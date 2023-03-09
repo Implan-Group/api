@@ -215,8 +215,7 @@ Take a dataset id from the dataset API request and use it for the model’s API 
 
 Will return Models
 
-
-    [
+[
 
 
        {
@@ -264,7 +263,7 @@ Will return Models
         }
 
 
-    ]
+]
 
 
 ## Industry Codes Endpoint (Get)
