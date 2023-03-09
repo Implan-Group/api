@@ -4,11 +4,11 @@ This document is intended to provide a developer guide for the API that IMPLAN h
 
 ## Postman Collection
 
-We have created a Postman collection with reference calls per section in this document to help with implementation.  IMPLAN will provide a client ID and client secret in a separate correspondence.
+We have created a Postman collection with reference calls per section in this document to help with implementation.  IMPLAN will provide a client ID and client secret in a separate correspondence as needed by client request.
 
 
 ## Development Variables
-
+The following variables can be used while developing against the IMPLAN API. Following development, please transition to Production Variables below.  
 
 <table>
   <tr>
