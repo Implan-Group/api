@@ -57,8 +57,7 @@ You have 7 H1 headings. You may want to use the "H1 -> H2" option to demote all 
 
 # Overview
 
-This document is intended to provide a developer guide for the API that IMPLAN has developed for generating Industry Impact Analysis (Detailed) impacts via API.  
-
+This document is intended to provide a developer guide for the API that IMPLAN has developed for generating simple and scalable Batch Industry Output impacts via API. 
 
 ## Postman Collection
 
@@ -98,7 +97,7 @@ We have created a Postman collection with reference calls per section in this do
    </td>
    <td>{{email}}
    </td>
-   <td>Same as beta-app.implan.com
+   <td>Same as app.implan.com
    </td>
   </tr>
   <tr>
@@ -106,7 +105,7 @@ We have created a Postman collection with reference calls per section in this do
    </td>
    <td>{{password}}
    </td>
-   <td>Same as beta-app.implan.com
+   <td>Same as app.implan.com
    </td>
   </tr>
 </table>
@@ -137,7 +136,7 @@ Some code examples for obtaining the authentication token are provided in the
 
 <p id="gdcalert2" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: undefined internal link (link text: "Appendix"). Did you generate a TOC with blue links? </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert3">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
 
-[Appendix](#heading=h.24vt0ete0h93).
+[Appendix](#Appendix).
 
 
 ## Expected Response
@@ -488,7 +487,7 @@ This will return a similar response to the Instant Impact, but will be formatted
 # 
 
 
-# Appendix
+<p id="Appendix" ># Appendix</p?
 
 
 ## Code Examples to retrieve tokens
