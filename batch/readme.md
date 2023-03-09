@@ -81,7 +81,7 @@ We have created a Postman collection with reference calls per section in this do
    </td>
    <td>{{api_domain}}
    </td>
-   <td>api.implan.com
+   <td>api.implan.com/beta
    </td>
   </tr>
   <tr>
@@ -90,6 +90,53 @@ We have created a Postman collection with reference calls per section in this do
    <td>{{env}}
    </td>
    <td>beta
+   </td>
+  </tr>
+  <tr>
+   <td>User Email
+   </td>
+   <td>{{email}}
+   </td>
+   <td>Same as beta-app.implan.com
+   </td>
+  </tr>
+  <tr>
+   <td>User Password
+   </td>
+   <td>{{password}}
+   </td>
+   <td>Same as beta-app.implan.com
+   </td>
+  </tr>
+</table>
+
+
+
+## Production Variables
+
+<table>
+  <tr>
+   <td>Item
+   </td>
+   <td>Reference Value
+   </td>
+   <td>Development Value
+   </td>
+  </tr>
+  <tr>
+   <td>API Domain 
+   </td>
+   <td>{{api_domain}}
+   </td>
+   <td>api.implan.com/
+   </td>
+  </tr>
+  <tr>
+   <td>Environment
+   </td>
+   <td>{{env}}
+   </td>
+   <td>n/a
    </td>
   </tr>
   <tr>
@@ -110,11 +157,6 @@ We have created a Postman collection with reference calls per section in this do
   </tr>
 </table>
 
-
-
-## Production Variables
-
-Coming soon
 
 
 # Retrieving Bearer access token
