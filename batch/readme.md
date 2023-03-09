@@ -132,11 +132,7 @@ The “access_token” is good for 24 hours.  It is required that you cache this
 
 ## Examples
 
-Some code examples for obtaining the authentication token are provided in the 
-
-<p id="gdcalert2" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: undefined internal link (link text: "Appendix"). Did you generate a TOC with blue links? </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert3">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-[Appendix](#Appendix).
+Some code examples for obtaining the authentication token are provided in the [Appendix](#Appendix).
 
 
 ## Expected Response
