@@ -487,7 +487,8 @@ This will return a similar response to the Instant Impact, but will be formatted
 # 
 
 
-# Appendix<p id="Appendix" ></p?
+# Appendix
+<p id="Appendix" > </p>
 
 
 ## Code Examples to retrieve tokens
