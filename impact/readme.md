@@ -7,27 +7,27 @@ This document assumes a working knowledge of the IMPLAN Cloud and its workflow, 
 
 ## Getting Started
 
-To help you get started running economic impact analysis, this section will provide a quick overview of the implan workflow after you’ve completed the Authentication (LINK).
+To help you get started running economic impact analysis, this section will provide a quick overview of the implan workflow after you’ve completed the [Authentication](#authentication---retrieving-bearer-access-token).
 
 
 ### Find a region and industry to study
 
-In order to run an economic impact analysis, you will first need to identify the [Data Year (Dataset)](#dataset-endpoint-get) on when the impact will take place, the Industry (LINK) that will change, and the Region (LINK) where the impact will take place. 
+In order to run an economic impact analysis, you will first need to identify the [Data Year (Dataset)](#dataset-endpoint-get) on when the impact will take place, the [Industry](#industry-codes-endpoint-get) that will change, and the [Region](#region-model-endpoint-get) where the impact will take place. 
 
 
 ### Create a project, define groups and events
 
-After determining your Region(s), Datasets, and Industries, you can create a Project (LINK), Add Events(LINK) to the project, and Add Groups (LINK) to the project with associated Events.
+After determining your Region(s), Datasets, and Industries, you can create a [Project](#create-project-post), add [Events](#create-event-post) to the project, and add [Groups](create-group-post) to the project with associated Events.
 
 
 ### Run an Impact on your project
 
-Once your project has been defined, you can Run an Impact(LINK) on your project.  Depending on the size of your project based on the number of events and groups, your project may take a few seconds or a few minutes to complete.  While waiting, you can poll for the status (LINK) of your project’s impact run. We recommend a polling frequency of XX seconds. 
+Once your project has been defined, you can [Run an Impact](#run-impact-post) on your project.  Depending on the size of your project based on the number of events and groups, your project may take a few seconds or a few minutes to complete.  While waiting, you can poll for the [status](#run-status-get) of your project’s impact run. We recommend a polling frequency of 30 seconds. 
 
 
 ### Export Results of the Impact
 
-Once your project’s impact run has completed, you may export the results (LINK) based on the impact run id.  
+Once your project’s impact run has completed, you may export the [Results](#results) based on the impact run id.  
 
 
 ## Glossary
@@ -387,7 +387,7 @@ If you need to download study area data or obtain regional information to build 
 
 ### Top Level Region (Get)
 
-This endpoint will return the top most region for an aggregation scheme and  dataset.  You may use the URID (LINK) of this in Get Region Children by Urid.  
+This endpoint will return the top most region for an aggregation scheme and  dataset.  You may use the [URID](#urid) of this in Get Region Children by Urid.  
 
 
 #### Parameters
