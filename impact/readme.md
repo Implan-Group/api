@@ -1,6 +1,3 @@
-<a href="#gdcalert2">alert2</a>
-<a href="#gdcalert3">alert3</a>
-
 # Overview
 
 This document is intended to provide a developer guide for the API that IMPLAN has developed for creating economic models and  generating impacts via API.  This API is intended to eventually replicate the functionality of IMPLAN Cloud, allowing you to embed IMPLAN into your applications and workflows.  
@@ -15,7 +12,7 @@ To help you get started running economic impact analysis, this section will prov
 
 ### Find a region and industry to study
 
-In order to run an economic impact analysis, you will first need to identify the Data Year (Dataset) (LINK) on when the impact will take place, the Industry (LINK) that will change, and the Region (LINK) where the impact will take place. 
+In order to run an economic impact analysis, you will first need to identify the [Data Year (Dataset)](#dataset-endpoint-get) on when the impact will take place, the Industry (LINK) that will change, and the Region (LINK) where the impact will take place. 
 
 
 ### Create a project, define groups and events
