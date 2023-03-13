@@ -907,83 +907,110 @@ These should only be used if you are adding an event that is marginable, such as
 
 ### Create Group (Post)
 
-
 #### Parameters
 
+* Id (Optional)
+* ProjectId (In URL)
+* Title
+* HashId (Optional*)
+* URID (Optional* )
+* Dollar Year
+* DatasetId
+* ScalingFactor (Optional - defaults to 1)
+* GroupEvents (Optional)
 
-
-* 
-
+*NOTE: HashId or URID must be supplied, but both are not required.
 
 #### Response
 
-
-
-* 
+* id
+* projectId
+* hashId
+* urid
+* userModelId
+* modelId
+* title
+* dollarYear
+* scalingFactor
+* dataSetId
+* groupEvents
 
 
 #### Endpoint
-
+**POST https://{{Domain}}/v1/impact/project/{{project_guid}}/group**
 
 ### Get Group (Get)
 
-
 #### Parameters
 
-
-
-* 
-
+* Project ID (In Url)
 
 #### Response
 
-
-
-* 
-
+* id
+* projectId
+* hashId
+* urid
+* userModelId
+* modelId
+* title
+* dollarYear
+* scalingFactor
+* dataSetId
+* groupEvents
 
 #### Endpoint
-
+**GET https://{{Domain}}/v1/impact/project/{{project id}}/group/**
 
 ### Update Group (Put)
 
-
 #### Parameters
 
+* Id - Group ID (In URL)
+* ProjectId (In Url)
+* Title
+* HashId (Optional*)
+* URID (Optional* )
+* Dollar Year
+* DatasetId
+* ScalingFactor (Optional - defaults to 1)
+* GroupEvents (Optional)
 
-
-* 
-
+*NOTE: HashId or URID must be supplied, but both are not required.
 
 #### Response
 
-
-
-* 
+* id
+* projectId
+* hashId
+* urid
+* userModelId
+* modelId
+* title
+* dollarYear
+* scalingFactor
+* dataSetId
+* groupEvents
 
 
 #### Endpoint
-
+**PUT https://{{Domain}}/v1/impact/project/{{project id}}/group/{{group id}}**
 
 ## Run Impact (Post)
 
 
 #### Parameters
 
-
-
-* 
+* Project Id (in Url)
 
 
 #### Response
 
-
-
-* 
+* Run Id 
 
 
 #### Endpoint
-
+**PUT https://{{Domain}}/v1/impact/{{project id}}**
 
 ## Run Status (Get)
 
@@ -992,14 +1019,12 @@ To provide an asynchronous environment, IMPLAN has developed an endpoint that yo
 
 #### Parameters:
 
-
-
 * Bearer Token
-* Run_id (in URL)
+* Run Id (in URL)
 
 
 #### Response
-
+* Status code
 
 #### Endpoint
 
@@ -1007,72 +1032,6 @@ To provide an asynchronous environment, IMPLAN has developed an endpoint that yo
 
 
         Will return “Unknown”,  “New”,  “InProgress”,  “ReadyForWarehouse” , “Complete”, “Error”
-
-
-## Deprecate Run Impact Analysis Endpoint (POST)
-
-The API method that will estimate economic impacts will be using the Industry Impact Analysis methodology. This will allow for a single endpoint that can accommodate multiple industry-based inputs.  Because the economic methodology may take more than 30 seconds to complete, your user interface, application, or script will require an asynchronous API call.  Note that concurrent usage may increase time to completion. As such, this endpoint will return an Analysis Run ID that can be used to poll and fetch results when complete.   
-
-
-
-* Required Parameters:
-    1. Bearer Token
-    2. User Email Address
-    3. Data Set Id (Returned in Data Set Endpoint)
-    4. Model Id (Returned in Region Endpoint)
-    5. Industry Id (Returned in Industry Set Endpoint) 
-* Optional Parameters (of which, any 1 is required)
-    6. Industry Total Output
-    7. Industry Total Employment
-    8. Industry Wage and Salary Employment
-    9. Industry Proprietor Employment
-    10. Industry Total Labor Income
-    11. Industry Employee Compensation
-    12. Industry Proprietor Income
-    13. Industry Other Property Income
-    14. Industry Taxes on Production and Imports
-* Response
-    15. Analysis Run ID
-
-**POST https://{{api_domain}}/api/v1/runimpact**
-
-In the body select RAW fill out the following json object. Select the JSON media type
-
-Decimal values can be left blank.
-
-{
-
-    "modelId":"{model id from Model request'}",
-
-    "email":"{email address}",
-
-    "datasetId":"{dataset id from dataset request",
-
-    "IndustryCode":"{industry id from industry request}",
-
-    "TaxOnProductionAndImports":"{decimal value}",
-
-    "TotalLaborIncome":"{decimal value}",
-
-    "OtherPropertyIncome":"{decimal value}",
-
-    "ProprietorEmployment":"{decimal value}",
-
-    "WageAndSalaryEmployment":"{decimal value}",
-
-    "ProprietorIncome":"{decimal value}",
-
-    "EmployeeCompensation":"{decimal value}",
-
-    "Employment":"{decimal value}",
-
-    "Output":"{decimal value}",
-
-    "TotalOutput":"{decimal value}"   
-
-}
-
-Will return the runId as a plain integer. 
 
 
 # Results
