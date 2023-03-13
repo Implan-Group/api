@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "79814ef2-a4a2-4413-a48a-4593e386357a",
-		"name": "Implan API",
+		"name": "Implan-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "5102844"
 	},
@@ -405,97 +405,6 @@
 			"name": "Impacts",
 			"item": [
 				{
-					"name": "Groups",
-					"item": [
-						{
-							"name": "Create Group",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"Title\" : \"Combine_ALA_ALA_7.0.3 Group\",\r\n    \"HashId\" : \"aRz7DELZma\",\r\n    \"DollarYear\" : 2021,\r\n    \"DatasetId\" : 87\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/group",
-									"protocol": "https",
-									"host": [
-										"{{Domain}}"
-									],
-									"path": [
-										"v1",
-										"impact",
-										"project",
-										"{{project_guid}}",
-										"group"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get Group",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/group/",
-									"protocol": "https",
-									"host": [
-										"{{Domain}}"
-									],
-									"path": [
-										"v1",
-										"impact",
-										"project",
-										"{{project_guid}}",
-										"group",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update Group",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"id\": \"f6fa3ac9-f090-4e30-9123-63d8a7463790\",\r\n    \"projectId\": \"e8935d7b-379f-43d3-8507-eed797cf877a\",\r\n    \"hashId\": \"EdVkwjjXV7\",\r\n    \"urid\": null,\r\n    \"userModelId\": null,\r\n    \"modelId\": null,\r\n    \"title\": \"Api_Test_1_Group_1_up\",\r\n    \"dollarYear\": 2022,\r\n    \"scalingFactor\": 1,\r\n    \"datasetId\": 83,\r\n    \"groupEvents\": [\r\n       { \"EventId\" : \"a1b38f70-24c4-4442-ab0b-5b9ef9cf69be\" }\r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/group/{{group_guid}}",
-									"protocol": "https",
-									"host": [
-										"{{Domain}}"
-									],
-									"path": [
-										"v1",
-										"impact",
-										"project",
-										"{{project_guid}}",
-										"group",
-										"{{group_guid}}"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
 					"name": "Events",
 					"item": [
 						{
@@ -508,7 +417,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"ImpactEventType\": \"IndustryOutput\",\r\n    \"Title\" : \"IndustryOutput_api\",\r\n    \"Output\" : 100000.01,\r\n    \"Employment\" : 20.25,\r\n    \"EmployeeCompensation\" : 50000.23,\r\n    \"ProprietorIncome\" : 3400.233\r\n}",
+									"raw": "",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -696,7 +605,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"ImpactEventType\": \"IndustryEmployment\",\r\n    \"Title\" : \"IndustryEmployment_api\",\r\n    \"Output\" : 100000.01,\r\n    \"Employment\" : 20.25,\r\n    \"EmployeeCompensation\" : 50000.23,\r\n    \"ProprietorIncome\" : 3400.233\r\n}",
+									"raw": "{\r\n    \"ImpactEventType\": \"IndustryEmployment\",\r\n    \"Title\" : \"IndustryEmployment_api\",\r\n    \"industryCode\": 1,\r\n    \"Output\" : 100000.01,\r\n    \"Employment\" : 20.25,\r\n    \"EmployeeCompensation\" : 50000.23,\r\n    \"ProprietorIncome\" : 3400.233\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -723,68 +632,95 @@
 					]
 				},
 				{
-					"name": "WIP - Excel Import",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "excelFile",
-									"type": "file",
-									"src": "/C:/EventTemp/1 -Group Example.xlsx"
+					"name": "Groups",
+					"item": [
+						{
+							"name": "Create Group",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n    \"ProjectId\": \"54dd7fca-c0da-11ed-a2c6-12fa59c0e2d9\",\r\n    \"Title\" : \"Combine_ALA_ALA_7.0.3 Group 2\",\r\n    \"HashId\" : \"aRz7DELZma\",\r\n    \"DollarYear\" : 2021,\r\n    \"DatasetId\" : 87\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/group",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"project",
+										"{{project_guid}}",
+										"group"
+									]
 								}
-							]
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "https://int-app-api.implan.com/external/api/v1/impact/project/import/49ae7ce7-6e55-41d0-8cdf-28a16b3f40d0",
-							"protocol": "https",
-							"host": [
-								"int-app-api",
-								"implan",
-								"com"
-							],
-							"path": [
-								"external",
-								"api",
-								"v1",
-								"impact",
-								"project",
-								"import",
-								"49ae7ce7-6e55-41d0-8cdf-28a16b3f40d0"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Run IIA Impact",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n   \"modelId\":\"34462\",\r\n    \"email\":\"support@implan.com\",\r\n    \"datasetId\":\"87\",\r\n    \"IndustryCode\":\"1\",\r\n    \"TaxOnProductionAndImports\":\"\",\r\n    \"TotalLaborIncome\":\"\",\r\n    \"OtherPropertyIncome\":\"\",\r\n    \"ProprietorEmployment\":\"\",\r\n    \"WageAndSalaryEmployment\":\"\",\r\n    \"ProprietorIncome\":\"\",\r\n    \"EmployeeCompensation\":\"\",\r\n    \"Employment\":\"\",\r\n    \"Output\":\"\",\r\n    \"TotalOutput\":\"10000000\"   \r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+						{
+							"name": "Get Group",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/group/",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"project",
+										"{{project_guid}}",
+										"group",
+										""
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "https://{{Domain}}/v1/impact",
-							"protocol": "https",
-							"host": [
-								"{{Domain}}"
-							],
-							"path": [
-								"v1",
-								"impact"
-							]
+						{
+							"name": "Update Group",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"id\": \"ca058f60-6379-4127-ac3d-f524782e780d\",\r\n        \"projectId\": \"54dd7fca-c0da-11ed-a2c6-12fa59c0e2d9\",\r\n        \"hashId\": \"aRz7DELZma\",\r\n        \"urid\": null,\r\n        \"userModelId\": 25337,\r\n        \"modelId\": 33971,\r\n        \"title\": \"Combine_ALA_ALA_7.0.3 Group\",\r\n        \"dollarYear\": 2021,\r\n        \"scalingFactor\": 1,\r\n        \"datasetId\": 87,\r\n        \"groupEvents\": [\r\n            {\r\n                \"eventId\": \"8ff2bfe8-83de-4f25-9df3-bdf2b0aa0131\",\r\n                \"scalingFactor\": 1\r\n            }]\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/group/{{group_guid}}",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"project",
+										"{{project_guid}}",
+										"group",
+										"{{group_guid}}"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
 					"name": "Industry Codes",
@@ -812,7 +748,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Title\" : \"EDG API Test2\",\r\n    \"AggregationSchemeId\" : 8,\r\n    \"HouseholdSetId\" : 1,\r\n    \"IsMrio\": false,\r\n    \"FolderId\" : null\r\n}",
+							"raw": "{\r\n    \"Title\" : \"EDG API Test 6\",\r\n    \"AggregationSchemeId\" : 8,\r\n    \"HouseholdSetId\" : 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -862,7 +798,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Api_test_5-Updated\",\r\n    \"aggregationSchemeId\": 8,\r\n    \"householdSetId\": 1,\r\n    \"isMrio\": false,\r\n    \"folderId\": null\r\n}",
+							"raw": "{\r\n    \"title\": \"EDG API Test 6\",\r\n    \"aggregationSchemeId\": 10,\r\n    \"householdSetId\": 1,\r\n    \"isMrio\": true,\r\n    \"folderId\": null\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -892,7 +828,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"ImpactEventType\": \"IndustryOutput\",\r\n    \"Title\" : \"IndustryOutput_api\",\r\n    \"Output\" : 100000.01,\r\n    \"Employment\" : 20.25,\r\n    \"EmployeeCompensation\" : 50000.23,\r\n    \"ProprietorIncome\" : 3400.233\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -934,12 +870,69 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "WIP - Excel Import",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "excelFile",
+									"type": "file",
+									"src": "/C:/EventTemp/1 -Group Example.xlsx"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://int-app-api.implan.com/external/api/v1/impact/project/import/49ae7ce7-6e55-41d0-8cdf-28a16b3f40d0",
+							"protocol": "https",
+							"host": [
+								"int-app-api",
+								"implan",
+								"com"
+							],
+							"path": [
+								"external",
+								"api",
+								"v1",
+								"impact",
+								"project",
+								"import",
+								"49ae7ce7-6e55-41d0-8cdf-28a16b3f40d0"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "Results",
 			"item": [
+				{
+					"name": "Results Totals",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{Domain}}/v1/impact/results/{{impact_run_id}}",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"results",
+								"{{impact_run_id}}"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "Detail Economic Indicators Export",
 					"request": {
@@ -1035,6 +1028,34 @@
 			"name": "IIA Impact",
 			"item": [
 				{
+					"name": "Run IIA Impact",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"modelId\":\"34462\",\r\n    \"email\":\"support@implan.com\",\r\n    \"datasetId\":\"87\",\r\n    \"IndustryCode\":\"1\",\r\n    \"TaxOnProductionAndImports\":\"\",\r\n    \"TotalLaborIncome\":\"\",\r\n    \"OtherPropertyIncome\":\"\",\r\n    \"ProprietorEmployment\":\"\",\r\n    \"WageAndSalaryEmployment\":\"\",\r\n    \"ProprietorIncome\":\"\",\r\n    \"EmployeeCompensation\":\"\",\r\n    \"Employment\":\"\",\r\n    \"Output\":\"\",\r\n    \"TotalOutput\":\"10000000\"   \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Domain}}/v1/impact",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"impact"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "IIA Results",
 					"request": {
 						"method": "GET",
@@ -1079,30 +1100,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "GetResults",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://api.implan.com/{{Domain}}/v1/impact/results/8689",
-							"protocol": "https",
-							"host": [
-								"api",
-								"implan",
-								"com"
-							],
-							"path": [
-								"{{Domain}}",
-								"v1",
-								"impact",
-								"results",
-								"8689"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -1129,7 +1126,7 @@
 					"raw": "{  \"username\": \"\",   \"password\": \"\" }\r\n"
 				},
 				"url": {
-					"raw": "https://api.implan.com/int/auth",
+					"raw": "https://api.implan.com/beta/auth",
 					"protocol": "https",
 					"host": [
 						"api",
@@ -1137,7 +1134,7 @@
 						"com"
 					],
 					"path": [
-						"int",
+						"beta",
 						"auth"
 					]
 				}
@@ -1196,7 +1193,7 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"pm.request.headers.add({key: 'Authorization', value: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Il95RlFIVmtRd1ptaU0yaWpXbVdZeSJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJpbXBsYW4wMDAxQGdtYWlsLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2dpdmVubmFtZSI6ImltcGxhbjAwMDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zdXJuYW1lIjoiaW1wbGFuMDAwMSIsImlzcyI6Imh0dHBzOi8vZGV2LWxvZ2luLmltcGxhbi5jb20vIiwic3ViIjoiYXV0aDB8NjFjY2NjYzZjN2FhZGMwMDcxYzAxYmE0IiwiYXVkIjpbImh0dHBzOi8vc2VydmljZXMuaW1wbGFuLmNvbSIsImh0dHBzOi8vaW1wbGFuLWRldi51cy5hdXRoMC5jb20vdXNlcmluZm8iXSwiaWF0IjoxNjc4MzY3NjUxLCJleHAiOjE2Nzg0NTQwNTEsImF6cCI6IlZQUEdJOUNRanZUUjRpUzZlRnZsUWhTb05Sdng1MmdiIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCJ9.BkmHXMQh3dCt_mu1A03Tl-CnVx0JskdrB6VVZD8muUtEkJnk66ldHkzctP8TyXSePeP9OtH0qNnXQ4TyKuIniE4k3yeO-K6Mjr3sqj1JyFM_406HPtzELE5555uJPspI3GbZLKqxtSmmPOzHC7oYNrmLPCaw8kQmY4lvwmbifQw15qTGIMweZ9KftvId-SomAZ3PzODetCIVQmtMT_NRzo9KUC7qAeLR2vhSwcV85dkCopVaadxmY9SwIqBDl9eurkf8JVIRupFOgfvEskNsr-N3C7k8mDuAJQpqJnyj3FPihU4RTo6qgQgsfM6vAyqoLdVHJ9zJFhPlOWYjuQ2-Iw' })"
+					"pm.request.headers.add({key: 'Authorization', value: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Il95RlFIVmtRd1ptaU0yaWpXbVdZeSJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJpbXBsYW4wMDAxQGdtYWlsLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2dpdmVubmFtZSI6ImltcGxhbjAwMDEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zdXJuYW1lIjoiaW1wbGFuMDAwMSIsImlzcyI6Imh0dHBzOi8vZGV2LWxvZ2luLmltcGxhbi5jb20vIiwic3ViIjoiYXV0aDB8NjFjY2NjYzZjN2FhZGMwMDcxYzAxYmE0IiwiYXVkIjpbImh0dHBzOi8vc2VydmljZXMuaW1wbGFuLmNvbSIsImh0dHBzOi8vaW1wbGFuLWRldi51cy5hdXRoMC5jb20vdXNlcmluZm8iXSwiaWF0IjoxNjc4NzMxMTAzLCJleHAiOjE2Nzg4MTc1MDMsImF6cCI6IlZQUEdJOUNRanZUUjRpUzZlRnZsUWhTb05Sdng1MmdiIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCJ9.vbOjYmevVvPtlR46_7iEjf2Fd25Ld7gHUFmlec6znTWrBduAm2QIAyM9LdjxtOzVTK_NobdmoIr4ctxISITuznJELsC0OA8JvdM_cYPqv1j5F3ItljnpfsGFl9dE9Bmukfg-D-LrnhumMhcQ_al8YojTK7McAJIkbcUmbUkCnlB_MA8An0Gk2Bbxfc5abDnGDFmc_4dNhn5rOL7qwkcUcW0qkemmPhc935yJpFa9aZ0mle9yHuwThy3tCnShKP3fvWLYORjFEAKZxqHueWnFLOmo7oDJ5BubLa6ALGNyyryPH9tIm0UCgK_bcZXYwN5c9zGVk7s85PG58LhTJISQtA' })"
 				]
 			}
 		},
@@ -1218,22 +1215,22 @@
 		},
 		{
 			"key": "project_guid",
-			"value": "ef281e71-a05a-40bc-aef0-56b756d65614",
+			"value": "54dd7fca-c0da-11ed-a2c6-12fa59c0e2d9",
 			"type": "string"
 		},
 		{
 			"key": "group_guid",
-			"value": "",
+			"value": "ca058f60-6379-4127-ac3d-f524782e780d",
 			"type": "string"
 		},
 		{
 			"key": "event_guid",
-			"value": "",
+			"value": "c0c2c8f4-bbeb-42a1-8362-aee4ab230c1b",
 			"type": "string"
 		},
 		{
 			"key": "impact_run_id",
-			"value": "98323",
+			"value": "98648",
 			"type": "string"
 		}
 	]
