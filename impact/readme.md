@@ -206,7 +206,7 @@ IMPLAN models vary based on annual data sets.  In order to provide the correct l
 * Default Data Set (Boolean - only 1 record in the list should be true)
 
 Will Return datasets
-
+```
 [   
 
 	{
@@ -230,7 +230,7 @@ Will Return datasets
     }
 
 ]
-
+```
 
 #### Endpoint
 
@@ -267,7 +267,7 @@ The Regions that will be accessible by this API endpoint will include the region
 
 Will return Models
 
-
+```
     [
 
 
@@ -317,7 +317,7 @@ Will return Models
 
 
     ]
-
+```
 
 #### Endpoint
 
@@ -349,7 +349,7 @@ In 2022, the BEA will redefine the North American Industry Classifications Syste
 * Industry Description
 
 Will return Industries
-
+```
 [
 
     {
@@ -373,7 +373,7 @@ Will return Industries
     }
 
 ]
-
+```
 
 #### Endpoint
 
@@ -885,7 +885,7 @@ These should only be used if you are adding an event that is marginable, such as
 * Percentage
 * DataSetId
 * MarginType (PurchaserPrice, ProducerPrice)
-* 
+
 
 
 #### Response
@@ -1034,7 +1034,7 @@ To provide an asynchronous environment, IMPLAN has developed an endpoint that yo
 **GET https://{{api_domain}}/api/v1/impact/status/{runId}**
 
 
-        Will return “Unknown”,  “New”,  “InProgress”,  “ReadyForWarehouse” , “Complete”, “Error”
+* Will return “Unknown”,  “New”,  “InProgress”,  “ReadyForWarehouse” , “Complete”, “Error”
 
 
 # Results
@@ -1084,8 +1084,8 @@ The API response when the impact analysis is complete will provide Direct, Indir
 
 Call after Status API request returns “Complete”
 
-           	Will return.
-
+Will return.
+```
 
         [
 
@@ -1289,7 +1289,7 @@ Call after Status API request returns “Complete”
 
 
         ]
-
+```
 
 ## Detail Economic Indicators Export (Get)
 
@@ -1350,16 +1350,16 @@ The API response when the analysis is complete will provide a CSV response with 
 
 
 
-    1. GroupName
-    2. EventName
-    3. ModelName
-    4. TaxSplitDescription
-    5. ImpactType
-    6. TransferCode
-    7. TransferDescription
-    8. PayingTypeCode
-    9. PayingTypeDescription
-    10. Value
+* GroupName
+* EventName
+* ModelName
+* TaxSplitDescription
+* ImpactType
+* TransferCode
+* TransferDescription
+* PayingTypeCode
+* PayingTypeDescription
+* Value
 
 
 #### Endpoint
@@ -1444,7 +1444,7 @@ The API response when the analysis is complete will provide a CSV response with 
 
 
 ### C# example
-
+```
 var options = new RestClientOptions("https://{{api_domain}}")
 {
   MaxTimeout = -1,
@@ -1458,19 +1458,19 @@ var body = @"{  ""username"": """",   ""password"": """" }
 request.AddParameter("text/plain", body,  ParameterType.RequestBody);
 RestResponse response = await client.ExecuteAsync(request);
 Console.WriteLine(response.Content);
-
+```
 
 ### Java Example
-
+```
 Unirest.setTimeouts(0, 0);
 HttpResponse<String> response = Unirest.post("https://{{api_domain}}/{{env}}/auth")
   .header("Content-Type", "text/plain")
   .body("{  \"username\": \"\",   \"password\": \"\" }\r\n")
   .asString();
-
+```
 
 ### Node Example
-
+```
 var request = require('request');
 var options = {
   'method': 'POST',
@@ -1485,10 +1485,10 @@ request(options, function (error, response) {
   if (error) throw new Error(error);
   console.log(response.body);
 });
-
+```
 
 ###  Python Example
-
+```
 import http.client
 
 conn = http.client.HTTPSConnection("{{api_domain}}")
@@ -1500,7 +1500,8 @@ conn.request("POST", "/{{env}}/auth", payload, headers)
 res = conn.getresponse()
 data = res.read()
 print(data.decode("utf-8"))
-
+```
+	
 ### R Example
 ```
 library(RCurl)
