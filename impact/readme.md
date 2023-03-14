@@ -1445,117 +1445,67 @@ The API response when the analysis is complete will provide a CSV response with 
 
 ### C# example
 
-var client = new RestClient("https://{{auth_domain}}/oauth/token");
-
-var request = new RestRequest(Method.POST);
-
-request.AddHeader("content-type", "application/json");
-
-request.AddParameter("application/json", "{\"client_id\":\"{{client_id}}\",\"client_secret\":\"{{client_secret}}",\"audience\":\"{{audience}}\",\"grant_type\":\"client_credentials\"}", ParameterType.RequestBody);
-
-IRestResponse response = client.Execute(request);
+var options = new RestClientOptions("https://{{api_domain}}")
+{
+  MaxTimeout = -1,
+};
+var client = new RestClient(options);
+var request = new RestRequest("/{{env}}/auth", Method.Post);
+request.AddHeader("Content-Type", "text/plain");
+var body = @"{  ""username"": """",   ""password"": """" }
+" + "\n" +
+@"";
+request.AddParameter("text/plain", body,  ParameterType.RequestBody);
+RestResponse response = await client.ExecuteAsync(request);
+Console.WriteLine(response.Content);
 
 
 ### Java Example
 
-HttpResponse&lt;String> response = Unirest.post("https://{{auth_domain}}/oauth/token")        	
-
-.header("content-type", "application/json")       	           .body("{\"client_id\":\"{{client_id}}\",\"client_secret\":\"{{client_secret}}",\"audience\":\"{{audience}}\",\"grant_type\":\"client_credentials\"}")
-
-.asString();
+Unirest.setTimeouts(0, 0);
+HttpResponse<String> response = Unirest.post("https://{{api_domain}}/{{env}}/auth")
+  .header("Content-Type", "text/plain")
+  .body("{  \"username\": \"\",   \"password\": \"\" }\r\n")
+  .asString();
 
 
 ### Node Example
 
-var request = require("request");
+var request = require('request');
+var options = {
+  'method': 'POST',
+  'url': 'https://{{api_domain}}/{{env}}/auth',
+  'headers': {
+    'Content-Type': 'text/plain'
+  },
+  body: '{  "username": "",   "password": "" }\r\n'
 
-var options = { method: 'POST',
-
-url: 'https://{{auth_domain}}/oauth/token',
-
-headers: { 'content-type': 'application/json' },
-
-body: ‘{"client_id":"{{client_id}}","client_secret":"{{client_secret}}","audience":"{{audience}}","grant_type":"client_credentials"}' };
-
- request(options, function (error, response, body) {
-
-if (error) throw new Error(error);
-
-console.log(body);
-
+};
+request(options, function (error, response) {
+  if (error) throw new Error(error);
+  console.log(response.body);
 });
-
-
-### PHP Example
-
-$curl = curl_init();
-
-curl_setopt_array($curl, array(
-
-
-    CURLOPT_URL => "https://{{auth_domain}}/oauth/token",
-
-
-    CURLOPT_RETURNTRANSFER => true,
-
-
-    CURLOPT_ENCODING => "",
-
-
-    CURLOPT_MAXREDIRS => 10,
-
-
-    CURLOPT_TIMEOUT => 30,
-
-
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-
-
-    CURLOPT_CUSTOMREQUEST => "POST",
-
-
-    CURLOPT_POSTFIELDS => "{\"client_id\":\"{{client_id}}\",\"client_secret\":\"{{client_secret}}",\"audience\":\"{{audience}}\",\"grant_type\":\"client_credentials\"}",
-
-
-    CURLOPT_HTTPHEADER => array(
-
-"content-type: application/json"
-
-              	  ),
-
-));
-
-$response = curl_exec($curl);
-
-$err = curl_error($curl);
-
-curl_close($curl);
-
-if ($err) {
-
-echo "cURL Error #:" . $err;
-
-              	} else {
-
-              	  echo $response;
-
-}
 
 
 ###  Python Example
 
 import http.client
 
- conn = http.client.HTTPSConnection("{{auth_domain}}")
-
-payload = "{\"client_id\":\"{{client_id}}\",\"client_secret\":\"{{client_secret}}",\"audience\":\"{{audience}}\",\"grant_type\":\"client_credentials\"}"
-
-headers = { 'content-type': "application/json" }
-
-conn.request("POST", "/oauth/token", payload, headers)
-
+conn = http.client.HTTPSConnection("{{api_domain}}")
+payload = "{  \"username\": \"\",   \"password\": \"\" }\r\n"
+headers = {
+  'Content-Type': 'text/plain'
+}
+conn.request("POST", "/{{env}}/auth", payload, headers)
 res = conn.getresponse()
-
 data = res.read()
-
 print(data.decode("utf-8"))
+
+### R Example
+library(RCurl)
+headers = c(
+  "Content-Type" = "text/plain"
+)
+params = "{  \"username\": \"\",   \"password\": \"\" }\r\n"
+res <- postForm("https://{{api_domain}}/{{env}}/auth", .opts=list(postfields = params, httpheader = headers, followlocation = TRUE), style = "httppost")
+cat(res)
