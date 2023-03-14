@@ -1502,6 +1502,7 @@ data = res.read()
 print(data.decode("utf-8"))
 
 ### R Example
+```
 library(RCurl)
 headers = c(
   "Content-Type" = "text/plain"
@@ -1509,3 +1510,4 @@ headers = c(
 params = "{  \"username\": \"\",   \"password\": \"\" }\r\n"
 res <- postForm("https://{{api_domain}}/{{env}}/auth", .opts=list(postfields = params, httpheader = headers, followlocation = TRUE), style = "httppost")
 cat(res)
+```
