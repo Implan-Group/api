@@ -171,6 +171,9 @@ The “access_token” is good for 24 hours.  It is required that you cache this
 
 Some code examples for obtaining the authentication token are provided in the [Appendix](#appendix).
 
+## Endpoint
+**POST https://{{api_domain}}/auth**
+
 ## Expected Response
 
 The expected response will be in this format:
