@@ -139,7 +139,19 @@ Once downloaded, you may enter your application credentials into the “auth” 
 
 ![alt_text](/images/auth_pre_request.png "auth pre request")
 
-
+# Throttling Rates
+The IMPLAN API will currently support the following requests per timeframe, to ensure a smooth operation for all customers.  When exceeding these rates, you will receiving a throttling error response.  
+* Industry Codes
+** Requests per minute = 10
+* Data Sets
+** Requests per minute = 10
+* Region Models
+** Requests per minute = 5
+* Instant 
+** Requests per second = 5
+* Batch
+** Requests per minute = 6
+** 2500 events per request supported.
 
 # Preliminary Requests to Running an Impact
 
