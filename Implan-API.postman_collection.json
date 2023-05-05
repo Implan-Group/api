@@ -678,7 +678,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/8/RegionMultipliersPerMillionEffects?hashId=k4bKm54kxO&effectType=Output&industryCode=15",
+									"raw": "https://{{Domain}}/v1/regions/export/8/RegionMultipliersPerMillionEffects?hashId=k4bKm54kxO&effectType=Output",
 									"protocol": "https",
 									"host": [
 										"{{Domain}}"
@@ -698,10 +698,6 @@
 										{
 											"key": "effectType",
 											"value": "Output"
-										},
-										{
-											"key": "industryCode",
-											"value": "15"
 										}
 									]
 								}
