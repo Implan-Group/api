@@ -53,7 +53,7 @@ URID stands for Universal Region Identifier, and refers to a unique identifying 
 
 We have created a Postman collection with reference calls per section in this document to help with implementation.  IMPLAN will provide credentials in a separate correspondence.  The latest Postman Collection is available for download below at:
 
-[https://github.com/Implan-Group/api/blob/main/Implan-API.postman_collection.json](https://github.com/Implan-Group/api/blob/main/Implan-API.postman_collection.json) 
+[https://github.com/Implan-Group/api/blob/main/IMPLAN-API.postman_collection.json](https://github.com/Implan-Group/api/blob/main/IMPLAN-API.postman_collection.json) 
 
 
 ## Development Variables
