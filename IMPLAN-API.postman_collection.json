@@ -2536,7 +2536,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/ImpactOccupation?runId=102157",
+							"raw": "https://{{Domain}}/v1/impact/results/ImpactOccupation/{{impact_run_id}}",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2545,13 +2545,8 @@
 								"v1",
 								"impact",
 								"results",
-								"ImpactOccupation"
-							],
-							"query": [
-								{
-									"key": "runId",
-									"value": "102157"
-								}
+								"ImpactOccupation",
+								"{{impact_run_id}}"
 							]
 						}
 					},
@@ -2586,7 +2581,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/ImpactOccupationAverages?runId=102157",
+							"raw": "https://{{Domain}}/v1/impact/results/ImpactOccupationAverages/{{impact_run_id}}",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2595,13 +2590,8 @@
 								"v1",
 								"impact",
 								"results",
-								"ImpactOccupationAverages"
-							],
-							"query": [
-								{
-									"key": "runId",
-									"value": "102157"
-								}
+								"ImpactOccupationAverages",
+								"{{impact_run_id}}"
 							]
 						}
 					},
@@ -2636,7 +2626,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/ImpactOccupationCoreCompetencies?runId=102157",
+							"raw": "https://{{Domain}}/v1/impact/results/ImpactOccupationCoreCompetencies/{{impact_run_id}}",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2645,13 +2635,8 @@
 								"v1",
 								"impact",
 								"results",
-								"ImpactOccupationCoreCompetencies"
-							],
-							"query": [
-								{
-									"key": "runId",
-									"value": "102157"
-								}
+								"ImpactOccupationCoreCompetencies",
+								"{{impact_run_id}}"
 							]
 						}
 					},
@@ -2686,7 +2671,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactSummarySatellitesByImpact/102157",
+							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactSummarySatellitesByImpact/{{impact_run_id}}",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2696,7 +2681,7 @@
 								"impact",
 								"results",
 								"EnvironmentImpactSummarySatellitesByImpact",
-								"102157"
+								"{{impact_run_id}}"
 							]
 						}
 					},
@@ -2731,7 +2716,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactSummaryIndustryEnvironmentalSummary/102157",
+							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactSummaryIndustryEnvironmentalSummary/{{impact_run_id}}",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2741,7 +2726,7 @@
 								"impact",
 								"results",
 								"EnvironmentImpactSummaryIndustryEnvironmentalSummary",
-								"102157"
+								"{{impact_run_id}}"
 							]
 						}
 					},
@@ -2776,7 +2761,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactRegionSatelliteSummary/102157",
+							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactRegionSatelliteSummary/{{impact_run_id}}",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2786,7 +2771,7 @@
 								"impact",
 								"results",
 								"EnvironmentImpactRegionSatelliteSummary",
-								"102157"
+								"{{impact_run_id}}"
 							]
 						}
 					},
@@ -2821,7 +2806,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactIndustrySatelliteSummary/102157",
+							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactIndustrySatelliteSummary/{{impact_run_id}}",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2831,7 +2816,7 @@
 								"impact",
 								"results",
 								"EnvironmentImpactIndustrySatelliteSummary",
-								"102157"
+								"{{impact_run_id}}"
 							]
 						}
 					},
@@ -2866,7 +2851,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactSatelliteDetail/102157",
+							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactSatelliteDetail/{{impact_run_id}}",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2876,7 +2861,7 @@
 								"impact",
 								"results",
 								"EnvironmentImpactSatelliteDetail",
-								"102157"
+								"{{impact_run_id}}"
 							]
 						}
 					},
