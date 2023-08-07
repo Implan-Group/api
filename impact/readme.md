@@ -674,6 +674,225 @@ This endpoint will allow a user to build a single combined region by providing t
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
 
+## Regional Data Exports
+
+These endpoints export region specific data for a built model. Data is exported in either CSV or Zip format depending on the endpoint.
+
+### Region Overview Industries (Get)
+
+This endpoint provides regional industry overview data equivalent to the Industries table found in Regions > Regions Overview in the IMPLAN application.
+
+
+#### Parameters
+
+
+
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+
+#### Response
+
+The API response will provide a CSV response with following fields for all industries:
+
+* Display Code
+* Display Description
+* Employment
+* Labor Income
+* Output
+* Average Employee Compensation per Wage and Salary Employee
+* Average Proprietor Income per Proprietor
+
+#### Endpoint
+
+**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/RegionOverviewIndustries?hashId={hashId}**
+
+
+### Study Area Data General Information (Get)
+
+This endpoint provides regional General Information such as population, land area, and industry count. This data is equivalent to that found on tables in Regions > Regions Overview and Study Area Data > Area Demographics. 
+
+
+#### Parameters
+
+
+
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+
+#### Response
+
+The API response will provide a CSV response with following fields:
+
+* Region Name
+* Fips
+* Population
+* Land Area
+* Dataset year
+* Industry Aggregation Description
+* Commodity Aggregation Description
+* Industry Count
+* Total Personal Income
+* Total Household Count by Household Group
+
+#### Endpoint
+
+**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/StudyAreaDataGeneralInformation?hashId={hashId}**
+
+
+### Study Area Industry Detail (Get)
+
+This endpoint provides regional industry detail data equivalent to the Region Industries Detail table found in Regions > Study Area Data > Industry Detail in the IMPLAN application.
+
+
+#### Parameters
+
+
+
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+
+#### Response
+
+The API response will provide a CSV response with following fields for all industries:
+
+* Industry Code
+* Description
+* Total Output
+* Wage and Salary Employment
+* Employee Compensation
+* Proprietor Employment
+* Proprietor Income
+* Other Property Income
+* Taxes on Production and Imports Net of Subsidies
+
+#### Endpoint
+
+**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/StudyAreaDataIndustryDetail?hashId={hashId}**
+
+
+### Study Area Industry Summary (Get)
+
+This endpoint provides regional industry summary data equivalent to the Region Industries Summary table found in Regions > Study Area Data > Industry Summary in the IMPLAN application.
+
+
+#### Parameters
+
+
+
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+
+#### Response
+
+The API response will provide a CSV response with following fields for all industries:
+
+* Industry Code
+* Description
+* Total Employment
+* Total Output
+* Total Intermediate Inputs
+* Total Value Added
+* Labor Income
+
+#### Endpoint
+
+**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/StudyAreaDataIndustrySummary?hashId={hashId}**
+
+
+### Region Multipliers Detailed (Get)
+
+This endpoint provides detailed multipliers by a given type and industry as found in the Regions > Multipliers > Detailed Multipliers tables in the IMPLAN application.
+
+
+#### Parameters
+
+
+
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
+* IndustryCode
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+
+#### Response
+
+The API response will provide a CSV response with following fields:
+
+* Display Code
+* Display Description
+* Industry Code
+* Indirect Multiplier Sum
+* Type I Multiplier
+* Induced Multiplier
+* Type SAM Multiplier
+
+
+#### Endpoint
+
+**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/RegionMultipliersDetailed?hashId={hashId}&effectType=LaborIncome&industryCode=15**
+
+
+## Region Multipliers Per Million Effects (Get)
+
+This endpoint provides per million of output effects by a given type and industry as found in the Regions > Multipliers > Per Million Effects tables in the IMPLAN application.
+
+
+#### Parameters
+
+
+
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+
+#### Response
+
+The API response will provide a CSV response with following fields:
+
+* Display Code
+* Display Description
+* Industry Code
+* Direct Effects
+* Indirect Effects
+* Induced Effects
+* Type I Effects
+* Type SAM Effects
+
+
+#### Endpoint
+
+**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/RegionMultipliersPerMillionEffects?hashId={hashId}&effectType=LaborIncome**
+
+
 # Impacts
 
 After the authentication token, and responses have been collected from the API endpoints above, you may then proceed with running an impact analysis. The starting point for this is to create a project.  
@@ -1435,222 +1654,6 @@ The API response when the analysis is complete will provide a CSV response with 
 #### Endpoint
 
 **GET https://{{api_domain}}/api/v1/impact/results/SummaryTaxes/{runId}**
-
-
-# Regional Data Exports
-## Region Overview Industries (Get)
-
-This endpoint provides regional industry overview data equivalent to the Industries table found in Regions > Regions Overview in the IMPLAN application.
-
-
-#### Parameters
-
-
-
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId (Optional*)
-* URID (Optional* )
-
-*NOTE: HashId or URID must be supplied, but both are not required.
-
-
-#### Response
-
-The API response will provide a CSV response with following fields for all industries:
-
-* Display Code
-* Display Description
-* Employment
-* Labor Income
-* Output
-* Average Employee Compensation per Wage and Salary Employee
-* Average Proprietor Income per Proprietor
-
-#### Endpoint
-
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/RegionOverviewIndustries?hashId={hashId}**
-
-
-## Study Area Data General Information (Get)
-
-This endpoint provides regional General Information such as population, land area, and industry count. This data is equivalent to that found on tables in Regions > Regions Overview and Study Area Data > Area Demographics. 
-
-
-#### Parameters
-
-
-
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId (Optional*)
-* URID (Optional* )
-
-*NOTE: HashId or URID must be supplied, but both are not required.
-
-
-#### Response
-
-The API response will provide a CSV response with following fields:
-
-* Region Name
-* Fips
-* Population
-* Land Area
-* Dataset year
-* Industry Aggregation Description
-* Commodity Aggregation Description
-* Industry Count
-* Total Personal Income
-* Total Household Count by Household Group
-
-#### Endpoint
-
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/StudyAreaDataGeneralInformation?hashId={hashId}**
-
-
-## Study Area Industry Detail (Get)
-
-This endpoint provides regional industry detail data equivalent to the Region Industries Detail table found in Regions > Study Area Data > Industry Detail in the IMPLAN application.
-
-
-#### Parameters
-
-
-
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId (Optional*)
-* URID (Optional* )
-
-*NOTE: HashId or URID must be supplied, but both are not required.
-
-
-#### Response
-
-The API response will provide a CSV response with following fields for all industries:
-
-* Industry Code
-* Description
-* Total Output
-* Wage and Salary Employment
-* Employee Compensation
-* Proprietor Employment
-* Proprietor Income
-* Other Property Income
-* Taxes on Production and Imports Net of Subsidies
-
-#### Endpoint
-
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/StudyAreaDataIndustryDetail?hashId={hashId}**
-
-
-## Study Area Industry Summary (Get)
-
-This endpoint provides regional industry summary data equivalent to the Region Industries Summary table found in Regions > Study Area Data > Industry Summary in the IMPLAN application.
-
-
-#### Parameters
-
-
-
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId (Optional*)
-* URID (Optional* )
-
-*NOTE: HashId or URID must be supplied, but both are not required.
-
-
-#### Response
-
-The API response will provide a CSV response with following fields for all industries:
-
-* Industry Code
-* Description
-* Total Employment
-* Total Output
-* Total Intermediate Inputs
-* Total Value Added
-* Labor Income
-
-#### Endpoint
-
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/StudyAreaDataIndustrySummary?hashId={hashId}**
-
-
-## Region Multipliers Detailed (Get)
-
-This endpoint provides detailed multipliers by a given type and industry as found in the Regions > Multipliers > Detailed Multipliers tables in the IMPLAN application.
-
-
-#### Parameters
-
-
-
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId (Optional*)
-* URID (Optional* )
-* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
-* IndustryCode
-
-*NOTE: HashId or URID must be supplied, but both are not required.
-
-
-#### Response
-
-The API response will provide a CSV response with following fields:
-
-* Display Code
-* Display Description
-* Industry Code
-* Indirect Multiplier Sum
-* Type I Multiplier
-* Induced Multiplier
-* Type SAM Multiplier
-
-
-#### Endpoint
-
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/RegionMultipliersDetailed?hashId={hashId}&effectType=LaborIncome&industryCode=15**
-
-
-## Region Multipliers Per Million Effects (Get)
-
-This endpoint provides per million of output effects by a given type and industry as found in the Regions > Multipliers > Per Million Effects tables in the IMPLAN application.
-
-
-#### Parameters
-
-
-
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId (Optional*)
-* URID (Optional* )
-* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
-
-*NOTE: HashId or URID must be supplied, but both are not required.
-
-
-#### Response
-
-The API response will provide a CSV response with following fields:
-
-* Display Code
-* Display Description
-* Industry Code
-* Direct Effects
-* Indirect Effects
-* Induced Effects
-* Type I Effects
-* Type SAM Effects
-
-
-#### Endpoint
-
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/RegionMultipliersPerMillionEffects?hashId={hashId}&effectType=LaborIncome**
 
 # Appendix
 
