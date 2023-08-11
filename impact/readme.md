@@ -380,6 +380,26 @@ Will return Industries
 **GET https://{{api_domain}}/api/v1/IndustryCodes**
 
 
+## Aggregation Schemes Endpoint (Get)
+This endpoint will return a list of aggregation schemes available for use.
+
+#### Parameters
+* Bearer Token
+* IndustrySetId (optional filter)
+
+
+#### Response (List)
+* Id (Aggregation Scheme Id)
+* Description
+* Industry Set Id 
+* Household Set Ids []
+* Map Code
+* Status
+
+#### Endpoint
+
+**GET https://{{api_domain}}/api/v1/aggregationschemes?industrySetId={{industrySetId}}**
+
 # Regions
 
 
@@ -404,7 +424,7 @@ This endpoint will return the top most region for an aggregation scheme and  dat
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/region/{aggregationSchemeId}/{dataSetId}**
+**GET https://{{api_domain}}/api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -425,7 +445,7 @@ This endpoint will return all children regions for the top most region returned 
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/region/{aggregationSchemeId}/{dataSetId}/children**
+**GET https://{{api_domain}}/api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/children**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -446,7 +466,7 @@ This endpoint will return all combined and custom regions that a user created by
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/region/{aggregationSchemeId}/{dataSetId}/user**
+**GET https://{{api_domain}}/api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/user**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -468,7 +488,7 @@ This endpoint allows a user to pull high level region information by a specific 
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/region/{aggregationSchemeId}/{dataSetId}/{urid}**
+**GET https://{{api_domain}}/api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/{{urid}}**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -490,7 +510,7 @@ This endpoint allows a user to pull high level region information for all childr
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/region/{aggregationSchemeId}/{dataSetId}/{urid}/children**
+**GET https://{{api_domain}}/api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/{{urid}}/children**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -573,7 +593,7 @@ This endpoint will allow a user to batch build single regions by urid and aggreg
 
 #### Endpoint
 
-**POST https://{{api_domain}}/api/v1/region/build/batch/{aggregationSchemeId}**
+**POST https://{{api_domain}}/api/v1/region/build/batch/{{aggregationSchemeId}}**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -592,7 +612,7 @@ This endpoint will allow a user to build multiple combined regions  by providing
 * Description (in body)
 * URID (in body)
 * Optional - Type of Request Body (CSV/JSON)
-    1. If you would prefer to upload your URID’s in a CSV format, you may do so by specifying CSV for the {type} parameter
+    1. If you would prefer to upload your URID’s in a CSV format, you may do so by specifying CSV for the {{type}} parameter
 
 
 #### Response (List)
@@ -622,7 +642,7 @@ This endpoint will allow a user to build multiple combined regions  by providing
 
 #### Endpoint
 
-**POST https://{{api_domain}}/api/v1/region/build/batch/combined/{aggregationSchemeId}/{type}**
+**POST https://{{api_domain}}/api/v1/region/build/batch/combined/{{aggregationSchemeId}}/{{type}}**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -669,7 +689,7 @@ This endpoint will allow a user to build a single combined region by providing t
 
 #### Endpoint
 
-**POST https://{{api_domain}}/api/v1/region/build/combined/{aggregationSchemeId}**
+**POST https://{{api_domain}}/api/v1/region/build/combined/{{aggregationSchemeId}}**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -709,7 +729,7 @@ The API response will provide a CSV response with following fields for all indus
 
 #### Endpoint
 
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/RegionOverviewIndustries?hashId={hashId}**
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionOverviewIndustries?hashId={{hashId}}**
 
 
 ### Study Area Data General Information (Get)
@@ -746,7 +766,7 @@ The API response will provide a CSV response with following fields:
 
 #### Endpoint
 
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/StudyAreaDataGeneralInformation?hashId={hashId}**
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataGeneralInformation?hashId={{hashId}}**
 
 
 ### Study Area Industry Detail (Get)
@@ -782,7 +802,7 @@ The API response will provide a CSV response with following fields for all indus
 
 #### Endpoint
 
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/StudyAreaDataIndustryDetail?hashId={hashId}**
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail?hashId={{hashId}}**
 
 
 ### Study Area Industry Summary (Get)
@@ -816,7 +836,7 @@ The API response will provide a CSV response with following fields for all indus
 
 #### Endpoint
 
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/StudyAreaDataIndustrySummary?hashId={hashId}**
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustrySummary?hashId={{hashId}}**
 
 
 ### Region Multipliers Detailed (Get)
@@ -853,7 +873,7 @@ The API response will provide a CSV response with following fields:
 
 #### Endpoint
 
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/RegionMultipliersDetailed?hashId={hashId}&effectType=LaborIncome&industryCode=15**
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionMultipliersDetailed?hashId={{hashId}}&effectType={{effectType}}&industryCode={{industryCode}}**
 
 
 ## Region Multipliers Per Million Effects (Get)
@@ -890,7 +910,7 @@ The API response will provide a CSV response with following fields:
 
 #### Endpoint
 
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/RegionMultipliersPerMillionEffects?hashId={hashId}&effectType=LaborIncome**
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionMultipliersPerMillionEffects?hashId={{hashId}}&effectType={{effectType}}**
 
 
 # Impacts
@@ -956,6 +976,113 @@ Inside the project, you will define the Events, which are the changes to an econ
 #### Endpoint
 
 **GET https://{{api_domain}}/api/v1/impact/project/{{project id}}**
+
+
+### Get Projects (Get)
+Returns a list of all projects owned by user
+
+#### Parameters
+none
+
+
+#### Response
+
+Array of the following:
+
+* Id - This will be used on all subsequent Project, Event, and Group API Requests
+* Title
+* aggregationSchemeId
+* householdSetId
+* isMrio
+* folderId
+* LastImpactRunId
+
+
+#### Endpoint
+
+**GET https://{{api_domain}}/api/v1/impact/project**
+
+
+### Get Projects Shared With User (Get)
+Returns a list of all projects shared with the user
+
+#### Parameters
+none
+
+
+#### Response
+
+Array of the following:
+
+* Id - This will be used on all subsequent Project, Event, and Group API Requests
+* Title
+* aggregationSchemeId
+* householdSetId
+* isMrio
+* folderId
+* LastImpactRunId
+
+
+#### Endpoint
+
+**GET https://{{api_domain}}/api/v1/impact/project/Shared**
+
+
+### Share Project with Users (Put)
+Shares project with other users
+
+#### Parameters
+* array of email addresses (in body)
+```
+["EmailAddressOfUserToShareProjectWith", "EmailAddressOfUserToShareProjectWith", ...]
+```
+
+#### Response
+* status code
+
+
+#### Endpoint
+
+**Put https://{{api_domain}}/api/v1/impact/project/{{projectId}}/share**
+
+
+### Transfer Project to User (Patch)
+Transfers project ownership to another user
+
+#### Parameters
+* email address (in body)
+```
+{
+    "Email": "EmailAddressOfUserToTransferProjectTo"
+}
+```
+
+#### Response
+* status code
+
+
+#### Endpoint
+
+**Patch https://{{api_domain}}/api/v1/impact/project/{{projectId}}/transfer**
+
+
+### Share Folder with Users (Put)
+Shares folder with other users
+
+#### Parameters
+* array of email addresses (in body)
+```
+["EmailAddressOfUserToShareFolderWith", "EmailAddressOfUserToShareFolderWith", ...]
+```
+
+#### Response
+* status code
+
+
+#### Endpoint
+
+**Put https://{{api_domain}}/api/v1/impact/folder/{{folderId}}/share**
+
 
 
 ### Update Project (Put)
@@ -1299,7 +1426,7 @@ The API response when the impact analysis is complete will provide Direct, Indir
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/impact/results/{runId}**
+**GET https://{{api_domain}}/api/v1/impact/results/{{runId}}**
 
 Call after Status API request returns “Complete”
 
@@ -1547,7 +1674,7 @@ The API response when the analysis is complete will provide a CSV response with 
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/impact/results/ExportDetailEconomicIndicators/{runId}**
+**GET https://{{api_domain}}/api/v1/impact/results/ExportDetailEconomicIndicators/{{runId}}**
 
 
 ## Detail Taxes Export (Get)
@@ -1583,7 +1710,7 @@ The API response when the analysis is complete will provide a CSV response with 
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/impact/results/DetailedTaxes/{runId}**
+**GET https://{{api_domain}}/api/v1/impact/results/DetailedTaxes/{{runId}}**
 
 
 ## Summary Economic Indicators Export  (Get)
@@ -1617,7 +1744,7 @@ The API response when the analysis is complete will provide a CSV response with 
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/impact/results/SummaryEconomicIndicators/{runId}**
+**GET https://{{api_domain}}/api/v1/impact/results/SummaryEconomicIndicators/{{runId}}**
 
 
 ## Summary Taxes Export (Get)
@@ -1653,7 +1780,7 @@ The API response when the analysis is complete will provide a CSV response with 
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/impact/results/SummaryTaxes/{runId}**
+**GET https://{{api_domain}}/api/v1/impact/results/SummaryTaxes/{{runId}}**
 
 # Appendix
 
