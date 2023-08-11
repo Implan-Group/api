@@ -1356,6 +1356,13 @@
 							"path": [
 								"v1",
 								"aggregationSchemes"
+							],
+							"query": [
+								{
+									"key": "industrysetId",
+									"value": "8",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -2257,6 +2264,101 @@
 					"response": []
 				},
 				{
+					"name": "Get Projects Shared with User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{Domain}}/v1/impact/project/shared",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"project",
+								"shared"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Share Project",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"enterEmailAddressOfUserToShareProjectWithHere\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Domain}}/v1/impact/project/:projectId/share",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"project",
+								":projectId",
+								"share"
+							],
+							"variable": [
+								{
+									"key": "projectId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transfer Project",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Email\": \"enterEmailAddressOfUserToTransferProjectToHere\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Domain}}/v1/impact/project/:projectId/transfer",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"project",
+								":projectId",
+								"transfer"
+							],
+							"variable": [
+								{
+									"key": "projectId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Project Specification",
 					"request": {
 						"method": "GET",
@@ -2305,6 +2407,43 @@
 								"impact",
 								"project",
 								"{{project_guid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Share Folder",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"enterEmailAddressOfUserToShareFolderWithHere\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Domain}}/v1/impact/folder/:folderId/share",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"folder",
+								":folderId",
+								"share"
+							],
+							"variable": [
+								{
+									"key": "folderId",
+									"value": null
+								}
 							]
 						}
 					},
