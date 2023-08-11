@@ -2075,6 +2075,267 @@ The API response when the analysis is complete will provide a CSV response with 
 
 **GET https://{{api_domain}}/api/v1/impact/results/SummaryTaxes/{{runId}}**
 
+
+## Impact Occupation (Get)
+This endpoint will provide occupation results from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Occupation Aggregation Level (in body)
+* Occupation Data Year (in body)
+* Dollar Year (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+
+#### Response
+The API response when the analysis is complete will provide a CSV response with following fields:
+* Occupation Code
+* Occupation
+* Wage and Salary Employment
+* Wage and Salary Income
+* Supplements to Wages and Salaries
+* Employee Compensation
+* Hours Worked
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/ImpactOccupation/{{runId}}**
+
+
+## Impact Occupation Averages (Get)
+This endpoint will provide occupation results averages from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Occupation Aggregation Level (in body)
+* Occupation Data Year (in body)
+* Dollar Year (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+
+#### Response
+The API response when the analysis is complete will provide a CSV response with following fields:
+* Occupation Code
+* Occupation
+* Average Wage and Salary Income
+* Average Supplements to Wages and Salaries
+* Average Employee Compensation
+* Average Hours per Year
+* Average Wage and Salary Income per Hour
+* Average Supplements to Wages and Salaries per Hour
+* Average Employee Compensation per Hour
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/ImpactOccupationAverages/{{runId}}**
+
+
+## Impact Occupation Core Competencies (Get)
+This endpoint will provide occupation core compentencies results from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Occupation Aggregation Level (in body)
+* Occupation Data Year (in body)
+* Industry Code (in body)
+* Occupation Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+#### Response
+The API response when the analysis is complete will provide a zip file with a collection of CSV files with different core competency results data.
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/ImpactOccupationCoreCompetencies/{{runId}}**
+
+
+
+## Environment Impact Summary Satellites By Impact (Get)
+This endpoint will provide environmental impact by impact summary data from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Environment Data Year (in body)
+* Environment Satellites (in body, array)
+* Environment Category (in body)
+* Environment Tag (in body)
+* Environment Name (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+#### Response
+The API response when the analysis is complete will provide a CSV file with the following fields:
+* Impact Category
+* Environment Satellite Impact
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactSummarySatellitesByImpact/{{runId}}**
+
+
+## Environment Impact Summary Industry Environmental Summary (Get)
+This endpoint will provide industry environmental impact summary data from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Environment Data Year (in body)
+* Environment Satellites (in body, array)
+* Environment Category (in body)
+* Environment Tag (in body)
+* Environment Name (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+#### Response
+The API response when the analysis is complete will provide a CSV file with the following fields:
+* Industry
+* Environment Satellite Impact
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactSummaryIndustryEnvironmentalSummary/{{runId}}**
+
+
+## Environment Impact Summary Industry Environmental Summary (Get)
+This endpoint will provide industry environmental impact summary data from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Environment Data Year (in body)
+* Environment Satellites (in body, array)
+* Environment Category (in body)
+* Environment Tag (in body)
+* Environment Name (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+#### Response
+The API response when the analysis is complete will provide a CSV file with the following fields:
+* Industry
+* Environment Satellite Impact
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactSummaryIndustryEnvironmentalSummary/{{runId}}**
+
+
+## Environment Impact Region Satellite Summary (Get)
+This endpoint will provide environment impact by environment satellite summary data from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Environment Data Year (in body)
+* Environment Satellite (in body)
+* Environment Category (in body)
+* Environment Tag (in body)
+* Environment Name (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+#### Response
+The API response when the analysis is complete will provide a CSV file with the following fields:
+* Environment Name
+* Environment Tag
+* Impact Types (filtered if filtered in request body)
+* Total Unit Value
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactRegionSatelliteSummary/{{runId}}**
+
+
+## Environment Impact Industry Satellite Summary (Get)
+This endpoint will provide environment industry impact by environment satellite summary data from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Environment Data Year (in body)
+* Environment Satellite (in body)
+* Environment Category (in body)
+* Environment Tag (in body)
+* Environment Name (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+#### Response
+The API response when the analysis is complete will provide a CSV file with the following fields:
+* Industry
+* Environment Unit
+* Unit Value
+* Output
+* Value per $ of Output
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactIndustrySatelliteSummary/{{runId}}**
+
+
+## Environment Impact Satellite Detail (Get)
+This endpoint will provide environment impact by environment satellite detail data from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Environment Data Year (in body)
+* Environment Satellite (in body)
+* Environment Category (in body)
+* Environment Tag (in body)
+* Environment Name (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+#### Response
+The API response when the analysis is complete will provide a CSV file with the following fields:
+* Industry
+* Environment Name
+* Environment Tag
+* Environment Unit
+* Unit Value
+* Output
+* Value per $ of Output
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactSatelliteDetail/{{runId}}**
+
+
 # Appendix
 
 
