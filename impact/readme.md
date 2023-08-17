@@ -380,6 +380,26 @@ Will return Industries
 **GET https://{{api_domain}}/api/v1/IndustryCodes**
 
 
+## Aggregation Schemes Endpoint (Get)
+This endpoint will return a list of aggregation schemes available for use.
+
+#### Parameters
+* Bearer Token
+* IndustrySetId (optional filter)
+
+
+#### Response (List)
+* Id (Aggregation Scheme Id)
+* Description
+* Industry Set Id 
+* Household Set Ids []
+* Map Code
+* Status
+
+#### Endpoint
+
+**GET https://{{api_domain}}/api/v1/aggregationschemes?industrySetId={{industrySetId}}**
+
 # Regions
 
 
@@ -404,7 +424,7 @@ This endpoint will return the top most region for an aggregation scheme and  dat
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/region/{aggregationSchemeId}/{dataSetId}**
+**GET https://{{api_domain}}/api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -425,7 +445,7 @@ This endpoint will return all children regions for the top most region returned 
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/region/{aggregationSchemeId}/{dataSetId}/children**
+**GET https://{{api_domain}}/api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/children**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -446,7 +466,7 @@ This endpoint will return all combined and custom regions that a user created by
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/region/{aggregationSchemeId}/{dataSetId}/user**
+**GET https://{{api_domain}}/api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/user**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -468,7 +488,7 @@ This endpoint allows a user to pull high level region information by a specific 
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/region/{aggregationSchemeId}/{dataSetId}/{urid}**
+**GET https://{{api_domain}}/api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/{{urid}}**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -490,7 +510,7 @@ This endpoint allows a user to pull high level region information for all childr
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/region/{aggregationSchemeId}/{dataSetId}/{urid}/children**
+**GET https://{{api_domain}}/api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/{{urid}}/children**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -573,7 +593,7 @@ This endpoint will allow a user to batch build single regions by urid and aggreg
 
 #### Endpoint
 
-**POST https://{{api_domain}}/api/v1/region/build/batch/{aggregationSchemeId}**
+**POST https://{{api_domain}}/api/v1/region/build/batch/{{aggregationSchemeId}}**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -592,7 +612,7 @@ This endpoint will allow a user to build multiple combined regions  by providing
 * Description (in body)
 * URID (in body)
 * Optional - Type of Request Body (CSV/JSON)
-    1. If you would prefer to upload your URID’s in a CSV format, you may do so by specifying CSV for the {type} parameter
+    1. If you would prefer to upload your URID’s in a CSV format, you may do so by specifying CSV for the {{type}} parameter
 
 
 #### Response (List)
@@ -622,7 +642,7 @@ This endpoint will allow a user to build multiple combined regions  by providing
 
 #### Endpoint
 
-**POST https://{{api_domain}}/api/v1/region/build/batch/combined/{aggregationSchemeId}/{type}**
+**POST https://{{api_domain}}/api/v1/region/build/batch/combined/{{aggregationSchemeId}}/{{type}}**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
@@ -669,9 +689,521 @@ This endpoint will allow a user to build a single combined region by providing t
 
 #### Endpoint
 
-**POST https://{{api_domain}}/api/v1/region/build/combined/{aggregationSchemeId}**
+**POST https://{{api_domain}}/api/v1/region/build/combined/{{aggregationSchemeId}}**
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
+
+
+## Regional Data Exports
+
+These endpoints export region specific data for a built model. Data is exported in either CSV or Zip format depending on the endpoint.
+
+### Region Overview Industries (Get)
+
+This endpoint provides regional industry overview data equivalent to the Industries table found in Regions > Regions Overview in the IMPLAN application.
+
+
+#### Parameters
+
+
+
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+
+#### Response
+
+The API response will provide a CSV response with following fields for all industries:
+
+* Display Code
+* Display Description
+* Employment
+* Labor Income
+* Output
+* Average Employee Compensation per Wage and Salary Employee
+* Average Proprietor Income per Proprietor
+
+#### Endpoint
+
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionOverviewIndustries?hashId={{hashId}}**
+
+
+### Study Area Data General Information (Get)
+
+This endpoint provides regional General Information such as population, land area, and industry count. This data is equivalent to that found on tables in Regions > Regions Overview and Study Area Data > Area Demographics. 
+
+
+#### Parameters
+
+
+
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+
+#### Response
+
+The API response will provide a CSV response with following fields:
+
+* Region Name
+* Fips
+* Population
+* Land Area
+* Dataset year
+* Industry Aggregation Description
+* Commodity Aggregation Description
+* Industry Count
+* Total Personal Income
+* Total Household Count by Household Group
+
+#### Endpoint
+
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataGeneralInformation?hashId={{hashId}}**
+
+
+### Study Area Industry Detail (Get)
+
+This endpoint provides regional industry detail data equivalent to the Region Industries Detail table found in Regions > Study Area Data > Industry Detail in the IMPLAN application.
+
+
+#### Parameters
+
+
+
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+
+#### Response
+
+The API response will provide a CSV response with following fields for all industries:
+
+* Industry Code
+* Description
+* Total Output
+* Wage and Salary Employment
+* Employee Compensation
+* Proprietor Employment
+* Proprietor Income
+* Other Property Income
+* Taxes on Production and Imports Net of Subsidies
+
+#### Endpoint
+
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail?hashId={{hashId}}**
+
+
+### Study Area Industry Summary (Get)
+
+This endpoint provides regional industry summary data equivalent to the Region Industries Summary table found in Regions > Study Area Data > Industry Summary in the IMPLAN application.
+
+
+#### Parameters
+
+
+
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+
+#### Response
+
+The API response will provide a CSV response with following fields for all industries:
+
+* Industry Code
+* Description
+* Total Employment
+* Total Output
+* Total Intermediate Inputs
+* Total Value Added
+* Labor Income
+
+#### Endpoint
+
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustrySummary?hashId={{hashId}}**
+
+
+### Region Multipliers Detailed (Get)
+
+This endpoint provides detailed multipliers by a given type and industry as found in the Regions > Multipliers > Detailed Multipliers tables in the IMPLAN application.
+
+
+#### Parameters
+
+
+
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
+* IndustryCode
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+
+#### Response
+
+The API response will provide a CSV response with following fields:
+
+* Display Code
+* Display Description
+* Industry Code
+* Indirect Multiplier Sum
+* Type I Multiplier
+* Induced Multiplier
+* Type SAM Multiplier
+
+
+#### Endpoint
+
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionMultipliersDetailed?hashId={{hashId}}&effectType={{effectType}}&industryCode={{industryCode}}**
+
+
+### Region Multipliers Per Million Effects (Get)
+
+This endpoint provides per million of output effects by a given type and industry as found in the Regions > Multipliers > Per Million Effects tables in the IMPLAN application.
+
+
+#### Parameters
+
+
+
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+
+#### Response
+
+The API response will provide a CSV response with following fields:
+
+* Display Code
+* Display Description
+* Industry Code
+* Direct Effects
+* Indirect Effects
+* Induced Effects
+* Type I Effects
+* Type SAM Effects
+
+
+#### Endpoint
+
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionMultipliersPerMillionEffects?hashId={{hashId}}&effectType={{effectType}}**
+
+
+
+### Region Household Local Commodity Demand (Get)
+This endpoint provides per household local commodity demand as found in the Regions > Study Area Data > Household Commodity Demand table in the IMPLAN application.
+
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+#### Response
+The API response will provide a CSV response with following fields (per commodity):
+* Commodity Code
+* Description
+* Household cateogry (one column per household category)
+
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionHouseholdLocalCommodityDemand?hashId={{hashId}}**
+
+
+### Region Household Commodity Demand (Get)
+This endpoint provides per household total commodity demand as found in the Regions > Study Area Data > Household Commodity Demand table in the IMPLAN application.
+
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+#### Response
+The API response will provide a CSV response with following fields (per commodity):
+* Commodity Code
+* Description
+* Household cateogry (one column per household category)
+
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionHouseholdCommodityDemand?hashId={{hashId}}**
+
+
+### Region General Algebraic Modeling System Files (Get)
+This endpoint provides a zip file containing .dat files for use in GAMS systems.
+
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+#### Response
+The API response will provide a zip file containing multiple .dat files.
+
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionGeneralAlgebraicModeling?hashId={{hashId}}**
+
+
+### Region Industry Occupation Detail (Get)
+This endpoint provides industry occupation detail as found in the Regions > Occupation Data > Industry Occupation Detail table in the IMPLAN application.
+
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+* Occupation Data Year (in body)
+* Occupation Aggregation Level (in body)
+* Industry Code (in body)
+* Occupation Code Filter (in body; array)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+#### Response
+The API response will provide a CSV response with following fields (per occupation):
+* OCC Code
+* Occupation
+* Wage and Salary Employment
+* Wage and Salary Income
+* Supplements to Wages and Salaries
+* Employee Compensation
+* Hours Worked
+
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionIndustryOccupationDetail?hashId={{hashId}}**
+
+
+### Region Industry Occupation Averages (Get)
+This endpoint provides industry occupation averages as found in the Regions > Occupation Data > Industry Occupation Averages table in the IMPLAN application.
+
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+* Occupation Data Year (in body)
+* Occupation Aggregation Level (in body)
+* Industry Code (in body)
+* Occupation Code Filter (in body; array)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+#### Response
+The API response will provide a CSV response with following fields (per occupation):
+* OCC Code
+* Occupation
+* Average Wage and Salary Income
+* Average Supplements to Wages and Salaries
+* Average Employee Compensation
+* Average Hours per Year
+* Average Wage and Salary Income per Hour
+* Average Supplements to Wages and Salaries per Hour
+* Average Employee Compensation per Hour
+
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionIndustryOccupationAverages?hashId={{hashId}}**
+
+
+### Region Core Competencies Region Summary (Get)
+This endpoint provides a zip file containing CSV files for each table as found in Regions > Occupation Data > Core Competencies > Region Summary in the IMPLAN application.
+
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+* Occupation Data Year (in body)
+* Occupation Aggregation Level (in body)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+#### Response
+The API response will provide a zip file with a collection of CSV files representing the region core competencies summary tables.
+
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionCoreCompetenciesRegionSummary?hashId={{hashId}}**
+
+
+### Region Core Competencies Industry Summary (Get)
+This endpoint provides a zip file containing CSV files for each table as found in Regions > Occupation Data > Core Competencies > Industry Summary in the IMPLAN application.
+
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+* Occupation Data Year (in body)
+* Occupation Aggregation Level (in body)
+* Industry Code (in body)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+#### Response
+The API response will provide a zip file with a collection of CSV files representing the region core competencies industry summary tables.
+
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionCoreCompetenciesIndustrySummary?hashId={{hashId}}**
+
+
+### Region Core Competencies Occupation Summary (Get)
+This endpoint provides a zip file containing CSV files for each table as found in Regions > Occupation Data > Core Competencies > Occupation Summary in the IMPLAN application.
+
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+* Occupation Data Year (in body)
+* Occupation Aggregation Level (in body)
+* Occupation Code (in body)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+#### Response
+The API response will provide a zip file with a collection of CSV files representing the region core competencies occupation summary tables.
+
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionCoreCompetenciesOccupationSummary?hashId={{hashId}}**
+
+
+### Environment Region Summary (Get)
+This endpoint provides a CSV file containing evironmental summary data as found in Regions > Evironmental > Region Environmental Summary table in the IMPLAN application.
+
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+* Industry Codes (in body; array)
+* Environment Categories (in body; array)
+* Environment Tags (in body; array)
+* Environment Data Year (in body)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+#### Response
+The API response will provide a CSV response with the following fields (per industry).
+* Industry
+* Environmental Satellite
+
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/EnvironmentRegionSummary?hashId={{hashId}}**
+
+
+### Environment Region Satellite Summary (Get)
+This endpoint provides a CSV file containing evironmental satellite summary data as found in a specified Regions > Evironmental > {{Environmental Satellite}} Region Summary table in the IMPLAN application.
+
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+* EnvironmentSatellite (in body)
+* Industry Codes (in body; array)
+* Environment Categories (in body; array)
+* Environment Tags (in body; array)
+* Environment Data Year (in body)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+#### Response
+The API response will provide a CSV response with the following fields (per Environment).
+* Environment Name
+* Environment Tag
+* Environment Unit
+* Unit Value
+
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/EnvironmentRegionSatelliteSummary?hashId={{hashId}}**
+
+
+### Environment Industry Satellite Summary (Get)
+This endpoint provides a CSV file containing evironmental industry satellite summary data as found in a specified Regions > Evironmental > {{Environmental Satellite}} Industry Summary table in the IMPLAN application.
+
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+* EnvironmentSatellite (in body)
+* Industry Codes (in body; array)
+* Environment Categories (in body; array)
+* Environment Tags (in body; array)
+* Environment Data Year (in body)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+#### Response
+The API response will provide a CSV response with the following fields (per industry).
+* Industry
+* Environment Unit
+* Unit Value
+* Output
+* Value per $ of Output
+
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/EnvironmentIndustrySatelliteSummary?hashId={{hashId}}**
+
+
+### Environment Satellite Detail (Get)
+This endpoint provides a CSV file containing evironmental industry satellite summary data as found in a specified Regions > Evironmental > {{Environmental Satellite}} Details table in the IMPLAN application.
+
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional* )
+* EnvironmentSatellite (in body)
+* Industry Codes (in body; array)
+* Environment Categories (in body; array)
+* Environment Tags (in body; array)
+* Environment Data Year (in body)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+
+#### Response
+The API response will provide a CSV response with the following fields (per industry).
+* Industry
+* Environment Name
+* Environment Tag
+* Environment Unit
+* Unit Value
+* Output
+* Value per $ of Output
+
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/EnvironmentSatelliteDetail?hashId={{hashId}}**
+
 
 
 # Impacts
@@ -739,6 +1271,113 @@ Inside the project, you will define the Events, which are the changes to an econ
 **GET https://{{api_domain}}/api/v1/impact/project/{{project id}}**
 
 
+### Get Projects (Get)
+Returns a list of all projects owned by user
+
+#### Parameters
+none
+
+
+#### Response
+
+Array of the following:
+
+* Id - This will be used on all subsequent Project, Event, and Group API Requests
+* Title
+* aggregationSchemeId
+* householdSetId
+* isMrio
+* folderId
+* LastImpactRunId
+
+
+#### Endpoint
+
+**GET https://{{api_domain}}/api/v1/impact/project**
+
+
+### Get Projects Shared With User (Get)
+Returns a list of all projects shared with the user
+
+#### Parameters
+none
+
+
+#### Response
+
+Array of the following:
+
+* Id - This will be used on all subsequent Project, Event, and Group API Requests
+* Title
+* aggregationSchemeId
+* householdSetId
+* isMrio
+* folderId
+* LastImpactRunId
+
+
+#### Endpoint
+
+**GET https://{{api_domain}}/api/v1/impact/project/Shared**
+
+
+### Share Project with Users (Put)
+Shares project with other users
+
+#### Parameters
+* array of email addresses (in body)
+```
+["EmailAddressOfUserToShareProjectWith", "EmailAddressOfUserToShareProjectWith", ...]
+```
+
+#### Response
+* status code
+
+
+#### Endpoint
+
+**Put https://{{api_domain}}/api/v1/impact/project/{{projectId}}/share**
+
+
+### Transfer Project to User (Patch)
+Transfers project ownership to another user
+
+#### Parameters
+* email address (in body)
+```
+{
+    "Email": "EmailAddressOfUserToTransferProjectTo"
+}
+```
+
+#### Response
+* status code
+
+
+#### Endpoint
+
+**Patch https://{{api_domain}}/api/v1/impact/project/{{projectId}}/transfer**
+
+
+### Share Folder with Users (Put)
+Shares folder with other users
+
+#### Parameters
+* array of email addresses (in body)
+```
+["EmailAddressOfUserToShareFolderWith", "EmailAddressOfUserToShareFolderWith", ...]
+```
+
+#### Response
+* status code
+
+
+#### Endpoint
+
+**Put https://{{api_domain}}/api/v1/impact/folder/{{folderId}}/share**
+
+
+
 ### Update Project (Put)
 
 If you wish to edit the values of an existing project, you may do so with this endpoint.  We do not currently allow for aggregationSchemeId or householdSetId to be changed on a project, because any existing events or groups are specific to those values, and would be incompatible with other aggregationSchemeId’s or householdSetId’s.  
@@ -790,6 +1429,7 @@ If you wish to edit the values of an existing project, you may do so with this e
 * Employment (Optional, unless event type is IndustryEmployment)
 * EmployeeCompensation (Optional, unless event type is IndustryEmployeeCompensation)
 * ProprietorIncome (Optional, unless event type is IndustryProprietorIncome)
+* Tags (Optional)
 
 
 #### Parameters for a Marginable Event
@@ -874,6 +1514,7 @@ These should only be used if you are adding an event that is marginable, such as
 * Employment (Optional, unless event type is IndustryEmployment)
 * EmployeeCompensation (Optional, unless event type is IndustryEmployeeCompensation)
 * ProprietorIncome (Optional, unless event type is IndustryProprietorIncome)
+* Tags (Optional)
 
 
 #### Parameters for a Marginable Event
@@ -1080,7 +1721,7 @@ The API response when the impact analysis is complete will provide Direct, Indir
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/impact/results/{runId}**
+**GET https://{{api_domain}}/api/v1/impact/results/{{runId}}**
 
 Call after Status API request returns “Complete”
 
@@ -1328,7 +1969,7 @@ The API response when the analysis is complete will provide a CSV response with 
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/impact/results/ExportDetailEconomicIndicators/{runId}**
+**GET https://{{api_domain}}/api/v1/impact/results/ExportDetailEconomicIndicators/{{runId}}**
 
 
 ## Detail Taxes Export (Get)
@@ -1364,7 +2005,7 @@ The API response when the analysis is complete will provide a CSV response with 
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/impact/results/DetailedTaxes/{runId}**
+**GET https://{{api_domain}}/api/v1/impact/results/DetailedTaxes/{{runId}}**
 
 
 ## Summary Economic Indicators Export  (Get)
@@ -1398,7 +2039,7 @@ The API response when the analysis is complete will provide a CSV response with 
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/impact/results/SummaryEconomicIndicators/{runId}**
+**GET https://{{api_domain}}/api/v1/impact/results/SummaryEconomicIndicators/{{runId}}**
 
 
 ## Summary Taxes Export (Get)
@@ -1434,223 +2075,268 @@ The API response when the analysis is complete will provide a CSV response with 
 
 #### Endpoint
 
-**GET https://{{api_domain}}/api/v1/impact/results/SummaryTaxes/{runId}**
+**GET https://{{api_domain}}/api/v1/impact/results/SummaryTaxes/{{runId}}**
 
 
-# Regional Data Exports
-## Region Overview Industries (Get)
-
-This endpoint provides regional industry overview data equivalent to the Industries table found in Regions > Regions Overview in the IMPLAN application.
-
+## Impact Occupation (Get)
+This endpoint will provide occupation results from an impact analysis.
 
 #### Parameters
-
-
-
 * Bearer Token
-* AggregationSchemeId (In URL)
-* HashId (Optional*)
-* URID (Optional* )
-
-*NOTE: HashId or URID must be supplied, but both are not required.
+* Analysis Run Id 
+* Occupation Aggregation Level (in body)
+* Occupation Data Year (in body)
+* Dollar Year (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
 
 
 #### Response
-
-The API response will provide a CSV response with following fields for all industries:
-
-* Display Code
-* Display Description
-* Employment
-* Labor Income
-* Output
-* Average Employee Compensation per Wage and Salary Employee
-* Average Proprietor Income per Proprietor
-
-#### Endpoint
-
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/RegionOverviewIndustries?hashId={hashId}**
-
-
-## Study Area Data General Information (Get)
-
-This endpoint provides regional General Information such as population, land area, and industry count. This data is equivalent to that found on tables in Regions > Regions Overview and Study Area Data > Area Demographics. 
-
-
-#### Parameters
-
-
-
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId (Optional*)
-* URID (Optional* )
-
-*NOTE: HashId or URID must be supplied, but both are not required.
-
-
-#### Response
-
-The API response will provide a CSV response with following fields:
-
-* Region Name
-* Fips
-* Population
-* Land Area
-* Dataset year
-* Industry Aggregation Description
-* Commodity Aggregation Description
-* Industry Count
-* Total Personal Income
-* Total Household Count by Household Group
-
-#### Endpoint
-
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/StudyAreaDataGeneralInformation?hashId={hashId}**
-
-
-## Study Area Industry Detail (Get)
-
-This endpoint provides regional industry detail data equivalent to the Region Industries Detail table found in Regions > Study Area Data > Industry Detail in the IMPLAN application.
-
-
-#### Parameters
-
-
-
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId (Optional*)
-* URID (Optional* )
-
-*NOTE: HashId or URID must be supplied, but both are not required.
-
-
-#### Response
-
-The API response will provide a CSV response with following fields for all industries:
-
-* Industry Code
-* Description
-* Total Output
+The API response when the analysis is complete will provide a CSV response with following fields:
+* Occupation Code
+* Occupation
 * Wage and Salary Employment
+* Wage and Salary Income
+* Supplements to Wages and Salaries
 * Employee Compensation
-* Proprietor Employment
-* Proprietor Income
-* Other Property Income
-* Taxes on Production and Imports Net of Subsidies
+* Hours Worked
 
 #### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/ImpactOccupation/{{runId}}**
 
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/StudyAreaDataIndustryDetail?hashId={hashId}**
 
-
-## Study Area Industry Summary (Get)
-
-This endpoint provides regional industry summary data equivalent to the Region Industries Summary table found in Regions > Study Area Data > Industry Summary in the IMPLAN application.
-
+## Impact Occupation Averages (Get)
+This endpoint will provide occupation results averages from an impact analysis.
 
 #### Parameters
-
-
-
 * Bearer Token
-* AggregationSchemeId (In URL)
-* HashId (Optional*)
-* URID (Optional* )
-
-*NOTE: HashId or URID must be supplied, but both are not required.
+* Analysis Run Id 
+* Occupation Aggregation Level (in body)
+* Occupation Data Year (in body)
+* Dollar Year (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
 
 
 #### Response
-
-The API response will provide a CSV response with following fields for all industries:
-
-* Industry Code
-* Description
-* Total Employment
-* Total Output
-* Total Intermediate Inputs
-* Total Value Added
-* Labor Income
+The API response when the analysis is complete will provide a CSV response with following fields:
+* Occupation Code
+* Occupation
+* Average Wage and Salary Income
+* Average Supplements to Wages and Salaries
+* Average Employee Compensation
+* Average Hours per Year
+* Average Wage and Salary Income per Hour
+* Average Supplements to Wages and Salaries per Hour
+* Average Employee Compensation per Hour
 
 #### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/ImpactOccupationAverages/{{runId}}**
 
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/StudyAreaDataIndustrySummary?hashId={hashId}**
 
-
-## Region Multipliers Detailed (Get)
-
-This endpoint provides detailed multipliers by a given type and industry as found in the Regions > Multipliers > Detailed Multipliers tables in the IMPLAN application.
-
+## Impact Occupation Core Competencies (Get)
+This endpoint will provide occupation core compentencies results from an impact analysis.
 
 #### Parameters
-
-
-
 * Bearer Token
-* AggregationSchemeId (In URL)
-* HashId (Optional*)
-* URID (Optional* )
-* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
-* IndustryCode
-
-*NOTE: HashId or URID must be supplied, but both are not required.
-
+* Analysis Run Id 
+* Occupation Aggregation Level (in body)
+* Occupation Data Year (in body)
+* Industry Code (in body)
+* Occupation Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
 
 #### Response
-
-The API response will provide a CSV response with following fields:
-
-* Display Code
-* Display Description
-* Industry Code
-* Indirect Multiplier Sum
-* Type I Multiplier
-* Induced Multiplier
-* Type SAM Multiplier
-
+The API response when the analysis is complete will provide a zip file with a collection of CSV files with different core competency results data.
 
 #### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/ImpactOccupationCoreCompetencies/{{runId}}**
 
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/RegionMultipliersDetailed?hashId={hashId}&effectType=LaborIncome&industryCode=15**
 
 
-## Region Multipliers Per Million Effects (Get)
-
-This endpoint provides per million of output effects by a given type and industry as found in the Regions > Multipliers > Per Million Effects tables in the IMPLAN application.
-
+## Environment Impact Summary Satellites By Impact (Get)
+This endpoint will provide environmental impact by impact summary data from an impact analysis.
 
 #### Parameters
-
-
-
 * Bearer Token
-* AggregationSchemeId (In URL)
-* HashId (Optional*)
-* URID (Optional* )
-* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
-
-*NOTE: HashId or URID must be supplied, but both are not required.
-
+* Analysis Run Id 
+* Environment Data Year (in body)
+* Environment Satellites (in body, array)
+* Environment Category (in body)
+* Environment Tag (in body)
+* Environment Name (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
 
 #### Response
-
-The API response will provide a CSV response with following fields:
-
-* Display Code
-* Display Description
-* Industry Code
-* Direct Effects
-* Indirect Effects
-* Induced Effects
-* Type I Effects
-* Type SAM Effects
-
+The API response when the analysis is complete will provide a CSV file with the following fields:
+* Impact Category
+* Environment Satellite Impact
 
 #### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactSummarySatellitesByImpact/{{runId}}**
 
-**GET https://{{Domain}}/v1/regions/export/{AggregationSchemeId}/RegionMultipliersPerMillionEffects?hashId={hashId}&effectType=LaborIncome**
+
+## Environment Impact Summary Industry Environmental Summary (Get)
+This endpoint will provide industry environmental impact summary data from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Environment Data Year (in body)
+* Environment Satellites (in body, array)
+* Environment Category (in body)
+* Environment Tag (in body)
+* Environment Name (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+#### Response
+The API response when the analysis is complete will provide a CSV file with the following fields:
+* Industry
+* Environment Satellite Impact
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactSummaryIndustryEnvironmentalSummary/{{runId}}**
+
+
+## Environment Impact Summary Industry Environmental Summary (Get)
+This endpoint will provide industry environmental impact summary data from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Environment Data Year (in body)
+* Environment Satellites (in body, array)
+* Environment Category (in body)
+* Environment Tag (in body)
+* Environment Name (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+#### Response
+The API response when the analysis is complete will provide a CSV file with the following fields:
+* Industry
+* Environment Satellite Impact
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactSummaryIndustryEnvironmentalSummary/{{runId}}**
+
+
+## Environment Impact Region Satellite Summary (Get)
+This endpoint will provide environment impact by environment satellite summary data from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Environment Data Year (in body)
+* Environment Satellite (in body)
+* Environment Category (in body)
+* Environment Tag (in body)
+* Environment Name (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+#### Response
+The API response when the analysis is complete will provide a CSV file with the following fields:
+* Environment Name
+* Environment Tag
+* Impact Types (filtered if filtered in request body)
+* Total Unit Value
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactRegionSatelliteSummary/{{runId}}**
+
+
+## Environment Impact Industry Satellite Summary (Get)
+This endpoint will provide environment industry impact by environment satellite summary data from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Environment Data Year (in body)
+* Environment Satellite (in body)
+* Environment Category (in body)
+* Environment Tag (in body)
+* Environment Name (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+#### Response
+The API response when the analysis is complete will provide a CSV file with the following fields:
+* Industry
+* Environment Unit
+* Unit Value
+* Output
+* Value per $ of Output
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactIndustrySatelliteSummary/{{runId}}**
+
+
+## Environment Impact Satellite Detail (Get)
+This endpoint will provide environment impact by environment satellite detail data from an impact analysis.
+
+#### Parameters
+* Bearer Token
+* Analysis Run Id 
+* Environment Data Year (in body)
+* Environment Satellite (in body)
+* Environment Category (in body)
+* Environment Tag (in body)
+* Environment Name (in body)
+* Industry Code (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+
+#### Response
+The API response when the analysis is complete will provide a CSV file with the following fields:
+* Industry
+* Environment Name
+* Environment Tag
+* Environment Unit
+* Unit Value
+* Output
+* Value per $ of Output
+
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactSatelliteDetail/{{runId}}**
+
 
 # Appendix
 
