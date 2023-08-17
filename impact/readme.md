@@ -1429,6 +1429,7 @@ If you wish to edit the values of an existing project, you may do so with this e
 * Employment (Optional, unless event type is IndustryEmployment)
 * EmployeeCompensation (Optional, unless event type is IndustryEmployeeCompensation)
 * ProprietorIncome (Optional, unless event type is IndustryProprietorIncome)
+* Tags (Optional)
 
 
 #### Parameters for a Marginable Event
@@ -1513,6 +1514,7 @@ These should only be used if you are adding an event that is marginable, such as
 * Employment (Optional, unless event type is IndustryEmployment)
 * EmployeeCompensation (Optional, unless event type is IndustryEmployeeCompensation)
 * ProprietorIncome (Optional, unless event type is IndustryProprietorIncome)
+* Tags (Optional)
 
 
 #### Parameters for a Marginable Event
