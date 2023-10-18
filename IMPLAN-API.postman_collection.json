@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "febac191-f1e2-483f-a872-a78efe7dc956",
+		"_postman_id": "98c05a4d-1993-4201-acc4-3015a7da0f3a",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "13893525"
+		"_exporter_id": "12725670"
 	},
 	"item": [
 		{
@@ -244,6 +244,13 @@
 										"8",
 										"87",
 										"children"
+									],
+									"query": [
+										{
+											"key": "regionTypeFilter",
+											"value": "MSA",
+											"disabled": true
+										}
 									]
 								}
 							},
@@ -267,6 +274,13 @@
 										"87",
 										"2177236",
 										"children"
+									],
+									"query": [
+										{
+											"key": "regionTypeFilter",
+											"value": "County",
+											"disabled": true
+										}
 									]
 								}
 							},
@@ -290,6 +304,13 @@
 										"87",
 										"pGVrEZ87be",
 										"children"
+									],
+									"query": [
+										{
+											"key": "regionTypeFilter",
+											"value": "County",
+											"disabled": true
+										}
 									]
 								}
 							},
@@ -382,12 +403,200 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Get Region Types",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/region/RegionTypes",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"region",
+										"RegionTypes"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
 				{
 					"name": "Build Regions",
 					"item": [
+						{
+							"name": "Customization",
+							"item": [
+								{
+									"name": "Get Industry Economic Data",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://{{Domain}}/v1/region/EconomicIndustryData/:aggregationSchemeId?urid=2177236",
+											"protocol": "https",
+											"host": [
+												"{{Domain}}"
+											],
+											"path": [
+												"v1",
+												"region",
+												"EconomicIndustryData",
+												":aggregationSchemeId"
+											],
+											"query": [
+												{
+													"key": "urid",
+													"value": "2177236"
+												},
+												{
+													"key": "userModelId",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "hashId",
+													"value": "",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "aggregationSchemeId",
+													"value": "8"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Average Rpc Economic Data",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://{{Domain}}/v1/region/EconomicCommodityRPCData/:aggregationSchemeId?urid=2177236",
+											"protocol": "https",
+											"host": [
+												"{{Domain}}"
+											],
+											"path": [
+												"v1",
+												"region",
+												"EconomicCommodityRPCData",
+												":aggregationSchemeId"
+											],
+											"query": [
+												{
+													"key": "urid",
+													"value": "2177236"
+												},
+												{
+													"key": "userModelId",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "hashId",
+													"value": "",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "aggregationSchemeId",
+													"value": "8"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Modify Industry Economic Data",
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {}
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{    \r\n    \"modelName\": \"Customized Model Name\",\r\n    \"urid\": 2177236,\r\n    \"userModelId\": null,\r\n    \"HashId\": null,\r\n    \"customizedIndustryData\": [\r\n        {\r\n            \"output\": 880065020.8526169,\r\n            \"employeeCompensation\": 1290736.0910256733,\r\n            \"proprietorIncome\": 242123266.86085218,\r\n            \"otherPropertyTypeIncome\": 190558603.13303137,\r\n            \"taxOnProductionAndImports\": 1927449.7258658477,\r\n            \"employment\": 900,\r\n            \"industryId\": 4638\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://{{Domain}}/v1/region/build/CustomizeIndustry/:aggregationSchemeId",
+											"protocol": "https",
+											"host": [
+												"{{Domain}}"
+											],
+											"path": [
+												"v1",
+												"region",
+												"build",
+												"CustomizeIndustry",
+												":aggregationSchemeId"
+											],
+											"variable": [
+												{
+													"key": "aggregationSchemeId",
+													"value": "8"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Modify Economic Commodity RPC Data",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n\t\"modelName\": \"Customized RPC Model Name\",\r\n    \"urid\": 2177236,\r\n    \"userModelId\": null,\r\n    \"HashId\": null,\r\n    \"customizedAverageCommodityRpcData\": [\r\n        {\r\n            \"commodityId\": 1692,\r\n            \"totalCommoditySupply\": 900295642.7288595,\r\n            \"totalGrossCommodityDemand\": 1211386790.0792594,\r\n            \"localUseOfLocalSupply\": 558183298.491892,\r\n            \"localUseRatio\": 0.620000000000000,\r\n            \"averageRpc\": 0.460780407268080,\r\n            \"foreignExport\": 321401686.28834397,\r\n            \"foreignImport\": 37396301.58874131\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://{{Domain}}/v1/region/build/CustomizeAverageRPC/:aggregationSchemeId",
+											"protocol": "https",
+											"host": [
+												"{{Domain}}"
+											],
+											"path": [
+												"v1",
+												"region",
+												"build",
+												"CustomizeAverageRPC",
+												":aggregationSchemeId"
+											],
+											"variable": [
+												{
+													"key": "aggregationSchemeId",
+													"value": "8"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
 						{
 							"name": "Build Combined Region",
 							"request": {
@@ -1114,17 +1323,6 @@
 						},
 						{
 							"name": "Environment Region Summary",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1133,7 +1331,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"industryCodes\": [11, 162, 227, 353, 360, 381],\r\n  \"environmentCategories\": [\"water\", \"air\"],\r\n  \"environmentTags\": [\"acifluorfen, sodium salt\", \"ch4\"],\r\n  \"environmentDataYear\": 2013\r\n}",
+									"raw": "{\r\n  \"environmentalReleaseYear\": 2023,\r\n  \"industryCodes\": []  \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1141,7 +1339,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/EnvironmentRegionSummary?hashId=alDQwzY93a",
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/EnvironmentSummary?urid=2177236",
 									"protocol": "https",
 									"host": [
 										"{{Domain}}"
@@ -1151,12 +1349,22 @@
 										"regions",
 										"export",
 										":aggregationSchemeId",
-										"EnvironmentRegionSummary"
+										"EnvironmentSummary"
 									],
 									"query": [
 										{
+											"key": "urid",
+											"value": "2177236"
+										},
+										{
 											"key": "hashId",
-											"value": "alDQwzY93a"
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
 										}
 									],
 									"variable": [
@@ -1170,18 +1378,7 @@
 							"response": []
 						},
 						{
-							"name": "Environment Region Satellite Summary",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
+							"name": "Environment Detail",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1190,7 +1387,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"EnvironmentSatellite\": \"Greenhouse Gases\",\r\n  \"industryCodes\": [11, 162, 227, 353, 360, 381],\r\n  \"environmentCategories\": [\"water\", \"air\"],\r\n  \"environmentTags\": [\"acifluorfen, sodium salt\", \"ch4\"],\r\n  \"environmentDataYear\": 2013\r\n}",
+									"raw": "{\r\n  \"environmentalReleaseYear\": 2023,\r\n  \"industryCodes\": [],\r\n  \"environmentCategory\": \"Greenhouse Gases\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1198,7 +1395,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/EnvironmentRegionSatelliteSummary?hashId=alDQwzY93a",
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/EnvironmentDetail?urid=2177236",
 									"protocol": "https",
 									"host": [
 										"{{Domain}}"
@@ -1208,126 +1405,22 @@
 										"regions",
 										"export",
 										":aggregationSchemeId",
-										"EnvironmentRegionSatelliteSummary"
+										"EnvironmentDetail"
 									],
 									"query": [
 										{
-											"key": "hashId",
-											"value": "alDQwzY93a"
-										}
-									],
-									"variable": [
-										{
-											"key": "aggregationSchemeId",
-											"value": "8"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Environment Industry Satellite Summary",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"EnvironmentSatellite\": \"Greenhouse Gases\",\r\n  \"industryCodes\": [11, 162, 227, 353, 360, 381],\r\n  \"environmentCategories\": [\"water\", \"air\"],\r\n  \"environmentTags\": [\"acifluorfen, sodium salt\", \"ch4\"],\r\n  \"environmentDataYear\": 2013\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/EnvironmentIndustrySatelliteSummary?hashId=alDQwzY93a",
-									"protocol": "https",
-									"host": [
-										"{{Domain}}"
-									],
-									"path": [
-										"v1",
-										"regions",
-										"export",
-										":aggregationSchemeId",
-										"EnvironmentIndustrySatelliteSummary"
-									],
-									"query": [
+											"key": "urid",
+											"value": "2177236"
+										},
 										{
 											"key": "hashId",
-											"value": "alDQwzY93a"
-										}
-									],
-									"variable": [
+											"value": null,
+											"disabled": true
+										},
 										{
-											"key": "aggregationSchemeId",
-											"value": "8"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Environment Satellite Detail",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"EnvironmentSatellite\": \"Greenhouse Gases\",\r\n  \"industryCodes\": [11, 162, 227, 353, 360, 381],\r\n  \"environmentCategories\": [\"water\", \"air\"],\r\n  \"environmentTags\": [\"acifluorfen, sodium salt\", \"ch4\"],\r\n  \"environmentDataYear\": 2013\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/EnvironmentSatelliteDetail?hashId=EgxYnvP6av",
-									"protocol": "https",
-									"host": [
-										"{{Domain}}"
-									],
-									"path": [
-										"v1",
-										"regions",
-										"export",
-										":aggregationSchemeId",
-										"EnvironmentSatelliteDetail"
-									],
-									"query": [
-										{
-											"key": "hashId",
-											"value": "EgxYnvP6av"
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
 										}
 									],
 									"variable": [
@@ -1341,6 +1434,25 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Get Region Types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/v1/region/RegionTypes",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"v1",
+								"region",
+								"RegionTypes"
+							]
+						}
+					},
+					"response": []
 				},
 				{
 					"name": "Aggregation Schemes",
@@ -2479,6 +2591,27 @@
 					"response": []
 				},
 				{
+					"name": "Cancel Impact Run",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "https://{{Domain}}/v1/impact/cancel/{{impact_run_id}}",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"cancel",
+								"{{impact_run_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Run Status",
 					"request": {
 						"method": "GET",
@@ -2563,7 +2696,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1//impact/results/ExportDetailEconomicIndicators/{{impact_run_id}}",
+							"raw": "https://{{Domain}}/v1//impact/results/ExportDetailEconomicIndicators/{{impact_run_id}}?year=2023",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2575,6 +2708,37 @@
 								"results",
 								"ExportDetailEconomicIndicators",
 								"{{impact_run_id}}"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2023"
+								},
+								{
+									"key": "regions",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "impacts",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "groups",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "events",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "eventTags",
+									"value": "",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -2586,7 +2750,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/DetailedTaxes/{{impact_run_id}}",
+							"raw": "https://{{Domain}}/v1/impact/results/DetailedTaxes/{{impact_run_id}}?year=2023",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2597,6 +2761,37 @@
 								"results",
 								"DetailedTaxes",
 								"{{impact_run_id}}"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2023"
+								},
+								{
+									"key": "regions",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "impacts",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "groups",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "events",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "eventTags",
+									"value": null,
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -2608,7 +2803,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/SummaryEconomicIndicators/{{impact_run_id}}",
+							"raw": "https://{{Domain}}/v1/impact/results/SummaryEconomicIndicators/{{impact_run_id}}?year=2023",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2619,6 +2814,37 @@
 								"results",
 								"SummaryEconomicIndicators",
 								"{{impact_run_id}}"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2023"
+								},
+								{
+									"key": "regions",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "impacts",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "groups",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "events",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "eventTags",
+									"value": null,
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -2630,7 +2856,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/SummaryTaxes/{{impact_run_id}}",
+							"raw": "https://{{Domain}}/v1/impact/results/SummaryTaxes/{{impact_run_id}}?year=2023",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2641,6 +2867,37 @@
 								"results",
 								"SummaryTaxes",
 								"{{impact_run_id}}"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2023"
+								},
+								{
+									"key": "regions",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "impacts",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "groups",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "events",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "eventTags",
+									"value": null,
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -2782,18 +3039,7 @@
 					"response": []
 				},
 				{
-					"name": "Environment Impact Summary Satellites By Impact",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
+					"name": "Environment Categories By Impact",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2802,7 +3048,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"environmentDataYear\": 2013,\r\n  \"environmentSatellites\": [\"Greenhouse Gases\", \"Land Use\"],\r\n  \"environmentCategory\": \"air\",\r\n  \"environmentTag\": \"co2\",\r\n  \"environmentName\": \"carbon dioxide\",\r\n  \"industryCode\": 417,\r\n  \"regions\": [],\r\n  \"impacts\": [\"Indirect\", \"Induced\"],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
+							"raw": "{\r\n  \"dollarYear\": 2019,\r\n  \"environmentalReleaseYear\": 2023,\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2810,7 +3056,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactSummarySatellitesByImpact/{{impact_run_id}}",
+							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentCategoriesByImpact/{{impact_run_id}}",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2819,7 +3065,7 @@
 								"v1",
 								"impact",
 								"results",
-								"EnvironmentImpactSummarySatellitesByImpact",
+								"EnvironmentCategoriesByImpact",
 								"{{impact_run_id}}"
 							]
 						}
@@ -2827,18 +3073,7 @@
 					"response": []
 				},
 				{
-					"name": "Environment Impact Summary Industry Environmental Summary",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
+					"name": "Environment Industry Summary",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2847,7 +3082,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"environmentDataYear\": 2013,\r\n  \"environmentSatellites\": [\"Greenhouse Gases\", \"Land Use\"],\r\n  \"environmentCategory\": \"air\",\r\n  \"environmentTag\": \"co2\",\r\n  \"environmentName\": \"carbon dioxide\",\r\n  \"industryCode\": 417,\r\n  \"regions\": [],\r\n  \"impacts\": [\"Indirect\", \"Induced\"],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
+							"raw": "{\r\n  \"dollarYear\": 2019,\r\n  \"environmentalReleaseYear\": 2023,\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2855,7 +3090,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactSummaryIndustryEnvironmentalSummary/{{impact_run_id}}",
+							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentIndustrySummary/{{impact_run_id}}",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2864,7 +3099,7 @@
 								"v1",
 								"impact",
 								"results",
-								"EnvironmentImpactSummaryIndustryEnvironmentalSummary",
+								"EnvironmentIndustrySummary",
 								"{{impact_run_id}}"
 							]
 						}
@@ -2872,18 +3107,7 @@
 					"response": []
 				},
 				{
-					"name": "Environment Impact Region Satellite Summary",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
+					"name": "Environment Impact Details",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2892,7 +3116,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"environmentDataYear\": 2013,\r\n  \"environmentSatellite\": \"Greenhouse Gases\",\r\n  \"environmentCategory\": \"air\",\r\n  \"environmentTag\": \"co2\",\r\n  \"environmentName\": \"carbon dioxide\",\r\n  \"industryCode\": 417,\r\n  \"regions\": [],\r\n  \"impacts\": [\"Indirect\", \"Induced\"],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
+							"raw": "{\r\n  \"dollarYear\": 2019,\r\n  \"environmentalReleaseYear\": 2023,\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2900,7 +3124,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactRegionSatelliteSummary/{{impact_run_id}}",
+							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactDetails/{{impact_run_id}}",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2909,7 +3133,7 @@
 								"v1",
 								"impact",
 								"results",
-								"EnvironmentImpactRegionSatelliteSummary",
+								"EnvironmentImpactDetails",
 								"{{impact_run_id}}"
 							]
 						}
@@ -2917,18 +3141,7 @@
 					"response": []
 				},
 				{
-					"name": "Environment Impact Industry Satellite Summary",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
+					"name": "Environment Impact Industry Details",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -2937,7 +3150,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"environmentDataYear\": 2013,\r\n  \"environmentSatellite\": \"Greenhouse Gases\",\r\n  \"environmentCategory\": \"air\",\r\n  \"environmentTag\": \"co2\",\r\n  \"environmentName\": \"carbon dioxide\",\r\n  \"industryCode\": 417,\r\n  \"regions\": [],\r\n  \"impacts\": [\"Indirect\", \"Induced\"],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
+							"raw": "{\r\n  \"dollarYear\": 2019,\r\n  \"environmentalReleaseYear\": 2023,\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2945,7 +3158,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactIndustrySatelliteSummary/{{impact_run_id}}",
+							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactIndustryDetails/{{impact_run_id}}",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2954,52 +3167,7 @@
 								"v1",
 								"impact",
 								"results",
-								"EnvironmentImpactIndustrySatelliteSummary",
-								"{{impact_run_id}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Environment Impact Satellite Detail",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"environmentDataYear\": 2013,\r\n  \"environmentSatellite\": \"Greenhouse Gases\",\r\n  \"environmentCategory\": \"air\",\r\n  \"environmentTag\": \"co2\",\r\n  \"environmentName\": \"carbon dioxide\",\r\n  \"industryCode\": 417,\r\n  \"regions\": [],\r\n  \"impacts\": [\"Indirect\", \"Induced\"],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactSatelliteDetail/{{impact_run_id}}",
-							"protocol": "https",
-							"host": [
-								"{{Domain}}"
-							],
-							"path": [
-								"v1",
-								"impact",
-								"results",
-								"EnvironmentImpactSatelliteDetail",
+								"EnvironmentImpactIndustryDetails",
 								"{{impact_run_id}}"
 							]
 						}
