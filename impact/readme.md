@@ -2,7 +2,7 @@
 
 This document is intended to provide a developer guide for the API that IMPLAN has developed for creating economic models and  generating impacts via API.  This API is intended to eventually replicate the functionality of IMPLAN Cloud, allowing you to embed IMPLAN into your applications and workflows.  
 
-This document assumes a working knowledge of the IMPLAN Cloud and its workflow, which can be found on [support.implan.com](https://support.implan.com/hc/en-us/categories/360002245673-IMPLAN-Basics).  
+This document assumes a working knowledge of the IMPLAN Cloud and its workflow, which can be found on [support.implan.com](https://support.implan.com/hc/en-us).  
 
 
 ## Getting Started
@@ -32,7 +32,7 @@ Once your project’s impact run has completed, you may export the [Results](#re
 
 ## Glossary
 
-You can find a detailed [Glossary](https://support.implan.com/hc/en-us/categories/1500000107962-Glossary) of economic terms on [support.implan.com](https://support.implan.com/hc/en-us/categories/1500000107962-Glossary), including [Events and Groups](https://support.implan.com/hc/en-us/sections/360011253094-E-H), but in this section you will find terms unique to the API.  
+You can find a detailed [Glossary](https://support.implan.com/hc/en-us/sections/16901820111003-Glossary) of economic terms on [support.implan.com](https://support.implan.com/hc/en-us/sections/16901820111003-Glossary), including [Events](https://support.implan.com/hc/en-us/articles/115009668408-Event) and [Groups](https://support.implan.com/hc/en-us/articles/360042981553-Groups), but in this section you will find terms unique to the API.  
 
 
 ### URID
@@ -328,7 +328,7 @@ Take a dataset id from the dataset API request and use it for the model’s API 
 
 ## Industry Codes Endpoint (Get)
 
-**Use with project analysis endpoints.  **The Industries supported by this API will be the current standard IMPLAN 546 Industry scheme. This response may be cached.  A list of those industries can be found here: [https://support.implan.com/hc/en-us/articles/360034896614-546-Industries-Conversions-Bridges-Construction-2018-Data](https://support.implan.com/hc/en-us/articles/360034896614-546-Industries-Conversions-Bridges-Construction-2018-Data)
+**Use with project analysis endpoints.  **The Industries supported by this API will be the current standard IMPLAN 546 Industry scheme. This response may be cached.  A list of those industries can be found here: [https://support.implan.com/hc/en-us/articles/360034896614-546-Industries-Conversions-Bridges-Construction-2018-Data](https://support.implan.com/hc/en-us/articles/15398463942683-U-S-546-Industries-Conversions-Bridges)
 
 In 2022, the BEA will redefine the North American Industry Classifications System (NAICS) codes. This change will result in a change to the IMPLAN industry scheme for the 2023 IMPLAN data release. The API will then be updated to include these new industry designations when that data is added to the system.
 
