@@ -1372,10 +1372,10 @@ Inside the project, you will define the Events, which are the changes to an econ
 
 
 ### Get Projects (Get)
-Returns a list of all projects owned by user
+Returns a list of all non-deleted projects owned by the user. If the deleted parameter is passed as true, then returns a list of all deleted projects owned by the user. 
 
 #### Parameters
-none
+* deleted
 
 
 #### Response
@@ -1394,6 +1394,8 @@ Array of the following:
 #### Endpoint
 
 **GET https://{{api_domain}}/api/v1/impact/project**
+
+**GET https://{{api_domain}}/api/v1/impact/project?deleted=true**
 
 
 ### Get Projects Shared With User (Get)
@@ -1508,6 +1510,16 @@ If you wish to edit the values of an existing project, you may do so with this e
 #### Endpoint
 
 **PUT https://{{api_domain}}/api/v1/impact/project/{{project id}}**
+
+
+### Delete Project (DELETE)
+Use this endpoint to delete a project.
+#### Parameters
+Project Id (In URL)
+#### Response
+A status code of 200 if the project has been successfully deleted.
+#### Endpoint
+**DELETE https://{{api_domain}}/v1/impact/project/{{projectGUID}}**
 
 
 ### Create Event (Post)
@@ -1649,6 +1661,17 @@ These should only be used if you are adding an event that is marginable, such as
 **PUT https://{{api_domain}}/api/v1/impact/project/{{project id}}/event/{{event id}}**
 
 
+### Delete Event (Delete)
+Use this endpoint to delete an event.
+#### Parameters
+* Project Id (In Url)
+* Event Id (In Url)
+#### Response
+Status Code 200 if event successfully deleted.
+#### Endpoint
+**DELETE https://{{Domain}}/v1/impact/project/{{projectGUID}}/event/{{eventGUID}}**
+
+
 ### Create Group (Post)
 
 #### Parameters
@@ -1739,6 +1762,18 @@ These should only be used if you are adding an event that is marginable, such as
 
 #### Endpoint
 **PUT https://{{Domain}}/v1/impact/project/{{project id}}/group/{{group id}}**
+
+
+### Delete Group (DELETE)
+Use this endpoint to delete a group.
+#### Parameters
+* Project Id (In Url)
+* Group Id (In Url)
+#### Response
+Status Code 200 if group was successfully deleted
+#### Endpoint
+**DELETE https://{{Domain}}/v1/impact/project/{{projectGUID}}/group/{{groupGUID}}**
+
 
 ## Run Impact (Post)
 
@@ -2397,6 +2432,177 @@ The API response when the analysis is complete will provide a CSV file with deta
 
 #### Endpoint
 **GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactIndustryDetails/{{runId}}**
+
+
+# Folders
+These endpoints allow for the creation and management of folders for organizing projects. The folder id associated with a created folders can be used as part of the Project Post and Put endpoints to assign projects to folders.
+
+## Create Folder (Post)
+This endpoint will create a new folder. Include a parent id value in the body to create a folder inside of a previously created folder.
+#### Parameters
+* Title (in body; required)
+* ParentId (int body; optional)
+#### Response
+An object containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**POST https://{{api_domain}}/v1/impact/folder**
+
+## Get Folders (Get)
+This endpoint returns all folders created by the user.
+#### Parameters
+none
+#### Response
+An object containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/folder**
+
+## Get Folder (Get)
+This endpoint returns details for a specific folder.
+#### Parameters
+* Id (In Url)
+#### Response
+An object containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/folder/{{folderId}}**
+
+## Get Folder's Folders (Get)
+This endpoint returns a list of folders assigned to a specific folder.
+#### Parameters
+* Id (In Url)
+#### Response
+An array of objects, each containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/folder/{{folderId}}/folders**
+
+## Get Folder's Projects (Get)
+This endpoint returns a list of projects assigned to a specific folder.
+#### Parameters
+* Id (In Url)
+#### Response
+An array of objects, each containing the following properties:
+* Id
+* Title
+* AggregationSchemeId
+* HouseholdSetId
+* IsMrio
+* FolderId
+* LastImpactRunId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/folder/{{folderId}}/projects**
+
+## Update Folder (Put)
+This endpoint updates a specific folder. Use this endpoint to update a folder's title or assign a parent folder id.
+#### Parameters
+* Id (In Url)
+* Id (In Body; Required, must match Id in Url)
+* Title (Required but can match current title)
+* ParentId (Optional; cannot equal id)
+#### Response
+An array of objects, each containing the following properties:
+An object containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**PUT https://{{Domain}}/v1/impact/folder/{{folderId}}**
+
+## Delete Folder (Delete)
+Use this endpoint to delete a folder. Note, if the directory contains projects, the projectHandlingType parameter must be passed with one of two possible values (Delete or MoveToRoot).
+#### Parameters
+* Id (In Url)
+* projectHandlingType (required if folder directory contains projects. Pass either "Delete" or "MoveToRoot")
+#### Response
+Status Code 200 if folder was successfully deleted
+#### Endpoint
+**DELETE https://{{Domain}}/v1/impact/folder/{{folderId}}**
+
+**DELETE https://{{Domain}}/v1/impact/folder/:folderId?projectHandlingType=Delete**
+
+**DELETE https://{{Domain}}/v1/impact/folder/:folderId?projectHandlingType=MoveToRoot**
+
+## Shared Folders 
+The following endpoints allow the user to review folders that have been shared with them. 
+
+## Get Shared Folders (Get)
+This endpoint returns all folders shared with the user.
+#### Parameters
+none
+#### Response
+An object containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/shared-folders**
+
+## Get Shared Folder (Get)
+This endpoint returns details for a specific folder.
+#### Parameters
+* Id (In Url)
+#### Response
+An object containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/shared-folders/{{folderId}}**
+
+## Get Shared Folder's Folders (Get)
+This endpoint returns a list of folders assigned to a specific folder.
+#### Parameters
+* Id (In Url)
+#### Response
+An array of objects, each containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/shared-folders/{{folderId}}/folders**
+
+## Get Shared Folder's Projects (Get)
+This endpoint returns a list of projects assigned to a specific folder.
+#### Parameters
+* Id (In Url)
+#### Response
+An array of objects, each containing the following properties:
+* Id
+* Title
+* AggregationSchemeId
+* HouseholdSetId
+* IsMrio
+* FolderId
+* LastImpactRunId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/shared-folders/{{folderId}}/projects**
+
 
 # Appendix
 
