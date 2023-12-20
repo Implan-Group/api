@@ -2474,6 +2474,18 @@
 												"folder",
 												":folderId"
 											],
+											"query": [
+												{
+													"key": "projectHandlingType",
+													"value": "Delete",
+													"disabled": true
+												},
+												{
+													"key": "projectHandlingType",
+													"value": "MoveToRoot",
+													"disabled": true
+												}
+											],
 											"variable": [
 												{
 													"key": "folderId",
