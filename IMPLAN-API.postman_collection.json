@@ -1432,6 +1432,94 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Region Detail IxI SAM",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/StudyAreaDataDetailIxISam?urid=1654549",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"StudyAreaDataDetailIxISam"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1654549"
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Detail IxC SAM",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/StudyAreaDataDetailIxCSam?urid=1654549",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"StudyAreaDataDetailIxCSam"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1654549"
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -1514,6 +1602,37 @@
 								"v1",
 								"datasets",
 								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dollar Years",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{Domain}}/v1/dollarYears/:aggregationSchemeId/:datasetId",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"dollarYears",
+								":aggregationSchemeId",
+								":datasetId"
+							],
+							"variable": [
+								{
+									"key": "aggregationSchemeId",
+									"value": "8"
+								},
+								{
+									"key": "datasetId",
+									"value": "87"
+								}
 							]
 						}
 					},
@@ -2952,6 +3071,34 @@
 					"response": []
 				},
 				{
+					"name": "Duplicate Project",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://{{Domain}}/v1/impact/project/:guid/duplicate",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"project",
+								":guid",
+								"duplicate"
+							],
+							"variable": [
+								{
+									"key": "guid",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Delete Project",
 					"request": {
 						"method": "DELETE",
@@ -3352,6 +3499,40 @@
 									"value": null,
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Estimated Growth Percentage",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dollarYear\": 2022,\r\n    \"regions\": [],\r\n    \"impacts\": [],\r\n    \"groupNames\": [],\r\n    \"eventNames\": [],\r\n    \"eventTags\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Domain}}/v1/impact/results/EstimatedGrowthPercentage/{{impact_run_id}}",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"results",
+								"EstimatedGrowthPercentage",
+								"{{impact_run_id}}"
 							]
 						}
 					},
