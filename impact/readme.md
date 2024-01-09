@@ -1130,6 +1130,24 @@ The API response will provide a CSV response with following fields:
 **GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/region-commodity-summary?hashId={{hashId}}**
 
 
+### Region Commodity Summary Averages (Get)
+This endpoint provides commodity summary averages data as found in the Regions > Social Accounts > Reports > Commodity Summary > Commodity Summary Averages table in the IMPLAN application.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional*)
+  *NOTE: HashId or URID must be supplied, but both are not required.
+#### Response
+The API response will provide a CSV response with following fields:
+* Commodity Code
+* Description
+* Average RPC
+* Average RSC
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/region-commodity-summary-averages?hashId={{hashId}}**
+
+
 ### Region Household Local Commodity Demand (Get)
 This endpoint provides per household local commodity demand as found in the Regions > Study Area Data > Household Commodity Demand table in the IMPLAN application.
 
