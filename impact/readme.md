@@ -1106,6 +1106,29 @@ The API response will provide a CSV response with following fields:
 **GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionMultipliersPerMillionEffects?hashId={{hashId}}&effectType={{effectType}}**
 
 
+### Region Commodity Summary (Get)
+This endpoint provides commodity summary data as found in the Regions > Social Accounts > Reports > Commodity Summary > Commodity Summary table in the IMPLAN application.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional*)
+*NOTE: HashId or URID must be supplied, but both are not required.
+#### Response
+The API response will provide a CSV response with following fields:
+* Commodity Code
+* Description
+* Industry Commodity Production
+* Institutional Commodity Production
+* Total Commodity Supply
+* Local Use of Local Supply
+* Intermediate Commodity Demand
+* Institutional Commodity Demand
+* Total Gross Commodity demand
+* Domestic S/D Ratio
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/region-commodity-summary?hashId={{hashId}}**
+
 
 ### Region Household Local Commodity Demand (Get)
 This endpoint provides per household local commodity demand as found in the Regions > Study Area Data > Household Commodity Demand table in the IMPLAN application.
