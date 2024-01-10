@@ -1184,11 +1184,30 @@ This endpoint provides per household total commodity demand as found in the Regi
 The API response will provide a CSV response with following fields (per commodity):
 * Commodity Code
 * Description
-* Household cateogry (one column per household category)
+* Household Cateogry (one column per household category)
 
 #### Endpoint
 **GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionHouseholdCommodityDemand?hashId={{hashId}}**
 
+
+### Region Industry Institutional Production (Get)
+This endpoint provides commodity production data for a given commodity by industries and institutions as found in the Regions > Social Accounts > Balance Sheets > Commodity Balance Sheet > Industry-Institutional Production table in the IMPLAN application.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* CommodityCode (In URL)
+* HashId (Optional*)
+* URID (Optional*)
+  *NOTE: HashId or URID must be supplied, but both are not required.
+#### Response
+The API response will provide a CSV response with following fields:
+* Code
+* Description
+* Industry/Institutional Production
+* Regional Market Share
+* Coefficient
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/region-industry-institutional-production/{{CommodityCode}}?hashId={{hashId}}**
 
 ### Region General Algebraic Modeling System Files (Get)
 This endpoint provides a zip file containing .dat files for use in GAMS systems.
