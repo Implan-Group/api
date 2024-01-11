@@ -1190,6 +1190,29 @@ The API response will provide a CSV response with following fields (per commodit
 **GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/RegionHouseholdCommodityDemand?hashId={{hashId}}**
 
 
+### Region Industry Commodity Demand (Get)
+This endpoint provides commodity demand data for a given industry as found in the Regions > Social Accounts > Balance Sheets > Industry Balance Sheets > Commodity Demand table in the IMPLAN application.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* IndustryCode (In URL)
+* HashId (Optional*)
+* URID (Optional*)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+#### Response
+The API response will provide a CSV response with following fields:
+* Code
+* Description
+* RPC
+* Gross Absorption
+* Gross Inputs
+* Regional Absorption
+* Regional Inputs
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/region-industry-commodity-demand/{{IndustryCode}}?hashId={{hashId}}**
+
+
 ### Region Industry Institutional Production (Get)
 This endpoint provides commodity production data for a given commodity by industries and institutions as found in the Regions > Social Accounts > Balance Sheets > Commodity Balance Sheet > Industry-Institutional Production table in the IMPLAN application.
 #### Parameters
@@ -1198,7 +1221,8 @@ This endpoint provides commodity production data for a given commodity by indust
 * CommodityCode (In URL)
 * HashId (Optional*)
 * URID (Optional*)
-  *NOTE: HashId or URID must be supplied, but both are not required.
+
+*NOTE: HashId or URID must be supplied, but both are not required.
 #### Response
 The API response will provide a CSV response with following fields:
 * Code
