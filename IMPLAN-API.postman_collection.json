@@ -1223,6 +1223,55 @@
 							"response": []
 						},
 						{
+							"name": "Region Commodity Institutional Demand",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/region-commodity-institutional-demand/:commodityCode?urid=1774359",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-institutional-demand",
+										":commodityCode"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "commodityCode",
+											"value": "3001"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Region General Algebraic Modeling System Files",
 							"event": [
 								{

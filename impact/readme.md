@@ -1257,6 +1257,26 @@ The API response will provide a CSV response with following fields:
 **GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/region-commodity-industry-demand/{{CommodityCode}}?hashId={{hashId}}**
 
 
+### Region Commodity Institutional Demand (Get)
+This endpoint provides institutional demand data for a given commodity as found in the Regions > Social Accounts > Balance Sheets > Commodity Balance Sheets > Institutional Demand table in the IMPLAN application.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* CommodityCode (In URL)
+* HashId (Optional*)
+* URID (Optional*)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+#### Response
+The API response will provide a CSV response with following fields:
+* Code
+* Description
+* RPC
+* Gross Demand
+* Regional Demand
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/region-commodity-institutional-demand/{{CommodityCode}}?hashId={{hashId}}**
+
 ### Region General Algebraic Modeling System Files (Get)
 This endpoint provides a zip file containing .dat files for use in GAMS systems.
 
