@@ -999,6 +999,50 @@
 							"response": []
 						},
 						{
+							"name": "Region Commodity Imports",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/region-commodity-imports?urid=1774359",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-imports"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Region Household Local Commodity Demand",
 							"request": {
 								"method": "GET",
