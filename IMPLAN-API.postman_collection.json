@@ -1432,6 +1432,94 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Region Detail IxI SAM",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/StudyAreaDataDetailIxISam?urid=1654549",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"StudyAreaDataDetailIxISam"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1654549"
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Detail IxC SAM",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/StudyAreaDataDetailIxCSam?urid=1654549",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"StudyAreaDataDetailIxCSam"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1654549"
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -1514,6 +1602,37 @@
 								"v1",
 								"datasets",
 								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dollar Years",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{Domain}}/v1/dollarYears/:aggregationSchemeId/:datasetId",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"dollarYears",
+								":aggregationSchemeId",
+								":datasetId"
+							],
+							"variable": [
+								{
+									"key": "aggregationSchemeId",
+									"value": "8"
+								},
+								{
+									"key": "datasetId",
+									"value": "87"
+								}
 							]
 						}
 					},
@@ -2149,6 +2268,39 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Delete Event",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/impact/project/:projectGUID/event/:eventGUID",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"project",
+										":projectGUID",
+										"event",
+										":eventGUID"
+									],
+									"variable": [
+										{
+											"key": "projectGUID",
+											"value": "{{project_guid}}"
+										},
+										{
+											"key": "eventGUID",
+											"value": "{{event_guid}}"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -2263,6 +2415,393 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Delete Group",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/impact/project/:projectGUID/group/:groupGUID",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"project",
+										":projectGUID",
+										"group",
+										":groupGUID"
+									],
+									"variable": [
+										{
+											"key": "projectGUID",
+											"value": "{{project_guid}}"
+										},
+										{
+											"key": "groupGUID",
+											"value": "{{group_guid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Folder",
+					"item": [
+						{
+							"name": "FolderId",
+							"item": [
+								{
+									"name": "Get Folder",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://{{Domain}}/v1/impact/folder/:folderId",
+											"protocol": "https",
+											"host": [
+												"{{Domain}}"
+											],
+											"path": [
+												"v1",
+												"impact",
+												"folder",
+												":folderId"
+											],
+											"variable": [
+												{
+													"key": "folderId",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Folder Folders",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://{{Domain}}/v1/impact/folder/:folderId/folders",
+											"protocol": "https",
+											"host": [
+												"{{Domain}}"
+											],
+											"path": [
+												"v1",
+												"impact",
+												"folder",
+												":folderId",
+												"folders"
+											],
+											"variable": [
+												{
+													"key": "folderId",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get  Folder Projects",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://{{Domain}}/v1/impact/folder/:folderId/projects",
+											"protocol": "https",
+											"host": [
+												"{{Domain}}"
+											],
+											"path": [
+												"v1",
+												"impact",
+												"folder",
+												":folderId",
+												"projects"
+											],
+											"variable": [
+												{
+													"key": "folderId",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Folder",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"Id\": 0,\r\n    \"Title\": \"Your Folder Title Here\",\r\n    \"ParentId\": null\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://{{Domain}}/v1/impact/folder/:folderId",
+											"protocol": "https",
+											"host": [
+												"{{Domain}}"
+											],
+											"path": [
+												"v1",
+												"impact",
+												"folder",
+												":folderId"
+											],
+											"variable": [
+												{
+													"key": "folderId",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Folder",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "https://{{Domain}}/v1/impact/folder/:folderId",
+											"protocol": "https",
+											"host": [
+												"{{Domain}}"
+											],
+											"path": [
+												"v1",
+												"impact",
+												"folder",
+												":folderId"
+											],
+											"query": [
+												{
+													"key": "projectHandlingType",
+													"value": "Delete",
+													"disabled": true
+												},
+												{
+													"key": "projectHandlingType",
+													"value": "MoveToRoot",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "folderId",
+													"value": "1741"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Get Folders",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Domain}}/v1/impact/folder",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"folder"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Folder",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Title\": \"Your Folder Title Here\",\r\n    \"ParentId\": null\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Domain}}/v1/impact/folder",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"folder"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Shared-Folder",
+					"item": [
+						{
+							"name": "FolderId",
+							"item": [
+								{
+									"name": "Get Shared-Folder",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://{{Domain}}/v1/impact/shared-folders/:folderId",
+											"protocol": "https",
+											"host": [
+												"{{Domain}}"
+											],
+											"path": [
+												"v1",
+												"impact",
+												"shared-folders",
+												":folderId"
+											],
+											"variable": [
+												{
+													"key": "folderId",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Shared-Folder Folders",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://{{Domain}}/v1/impact/shared-folders/:folderId/folders",
+											"protocol": "https",
+											"host": [
+												"{{Domain}}"
+											],
+											"path": [
+												"v1",
+												"impact",
+												"shared-folders",
+												":folderId",
+												"folders"
+											],
+											"variable": [
+												{
+													"key": "folderId",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Shared-Folder Projects",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://{{Domain}}/v1/impact/shared-folders/:folderId/projects",
+											"protocol": "https",
+											"host": [
+												"{{Domain}}"
+											],
+											"path": [
+												"v1",
+												"impact",
+												"shared-folders",
+												":folderId",
+												"projects"
+											],
+											"variable": [
+												{
+													"key": "folderId",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Get Shared-Folders",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{Domain}}/v1/impact/shared-folders",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"shared-folders"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -2370,6 +2909,13 @@
 								"v1",
 								"impact",
 								"project"
+							],
+							"query": [
+								{
+									"key": "deleted",
+									"value": "true",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -2525,21 +3071,12 @@
 					"response": []
 				},
 				{
-					"name": "Share Folder",
+					"name": "Duplicate Project",
 					"request": {
-						"method": "PUT",
+						"method": "POST",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "[\"enterEmailAddressOfUserToShareFolderWithHere\"]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/folder/:folderId/share",
+							"raw": "https://{{Domain}}/v1/impact/project/:guid/duplicate",
 							"protocol": "https",
 							"host": [
 								"{{Domain}}"
@@ -2547,14 +3084,41 @@
 							"path": [
 								"v1",
 								"impact",
-								"folder",
-								":folderId",
-								"share"
+								"project",
+								":guid",
+								"duplicate"
 							],
 							"variable": [
 								{
-									"key": "folderId",
-									"value": null
+									"key": "guid",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Project",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{Domain}}/v1/impact/project/:projectGUID",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"project",
+								":projectGUID"
+							],
+							"variable": [
+								{
+									"key": "projectGUID",
+									"value": "{{project_guid}}"
 								}
 							]
 						}
@@ -2659,6 +3223,43 @@
 								"project",
 								"import",
 								"49ae7ce7-6e55-41d0-8cdf-28a16b3f40d0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Share Folder",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"enterEmailAddressOfUserToShareFolderWithHere\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Domain}}/v1/impact/folder/:folderId/share",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"folder",
+								":folderId",
+								"share"
+							],
+							"variable": [
+								{
+									"key": "folderId",
+									"value": null
+								}
 							]
 						}
 					},
@@ -2898,6 +3499,40 @@
 									"value": null,
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Estimated Growth Percentage",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dollarYear\": 2022,\r\n    \"regions\": [],\r\n    \"impacts\": [],\r\n    \"groupNames\": [],\r\n    \"eventNames\": [],\r\n    \"eventTags\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{Domain}}/v1/impact/results/EstimatedGrowthPercentage/{{impact_run_id}}",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"results",
+								"EstimatedGrowthPercentage",
+								"{{impact_run_id}}"
 							]
 						}
 					},

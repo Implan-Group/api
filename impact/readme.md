@@ -563,6 +563,35 @@ Not all economic models are built for regions by default, or sometimes you may w
 
 We have endpoints that will start the economic model build process right away, but if you need to build more than 5 regions at a time, we recommend you leverage our batch region endpoints.  
 
+### Built Models (GET)
+This endpoint returns a list of currently built models accessible to the user.
+#### Parameters
+* Aggregation Scheme Id (In URL)
+* Dataset Id (InURL)
+#### Response (list)
+* HashId
+* Urid
+* UserModelId
+* Description
+* ModelId
+* ModelBuildStatus
+* Employment
+* Output
+* ValueAdded
+* AggregationSchemeId
+* DatasetId
+* DatasetDescription
+* FipsCode
+* ProvinceCode
+* M49Code
+* RegionType
+* HasAccessibleChildren
+* GeoId
+* IsMrioAllowed
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/built**
+
+
 
 ### Build Region - Batch (POST)
 
@@ -1283,7 +1312,6 @@ The API response will provide a CSV response with the following fields (per indu
 
 ### Environmental Region Details (Get)
 This endpoint provides a CSV file containing environmental detail data as found in Regions > Environmental > Region Environmental Details table in the IMPLAN application.
-
 #### Parameters
 * Bearer Token
 * AggregationSchemeId (In URL)
@@ -1292,9 +1320,7 @@ This endpoint provides a CSV file containing environmental detail data as found 
 * Environmental Release Year (in body; required)
 * Industry Codes (in body; optional*)
 * Environment Category (in body; required)
-
 *NOTE: HashId or URID must be supplied, but both are not required.
-
 #### Response
 The API response will provide a CSV response with the following fields (per environment name).
 * Environment Name
@@ -1302,16 +1328,43 @@ The API response will provide a CSV response with the following fields (per envi
 * Environment Unit
 * Units per $ of Output
 * Environmental Output
-
 #### Endpoint
 **GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/EnvironmentDetail?hashId={{hashId}}**
+
+
+### Region Detail IxI SAM (GET)
+This endpoint provides a zipped CSV file containing a region's IxI SAM.
+#### Parameters
+* AggregationSchemeId (In URL)
+* One of the following URL query parameters
+  * HashId
+  * URID
+  * UserModelId
+#### Response
+A zipped CSV file.
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam?urid={{urid}}**
+
+
+### Region Detail IxC SAM (GET)
+This endpoint provides a zipped CSV file containing a region's IxC SAM.
+#### Parameters
+* AggregationSchemeId (In URL)
+* One of the following URL query parameters
+  * HashId
+  * URID
+  * UserModelId
+#### Response
+A zipped CSV file.
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxCSam?urid={{urid}}**
+
 
 # Impacts
 
 After the authentication token, and responses have been collected from the API endpoints above, you may then proceed with running an impact analysis. The starting point for this is to create a project.  
 
 Inside the project, you will define the Events, which are the changes to an economy that you want to analyze, and the groups, which are the regions and time frame the changes take place.  After defining your Project, Events, and Groups, you may Run the Impact, and poll for a status on the Impact Run. 
-
 
 ### Create Project (Post)
 
@@ -1372,10 +1425,10 @@ Inside the project, you will define the Events, which are the changes to an econ
 
 
 ### Get Projects (Get)
-Returns a list of all projects owned by user
+Returns a list of all non-deleted projects owned by the user. If the deleted parameter is passed as true, then returns a list of all deleted projects owned by the user. 
 
 #### Parameters
-none
+* deleted
 
 
 #### Response
@@ -1394,6 +1447,8 @@ Array of the following:
 #### Endpoint
 
 **GET https://{{api_domain}}/api/v1/impact/project**
+
+**GET https://{{api_domain}}/api/v1/impact/project?deleted=true**
 
 
 ### Get Projects Shared With User (Get)
@@ -1479,35 +1534,55 @@ Shares folder with other users
 
 
 ### Update Project (Put)
-
-If you wish to edit the values of an existing project, you may do so with this endpoint.  We do not currently allow for aggregationSchemeId or householdSetId to be changed on a project, because any existing events or groups are specific to those values, and would be incompatible with other aggregationSchemeId’s or householdSetId’s.  
-
-
+If you wish to edit the values of an existing project, you may do so with this endpoint.  We do not currently allow for aggregationSchemeId or householdSetId to be changed on a project, because any existing events or groups are specific to those values, and would be incompatible with other aggregationSchemeId’s or householdSetId’s.
 #### Parameters
-
-
-
 * Project Id (In URL)
 * Title
 * isMrio (Optional)
 * folderId (Optional)
-
-
 #### Response
-
-
-
 * Id - This will be used on all subsequent Project, Event, and Group API Requests
 * Title
 * aggregationSchemeId
 * householdSetId
 * isMrio
 * folderId
-
-
 #### Endpoint
-
 **PUT https://{{api_domain}}/api/v1/impact/project/{{project id}}**
+
+
+### Duplicate Project (Put)
+You can duplicate a project using this endpoint.
+#### Parameters
+* Project Id (In URL)
+#### Response
+* Project Id
+* Title
+#### Endpoint
+**POST https://{{api_domain}}/api/v1/impact/project/{{project id}}/duplicate**
+
+
+### Delete Project (DELETE)
+Use this endpoint to delete a project.
+#### Parameters
+Project Id (In URL)
+#### Response
+A status code of 200 if the project has been successfully deleted.
+#### Endpoint
+**DELETE https://{{api_domain}}/v1/impact/project/{{projectGUID}}**
+
+
+### Get Project Specification (Get)
+Use this endpoint to get event type specifications, such as industry codes for industry change events and commodity codes for commodity output change events.
+### Parameters
+* Project Id (In URL)
+* Event Type (In URL)
+#### Response
+A list of specifications data containing the following fields:
+* Code
+* Name
+#### Endpoint
+**GET https://{{api_domain}}/v1/impact/project/{{projectGUID}}/eventtype/{{eventtype}}/specification**
 
 
 ### Create Event (Post)
@@ -1649,6 +1724,27 @@ These should only be used if you are adding an event that is marginable, such as
 **PUT https://{{api_domain}}/api/v1/impact/project/{{project id}}/event/{{event id}}**
 
 
+### Delete Event (Delete)
+Use this endpoint to delete an event.
+#### Parameters
+* Project Id (In Url)
+* Event Id (In Url)
+#### Response
+Status Code 200 if event successfully deleted.
+#### Endpoint
+**DELETE https://{{Domain}}/v1/impact/project/{{projectGUID}}/event/{{eventGUID}}**
+
+
+### Import Events (POST)
+Use this endpoint along with the [Event Template](https://support.implan.com/hc/en-us/articles/360040713754-Using-the-Event-Template) to import events created in an excel file.
+#### Parameters
+Project Id (In URL)
+#### Response
+A status code of 200 if the event or events were successfully created.
+#### Endpoint
+**POST https://{{api_domain}}/v1/impact/project/import/{{projectGUID}}**
+
+
 ### Create Group (Post)
 
 #### Parameters
@@ -1740,19 +1836,22 @@ These should only be used if you are adding an event that is marginable, such as
 #### Endpoint
 **PUT https://{{Domain}}/v1/impact/project/{{project id}}/group/{{group id}}**
 
-## Run Impact (Post)
 
-
+### Delete Group (DELETE)
+Use this endpoint to delete a group.
 #### Parameters
-
-* Project Id (in Url)
-
-
+* Project Id (In Url)
+* Group Id (In Url)
 #### Response
+Status Code 200 if group was successfully deleted
+#### Endpoint
+**DELETE https://{{Domain}}/v1/impact/project/{{projectGUID}}/group/{{groupGUID}}**
 
+## Run Impact (Post)
+#### Parameters
+* Project Id (in Url)
+#### Response
 * Run Id 
-
-
 #### Endpoint
 **PUT https://{{Domain}}/v1/impact/{{project id}}**
 
@@ -1789,6 +1888,16 @@ To provide an asynchronous environment, IMPLAN has developed an endpoint that yo
 # Results
 
 After running an impact, you have these different options to get results.
+
+## Dollar Years (GET)
+This endpoint provides a list of possible dollar year deflators that can be applied to the results in many of the endpoints that follow.
+#### Parameters
+* Aggregation Scheme Id
+* Dataset Id
+#### Response
+* Array of valid dollar years for the given aggregation scheme and dataset combo
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/dollarYears/{{aggregationSchemeId}}/{{datasetId}}**
 
 
 ## Results Totals (GET)
@@ -2041,14 +2150,8 @@ Will return.
 ```
 
 ## Detail Economic Indicators Export (Get)
-
-This endpoint will provide Detailed Economic Indicators from an Impact Analysis 
-
-
+This endpoint will provide Detailed Economic Indicators from an Impact Analysis
 #### Parameters
-
-
-
 * Bearer Token
 * Analysis Run Id 
 * Optional Filter Parameters
@@ -2058,14 +2161,8 @@ This endpoint will provide Detailed Economic Indicators from an Impact Analysis
     * Groups
     * Events
     * EventTags
-
-
 #### Response
-
 The API response when the analysis is complete will provide a CSV response with following fields:
-
-
-
 * OriginRegion
 * DestinationRegion
 * EventName
@@ -2080,23 +2177,15 @@ The API response when the analysis is complete will provide a CSV response with 
 * ProprietorIncome
 * TaxesOnProductionAndImports
 * OtherPropertyIncome
-
-
 #### Endpoint
-
 **GET https://{{api_domain}}/api/v1/impact/results/ExportDetailEconomicIndicators/{{runId}}**
 #### Example with Filters
 **GET https://{{api_domain}}/api/v1/impact/results/ExportDetailEconomicIndicators/{{runId}}?year=2023&impacts=Indirect**
 
+
 ## Detail Taxes Export (Get)
-
-This endpoint will provide Detailed Tax Results from an Impact Analysis 
-
-
+This endpoint will provide Detailed Tax Results from an Impact Analysis
 #### Parameters
-
-
-
 * Bearer Token
 * Analysis Run Id 
 * Optional Filter Parameters
@@ -2106,14 +2195,8 @@ This endpoint will provide Detailed Tax Results from an Impact Analysis
     * Groups
     * Events
     * EventTags
-
-
 #### Response
-
 The API response when the analysis is complete will provide a CSV response with following fields:
-
-
-
 * GroupName
 * EventName
 * ModelName
@@ -2124,23 +2207,15 @@ The API response when the analysis is complete will provide a CSV response with 
 * PayingTypeCode
 * PayingTypeDescription
 * Value
-
-
 #### Endpoint
-
 **GET https://{{api_domain}}/api/v1/impact/results/DetailedTaxes/{{runId}}**
 #### Example with Filters
 **GET https://{{api_domain}}/api/v1/impact/results/DetailedTaxes/{{runId}}?year=2023&impacts=Indirect**
 
+
 ## Summary Economic Indicators Export  (Get)
-
-This endpoint will provide Summary Economic Indicators from an Impact Analysis 
-
-
+This endpoint will provide Summary Economic Indicators from an Impact Analysis
 #### Parameters
-
-
-
 * Bearer Token
 * Analysis Run Id
 * Optional Filter Parameters
@@ -2150,14 +2225,8 @@ This endpoint will provide Summary Economic Indicators from an Impact Analysis
     * Groups
     * Events
     * EventTags
-
-
 #### Response
-
 The API response when the analysis is complete will provide a CSV response with following fields:
-
-
-
 * GroupName
 * EventName
 * ModelName
@@ -2166,23 +2235,15 @@ The API response when the analysis is complete will provide a CSV response with 
 * LaborIncome
 * ValueAdded
 * Output
-
-
 #### Endpoint
-
 **GET https://{{api_domain}}/api/v1/impact/results/SummaryEconomicIndicators/{{runId}}**
 #### Example with Filters
 GET https://{{api_domain}}/api/v1/impact/results/SummaryEconomicIndicators/{{runId}}?year=2023&impacts=Indirect
 
+
 ## Summary Taxes Export (Get)
-
-This endpoint will provide Summary Tax Results from an Impact Analysis 
-
-
+This endpoint will provide Summary Tax Results from an Impact Analysis
 #### Parameters
-
-
-
 * Bearer Token
 * Analysis Run Id 
 * Optional Filter Parameters
@@ -2192,15 +2253,8 @@ This endpoint will provide Summary Tax Results from an Impact Analysis
     * Groups
     * Events
     * EventTags
-
-
-
 #### Response
-
 The API response when the analysis is complete will provide a CSV response with following fields:
-
-
-
 * GroupName
 * EventName
 * ModelName
@@ -2211,13 +2265,25 @@ The API response when the analysis is complete will provide a CSV response with 
 * State
 * Federal
 * Total
-
-
 #### Endpoint
-
 **GET https://{{api_domain}}/api/v1/impact/results/SummaryTaxes/{{runId}}**
 #### Example with Filters
 **GET https://{{api_domain}}/api/v1/impact/results/SummaryTaxes/{{runId}}?year=2023&impacts=Indirect**
+
+
+## Estimated Growth Percentage
+This endpoint will provide estimated industry growth percentage data from an Impact Analysis.
+#### Parameters
+* Bearer Token
+* Analysis Run Id
+* Dollar Year (in body)
+* Regions (in body; *optional)
+* Impacts (in body; *optional)
+* Group Names (in body; *optional)
+* Event Names (in body; *optional)
+* Event Tags (in body; *optional)
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/impact/results/EstimatedGrowthPercentage/{{runId}}**
 
 
 ## Impact Occupation (Get)
@@ -2397,6 +2463,177 @@ The API response when the analysis is complete will provide a CSV file with deta
 
 #### Endpoint
 **GET https://{{api_domain}}/api/v1/impact/results/EnvironmentImpactIndustryDetails/{{runId}}**
+
+
+# Folders
+These endpoints allow for the creation and management of folders for organizing projects. The folder id associated with a created folders can be used as part of the Project Post and Put endpoints to assign projects to folders.
+
+## Create Folder (Post)
+This endpoint will create a new folder. Include a parent id value in the body to create a folder inside of a previously created folder.
+#### Parameters
+* Title (in body; required)
+* ParentId (int body; optional)
+#### Response
+An object containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**POST https://{{api_domain}}/v1/impact/folder**
+
+## Get Folders (Get)
+This endpoint returns all folders created by the user.
+#### Parameters
+none
+#### Response
+An object containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/folder**
+
+## Get Folder (Get)
+This endpoint returns details for a specific folder.
+#### Parameters
+* Id (In Url)
+#### Response
+An object containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/folder/{{folderId}}**
+
+## Get Folder's Folders (Get)
+This endpoint returns a list of folders assigned to a specific folder.
+#### Parameters
+* Id (In Url)
+#### Response
+An array of objects, each containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/folder/{{folderId}}/folders**
+
+## Get Folder's Projects (Get)
+This endpoint returns a list of projects assigned to a specific folder.
+#### Parameters
+* Id (In Url)
+#### Response
+An array of objects, each containing the following properties:
+* Id
+* Title
+* AggregationSchemeId
+* HouseholdSetId
+* IsMrio
+* FolderId
+* LastImpactRunId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/folder/{{folderId}}/projects**
+
+## Update Folder (Put)
+This endpoint updates a specific folder. Use this endpoint to update a folder's title or assign a parent folder id.
+#### Parameters
+* Id (In Url)
+* Id (In Body; Required, must match Id in Url)
+* Title (Required but can match current title)
+* ParentId (Optional; cannot equal id)
+#### Response
+An array of objects, each containing the following properties:
+An object containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**PUT https://{{Domain}}/v1/impact/folder/{{folderId}}**
+
+## Delete Folder (Delete)
+Use this endpoint to delete a folder. Note, if the directory contains projects, the projectHandlingType parameter must be passed with one of two possible values (Delete or MoveToRoot).
+#### Parameters
+* Id (In Url)
+* projectHandlingType (required if folder directory contains projects. Pass either "Delete" or "MoveToRoot")
+#### Response
+Status Code 200 if folder was successfully deleted
+#### Endpoint
+**DELETE https://{{Domain}}/v1/impact/folder/{{folderId}}**
+
+**DELETE https://{{Domain}}/v1/impact/folder/:folderId?projectHandlingType=Delete**
+
+**DELETE https://{{Domain}}/v1/impact/folder/:folderId?projectHandlingType=MoveToRoot**
+
+## Shared Folders 
+The following endpoints allow the user to review folders that have been shared with them. 
+
+## Get Shared Folders (Get)
+This endpoint returns all folders shared with the user.
+#### Parameters
+none
+#### Response
+An object containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/shared-folders**
+
+## Get Shared Folder (Get)
+This endpoint returns details for a specific folder.
+#### Parameters
+* Id (In Url)
+#### Response
+An object containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/shared-folders/{{folderId}}**
+
+## Get Shared Folder's Folders (Get)
+This endpoint returns a list of folders assigned to a specific folder.
+#### Parameters
+* Id (In Url)
+#### Response
+An array of objects, each containing the following properties:
+* Id
+* Title
+* Created (date)
+* OwnerId
+* ParentId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/shared-folders/{{folderId}}/folders**
+
+## Get Shared Folder's Projects (Get)
+This endpoint returns a list of projects assigned to a specific folder.
+#### Parameters
+* Id (In Url)
+#### Response
+An array of objects, each containing the following properties:
+* Id
+* Title
+* AggregationSchemeId
+* HouseholdSetId
+* IsMrio
+* FolderId
+* LastImpactRunId
+#### Endpoint
+**GET https://{{Domain}}/v1/impact/shared-folders/{{folderId}}/projects**
+
 
 # Appendix
 
