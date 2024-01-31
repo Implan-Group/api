@@ -1316,6 +1316,50 @@
 							"response": []
 						},
 						{
+							"name": "Region Institution Industry Demand",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/region-institution-industry-demand?urid=1775084",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-institution-industry-demand"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1775084"
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Region General Algebraic Modeling System Files",
 							"event": [
 								{
