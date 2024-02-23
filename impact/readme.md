@@ -37,11 +37,12 @@ You can find a detailed [Glossary](https://support.implan.com/hc/en-us/sections/
 
 ### URID
 
-URID stands for Universal Region Identifier, and refers to a unique identifying number specific to a single implan region, such as a country, state, metropolitan statistical area (MSA), county, congressional district, or zip code.
+URID stands for Universal Region Identifier, and refers to a unique identifying number specific to a single implan region, such as a country, state, metropolitan statistical area (MSA), county, congressional district, or zip code.  A URID is a way to identify a geography before economic modeling data (such as multipliers) has been created. You may use a URID to combine single regions into a combined region, or to generate economic modeling data as a single region.  
 
 
 ### HashID
 
+A HashID is associated with a single region (like a URID), or can be associated with combined or customized regions that have built economic modeling data, and are ready to be used in impact analysis.  There are many underlying identifiers in the IMPLAN system associated with regions, and this field is a Hash of all of them so that you can provide a single identifier for the region you wish to study, and we can parse in our system to return the correct data.  
 
 ### AggregationSchemeId 
 
@@ -75,15 +76,7 @@ The following variables can be used while developing against the IMPLAN API. Fol
    </td>
    <td>{{api_domain}}
    </td>
-   <td>https://api.implan.com/
-   </td>
-  </tr>
-  <tr>
-   <td>Environment
-   </td>
-   <td>{{env}}
-   </td>
-   <td>beta/
+   <td>https://api.implan.com/beta/
    </td>
   </tr>
   <tr>
@@ -127,14 +120,6 @@ The following variables can be used while developing against the IMPLAN API. Fol
    </td>
   </tr>
   <tr>
-   <td>Environment
-   </td>
-   <td>{{env}}
-   </td>
-   <td>n/a - leave blank
-   </td>
-  </tr>
-  <tr>
    <td>User Email
    </td>
    <td>{{email}}
@@ -172,7 +157,7 @@ The “access_token” is good for 24 hours.  It is required that you cache this
 Some code examples for obtaining the authentication token are provided in the [Appendix](#appendix).
 
 ## Endpoint
-**POST https://{{api_domain}}/auth**
+**POST https://{{api_domain}}/api/auth**
 
 ## Expected Response
 
