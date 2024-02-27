@@ -999,6 +999,58 @@
 							"response": []
 						},
 						{
+							"name": "Region Commodity Exports",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/region-commodity-exports?urid=1774359",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-exports"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": "EdVkq095a7",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Region Commodity Imports",
 							"request": {
 								"method": "GET",

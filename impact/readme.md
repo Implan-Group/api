@@ -1133,6 +1133,27 @@ The API response will provide a CSV response with following fields:
 #### Endpoint
 **GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/region-commodity-summary-averages?hashId={{hashId}}**
 
+### Region Commodity Exports (Get)
+This endpoint provides commodity exports data as found in the Regions > Social Accounts > Reports > Commodity Trade > Commodity Exports table in the IMPLAN application.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId (Optional*)
+* URID (Optional*)
+
+*NOTE: HashId or URID must be supplied, but both are not required.
+#### Response
+The API response will provide a CSV response with following fields:
+* Commodity Code
+* Description
+* Industry Exports
+* Institutional Exports
+* Domestic Exports
+* Foreign Exports
+* Total Exports
+* Foreign Export Proportion
+#### Endpoint
+**GET https://{{Domain}}/v1/regions/export/{{AggregationSchemeId}}/region-commodity-exports?hashId={{hashId}}**
 
 ### Region Commodity Imports (Get)
 This endpoint provides commodity imports data as found in the Regions > Social Accounts > Reports > Commodity Trade > Commodity Imports table in the IMPLAN application.
