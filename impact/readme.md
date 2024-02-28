@@ -385,6 +385,37 @@ This endpoint will return a list of aggregation schemes available for use.
 
 **GET https://{{api_domain}}/api/v1/aggregationschemes?industrySetId={{industrySetId}}**
 
+
+## Industry Margins Endpoint (Get)
+This endpoint will return industry margins data in CSV format.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (in url)
+* DatasetId (in url)
+#### Response (CSV)
+* Paying Code
+* Display Description
+* Margin
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/margins/{{aggregationSchemeId}}/{{datasetId}}/industry-margins**
+
+
+## Commodity Margins Endpoint (Get)
+This endpoint will return commodity margins data in CSV format.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (in url)
+* DatasetId (in url)
+#### Response (CSV)
+* Paying Code
+* Paying Description
+* Receiving Code
+* Receiving Description
+* Margin
+#### Endpoint
+**GET https://{{api_domain}}/api/v1/margins/{{aggregationSchemeId}}/{{datasetId}}/commodity-margins**
+
+
 # Regions
 
 
