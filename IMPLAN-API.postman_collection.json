@@ -911,6 +911,190 @@
 							"response": []
 						},
 						{
+							"name": "Region Commodity Summary",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/region-commodity-summary?urid=1774359",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-summary"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Commodity Summary Averages",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/region-commodity-summary-averages?urid=1774359",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-summary-averages"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Commodity Exports",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/region-commodity-exports?urid=1774359",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-exports"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": "EdVkq095a7",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Commodity Imports",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/region-commodity-imports?urid=1774359",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-imports"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Region Household Local Commodity Demand",
 							"request": {
 								"method": "GET",
@@ -981,6 +1165,246 @@
 										{
 											"key": "hashId",
 											"value": "alDQwzY93a"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Industry Commodity Demand",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/region-industry-commodity-demand/:industryCode?urid=1774359",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-industry-commodity-demand",
+										":industryCode"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "industryCode",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Industry Institutional Production",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/region-industry-institutional-production/:commodityCode?urid=1774359",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-industry-institutional-production",
+										":commodityCode"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "commodityCode",
+											"value": "3019"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Commodity Industry Demand",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/region-commodity-industry-demand/:commodityCode?urid=1774359",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-industry-demand",
+										":commodityCode"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "commodityCode",
+											"value": "3001"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Commodity Institutional Demand",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/region-commodity-institutional-demand/:commodityCode?urid=1774359",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-institutional-demand",
+										":commodityCode"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "commodityCode",
+											"value": "3001"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Institution Industry Demand",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/region-institution-industry-demand?urid=1775084",
+									"protocol": "https",
+									"host": [
+										"{{Domain}}"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-institution-industry-demand"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1775084"
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
 										}
 									]
 								}
@@ -1632,6 +2056,76 @@
 								{
 									"key": "datasetId",
 									"value": "87"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Commodity Margins",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{Domain}}/v1/margins/:aggregationSchemeId/:datasetId/commodity-margins",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"margins",
+								":aggregationSchemeId",
+								":datasetId",
+								"commodity-margins"
+							],
+							"variable": [
+								{
+									"key": "aggregationSchemeId",
+									"value": "8"
+								},
+								{
+									"key": "datasetId",
+									"value": "92"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Industry Margins",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{Domain}}/v1/margins/:aggregationSchemeId/:datasetId/industry-margins",
+							"protocol": "https",
+							"host": [
+								"{{Domain}}"
+							],
+							"path": [
+								"v1",
+								"margins",
+								":aggregationSchemeId",
+								":datasetId",
+								"industry-margins"
+							],
+							"variable": [
+								{
+									"key": "aggregationSchemeId",
+									"value": "8"
+								},
+								{
+									"key": "datasetId",
+									"value": "92"
 								}
 							]
 						}
