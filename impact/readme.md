@@ -188,7 +188,7 @@ Take a dataset id from the dataset API request and use it for the model’s API 
     * MSA
     * County
 * Region Name
-**  **   	
+**  **
 Will return Models
 ```
     [
@@ -285,6 +285,10 @@ Will return Industries
 #### Endpoint
 **GET {{api_domain}}api/v1/IndustryCodes**
 
+---
+
+# Aggregation Schemes
+
 
 ## Aggregation Schemes Endpoint (Get)
 This endpoint will return a list of aggregation schemes available for use.
@@ -331,8 +335,114 @@ This endpoint will return commodity margins data in CSV format.
 #### Endpoint
 **GET {{api_domain}}api/v1/margins/{{aggregationSchemeId}}/{{datasetId}}/commodity-margins**
 
+## Aggregation Scheme Details
+
+- This endpoint returns the details for a single Aggregation Scheme
+
+### Endpoint
+
+- `GET {{api_domain}}api/v1/aggregationSchemes/{{AggregationSchemeId}}`
+
+### Parameters
+
+- Bearer Token
+- `AggregationSchemeId` - Number - URL
+
+### Response
+
+```json
+{
+    "id": 10,
+    "description": "IMPLAN 3 Digit NAICS 546",
+    "industrySetId": 8,
+    "householdSetIds": [
+        1
+    ],
+    "mapCode": "US",
+    "status": "Complete"
+}
+```
+
+## Aggregation Scheme Industries
+
+- This endpoint returns a list of my industries and the IMPLAN codes mapped to them for a single Aggregation Scheme
+
+### Endpoint
+
+- `GET {{api_domain}}api/v1/aggregationSchemes/{{AggregationSchemeId}}/industry-mapping`
+
+### Parameters
+
+- Bearer Token
+- `AggregationSchemeId` - Number - URL
+
+### Response
+
+```json
+[
+    {
+        "displayCode": "492",
+        "displayDescription": "Residential intellectual disability, mental health, substance abuse and other facilities",
+        "codeFrom": 492,
+        "codeTo": 492,
+        "industryIdFrom": 5129,
+        "industryIdTo": 5129
+    },
+    ...
+    {
+        "displayCode": "546",
+        "displayDescription": "* Employment and payroll of federal govt, non-military",
+        "codeFrom": 546,
+        "codeTo": 546,
+        "industryIdFrom": 5183,
+        "industryIdTo": 5183
+    }
+]
+```
+
+## Aggregation Scheme Commodities
+
+- This endpoint returns a list of my commodities and the IMPLAN codes mapped to them for a single Aggregation Scheme
+
+### Endpoint
+
+- `GET {{api_domain}}api/v1/aggregationSchemes/{{AggregationSchemeId}}/commodity-mapping`
+
+### Parameters
+
+- Bearer Token
+- `AggregationSchemeId` - Number - URL
+
+### Response
+
+```json
+[
+    {
+        "displayCode": "3001",
+        "displayDescription": "Oilseeds",
+        "codeFrom": 3001,
+        "codeTo": 3001,
+        "commodityIdFrom": 1692,
+        "commodityIdTo": 1692
+    },
+    ...
+    {
+        "displayCode": "3533",
+        "displayDescription": "* Not a unique commodity (electricity from local govt utilities)",
+        "codeFrom": 3533,
+        "codeTo": 3533,
+        "commodityIdFrom": 2237,
+        "commodityIdTo": 2237
+    }
+]
+```
+
+
+
+---
 
 # Regions
+
 ## Getting Regional Data
 If you need to download study area data or obtain regional information to build regions, these endpoints will be helpful.
 ### Get Region Types (Get)
@@ -2357,7 +2467,7 @@ res = conn.getresponse()
 data = res.read()
 print(data.decode("utf-8"))
 ```
-	
+
 ### R Example
 ```
 library(RCurl)

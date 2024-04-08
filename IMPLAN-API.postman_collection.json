@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "777165f2-9f56-44f0-b07a-84bffe7f23d7",
+		"_postman_id": "78c9f7fc-95da-4422-b921-9bd766401972",
 		"name": "IMPLAN-API 24.2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12725670"
+		"_exporter_id": "28583816"
 	},
 	"item": [
 		{
@@ -2117,6 +2117,134 @@
 					]
 				},
 				{
+					"name": "Aggregation Schemes",
+					"item": [
+						{
+							"name": "Aggregation Schemes",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/aggregationSchemes",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"aggregationSchemes"
+									],
+									"query": [
+										{
+											"key": "industrysetId",
+											"value": "8",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggregation Scheme Details",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/aggregationSchemes/:aggregationSchemeId",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"aggregationSchemes",
+										":aggregationSchemeId"
+									],
+									"query": [
+										{
+											"key": "industrysetId",
+											"value": "8",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggregation Scheme Industries",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/aggregationSchemes/:aggregationSchemeId/industry-mapping",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"aggregationSchemes",
+										":aggregationSchemeId",
+										"industry-mapping"
+									],
+									"query": [
+										{
+											"key": "industrysetId",
+											"value": "8",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggregation Scheme Commodities",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/aggregationSchemes/:aggregationSchemeId/commodity-mapping",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"aggregationSchemes",
+										":aggregationSchemeId",
+										"commodity-mapping"
+									],
+									"query": [
+										{
+											"key": "industrysetId",
+											"value": "8",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Get Region Types",
 					"request": {
 						"method": "GET",
@@ -2130,31 +2258,6 @@
 								"v1",
 								"region",
 								"RegionTypes"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Aggregation Schemes",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{api_domain}}api/v1/aggregationSchemes",
-							"host": [
-								"{{api_domain}}api"
-							],
-							"path": [
-								"v1",
-								"aggregationSchemes"
-							],
-							"query": [
-								{
-									"key": "industrysetId",
-									"value": "8",
-									"disabled": true
-								}
 							]
 						}
 					},
