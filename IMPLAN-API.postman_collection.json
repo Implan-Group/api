@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "98c05a4d-1993-4201-acc4-3015a7da0f3a",
-		"name": "IMPLAN-API",
+		"_postman_id": "777165f2-9f56-44f0-b07a-84bffe7f23d7",
+		"name": "IMPLAN-API 24.2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "12725670"
 	},
@@ -15,10 +15,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/datasets",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/datasets",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -34,17 +33,22 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/instant/models/87",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/instant/models/:datasetId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"instant",
 								"models",
-								"87"
+								":datasetId"
+							],
+							"variable": [
+								{
+									"key": "datasetId",
+									"value": "87"
+								}
 							]
 						}
 					},
@@ -56,10 +60,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/instant/models",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/instant/models",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -77,10 +80,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/IndustryCodes",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/IndustryCodes",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -96,18 +98,31 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/instant/34462/456/100000",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/instant/:modelId/:industryCode/:outputEventValue",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"instant",
-								"34462",
-								"456",
-								"100000"
+								":modelId",
+								":industryCode",
+								":outputEventValue"
+							],
+							"variable": [
+								{
+									"key": "modelId",
+									"value": "34462"
+								},
+								{
+									"key": "industryCode",
+									"value": "456"
+								},
+								{
+									"key": "outputEventValue",
+									"value": "100000"
+								}
 							]
 						}
 					},
@@ -119,22 +134,31 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/instant/456/100000?hashId=pGVrEZ87be",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/instant/:industryCode/:outputEventValue?hashId=pGVrEZ87be",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"instant",
-								"456",
-								"100000"
+								":industryCode",
+								":outputEventValue"
 							],
 							"query": [
 								{
 									"key": "hashId",
 									"value": "pGVrEZ87be"
+								}
+							],
+							"variable": [
+								{
+									"key": "industryCode",
+									"value": "456"
+								},
+								{
+									"key": "outputEventValue",
+									"value": "100000"
 								}
 							]
 						}
@@ -147,22 +171,31 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/instant/456/100000?urid=1600415",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/instant/:industryCode/:outputEventValue?urid=1600415",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"instant",
-								"456",
-								"100000"
+								":industryCode",
+								":outputEventValue"
 							],
 							"query": [
 								{
 									"key": "urid",
 									"value": "1600415"
+								}
+							],
+							"variable": [
+								{
+									"key": "industryCode",
+									"value": "456"
+								},
+								{
+									"key": "outputEventValue",
+									"value": "100000"
 								}
 							]
 						}
@@ -184,10 +217,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/batch",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/batch",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -212,16 +244,25 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/region/8/87",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/region/:aggregationSchemeId/:datasetId",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"region",
-										"8",
-										"87"
+										":aggregationSchemeId",
+										":datasetId"
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "datasetId",
+											"value": "87"
+										}
 									]
 								}
 							},
@@ -233,16 +274,15 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/region/8/87/children",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/region/:aggregationSchemeId/:datasetId/children",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"region",
-										"8",
-										"87",
+										":aggregationSchemeId",
+										":datasetId",
 										"children"
 									],
 									"query": [
@@ -250,6 +290,16 @@
 											"key": "regionTypeFilter",
 											"value": "MSA",
 											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "datasetId",
+											"value": "87"
 										}
 									]
 								}
@@ -262,17 +312,16 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/region/8/87/2177236/children",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/region/:aggregationSchemeId/:datasetId/:urid/children",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"region",
-										"8",
-										"87",
-										"2177236",
+										":aggregationSchemeId",
+										":datasetId",
+										":urid",
 										"children"
 									],
 									"query": [
@@ -280,6 +329,20 @@
 											"key": "regionTypeFilter",
 											"value": "County",
 											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "datasetId",
+											"value": "87"
+										},
+										{
+											"key": "urid",
+											"value": ""
 										}
 									]
 								}
@@ -292,17 +355,16 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/region/8/87/pGVrEZ87be/children",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/region/:aggregationSchemeId/:datasetId/:hashId/children",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"region",
-										"8",
-										"87",
-										"pGVrEZ87be",
+										":aggregationSchemeId",
+										":datasetId",
+										":hashId",
 										"children"
 									],
 									"query": [
@@ -310,6 +372,20 @@
 											"key": "regionTypeFilter",
 											"value": "County",
 											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "datasetId",
+											"value": "87"
+										},
+										{
+											"key": "hashId",
+											"value": "pGVrEZ87be"
 										}
 									]
 								}
@@ -322,17 +398,30 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/region/8/87/2177236",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/region/:aggregationSchemeId/:datasetId/:urid",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"region",
-										"8",
-										"87",
-										"2177236"
+										":aggregationSchemeId",
+										":datasetId",
+										":urid"
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "datasetId",
+											"value": "87"
+										},
+										{
+											"key": "urid",
+											"value": "2177236"
+										}
 									]
 								}
 							},
@@ -344,17 +433,30 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/region/8/87/pGVrEZ87be",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/region/:aggregationSchemeId/:datasetId/:hashId",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"region",
-										"8",
-										"87",
-										"pGVrEZ87be"
+										":aggregationSchemeId",
+										":datasetId",
+										":hashId"
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "datasetId",
+											"value": "87"
+										},
+										{
+											"key": "hashId",
+											"value": "pGVrEZ87be"
+										}
 									]
 								}
 							},
@@ -366,17 +468,26 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/region/8/87/user",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/region/:aggregationSchemeId/:datasetId/user",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"region",
-										"8",
-										"87",
+										":aggregationSchemeId",
+										":datasetId",
 										"user"
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "datasetId",
+											"value": "87"
+										}
 									]
 								}
 							},
@@ -388,17 +499,26 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/region/8/87/built",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/region/:aggregationSchemeId/:datasetId/built",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"region",
-										"8",
-										"87",
+										":aggregationSchemeId",
+										":datasetId",
 										"built"
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "datasetId",
+											"value": "87"
+										}
 									]
 								}
 							},
@@ -410,10 +530,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/region/RegionTypes",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/region/RegionTypes",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -438,10 +557,9 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "https://{{Domain}}/v1/region/EconomicIndustryData/:aggregationSchemeId?urid=2177236",
-											"protocol": "https",
+											"raw": "{{api_domain}}api/v1/region/EconomicIndustryData/:aggregationSchemeId?urid=2177236",
 											"host": [
-												"{{Domain}}"
+												"{{api_domain}}api"
 											],
 											"path": [
 												"v1",
@@ -481,10 +599,9 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "https://{{Domain}}/v1/region/EconomicCommodityRPCData/:aggregationSchemeId?urid=2177236",
-											"protocol": "https",
+											"raw": "{{api_domain}}api/v1/region/EconomicCommodityRPCData/:aggregationSchemeId?urid=2177236",
 											"host": [
-												"{{Domain}}"
+												"{{api_domain}}api"
 											],
 											"path": [
 												"v1",
@@ -536,10 +653,9 @@
 											}
 										},
 										"url": {
-											"raw": "https://{{Domain}}/v1/region/build/CustomizeIndustry/:aggregationSchemeId",
-											"protocol": "https",
+											"raw": "{{api_domain}}api/v1/region/build/CustomizeIndustry/:aggregationSchemeId",
 											"host": [
-												"{{Domain}}"
+												"{{api_domain}}api"
 											],
 											"path": [
 												"v1",
@@ -573,10 +689,9 @@
 											}
 										},
 										"url": {
-											"raw": "https://{{Domain}}/v1/region/build/CustomizeAverageRPC/:aggregationSchemeId",
-											"protocol": "https",
+											"raw": "{{api_domain}}api/v1/region/build/CustomizeAverageRPC/:aggregationSchemeId",
 											"host": [
-												"{{Domain}}"
+												"{{api_domain}}api"
 											],
 											"path": [
 												"v1",
@@ -612,17 +727,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/region/build/combined/8",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/region/build/combined/:aggregationSchemeId",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"region",
 										"build",
 										"combined",
-										"8"
+										":aggregationSchemeId"
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
 									]
 								}
 							},
@@ -643,10 +763,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/region/build/batch/combined/8",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/region/build/batch/combined/:aggregationSchemeId",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -654,7 +773,13 @@
 										"build",
 										"batch",
 										"combined",
-										"8"
+										":aggregationSchemeId"
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
 									]
 								}
 							},
@@ -676,10 +801,9 @@
 									]
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/region/build/batch/combined/8/csv",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/region/build/batch/combined/:aggregationSchemeId/csv",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -687,8 +811,14 @@
 										"build",
 										"batch",
 										"combined",
-										"8",
+										":aggregationSchemeId",
 										"csv"
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
 									]
 								}
 							},
@@ -709,17 +839,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/region/build/batch/8",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/region/build/batch/:aggregationSchemeId",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"region",
 										"build",
 										"batch",
-										"8"
+										":aggregationSchemeId"
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
 									]
 								}
 							},
@@ -736,22 +871,27 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/8/RegionOverviewIndustries?hashId=EgxYnvP6av",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionOverviewIndustries?hashId=EgxYnvP6av",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"regions",
 										"export",
-										"8",
+										":aggregationSchemeId",
 										"RegionOverviewIndustries"
 									],
 									"query": [
 										{
 											"key": "hashId",
 											"value": "EgxYnvP6av"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
 										}
 									]
 								}
@@ -764,22 +904,27 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/8/StudyAreaDataGeneralInformation?hashId=EgxYnvP6av",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/StudyAreaDataGeneralInformation?hashId=EgxYnvP6av",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"regions",
 										"export",
-										"8",
+										":aggregationSchemeId",
 										"StudyAreaDataGeneralInformation"
 									],
 									"query": [
 										{
 											"key": "hashId",
 											"value": "EgxYnvP6av"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
 										}
 									]
 								}
@@ -792,22 +937,27 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/8/StudyAreaDataIndustryDetail?hashId=alDQwzY93a",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/StudyAreaDataIndustryDetail?hashId=alDQwzY93a",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"regions",
 										"export",
-										"8",
+										":aggregationSchemeId",
 										"StudyAreaDataIndustryDetail"
 									],
 									"query": [
 										{
 											"key": "hashId",
 											"value": "alDQwzY93a"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
 										}
 									]
 								}
@@ -820,22 +970,27 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/8/StudyAreaDataIndustrySummary?hashId=alDQwzY93a",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/StudyAreaDataIndustrySummary?hashId=alDQwzY93a",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"regions",
 										"export",
-										"8",
+										":aggregationSchemeId",
 										"StudyAreaDataIndustrySummary"
 									],
 									"query": [
 										{
 											"key": "hashId",
 											"value": "alDQwzY93a"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
 										}
 									]
 								}
@@ -848,16 +1003,15 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/8/RegionMultipliersDetailed?hashId=alDQwzY93a&effectType=Output&industryCode=15",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionMultipliersDetailed?hashId=alDQwzY93a&effectType=Output&industryCode=15",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"regions",
 										"export",
-										"8",
+										":aggregationSchemeId",
 										"RegionMultipliersDetailed"
 									],
 									"query": [
@@ -873,6 +1027,12 @@
 											"key": "industryCode",
 											"value": "15"
 										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
 									]
 								}
 							},
@@ -884,16 +1044,15 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/8/RegionMultipliersPerMillionEffects?hashId=alDQwzY93a&effectType=Output",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionMultipliersPerMillionEffects?hashId=alDQwzY93a&effectType=Output",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"regions",
 										"export",
-										"8",
+										":aggregationSchemeId",
 										"RegionMultipliersPerMillionEffects"
 									],
 									"query": [
@@ -904,6 +1063,192 @@
 										{
 											"key": "effectType",
 											"value": "Output"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Commodity Summary",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-commodity-summary?urid=1774359",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-summary"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Commodity Summary Averages",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-commodity-summary-averages?urid=1774359",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-summary-averages"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Commodity Exports",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-commodity-exports?urid=1774359",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-exports"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": "EdVkq095a7",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Commodity Imports",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-commodity-imports?urid=1774359",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-imports"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
 										}
 									]
 								}
@@ -916,22 +1261,27 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/8/RegionHouseholdLocalCommodityDemand?hashId=alDQwzY93a",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionHouseholdLocalCommodityDemand?hashId=alDQwzY93a",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"regions",
 										"export",
-										"8",
+										":aggregationSchemeId",
 										"RegionHouseholdLocalCommodityDemand"
 									],
 									"query": [
 										{
 											"key": "hashId",
 											"value": "alDQwzY93a"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
 										}
 									]
 								}
@@ -947,7 +1297,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -955,16 +1306,15 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/8/RegionHouseholdCommodityDemand?hashId=alDQwzY93a",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionHouseholdCommodityDemand?hashId=alDQwzY93a",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"regions",
 										"export",
-										"8",
+										":aggregationSchemeId",
 										"RegionHouseholdCommodityDemand"
 									],
 									"query": [
@@ -982,6 +1332,247 @@
 											"key": "hashId",
 											"value": "alDQwzY93a"
 										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Industry Commodity Demand",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-industry-commodity-demand/:industryCode?urid=1774359",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-industry-commodity-demand",
+										":industryCode"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "industryCode",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Industry Institutional Production",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-industry-institutional-production/:commodityCode?urid=1774359",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-industry-institutional-production",
+										":commodityCode"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "commodityCode",
+											"value": "3019"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Commodity Industry Demand",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-commodity-industry-demand/:commodityCode?urid=1774359",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-industry-demand",
+										":commodityCode"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "commodityCode",
+											"value": "3001"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Commodity Institutional Demand",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-commodity-institutional-demand/:commodityCode?urid=1774359",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-commodity-institutional-demand",
+										":commodityCode"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1774359"
+										},
+										{
+											"key": "userModelId",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "commodityCode",
+											"value": "3001"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Institution Industry Demand",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-institution-industry-demand?urid=1775084",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-institution-industry-demand"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "1775084"
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
 									]
 								}
 							},
@@ -996,7 +1587,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1004,16 +1596,15 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/8/RegionGeneralAlgebraicModeling?hashId=alDQwzY93a",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionGeneralAlgebraicModeling?hashId=alDQwzY93a",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"regions",
 										"export",
-										"8",
+										":aggregationSchemeId",
 										"RegionGeneralAlgebraicModeling"
 									],
 									"query": [
@@ -1031,6 +1622,12 @@
 											"key": "hashId",
 											"value": "alDQwzY93a"
 										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
 									]
 								}
 							},
@@ -1045,7 +1642,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1065,10 +1663,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/RegionIndustryOccupationDetail?hashId=alDQwzY93a",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionIndustryOccupationDetail?hashId=alDQwzY93a",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -1102,7 +1699,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1122,10 +1720,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/RegionIndustryOccupationAverages?hashId=alDQwzY93a",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionIndustryOccupationAverages?hashId=alDQwzY93a",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -1159,7 +1756,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1179,10 +1777,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesRegionSummary?hashId=alDQwzY93a",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesRegionSummary?hashId=alDQwzY93a",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -1216,7 +1813,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1236,10 +1834,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesIndustrySummary?hashId=alDQwzY93a",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesIndustrySummary?hashId=alDQwzY93a",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -1273,7 +1870,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1293,10 +1891,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesOccupationSummary?hashId=alDQwzY93a",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesOccupationSummary?hashId=alDQwzY93a",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -1339,10 +1936,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/EnvironmentSummary?urid=2177236",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/EnvironmentSummary?urid=2177236",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -1395,10 +1991,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/EnvironmentDetail?urid=2177236",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/EnvironmentDetail?urid=2177236",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -1439,10 +2034,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/StudyAreaDataDetailIxISam?urid=1654549",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/StudyAreaDataDetailIxISam?urid=1654549",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -1483,10 +2077,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/regions/export/:aggregationSchemeId/StudyAreaDataDetailIxCSam?urid=1654549",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/StudyAreaDataDetailIxCSam?urid=1654549",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -1529,9 +2122,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiUrl}}/v1/region/RegionTypes",
+							"raw": "{{api_domain}}api/v1/region/RegionTypes",
 							"host": [
-								"{{apiUrl}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -1548,10 +2141,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/aggregationSchemes",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/aggregationSchemes",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -1574,10 +2166,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/datasets",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/datasets",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -1593,15 +2184,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/datasets/10",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/datasets/:aggregationSchemeId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"datasets",
-								"10"
+								":aggregationSchemeId"
+							],
+							"variable": [
+								{
+									"key": "aggregationSchemeId",
+									"value": "8"
+								}
 							]
 						}
 					},
@@ -1613,10 +2209,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/dollarYears/:aggregationSchemeId/:datasetId",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/dollarYears/:aggregationSchemeId/:datasetId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -1632,6 +2227,74 @@
 								{
 									"key": "datasetId",
 									"value": "87"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Commodity Margins",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_domain}}api/v1/margins/:aggregationSchemeId/:datasetId/commodity-margins",
+							"host": [
+								"{{api_domain}}api"
+							],
+							"path": [
+								"v1",
+								"margins",
+								":aggregationSchemeId",
+								":datasetId",
+								"commodity-margins"
+							],
+							"variable": [
+								{
+									"key": "aggregationSchemeId",
+									"value": "8"
+								},
+								{
+									"key": "datasetId",
+									"value": "92"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Industry Margins",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_domain}}api/v1/margins/:aggregationSchemeId/:datasetId/industry-margins",
+							"host": [
+								"{{api_domain}}api"
+							],
+							"path": [
+								"v1",
+								"margins",
+								":aggregationSchemeId",
+								":datasetId",
+								"industry-margins"
+							],
+							"variable": [
+								{
+									"key": "aggregationSchemeId",
+									"value": "8"
+								},
+								{
+									"key": "datasetId",
+									"value": "92"
 								}
 							]
 						}
@@ -1664,18 +2327,27 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event/{{event_guid}}",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event/:eventGuid",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event",
-										"{{event_guid}}"
+										":eventGuid"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										},
+										{
+											"key": "eventGuid",
+											"value": "{{event_guid}}"
+										}
 									]
 								}
 							},
@@ -1699,17 +2371,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -1730,18 +2407,27 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event/{{event_guid}}",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event/:eventGuid",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event",
-										"{{event_guid}}"
+										":eventGuid"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										},
+										{
+											"key": "eventGuid",
+											"value": "{{event_guid}}"
+										}
 									]
 								}
 							},
@@ -1762,17 +2448,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -1793,17 +2484,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -1824,17 +2520,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -1855,17 +2556,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -1886,17 +2592,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -1916,7 +2627,8 @@
 											"var jsonData = JSON.parse(responseBody);\r",
 											"pm.collectionVariables.set(\"event_guid\", jsonData.id);"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1933,17 +2645,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -1963,7 +2680,8 @@
 											"var jsonData = JSON.parse(responseBody);\r",
 											"pm.collectionVariables.set(\"event_guid\", jsonData.id);"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1980,17 +2698,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -2010,7 +2733,8 @@
 											"var jsonData = JSON.parse(responseBody);\r",
 											"pm.collectionVariables.set(\"event_guid\", jsonData.id);"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2027,17 +2751,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -2058,17 +2787,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -2089,17 +2823,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -2120,17 +2859,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -2145,7 +2889,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2162,17 +2907,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -2188,7 +2938,8 @@
 											"var jsonData = JSON.parse(responseBody);\r",
 											"pm.collectionVariables.set(\"event_guid\", jsonData.id);"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2205,21 +2956,20 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/:projectId/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										":projectId",
+										":projectGuid",
 										"event"
 									],
 									"variable": [
 										{
-											"key": "projectId",
+											"key": "projectGuid",
 											"value": "{{project_guid}}"
 										}
 									]
@@ -2236,7 +2986,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2253,17 +3004,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/event",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -2275,26 +3031,25 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/:projectGUID/event/:eventGUID",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event/:eventGuid",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										":projectGUID",
+										":projectGuid",
 										"event",
-										":eventGUID"
+										":eventGuid"
 									],
 									"variable": [
 										{
-											"key": "projectGUID",
+											"key": "projectGuid",
 											"value": "{{project_guid}}"
 										},
 										{
-											"key": "eventGUID",
+											"key": "eventGuid",
 											"value": "{{event_guid}}"
 										}
 									]
@@ -2322,17 +3077,22 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/group",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/group",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"group"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -2344,18 +3104,27 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/group/",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/group/:groupGuid",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"group",
-										""
+										":groupGuid"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										},
+										{
+											"key": "groupGuid",
+											"value": "{{group_guid}}"
+										}
 									]
 								}
 							},
@@ -2367,18 +3136,23 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/group/",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/group/",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"group",
 										""
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
 									]
 								}
 							},
@@ -2399,18 +3173,27 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/group/{{group_guid}}",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/group/:groupGuid",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										"{{project_guid}}",
+										":projectGuid",
 										"group",
-										"{{group_guid}}"
+										":groupGuid"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										},
+										{
+											"key": "groupGuid",
+											"value": "{{group_guid}}"
+										}
 									]
 								}
 							},
@@ -2422,26 +3205,25 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/project/:projectGUID/group/:groupGUID",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/group/:groupGuid",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
 										"impact",
 										"project",
-										":projectGUID",
+										":projectGuid",
 										"group",
-										":groupGUID"
+										":groupGuid"
 									],
 									"variable": [
 										{
-											"key": "projectGUID",
+											"key": "projectGuid",
 											"value": "{{project_guid}}"
 										},
 										{
-											"key": "groupGUID",
+											"key": "groupGuid",
 											"value": "{{group_guid}}"
 										}
 									]
@@ -2463,10 +3245,9 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "https://{{Domain}}/v1/impact/folder/:folderId",
-											"protocol": "https",
+											"raw": "{{api_domain}}api/v1/impact/folder/:folderId",
 											"host": [
-												"{{Domain}}"
+												"{{api_domain}}api"
 											],
 											"path": [
 												"v1",
@@ -2490,10 +3271,9 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "https://{{Domain}}/v1/impact/folder/:folderId/folders",
-											"protocol": "https",
+											"raw": "{{api_domain}}api/v1/impact/folder/:folderId/folders",
 											"host": [
-												"{{Domain}}"
+												"{{api_domain}}api"
 											],
 											"path": [
 												"v1",
@@ -2518,10 +3298,9 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "https://{{Domain}}/v1/impact/folder/:folderId/projects",
-											"protocol": "https",
+											"raw": "{{api_domain}}api/v1/impact/folder/:folderId/projects",
 											"host": [
-												"{{Domain}}"
+												"{{api_domain}}api"
 											],
 											"path": [
 												"v1",
@@ -2555,10 +3334,9 @@
 											}
 										},
 										"url": {
-											"raw": "https://{{Domain}}/v1/impact/folder/:folderId",
-											"protocol": "https",
+											"raw": "{{api_domain}}api/v1/impact/folder/:folderId",
 											"host": [
-												"{{Domain}}"
+												"{{api_domain}}api"
 											],
 											"path": [
 												"v1",
@@ -2582,10 +3360,9 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "https://{{Domain}}/v1/impact/folder/:folderId",
-											"protocol": "https",
+											"raw": "{{api_domain}}api/v1/impact/folder/:folderId",
 											"host": [
-												"{{Domain}}"
+												"{{api_domain}}api"
 											],
 											"path": [
 												"v1",
@@ -2608,7 +3385,7 @@
 											"variable": [
 												{
 													"key": "folderId",
-													"value": "1741"
+													"value": ""
 												}
 											]
 										}
@@ -2635,10 +3412,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/folder",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/folder",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -2664,10 +3440,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/folder",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/folder",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -2692,10 +3467,9 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "https://{{Domain}}/v1/impact/shared-folders/:folderId",
-											"protocol": "https",
+											"raw": "{{api_domain}}api/v1/impact/shared-folders/:folderId",
 											"host": [
-												"{{Domain}}"
+												"{{api_domain}}api"
 											],
 											"path": [
 												"v1",
@@ -2719,10 +3493,9 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "https://{{Domain}}/v1/impact/shared-folders/:folderId/folders",
-											"protocol": "https",
+											"raw": "{{api_domain}}api/v1/impact/shared-folders/:folderId/folders",
 											"host": [
-												"{{Domain}}"
+												"{{api_domain}}api"
 											],
 											"path": [
 												"v1",
@@ -2747,10 +3520,9 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "https://{{Domain}}/v1/impact/shared-folders/:folderId/projects",
-											"protocol": "https",
+											"raw": "{{api_domain}}api/v1/impact/shared-folders/:folderId/projects",
 											"host": [
-												"{{Domain}}"
+												"{{api_domain}}api"
 											],
 											"path": [
 												"v1",
@@ -2789,10 +3561,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://{{Domain}}/v1/impact/shared-folders",
-									"protocol": "https",
+									"raw": "{{api_domain}}api/v1/impact/shared-folders",
 									"host": [
-										"{{Domain}}"
+										"{{api_domain}}api"
 									],
 									"path": [
 										"v1",
@@ -2811,10 +3582,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/IndustryCodes",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/IndustryCodes",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -2830,15 +3600,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/IndustryCodes/10",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/IndustryCodes/:aggregationSchemeId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"IndustryCodes",
-								"10"
+								":aggregationSchemeId"
+							],
+							"variable": [
+								{
+									"key": "aggregationSchemeId",
+									"value": "8"
+								}
 							]
 						}
 					},
@@ -2859,10 +3634,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/project",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/project",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -2879,16 +3653,21 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/project/:projectGuid",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"project",
-								"{{project_guid}}"
+								":projectGuid"
+							],
+							"variable": [
+								{
+									"key": "projectGuid",
+									"value": "{{project_guid}}"
+								}
 							]
 						}
 					},
@@ -2900,10 +3679,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/project",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/project",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -2927,10 +3705,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/project/shared",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/project/shared",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -2957,22 +3734,21 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/project/:projectId/share",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/share",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"project",
-								":projectId",
+								":projectGuid",
 								"share"
 							],
 							"variable": [
 								{
-									"key": "projectId",
-									"value": null
+									"key": "projectGuid",
+									"value": ""
 								}
 							]
 						}
@@ -2994,22 +3770,21 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/project/:projectId/transfer",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/transfer",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"project",
-								":projectId",
+								":projectGuid",
 								"transfer"
 							],
 							"variable": [
 								{
-									"key": "projectId",
-									"value": null
+									"key": "projectGuid",
+									"value": ""
 								}
 							]
 						}
@@ -3022,19 +3797,24 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}/eventtype/IndustryOutput/specification",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/eventtype/IndustryOutput/specification",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"project",
-								"{{project_guid}}",
+								":projectGuid",
 								"eventtype",
 								"IndustryOutput",
 								"specification"
+							],
+							"variable": [
+								{
+									"key": "projectGuid",
+									"value": "{{project_guid}}"
+								}
 							]
 						}
 					},
@@ -3055,16 +3835,21 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/project/{{project_guid}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/project/:projectGuid",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"project",
-								"{{project_guid}}"
+								":projectGuid"
+							],
+							"variable": [
+								{
+									"key": "projectGuid",
+									"value": "{{project_guid}}"
+								}
 							]
 						}
 					},
@@ -3076,21 +3861,20 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/project/:guid/duplicate",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/duplicate",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"project",
-								":guid",
+								":projectGuid",
 								"duplicate"
 							],
 							"variable": [
 								{
-									"key": "guid",
+									"key": "projectGuid",
 									"value": ""
 								}
 							]
@@ -3104,20 +3888,19 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/project/:projectGUID",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/project/:projectGuid",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"project",
-								":projectGUID"
+								":projectGuid"
 							],
 							"variable": [
 								{
-									"key": "projectGUID",
+									"key": "projectGuid",
 									"value": "{{project_guid}}"
 								}
 							]
@@ -3140,15 +3923,20 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/{{project_guid}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/:projectGuid",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
-								"{{project_guid}}"
+								":projectGuid"
+							],
+							"variable": [
+								{
+									"key": "projectGuid",
+									"value": "{{project_guid}}"
+								}
 							]
 						}
 					},
@@ -3160,16 +3948,21 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/cancel/{{impact_run_id}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/cancel/:impactRunId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"cancel",
-								"{{impact_run_id}}"
+								":impactRunId"
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
 							]
 						}
 					},
@@ -3181,16 +3974,21 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/status/{{impact_run_id}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/status/:impactRunId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"status",
-								"{{impact_run_id}}"
+								":impactRunId"
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
 							]
 						}
 					},
@@ -3212,17 +4010,22 @@
 							]
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/project/import/49ae7ce7-6e55-41d0-8cdf-28a16b3f40d0",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/project/import/:projectGuid",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"project",
 								"import",
-								"49ae7ce7-6e55-41d0-8cdf-28a16b3f40d0"
+								":projectGuid"
+							],
+							"variable": [
+								{
+									"key": "projectGuid",
+									"value": "49ae7ce7-6e55-41d0-8cdf-28a16b3f40d0"
+								}
 							]
 						}
 					},
@@ -3243,10 +4046,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/folder/:folderId/share",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/folder/:folderId/share",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -3276,16 +4078,21 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/{{impact_run_id}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/results/:impactRunId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"results",
-								"{{impact_run_id}}"
+								":impactRunId"
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
 							]
 						}
 					},
@@ -3297,10 +4104,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1//impact/results/ExportDetailEconomicIndicators/{{impact_run_id}}?year=2023",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1//impact/results/ExportDetailEconomicIndicators/:impactRunId?year=2023",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -3308,7 +4114,7 @@
 								"impact",
 								"results",
 								"ExportDetailEconomicIndicators",
-								"{{impact_run_id}}"
+								":impactRunId"
 							],
 							"query": [
 								{
@@ -3339,6 +4145,12 @@
 									"key": "eventTags",
 									"value": "",
 									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
 								}
 							]
 						}
@@ -3351,17 +4163,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/DetailedTaxes/{{impact_run_id}}?year=2023",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/results/DetailedTaxes/:impactRunId?year=2023",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"results",
 								"DetailedTaxes",
-								"{{impact_run_id}}"
+								":impactRunId"
 							],
 							"query": [
 								{
@@ -3392,6 +4203,12 @@
 									"key": "eventTags",
 									"value": null,
 									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
 								}
 							]
 						}
@@ -3404,17 +4221,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/SummaryEconomicIndicators/{{impact_run_id}}?year=2023",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/results/SummaryEconomicIndicators/:impactRunId?year=2023",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"results",
 								"SummaryEconomicIndicators",
-								"{{impact_run_id}}"
+								":impactRunId"
 							],
 							"query": [
 								{
@@ -3446,6 +4262,12 @@
 									"value": null,
 									"disabled": true
 								}
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
 							]
 						}
 					},
@@ -3457,17 +4279,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/SummaryTaxes/{{impact_run_id}}?year=2023",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/results/SummaryTaxes/:impactRunId?year=2023",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"results",
 								"SummaryTaxes",
-								"{{impact_run_id}}"
+								":impactRunId"
 							],
 							"query": [
 								{
@@ -3498,6 +4319,12 @@
 									"key": "eventTags",
 									"value": null,
 									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
 								}
 							]
 						}
@@ -3522,17 +4349,22 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EstimatedGrowthPercentage/{{impact_run_id}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/results/EstimatedGrowthPercentage/:impactRunId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"results",
 								"EstimatedGrowthPercentage",
-								"{{impact_run_id}}"
+								":impactRunId"
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
 							]
 						}
 					},
@@ -3547,7 +4379,8 @@
 								"exec": [
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -3567,17 +4400,22 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/ImpactOccupation/{{impact_run_id}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/results/ImpactOccupation/:impactRunId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"results",
 								"ImpactOccupation",
-								"{{impact_run_id}}"
+								":impactRunId"
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
 							]
 						}
 					},
@@ -3592,7 +4430,8 @@
 								"exec": [
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -3612,17 +4451,22 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/ImpactOccupationAverages/{{impact_run_id}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/results/ImpactOccupationAverages/:impactRunId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"results",
 								"ImpactOccupationAverages",
-								"{{impact_run_id}}"
+								":impactRunId"
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
 							]
 						}
 					},
@@ -3637,7 +4481,8 @@
 								"exec": [
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -3657,17 +4502,22 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/ImpactOccupationCoreCompetencies/{{impact_run_id}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/results/ImpactOccupationCoreCompetencies/:impactRunId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"results",
 								"ImpactOccupationCoreCompetencies",
-								"{{impact_run_id}}"
+								":impactRunId"
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
 							]
 						}
 					},
@@ -3691,17 +4541,22 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentCategoriesByImpact/{{impact_run_id}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/results/EnvironmentCategoriesByImpact/:impactRunId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"results",
 								"EnvironmentCategoriesByImpact",
-								"{{impact_run_id}}"
+								":impactRunId"
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
 							]
 						}
 					},
@@ -3725,17 +4580,22 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentIndustrySummary/{{impact_run_id}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/results/EnvironmentIndustrySummary/:impactRunId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"results",
 								"EnvironmentIndustrySummary",
-								"{{impact_run_id}}"
+								":impactRunId"
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
 							]
 						}
 					},
@@ -3759,17 +4619,22 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactDetails/{{impact_run_id}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/results/EnvironmentImpactDetails/:impactRunId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"results",
 								"EnvironmentImpactDetails",
-								"{{impact_run_id}}"
+								":impactRunId"
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
 							]
 						}
 					},
@@ -3793,17 +4658,22 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact/results/EnvironmentImpactIndustryDetails/{{impact_run_id}}",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/results/EnvironmentImpactIndustryDetails/:impactRunId",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"impact",
 								"results",
 								"EnvironmentImpactIndustryDetails",
-								"{{impact_run_id}}"
+								":impactRunId"
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
 							]
 						}
 					},
@@ -3820,10 +4690,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{Domain}}/v1/models?datasetId=87",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/models?datasetId=87",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -3854,10 +4723,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{Domain}}/v1/impact",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact",
 							"host": [
-								"{{Domain}}"
+								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
@@ -3873,19 +4741,21 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://api.implan.com/{{Domain}}/v1/impact/results/8689",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/impact/results/:impactRunId",
 							"host": [
-								"api",
-								"implan",
-								"com"
+								"{{api_domain}}api"
 							],
 							"path": [
-								"{{Domain}}",
 								"v1",
 								"impact",
 								"results",
-								"8689"
+								":impactRunId"
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
 							]
 						}
 					},
@@ -3897,15 +4767,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://api.implan.com/{{Domain}}/v1/industries",
-							"protocol": "https",
+							"raw": "{{api_domain}}api/v1/industries",
 							"host": [
-								"api",
-								"implan",
-								"com"
+								"{{api_domain}}api"
 							],
 							"path": [
-								"{{Domain}}",
 								"v1",
 								"industries"
 							]
@@ -3938,10 +4804,9 @@
 					"raw": "{  \"username\": \"\",   \"password\": \"\" }"
 				},
 				"url": {
-					"raw": "https://{{Domain}}/auth",
-					"protocol": "https",
+					"raw": "{{api_domain}}api/auth",
 					"host": [
-						"{{Domain}}"
+						"{{api_domain}}api"
 					],
 					"path": [
 						"auth"
@@ -3973,8 +4838,8 @@
 	],
 	"variable": [
 		{
-			"key": "Domain",
-			"value": "api.implan.com/api",
+			"key": "api_domain",
+			"value": "https://api.implan.com/",
 			"type": "string"
 		},
 		{
