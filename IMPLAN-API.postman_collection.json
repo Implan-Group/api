@@ -2136,7 +2136,7 @@
 									"query": [
 										{
 											"key": "industrysetId",
-											"value": "8",
+											"value": "",
 											"disabled": true
 										}
 									]
@@ -2158,13 +2158,6 @@
 										"v1",
 										"aggregationSchemes",
 										":aggregationSchemeId"
-									],
-									"query": [
-										{
-											"key": "industrysetId",
-											"value": "8",
-											"disabled": true
-										}
 									],
 									"variable": [
 										{
@@ -2192,13 +2185,6 @@
 										":aggregationSchemeId",
 										"industry-mapping"
 									],
-									"query": [
-										{
-											"key": "industrysetId",
-											"value": "8",
-											"disabled": true
-										}
-									],
 									"variable": [
 										{
 											"key": "aggregationSchemeId",
@@ -2225,13 +2211,6 @@
 										":aggregationSchemeId",
 										"commodity-mapping"
 									],
-									"query": [
-										{
-											"key": "industrysetId",
-											"value": "8",
-											"disabled": true
-										}
-									],
 									"variable": [
 										{
 											"key": "aggregationSchemeId",
@@ -2243,13 +2222,13 @@
 							"response": []
 						},
 						{
-							"name": "Create Custom Industry Aggregation Scheme Copy",
+							"name": "Create Custom Industry Aggregation Scheme",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \r\n    \"description\": \"PHX-10001 - ImpactApi Custom Agg Scheme - T06\",  \r\n    \"industrysetid\": 8,\r\n    \"groups\": [  \r\n        {  \r\n            \"description\": \"PHX-10001 - T01 - G01\",  \r\n            \"sectors\": [  \r\n                {  \r\n                    \"description\": \"PHX-10001 - T01 - G01 - S01\",  \r\n                    \"code\": 1  \r\n                },  \r\n                {  \r\n                    \"description\": \"PHX-10001 - T01 - G01 - S02\",  \r\n                    \"code\": 2  \r\n                },\r\n                {  \r\n                    \"description\": \"PHX-10001 - T01 - G01 - S03\",  \r\n                    \"code\": 3  \r\n                },\r\n                {  \r\n                    \"description\": \"PHX-10001 - T01 - G01 - S04\",  \r\n                    \"code\": 4  \r\n                }\r\n            ]  \r\n        }\r\n    ]  \r\n}",
+									"raw": "{  \r\n    \"description\": \"{{Custom Aggregation Scheme Name}}\",  \r\n    \"industrysetid\": {{Custom Aggregation Scheme base Industry Set Identifier}},\r\n    \"groups\": [  \r\n        {  \r\n            \"description\": \"{{Industry Group Name}}\",  \r\n            \"sectors\": [  \r\n                {  \r\n                    \"description\": \"{{Industry Sector Name}}\",  \r\n                    \"code\": {{Industry Code}}\r\n                },  \r\n                ...\r\n                {  \r\n                    \"description\": \"{{Industry Sector Name}}\",  \r\n                    \"code\": {{Industry Code}}\r\n                }\r\n            ]  \r\n        },\r\n        ...\r\n        {  \r\n            \"description\": \"{{Industry Group Name}}\",  \r\n            \"sectors\": [  \r\n                {  \r\n                    \"description\": \"{{Industry Sector Name}}\",  \r\n                    \"code\": {{Industry Code}}\r\n                },  \r\n                ...\r\n                {  \r\n                    \"description\": \"{{Industry Sector Name}}\",  \r\n                    \"code\": {{Industry Code}}\r\n                }\r\n            ]  \r\n        }\r\n    ]  \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
