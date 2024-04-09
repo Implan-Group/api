@@ -339,10 +339,6 @@ This endpoint will return commodity margins data in CSV format.
 
 - This endpoint returns the details for a single Aggregation Scheme
 
-### Endpoint
-
-- `GET {{api_domain}}api/v1/aggregationSchemes/{{AggregationSchemeId}}`
-
 ### Parameters
 
 - Bearer Token
@@ -363,13 +359,15 @@ This endpoint will return commodity margins data in CSV format.
 }
 ```
 
+### Endpoint
+
+- `GET {{api_domain}}api/v1/aggregationSchemes/{{AggregationSchemeId}}`
+
+
+
 ## Aggregation Scheme Industries
 
 - This endpoint returns a list of my industries and the IMPLAN codes mapped to them for a single Aggregation Scheme
-
-### Endpoint
-
-- `GET {{api_domain}}api/v1/aggregationSchemes/{{AggregationSchemeId}}/industry-mapping`
 
 ### Parameters
 
@@ -400,13 +398,15 @@ This endpoint will return commodity margins data in CSV format.
 ]
 ```
 
+### Endpoint
+
+- `GET {{api_domain}}api/v1/aggregationSchemes/{{AggregationSchemeId}}/industry-mapping`
+
+
+
 ## Aggregation Scheme Commodities
 
 - This endpoint returns a list of my commodities and the IMPLAN codes mapped to them for a single Aggregation Scheme
-
-### Endpoint
-
-- `GET {{api_domain}}api/v1/aggregationSchemes/{{AggregationSchemeId}}/commodity-mapping`
 
 ### Parameters
 
@@ -436,6 +436,65 @@ This endpoint will return commodity margins data in CSV format.
     }
 ]
 ```
+
+### Endpoint
+- `GET {{api_domain}}api/v1/aggregationSchemes/{{AggregationSchemeId}}/commodity-mapping`
+
+  
+
+## Create Custom Aggregation Scheme
+
+- This endpoints lets an ImpactAPI consumer define a Custom Aggregation Scheme
+- Just like in the IMPLAN Cloud platform, not all Industry Codes must be defined as part of a Sector. Any unmapped industries will automatically be added as-is to the Custom Aggregation Scheme.
+
+### Parameters
+- Bearer Token
+
+### Request
+```json
+{  
+    "description": "{{Custom Aggregation Scheme Name}}",  
+    "industrysetid": {{IndustrySetId}},
+    "groups": [  
+        {  
+            "description": "{{Group Description}}",  
+            "sectors": [  
+                {  
+                    "description": "{{Sector Description}}",  
+                    "code": {{Industry Code grouped in this Sector}}
+                },  
+            ...
+                {  
+                    "description": "{{Sector Description}}",  
+                    "code": {{Industry Code grouped in this Sector}}
+                }
+            ]  
+        },  
+    ...
+     {  
+            "description": "{{Group Description}}",  
+            "sectors": [  
+                {  
+                    "description": "{{Sector Description}}",  
+                    "code": {{Industry Code grouped in this Sector}}
+                },  
+            ...
+                {  
+                    "description": "{{Sector Description}}",  
+                    "code": {{Industry Code grouped in this Sector}}
+                }
+            ]  
+        }  
+    ]  
+}
+```
+
+### Response
+- A successful Custom Aggregation Scheme Creation request will respond with a single Number, the newly created `AggregationSchemeId`
+- Other endpoints, such as `Aggregation Scheme Details`, can be used to determine when the Custom Aggregation Scheme finishes building
+
+### Endpoint
+- `GET {{api_domain}}api/v1/aggregationSchemes/create-custom-industry-aggregation-scheme`
 
 
 

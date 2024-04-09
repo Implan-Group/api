@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "78c9f7fc-95da-4422-b921-9bd766401972",
-		"name": "IMPLAN-API 24.2",
+		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "28583816"
 	},
@@ -2237,6 +2237,34 @@
 											"key": "aggregationSchemeId",
 											"value": ""
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Custom Industry Aggregation Scheme Copy",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \r\n    \"description\": \"PHX-10001 - ImpactApi Custom Agg Scheme - T06\",  \r\n    \"industrysetid\": 8,\r\n    \"groups\": [  \r\n        {  \r\n            \"description\": \"PHX-10001 - T01 - G01\",  \r\n            \"sectors\": [  \r\n                {  \r\n                    \"description\": \"PHX-10001 - T01 - G01 - S01\",  \r\n                    \"code\": 1  \r\n                },  \r\n                {  \r\n                    \"description\": \"PHX-10001 - T01 - G01 - S02\",  \r\n                    \"code\": 2  \r\n                },\r\n                {  \r\n                    \"description\": \"PHX-10001 - T01 - G01 - S03\",  \r\n                    \"code\": 3  \r\n                },\r\n                {  \r\n                    \"description\": \"PHX-10001 - T01 - G01 - S04\",  \r\n                    \"code\": 4  \r\n                }\r\n            ]  \r\n        }\r\n    ]  \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_domain}}api/v1/aggregationSchemes/create-custom-industry-aggregation-scheme",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"aggregationSchemes",
+										"create-custom-industry-aggregation-scheme"
 									]
 								}
 							},
