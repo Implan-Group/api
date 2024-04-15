@@ -1752,7 +1752,47 @@ This endpoint provides a list of possible dollar year deflators that can be appl
 #### Response
 * Array of valid dollar years for the given aggregation scheme and dataset combo
 #### Endpoint
-**GET {{api_domain}}api/v1/dollarYears/{{aggregationSchemeId}}/{{datasetId}}**
+**GET {{api_domain}}api/v1/dollar-years/{{aggregationSchemeId}}/{{datasetId}}**
+
+# Deflators
+## Get Deflators
+This endpoint retrieves a list of Deflators
+### Parameters
+- `Bearer Token`
+- `aggregationSchemeId` (required)
+- `dataSetId` (required)
+- `deflatorType` (required)
+  - Valid deflator types are:
+    - **1** - Industry
+    - **2** - Commodity
+    - **4** - Other Institution
+    - **7** - Household
+    - **8** - Trade Institution
+    - **9** - Value Added Factor
+### Response
+- A `json` array of deflator information, broken down into `dollar_year`, `code`, `value`, and `description` for all deflators matching the **Parameters**
+```json
+[
+    {
+        "dollar_year": 1997,
+        "code": 1,
+        "value": 0.598684177840455,
+        "description": "Oilseed farming"
+    },
+    ...
+    {
+        "dollar_year": 2060,
+        "code": 546,
+        "value": 1.09899329593038,
+        "description": "* Employment and payroll of federal govt, non-military"
+    }
+]
+```
+### Endpoint
+- `GET {{api_domain}}api/v1/deflators?aggregationSchemeId={{aggregationSchemeId}}&dataSetId={{dataSetId}}&deflatorType={{deflatorType}}
+
+
+
 
 
 ## Results Totals (GET)
