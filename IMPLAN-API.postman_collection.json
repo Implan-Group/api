@@ -2135,7 +2135,7 @@
 									],
 									"query": [
 										{
-											"key": "industrysetId",
+											"key": "industrySetId",
 											"value": "",
 											"disabled": true
 										}
@@ -2162,7 +2162,7 @@
 									"variable": [
 										{
 											"key": "aggregationSchemeId",
-											"value": ""
+											"value": "1090"
 										}
 									]
 								}
@@ -2228,7 +2228,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \r\n    \"description\": \"{{Custom Aggregation Scheme Name}}\",  \r\n    \"industrysetid\": {{Custom Aggregation Scheme base Industry Set Identifier}},\r\n    \"groups\": [  \r\n        {  \r\n            \"description\": \"{{Industry Group Name}}\",  \r\n            \"sectors\": [  \r\n                {  \r\n                    \"description\": \"{{Industry Sector Name}}\",  \r\n                    \"code\": {{Industry Code}}\r\n                },  \r\n                ...\r\n                {  \r\n                    \"description\": \"{{Industry Sector Name}}\",  \r\n                    \"code\": {{Industry Code}}\r\n                }\r\n            ]  \r\n        },\r\n        ...\r\n        {  \r\n            \"description\": \"{{Industry Group Name}}\",  \r\n            \"sectors\": [  \r\n                {  \r\n                    \"description\": \"{{Industry Sector Name}}\",  \r\n                    \"code\": {{Industry Code}}\r\n                },  \r\n                ...\r\n                {  \r\n                    \"description\": \"{{Industry Sector Name}}\",  \r\n                    \"code\": {{Industry Code}}\r\n                }\r\n            ]  \r\n        }\r\n    ]  \r\n}",
+									"raw": "{  \r\n    \"description\": \"PHX-10001 Test\",  \r\n    \"industrysetid\": 8,\r\n    \"groups\": [  \r\n        {  \r\n            \"description\": \"G1\",  \r\n            \"sectors\": [  \r\n                {  \r\n                    \"description\": \"S1\",  \r\n                    \"code\": 1\r\n                },  \r\n                {  \r\n                    \"description\": \"S2\",  \r\n                    \"code\": 2\r\n                }\r\n            ]  \r\n        }\r\n    ]  \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2306,7 +2306,7 @@
 							"variable": [
 								{
 									"key": "aggregationSchemeId",
-									"value": "8"
+									"value": ""
 								}
 							]
 						}
@@ -2319,24 +2319,24 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{api_domain}}api/v1/dollarYears/:aggregationSchemeId/:datasetId",
+							"raw": "{{api_domain}}api/v1/dollar-years/:aggregationSchemeId/:datasetId",
 							"host": [
 								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
-								"dollarYears",
+								"dollar-years",
 								":aggregationSchemeId",
 								":datasetId"
 							],
 							"variable": [
 								{
 									"key": "aggregationSchemeId",
-									"value": "8"
+									"value": ""
 								},
 								{
 									"key": "datasetId",
-									"value": "87"
+									"value": ""
 								}
 							]
 						}
@@ -2405,6 +2405,41 @@
 								{
 									"key": "datasetId",
 									"value": "92"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deflators",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_domain}}api/v1/deflators/:aggregationSchemeId/:dataSetId/:deflatorType",
+							"host": [
+								"{{api_domain}}api"
+							],
+							"path": [
+								"v1",
+								"deflators",
+								":aggregationSchemeId",
+								":dataSetId",
+								":deflatorType"
+							],
+							"variable": [
+								{
+									"key": "aggregationSchemeId",
+									"value": ""
+								},
+								{
+									"key": "dataSetId",
+									"value": ""
+								},
+								{
+									"key": "deflatorType",
+									"value": ""
 								}
 							]
 						}
@@ -3699,6 +3734,13 @@
 							"path": [
 								"v1",
 								"IndustryCodes"
+							],
+							"query": [
+								{
+									"key": "industrySetId",
+									"value": "",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -3722,8 +3764,26 @@
 							"variable": [
 								{
 									"key": "aggregationSchemeId",
-									"value": "8"
+									"value": ""
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Industry Sets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_domain}}api/v1/industry-sets",
+							"host": [
+								"{{api_domain}}api"
+							],
+							"path": [
+								"v1",
+								"industry-sets"
 							]
 						}
 					},
