@@ -251,39 +251,62 @@ Will return Models
 In 2022, the BEA will redefine the North American Industry Classifications System (NAICS) codes. This change will result in a change to the IMPLAN industry scheme for the 2023 IMPLAN data release. The API will then be updated to include these new industry designations when that data is added to the system.
 #### Parameters
 * Bearer Token
-#### Response (List)
-* Industry Id 
-* Industry Codes
-* Industry Description
-
-Will return Industries
-```
+* `IndustrySetId` _(optional)_
+  * If no `IndustrySetId` is specifed, the current default Industry Set will be used
+#### Response
+- A `json` response will include _all_ Industry Codes unless an optional `IndustrySetId` is specific, in which case the response will be filtered to only the Industry Codes from that Industry Set
+```json
 [
-
     {
-
         "id": 4638,
-
         "code": 1,
-
         "description": "Oilseed farming"
-
     },
-
+    ...
     {
-
-        "id": 4639,
-
-        "code": 2,
-
-        "description": "Grain farming"
-
+        "id": 5183,
+        "code": 546,
+        "description": "* Employment and payroll of federal govt, non-military"
     }
-
 ]
 ```
 #### Endpoint
-**GET {{api_domain}}api/v1/IndustryCodes**
+`GET {{api_domain}}api/v1/IndustryCodes`
+`GET {{api_domain}}api/v1/IndustryCodes?industrySetId={{industrySetId}}`
+
+## Industry Sets
+- This endpoint provides a list of all the details about all existing Industry Sets
+#### Parameters
+- Bearer Token
+#### Response
+- `json` list of Industry Set details:
+```json
+[
+    {
+        "id": 1,
+        "description": "440 Industries",
+        "defaultAggregationSchemeId": null,
+        "activeStatus": null,
+        "isDefault": null,
+        "mapTypeId": 1,
+        "isNaicsCompatible": false,
+        "sort": null
+    },
+    ...
+    {
+        "id": 11,
+        "description": "46 Industries (2018 International)",
+        "defaultAggregationSchemeId": 13,
+        "activeStatus": true,
+        "isDefault": null,
+        "mapTypeId": 3,
+        "isNaicsCompatible": false,
+        "sort": 4
+    }
+]
+```
+#### Endpoint
+`GET {{api_domain}}api/v1/industry-sets`
 
 ---
 
@@ -294,7 +317,7 @@ Will return Industries
 This endpoint will return a list of aggregation schemes available for use.
 #### Parameters
 * Bearer Token
-* IndustrySetId (optional filter)
+* `IndustrySetId` _(optional)_
 #### Response (List)
 * Id (Aggregation Scheme Id)
 * Description
@@ -302,8 +325,35 @@ This endpoint will return a list of aggregation schemes available for use.
 * Household Set Ids []
 * Map Code
 * Status
-#### Endpoint
-**GET {{api_domain}}api/v1/aggregationschemes?industrySetId={{industrySetId}}**
+```json
+[
+    {
+        "id": 1,
+        "description": "536 Unaggregated",
+        "industrySetId": 2,
+        "householdSetIds": [
+            1,
+            2
+        ],
+        "mapCode": "US",
+        "status": "Complete"
+    },
+    ...
+    {
+        "id": 1090,
+        "description": "PHX-10001 Test",
+        "industrySetId": 8,
+        "householdSetIds": [
+            1
+        ],
+        "mapCode": "US",
+        "status": "Complete"
+    }
+]
+```
+#### Endpoints
+`GET {{api_domain}}api/v1/aggregationschemes`
+`GET {{api_domain}}api/v1/aggregationschemes?industrySetId={{industrySetId}}`
 
 
 ## Industry Margins Endpoint (Get)
@@ -1756,7 +1806,8 @@ This endpoint provides a list of possible dollar year deflators that can be appl
 
 # Deflators
 ## Get Deflators
-This endpoint retrieves a list of Deflators
+- This endpoint retrieves a list of Deflators
+
 ### Parameters
 - `Bearer Token`
 - `aggregationSchemeId` (required)
@@ -1776,20 +1827,20 @@ This endpoint retrieves a list of Deflators
     {
         "dollar_year": 1997,
         "code": 1,
-        "value": 0.598684177840455,
+        "value": 0.598,
         "description": "Oilseed farming"
     },
     ...
     {
         "dollar_year": 2060,
         "code": 546,
-        "value": 1.09899329593038,
+        "value": 1.098,
         "description": "* Employment and payroll of federal govt, non-military"
     }
 ]
 ```
 ### Endpoint
-- `GET {{api_domain}}api/v1/deflators?aggregationSchemeId={{aggregationSchemeId}}&dataSetId={{dataSetId}}&deflatorType={{deflatorType}}
+- `GET {{api_domain}}api/v1/deflators/:aggregationSchemeId/:dataSetId/:deflatorType`
 
 
 
