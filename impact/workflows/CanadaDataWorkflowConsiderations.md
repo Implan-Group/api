@@ -150,6 +150,15 @@ To run an impact analysis, the following 3 steps must be completed first:
 Projects are the top level of organization for an analysis and contain the specifics of the aggregation scheme, household set, MRIO status, and folder placement. Below are the primary endpoints required for setting up a project.
 * [Create Project (POST)](https://github.com/Implan-Group/api/tree/main/impact#create-project-post)
   * Creates a project and returns basic information about the project, including a unique identifier `ProjectId` (GUID) to be used in other API requests.
+  * Sample Body Request:
+  ```
+  {
+    "Title" : "Sample Canada Project",
+    "AggregationSchemeId" : 12,
+    "HouseholdSetId" : 4,
+    "FolderId": 6883,
+    "IsMrio": false
+  }
 * [Get Project (GET)](https://github.com/Implan-Group/api/tree/main/impact#get-projects-get)
   * Returns basic information about the project referenced by the `ProjectId`.
 * [Update Project (PUT)](https://github.com/Implan-Group/api/tree/main/impact#update-project-put)
@@ -163,7 +172,19 @@ For information on using folders, see the [Folders](https://github.com/Implan-Gr
 ### Creating Events
 Events represent the economic activity taking place and come in different forms. Below are the primary endpoints required for setting up events. Reference the `ProjectId` from the created project where required.
 * [Create Event (POST)](https://github.com/Implan-Group/api/tree/main/impact#create-event-post)
-  * Creates an event in the project specified and returns information about the even, including an event identifier `EventId` (GUID). This endpoint also makes use of an `IndustryCode` body parameter.  
+  * Creates an event in the project specified and returns information about the event, including an event identifier `EventId` (GUID). This endpoint also makes use of an `IndustryCode` body parameter.
+  * Sample Body Request:
+  ```
+  {
+    "ImpactEventType": "IndustryOutput",
+    "Title" : "Industry Output",
+    "Output" : 100000.01,
+    "IndustryCode": 1,
+    "Employment" : 20.25,
+    "EmployeeCompensation" : 50000.23,
+    "ProprietorIncome" : 3400.233,
+    "Tags": []
+  }
 * [Get Event (GET)](https://github.com/Implan-Group/api/tree/main/impact#create-event-post)
   * Gets the event specified by the `EventId`.
 * [Update Event (PUT)](https://github.com/Implan-Group/api/tree/main/impact#update-event-put)
@@ -175,6 +196,20 @@ Events represent the economic activity taking place and come in different forms.
 Groups represent the region and timeframe in which an event takes place. Use the following endpoints to arrange groups in your project. Reference the `ProjectId` and `EventId`s from the created project and events where required.
 * [Create Group (POST)](https://github.com/Implan-Group/api/tree/main/impact#create-group-post)
   * Creates a group that contains a reference to a project, a region, and to 1 or more events. Returns a group identifier `GroupId` (GUID).
+  * Sample Body Request:
+  ```
+  {
+    "ProjectId": "32cf4b69-1b04-443a-a450-cc88e18e6905",
+    "Title" : "Sample Group 1",
+    "HashId" : "5Oad9R1PbZ",
+    "DollarYear" : 2024,
+    "DatasetId" : 93,
+    "Scaling Factor": 1,
+    "groupEvents": [{
+            "eventId": "6741df0d-c26c-44cf-9992-8aab695efd91",
+            "scalingFactor": 1
+        }]
+  }
 * [Get Group (GET)](https://github.com/Implan-Group/api/tree/main/impact#get-group-get)
   * Returns data on the group specified by the `GroupId`.
 * [Update Group (PUT)](https://github.com/Implan-Group/api/tree/main/impact#update-group-put)
