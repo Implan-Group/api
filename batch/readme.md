@@ -474,26 +474,26 @@ This will return a similar response to the Instant Impact, but will be formatted
 
 
 ### C# example
-
-**var** client = **new** RestClient("https://{{api_domain}}/{{env}}/auth");
+```
+var client = new RestClient("https://{{api_domain}}/{{env}}/auth");
 
 client.Timeout = -1;
 
-**var** request = **new** RestRequest(Method.POST);
+var request = new RestRequest(Method.POST);
 
 request.AddHeader("Content-Type", "text/plain");
 
-**var** body = @"{  ""username"": ""{{email}}"",   ""password"": ""{{password}}"" }";
+var body = @"{  ""username"": ""{{email}}"",   ""password"": ""{{password}}"" }";
 
 request.AddParameter("text/plain", body,  ParameterType.RequestBody);
 
 IRestResponse response = client.Execute(request);
 
 Console.WriteLine(response.Content);
-
+```
 
 ### Java Example
-
+```
 HttpResponse&lt;String> response = Unirest.post("https://{{api_domain}}/{{env}}/auth")
 
   .header("Content-Type", "text/plain")
@@ -501,16 +501,13 @@ HttpResponse&lt;String> response = Unirest.post("https://{{api_domain}}/{{env}}/
   .body("{  \"username\": \"{{email}}\",   \"password\": \"{{password}}\" }")
 
   .asString();
-
-
-### 
-
+```
 
 ### Node Example
+```
+var request = require('request');
 
-var request **=** **require**('request');
-
-var options **=** {
+var options = {
 
   'method': 'POST',
 
@@ -526,18 +523,18 @@ var options **=** {
 
 };
 
-request(options, **function** (error, response) {
+request(options, function (error, response) {
 
-  **if** (error) **throw** **new** Error(error);
+  if (error) throw new Error(error);
 
-  console.**log**(response.body);
+  console.log(response.body);
 
 });
-
+```
 
 ###  Python Example
-
-**import** http.client
+```
+import http.client
 
 conn = http.client.HTTPSConnection("{{api_domain}}")
 
@@ -555,4 +552,5 @@ res = conn.getresponse()
 
 data = res.read()
 
-**print**(data.decode("utf-8"))
+print(data.decode("utf-8"))
+```
