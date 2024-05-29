@@ -1,0 +1,26 @@
+[Bb]in/
+[Oo]bj/
+packages/
+artifacts/
+
+# Nuget
+.nuget/
+*.nuget.targets
+*.nuget.props
+# IDE
+.vs/
+.vscode/
+*.lock.json
+*.orig
+.DS_Store
+*.sln.ide
+*.user
+*.suo
+*.userprefs
+
+# JetBrains
+_ReSharper.*
+*.ReSharper.user
+*.resharper.user
+.idea/
+*.DotSettings.*
