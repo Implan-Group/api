@@ -1,7 +1,7 @@
 ﻿using ConsoleApp.Services;
 using RestSharp;
 
-namespace ConsoleApp.AggregationSchemes;
+namespace ConsoleApp.Endpoints;
 
 public sealed record class AggregationScheme
 {
@@ -13,22 +13,25 @@ public sealed record class AggregationScheme
     public string Status { get; set; }
 }
 
-public class AggregationSchemes
+public static class AggregationSchemes
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="industrySetId"></param>
+    /// <returns></returns>
     public static AggregationScheme[] GetAggregationSchemes(int? industrySetId = null)
     {
         //GET {api_domain}api/v1/aggregationschemes?industrySetId={industrySetId}
         var request = new RestRequest("api/v1/aggregationSchemes");
+        request.Method = Method.Get;
         if (industrySetId is not null)
         {
             request.AddParameter("industrySetId", industrySetId.Value);
         }
-        request.Method = Method.Get;
-
+        
         return Rest.GetResponseData<AggregationScheme[]>(request);
     }
-    
-    
-    //AddUrlSegment works with placeholder values in the request URL
-    // {entity}
 }
+
+// Note: the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries

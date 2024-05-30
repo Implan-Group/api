@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp.Services;
+﻿namespace ConsoleApp.Models;
 
 public sealed record class ImplanAuthentication
 {

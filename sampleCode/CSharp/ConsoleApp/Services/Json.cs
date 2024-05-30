@@ -7,12 +7,12 @@ namespace ConsoleApp.Services;
 
 public static class Json
 {
-    internal static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions()
+    internal static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        
+        WriteIndented = true,
         // TODO: Remove all below after debugging
-        UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow, 
+        //UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow, 
         TypeInfoResolver = new DefaultJsonTypeInfoResolver()
         {
             Modifiers =
@@ -24,7 +24,13 @@ public static class Json
 
     public static string Serialize<T>(T value)
     {
-        return JsonSerializer.Serialize(value, _jsonSerializerOptions);
+        return JsonSerializer.Serialize(value, JsonSerializerOptions);
+    }
+
+    public static T? Deserialize<T>(string? json)
+    {
+        if (json is null) return default;
+        return JsonSerializer.Deserialize<T>(json, JsonSerializerOptions);
     }
     
     
@@ -49,7 +55,11 @@ public static class Json
                 var setter = property.Set;
                 property.Set = (instance, value) =>
                 {
-                    ArgumentNullException.ThrowIfNull(value);
+                    if (value is null)
+                    {
+                        throw new ArgumentNullException(nameof(value),
+                            $"Cannot set {propertyInfo.DeclaringType?.Name}.{propertyInfo.Name} to null!");
+                    }
                     setter(instance, value);
                 };
             }

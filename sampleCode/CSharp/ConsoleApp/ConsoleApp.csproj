@@ -11,8 +11,4 @@
       <PackageReference Include="RestSharp" Version="111.1.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Authentication\" />
-    </ItemGroup>
-
 </Project>
