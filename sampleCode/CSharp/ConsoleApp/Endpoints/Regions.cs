@@ -1,7 +1,4 @@
-﻿using ConsoleApp.Services;
-using RestSharp;
-
-namespace ConsoleApp.Endpoints;
+﻿namespace ConsoleApp.Endpoints;
 
 public sealed record class Region
 {
@@ -23,19 +20,22 @@ public sealed record class Region
     public string RegionType { get; set; }
     public bool HasAccessibleChildren { get; set; }
     public string RegionTypeDescription { get; set; }
-    public string GeoId { get; set; }
+    public string? GeoId { get; set; }
     public bool IsMrioAllowed { get; set; }
 }
 
 public static class Regions
 {
+    /// <summary>
+    /// Gets a list of all Region Types
+    /// </summary>
+    /// <returns></returns>
     public static string[] GetRegionTypes()
     {
-        // GET {api_domain}api/v1/region/RegionTypes
         var request = new RestRequest("api/v1/region/RegionTypes");
         request.Method = Method.Get;
 
-        return Rest.GetResponseData<string[]>(request);
+        return Rest.GetResponseData<string[]>(request).ThrowIfNull();
     }
 
     public static Region GetTopLevelRegion(int aggregationSchemeId, int dataSetId, string? hashIdOrUrid = null)
@@ -79,7 +79,7 @@ public static class Regions
             request.AddParameter("regionTypeFilter", regionType);
         }
 
-        return Rest.GetResponseData<Region[]>(request);
+        return Rest.GetResponseData<Region[]>(request).ThrowIfNull();
     }
 
     public static Region[] GetUserRegions(int aggregationSchemeId, int dataSetId)
@@ -90,6 +90,6 @@ public static class Regions
         request.AddUrlSegment("aggregationSchemeId", aggregationSchemeId);
         request.AddUrlSegment("dataSetId", dataSetId);
 
-        return Rest.GetResponseData<Region[]>(request);
+        return Rest.GetResponseData<Region[]>(request).ThrowIfNull();
     }
 }

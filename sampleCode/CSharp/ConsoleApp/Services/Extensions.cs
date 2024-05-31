@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using System.Text;
-using RestSharp;
 
 namespace ConsoleApp.Services;
 
@@ -16,6 +14,11 @@ public static class Extensions
         if (value is not null)
             return value;
         throw new ArgumentNullException(valueName);
+    }
+
+    public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? str)
+    {
+        return string.IsNullOrWhiteSpace(str);
     }
 
     public static void AppendUrlSegment<T>(this RestRequest restRequest, string name, T value)

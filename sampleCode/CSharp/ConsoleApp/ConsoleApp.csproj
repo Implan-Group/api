@@ -7,6 +7,19 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <!-- Global Usings -->
+    <ItemGroup>
+        <Using Include="System.Diagnostics"/>
+        <Using Include="System.Text"/>
+
+        <Using Include="RestSharp"/>
+        
+        <Using Include="ConsoleApp.Endpoints"/>
+        <Using Include="ConsoleApp.Models"/>
+        <Using Include="ConsoleApp.Services"/>
+    </ItemGroup>
+    
+    <!-- NuGet Packages -->
     <ItemGroup>
       <PackageReference Include="RestSharp" Version="111.1.0" />
     </ItemGroup>

@@ -4,3 +4,4 @@ public interface IWorkflow
 {
     static abstract void Execute();
 }
+

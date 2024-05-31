@@ -1,6 +1,4 @@
-﻿using ConsoleApp.Endpoints;
-
-namespace ConsoleApp.Workflows;
+﻿namespace ConsoleApp.Workflows;
 
 public class CreateProjectWorkflow : IWorkflow
 {
@@ -17,8 +15,13 @@ public class CreateProjectWorkflow : IWorkflow
         int aggregationSchemeId = 8; // The default
         // Select a HouseholdSetId from the valid options in the AggregationScheme
         int householdSetId = 1;
+        
+        // TODO: Lookup dataset
+        int dataSetId = 96;
 
-        // Create the Project object
+        /* Just like the Create a New Project window in the Cloud app, we require certain information to create a new
+         * project.
+         ***REMOVED***
         Project project = new Project
         {
             Title = $"PHX-11757 - Test - {Guid.NewGuid()}",
@@ -29,10 +32,10 @@ public class CreateProjectWorkflow : IWorkflow
         // Call the CreateProject Endpoint to get the rest of the Project information (including the Project's Unique Guid Id)
         project = Projects.Create(project);
         
-        // You can verify the Project's information at any point:
+        // You can see the Project's information at any point:
         var projectInfo = Projects.GetProject(project.Id);
         
-        /* Once a Project has been created, it needs to be filled with Events ***REMOVED***
+/* Once a Project has been created, it needs to be filled with Events ***REMOVED***
         
         // Industries are seperated into different Industry Sets
         var industrySets = IndustrySets.GetIndustrySets();
@@ -41,17 +44,58 @@ public class CreateProjectWorkflow : IWorkflow
         var industryCodes = IndustryCodes.GetIndustryCodes(aggregationSchemeId, industrySetId: null);
         
         // Now we can create an event. There are many types of event
-        // PHX-11909
+        // PHX-11909 - Get Event Types
         
         // We're going to use a very simple one, Industry Output
         var industryOutputEvent = new IndustryOutputEvent()
         {
             Title = "Industry Output",
             Output = 100_000.00,
-            IndustryCode = 1, // See IndustryCodes
+            IndustryCode = 1,
             Employment = 20.25,
-            EmployeeCompensation = 50_000.23,
-            ProprietorIncome = 3_400.233,
+            EmployeeCompensation = 50_000.00,
+            ProprietorIncome = 3_333.3333,
+            Tags = ["testing"],
         };
+
+        // Add the event to the Project we just created -- will return the event with information filled in
+        industryOutputEvent = Events.AddEvent(project.Id, industryOutputEvent);
+        
+        // Can always retrieve the Event's information
+        var industryOutputEvent2 = Events.GetEvent<IndustryOutputEvent>(project.Id, industryOutputEvent.Id);
+        
+        // We can always pull a list of all Project Events to see what we've added
+        var projectEvents = Events.GetEvents(project.Id);
+        
+/*  With events added, it is time to define Group(s) to contain the Event(s) in Region(s)  ***REMOVED***
+    
+        // See this Workflow for Regional Information
+        RegionalWorkflow.Execute();
+
+        // Start by defining your Group
+        Group group = new Group()
+        {
+            ProjectId = project.Id,
+            Title = "Sample Group 1",
+            DatasetId = dataSetId,
+            DollarYear = 2024,
+        };
+
+        // Every Group is attached to a single Region; indicate HashId, Urid, ModelId, _or_ UserModelId
+        // Including excess Regional information can cause mismatch failures        
+        group.HashId = "15b869ZOxy";      // Agg 8, DataSet 96, Oregon State
+        
+        // The Group starts off with Zero events (group.GroupEvents) and can have any number added
+        GroupEvent groupEvent = new GroupEvent { EventId = industryOutputEvent.Id };
+        group.GroupEvents = [groupEvent];
+
+        // Then you can add the fully-defined Group to the Project, which will fill in other information
+        group = Groups.AddGroup(project.Id, group);
+        
+/*  Now that we have at least one group defined, we can Run the Impact  ***REMOVED***
+
+        long impactRunId = Impacts.RunImpact(project.Id);
+
+        Debugger.Break();
     }
 }

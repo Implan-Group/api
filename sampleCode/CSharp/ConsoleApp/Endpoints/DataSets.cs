@@ -1,7 +1,4 @@
-﻿using ConsoleApp.Services;
-using RestSharp;
-
-namespace ConsoleApp.Endpoints;
+﻿namespace ConsoleApp.Endpoints;
 
 public sealed record class DataSet
 {

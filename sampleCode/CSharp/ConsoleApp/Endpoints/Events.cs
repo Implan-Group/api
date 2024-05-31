@@ -1,7 +1,4 @@
 ﻿using System.ComponentModel;
-using ConsoleApp.Models;
-using ConsoleApp.Services;
-using RestSharp;
 
 namespace ConsoleApp.Endpoints;
 
@@ -73,7 +70,7 @@ public record class Event
     public Guid ProjectId { get; set; }
     public virtual ImpactEventType ImpactEventType { get; set; }
     public string Title { get; set; }
-    public string[] Tags { get; set; } = Array.Empty<string>();
+    public string[] Tags { get; set; } = [];
 }
 
 public enum MarginType
@@ -102,16 +99,28 @@ public class Events
     {
         // {{api_domain}}api/v1/impact/project/:projectGuid/event/:eventGuid
         var request = new RestRequest("api/v1/impact/project/{projectGuid}/event/{eventGuid}");
+        request.Method = Method.Get;
         request.AddUrlSegment("projectGuid", projectGuid);
         request.AddUrlSegment("eventGuid", eventGuid);
 
         return Rest.GetResponseData<Event>(request);
+    }
+
+    public static TEvent? GetEvent<TEvent>(Guid projectGuid, Guid eventGuid)
+        where TEvent : Event
+    {
+        var request = new RestRequest("api/v1/impact/project/{projectGuid}/event/{eventGuid}");
+        request.Method = Method.Get;
+        request.AddUrlSegment("projectGuid", projectGuid);
+        request.AddUrlSegment("eventGuid", eventGuid);
+        return Rest.GetResponseData<TEvent>(request);
     }
     
     public static Event[] GetEvents(Guid projectGuid)
     {
         // {{api_domain}}api/v1/impact/project/:projectGuid/event
         var request = new RestRequest("api/v1/impact/project/{projectGuid}/event");
+        request.Method = Method.Get;
         request.AddUrlSegment("projectGuid", projectGuid);
 
         return Rest.GetResponseData<Event[]>(request).ThrowIfNull();
@@ -120,14 +129,14 @@ public class Events
     // Though there are 17? different Impact Event Types, there is technically only one endpoint to add them
     // They are split up here for clarity of input Model
     
-    public static ActionResult AddEvent(Guid projectGuid, IndustryOutputEvent industryOutputEvent)
+    public static IndustryOutputEvent AddEvent(Guid projectGuid, IndustryOutputEvent industryOutputEvent)
     {
         // [HttpPost("external/api/v1/impact/project/{projectId}/event")]
         var request = new RestRequest("api/v1/impact/project/{projectId}/event");
         request.Method = Method.Post;
         request.AddUrlSegment("projectId", projectGuid);
         request.AddJsonBody(industryOutputEvent);
-
-        return Rest.GetResponseData<ActionResult>(request).ThrowIfNull();
+        
+        return Rest.GetResponseData<IndustryOutputEvent>(request).ThrowIfNull();
     }
 }

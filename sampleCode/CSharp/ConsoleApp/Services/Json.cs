@@ -9,8 +9,20 @@ public static class Json
 {
     internal static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions()
     {
+        // Convert our Model Properties to CamelCase
+        // e.g.: "Name" -> "name", "ThingId" -> "thingId"
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        WriteIndented = true,
+        WriteIndented = false,
+        Converters =
+        {
+            // Configure Enums
+            new JsonStringEnumConverter(
+                // CamelCase the enum name (same as PropertyNamingPolicy)
+                namingPolicy: JsonNamingPolicy.CamelCase, 
+                // Allow integer values as inputs
+                allowIntegerValues: true),
+        },
+        
         // TODO: Remove all below after debugging
         //UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow, 
         TypeInfoResolver = new DefaultJsonTypeInfoResolver()
@@ -22,11 +34,27 @@ public static class Json
         }
     };
 
+    /// <summary>
+    /// Serialize the given <paramref name="value"/>
+    /// </summary>
+    /// <param name="value"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns>
+    /// A json <see cref="string"/> serialization
+    /// </returns>
     public static string Serialize<T>(T value)
     {
         return JsonSerializer.Serialize(value, JsonSerializerOptions);
     }
 
+    /// <summary>
+    /// Deserialize the given json <see cref="string"/> into a <typeparamref name="T"/>
+    /// </summary>
+    /// <param name="json"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns>
+    /// A <typeparamref name="T"/> deserialization
+    /// </returns>
     public static T? Deserialize<T>(string? json)
     {
         if (json is null) return default;

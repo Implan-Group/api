@@ -1,11 +1,4 @@
-﻿using System.Diagnostics;
-using System.Net;
-using System.Security.Authentication;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using ConsoleApp.Models;
-using RestSharp;
+﻿using System.Security.Authentication;
 using RestSharp.Authenticators;
 using RestSharp.Serializers.Json;
 
@@ -16,7 +9,7 @@ public static class Rest
     private static readonly RestClientOptions _restClientOptions;
     private static readonly RestClient _restClient;
     private static readonly JwtAuthenticator _jwtAuthenticator;
-    private static ImplanAuthentication? _implanAuthentication = null;
+    private static ImplanAuthentication? _implanAuthentication;
 
     static Rest()
     {
@@ -47,110 +40,68 @@ public static class Rest
     /// </exception>
     public static void SetAuthentication(string username, string password)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        ArgumentException.ThrowIfNullOrWhiteSpace(password);
+        
         _implanAuthentication = new ImplanAuthentication()
         {
             Username = username,
             Password = password,
         };
-        ReAuthenticate(); // verify immediately
+        Authenticate(); // verify immediately
     }
 
-    private static void ReAuthenticate()
+    public static void SetAuthentication(string bearerToken)
+    {
+        _jwtAuthenticator.SetBearerToken(bearerToken);
+        // Validate that we can hit a small endpoint
+        try
+        {
+            Regions.GetRegionTypes();
+        }
+        catch (Exception ex)
+        {
+            throw new AuthenticationException("Invalid Bearer Token");
+        }
+    }
+
+    /// <summary>
+    /// Authenticate to Implan API and store the JWT Bearer Token for subsequent re-use
+    /// </summary>
+    /// <exception cref="AuthenticationException"></exception>
+    private static void Authenticate()
     {
         if (_implanAuthentication is null)
+        {
             throw new AuthenticationException(
                 $"You must call {nameof(Rest)}.{nameof(SetAuthentication)}() before using {nameof(Rest)}");
+        }
 
-        // There is a universal /auth endpoint for all authentication
+        // The /auth endpoint handles authentication for all of ImpactApi
         var authRequest = new RestRequest("/auth");
-        // The username + password must be passed in via Json
+        authRequest.Method = Method.Post;
+        // The username + password must be passed in via Json body
         authRequest.AddJsonBody(_implanAuthentication);
 
-        // Authentication must succeed to access any other endpoints
+        // Authentication must succeed and return a valid Bearer Token for any other ImpactApi calls to work
         var response = _restClient.ExecutePost(authRequest);
-        if (!response.IsSuccessStatusCode || string.IsNullOrWhiteSpace(response.Content))
+        if (!response.IsSuccessStatusCode)
         {
-            LogIfError(response);
-            throw new AuthenticationException("Cannot Authenticate to Impact Api");
+            // This is a service timeout
+            throw new AuthenticationException("Cannot currently Authenticate to Impact Api");
+            
+            // TODO: Wait + Retry Loop
         }
-        // The response from this endpoint is a string like "Bearer XXX...XXX"
+        
+        // The response from this endpoint is a JWT Bearer token string "Bearer XXX...XXX"
+        var token = response.Content;
+        if (token.IsNullOrWhiteSpace())
+            throw new AuthenticationException("Cannot currently Authenticate to Impact Api");
 
         // Store the JWT Bearer Token for all future requests
-        _jwtAuthenticator.SetBearerToken(response.Content);
+        _jwtAuthenticator.SetBearerToken(token);
     }
-
-    private static void LogIfError(RestResponse response)
-    {
-        if (response.IsSuccessStatusCode &&
-            response.ErrorException is null &&
-            string.IsNullOrWhiteSpace(response.ErrorMessage))
-        {
-            return; // no issue here
-        }
-
-        var log = new StringBuilder();
-        log.AppendLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]: Rest Response Failed")
-            .AppendLine($"StatusCode: {response.StatusCode}");
-        if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
-            log.AppendLine($"ErrorMessage: {response.ErrorMessage}");
-        if (response.ErrorException is not null)
-            log.AppendLine($"ErrorException: {response.ErrorException}");
-
-        // Try to get the response as an Error
-        ActionResult? error = Json.Deserialize<ActionResult>(response.Content);
-        if (error is not null && !string.IsNullOrWhiteSpace(error.Type))
-        {
-            log.AppendLine(error.ToString());
-        }
-
-        // Try to get the response as a Message
-        ErrorMessage? errorMessage = Json.Deserialize<ErrorMessage>(response.Content);
-        if (errorMessage is not null && !string.IsNullOrWhiteSpace(errorMessage.Message))
-        {
-            log.AppendLine(errorMessage.Message);
-        }
-
-        Debug.WriteLine(log.ToString());
-    }
-
-    private static string GetLogJson(RestRequest request)
-    {
-        var loggable = new
-        {
-            resource = request.Resource,
-            // Parameters are custom anonymous objects in order to have the parameter type as a nice string
-            // otherwise it will just show the enum value
-            parameters = request.Parameters.Select(parameter => new
-            {
-                name = parameter.Name,
-                value = parameter.Value,
-                type = parameter.Type.ToString()
-            }),
-            // ToString() here to have the method as a nice string otherwise it will just show the enum value
-            method = request.Method.ToString(),
-            // This will generate the actual Uri used in the request
-            uri = _restClient.BuildUri(request),
-        };
-        string json = Json.Serialize(loggable);
-        return json;
-    }
-
-    private static string GetLogJson(RestResponse? response)
-    {
-        if (response is null) return "null";
-        var loggable = new
-        {
-            statusCode = response.StatusCode,
-            content = response.Content,
-            headers = response.Headers,
-            // The Uri that actually responded (could be different from the requestUri if a redirection occurred)
-            responseUri = response.ResponseUri,
-            errorMessage = response.ErrorMessage,
-        };
-        string json = Json.Serialize(loggable);
-        return json;
-    }
-
+    
     public static RestResponse GetResponse(RestRequest request)
     {
         RestResponse? response = null;
@@ -159,34 +110,16 @@ public static class Rest
         {
             timer.Start();
             response = _restClient.Execute(request, request.Method);
-            timer.Stop();
-
-            LogIfError(response);
-            
-            Debug.WriteLine(
-                $"""
-                 [{DateTime.Now:yyyy-MM-dd HH:mm:ss}]: Rest Request completed in {timer.Elapsed:g}
-                 Request:
-                 {GetLogJson(request)}
-                 Response:
-                 {GetLogJson(response)}
-                 """);
         }
         catch (Exception ex)
         {
+            response ??= new RestResponse();
+            response.ErrorException = ex;
+        }
+        finally
+        {
             timer.Stop();
-            Debug.WriteLine(
-                $"""
-                 [{DateTime.Now:yyyy-MM-dd HH:mm:ss}]: Rest Request failed in {timer.Elapsed:g}
-                 Request:
-                 {GetLogJson(request)}
-                 Response:
-                 {GetLogJson(response)}
-                 Exception:
-                 {ex.GetType()} {ex.Message}
-                 {ex.StackTrace}
-                 """);
-            throw;
+            Logging.LogRequestResponse(_restClient, request, response!, timer.Elapsed);
         }
 
         return response;
@@ -200,57 +133,38 @@ public static class Rest
         {
             timer.Start();
             response = _restClient.Execute<T>(request, request.Method);
-            timer.Stop();
-
-            LogIfError(response);
-
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                Debug.WriteLine(
-                    $"""
-                     [{DateTime.Now:yyyy-MM-dd HH:mm:ss}]: Rest Request completed in {timer.Elapsed:g}
-                     Request:
-                     {GetLogJson(request)}
-                     Response:
-                     {GetLogJson(response)}
-                     """);
-            }
-
-            Debug.WriteLine(
-                $"""
-                 [{DateTime.Now:yyyy-MM-dd HH:mm:ss}]: Rest Request completed in {timer.Elapsed:g}
-                 Request:
-                 {GetLogJson(request)}
-                 Response:
-                 {GetLogJson(response)}
-                 """);
         }
         catch (Exception ex)
         {
+            response ??= new RestResponse<T>(request);
+            response.ErrorException = ex;
+        }
+        finally
+        {
             timer.Stop();
-            Debug.WriteLine(
-                $"""
-                 [{DateTime.Now:yyyy-MM-dd HH:mm:ss}]: Rest Request failed in {timer.Elapsed:g}
-                 Request:
-                 {GetLogJson(request)}
-                 Response:
-                 {GetLogJson(response)}
-                 Exception:
-                 {ex.GetType()} {ex.Message}
-                 {ex.StackTrace}
-                 """);
-            throw;
+            Logging.LogRequestResponse(_restClient, request, response!, timer.Elapsed, typeof(T));
         }
 
         return response;
     }
 
+    /// <summary>
+    /// Sends a <see cref="RestRequest"/> and returns the <see cref="string"/> Content of the <see cref="RestResponse"/>
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     public static string GetResponseContent(RestRequest request)
     {
         var response = GetResponse(request);
         return response.Content.ThrowIfNull();
     }
 
+    /// <summary>
+    /// Sends a <see cref="RestRequest"/> and returns the deserialized <typeparamref name="T"/> Data of the <see cref="RestResponse{T}"/>
+    /// </summary>
+    /// <param name="request"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     public static T? GetResponseData<T>(RestRequest request)
     {
         var response = GetResponse<T>(request);
