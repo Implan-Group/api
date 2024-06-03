@@ -17,7 +17,30 @@ public static class Impacts
         request.Method = Method.Post;
         request.AddUrlSegment("projectId", projectGuid);
 
-        long impactId = Rest.GetResponseData<long>(request);
-        return impactId;
+        long impactRunId = Rest.GetResponseData<long>(request);
+        return impactRunId;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="impactRunId"></param>
+    /// <returns>
+    /// The current status of the Impact Run, one of:
+    /// Unknown
+    /// New
+    /// InProgress
+    /// ReadyForWarehouse
+    /// Complete
+    /// Error
+    /// </returns>
+    public static string GetImpactStatus(long impactRunId)
+    {
+        var request = new RestRequest("api/v1/impact/status/{impactRunId}");
+        request.Method = Method.Get;
+        request.AddUrlSegment("impactRunId", impactRunId);
+
+        return Rest.GetResponseData<string>(request)
+            .ThrowIfNull();
     }
 }

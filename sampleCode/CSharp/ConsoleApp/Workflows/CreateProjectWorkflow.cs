@@ -4,7 +4,7 @@ public class CreateProjectWorkflow : IWorkflow
 {
     public static void Execute()
     {
-        /*  PHX-11757 - Create Project Workflow  ***REMOVED***
+        /*  PHX-11757 - Create Project Workflow  */
 
         // The very first step in this process is to create the Project itself
         // A unique Title, Aggregation Scheme Id, and HouseholdSetId must be provided 
@@ -21,7 +21,7 @@ public class CreateProjectWorkflow : IWorkflow
 
         /* Just like the Create a New Project window in the Cloud app, we require certain information to create a new
          * project.
-         ***REMOVED***
+         */
         Project project = new Project
         {
             Title = $"PHX-11757 - Test - {Guid.NewGuid()}",
@@ -35,7 +35,7 @@ public class CreateProjectWorkflow : IWorkflow
         // You can see the Project's information at any point:
         var projectInfo = Projects.GetProject(project.Id);
         
-/* Once a Project has been created, it needs to be filled with Events ***REMOVED***
+/* Once a Project has been created, it needs to be filled with Events */
         
         // Industries are seperated into different Industry Sets
         var industrySets = IndustrySets.GetIndustrySets();
@@ -67,7 +67,7 @@ public class CreateProjectWorkflow : IWorkflow
         // We can always pull a list of all Project Events to see what we've added
         var projectEvents = Events.GetEvents(project.Id);
         
-/*  With events added, it is time to define Group(s) to contain the Event(s) in Region(s)  ***REMOVED***
+/*  With events added, it is time to define Group(s) to contain the Event(s) in Region(s)  */
     
         // See this Workflow for Regional Information
         RegionalWorkflow.Execute();
@@ -92,10 +92,26 @@ public class CreateProjectWorkflow : IWorkflow
         // Then you can add the fully-defined Group to the Project, which will fill in other information
         group = Groups.AddGroup(project.Id, group);
         
-/*  Now that we have at least one group defined, we can Run the Impact  ***REMOVED***
+/*  Now that we have at least one group defined, we can Run the Impact  */
 
         long impactRunId = Impacts.RunImpact(project.Id);
 
-        Debugger.Break();
+        // The impact can take a while to run depending on the number of regions, number of events,
+        // and whether it is MRIO
+        
+        // If you need to know when the Impact completes, a small polling loop can be implemented
+        bool completed = false;
+        while (true)
+        {
+            // Give the impact 30 more seconds to process
+            Thread.Sleep(TimeSpan.FromSeconds(30));
+            
+            // Check the current status
+            string status = Impacts.GetImpactStatus(impactRunId);
+
+            if (string.Equals(status, "Complete", StringComparison.OrdinalIgnoreCase))
+                break;
+        }
+
     }
 }
