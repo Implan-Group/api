@@ -48,6 +48,13 @@ public static class Logging
                 continue;
             }
             
+            // Header?
+            if (param is HeaderParameter headerParameter)
+            {
+                log.AppendLine($"-H {headerParameter.Name} {headerParameter.Value}");
+                continue;
+            }
+            
             Debugger.Break();
         }
         

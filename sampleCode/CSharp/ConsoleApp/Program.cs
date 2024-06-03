@@ -6,21 +6,17 @@ The very first step to accessing Implan's ImpactApi is to authenticate to the se
 Your current Implan Username + Password need to be entered below so that the process completes.
 See Rest.cs for details
 */
-Rest.SetAuthentication("", "");
-Rest.SetAuthentication("");
+
+//Rest.SetAuthentication("", "");
 
 //TODO: Try setting the auth timeout in Gateway higher? (1min?)
 
-
-
 /* Here is an example of a complete walkthrough of creating + defining a Project */
-CreateProjectWorkflow.Execute();
-
-
+//CreateProjectWorkflow.Execute();
+ImpactResultsWorkflow.Execute();
 //StartingWorkflow.Execute();
 
-
-
+//RegionalWorkflow.Execute();
 
 
 Console.WriteLine("Press Enter to close this window");

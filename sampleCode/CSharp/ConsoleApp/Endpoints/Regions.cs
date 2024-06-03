@@ -33,6 +33,7 @@ public static class Regions
     public static string[] GetRegionTypes()
     {
         var request = new RestRequest("api/v1/region/RegionTypes");
+        //var request = new RestRequest("api/v1/region/region-types");
         request.Method = Method.Get;
 
         return Rest.GetResponseData<string[]>(request).ThrowIfNull();

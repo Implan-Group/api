@@ -1,4 +1,5 @@
-﻿using System.Security.Authentication;
+﻿using System.Net;
+using System.Security.Authentication;
 using RestSharp.Authenticators;
 using RestSharp.Serializers.Json;
 
@@ -19,7 +20,10 @@ public static class Rest
         {
             // This is the base endpoint for all Implan ImpactAPI Requests
             BaseUrl = new Uri("https://api.implan.com/int/"),
-
+            //BaseUrl = new Uri("https://localhost:5001/external/"),
+            
+            AutomaticDecompression = DecompressionMethods.All,
+            
             // We use JWT Bearer Tokens (https://jwt.io/) that must be passed with every Request
             Authenticator = _jwtAuthenticator,
 
@@ -153,10 +157,10 @@ public static class Rest
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    public static string GetResponseContent(RestRequest request)
+    public static string? GetResponseContent(RestRequest request)
     {
         var response = GetResponse(request);
-        return response.Content.ThrowIfNull();
+        return response.Content;//.ThrowIfNull();
     }
 
     /// <summary>
