@@ -31,4 +31,30 @@ public class Projects
 
         return Rest.GetResponseData<Project>(request).ThrowIfNull();
     }
+
+    /// <summary>
+    /// Returns a list of <see cref="Project"/>s that belong to the currently Authorized Implan User
+    /// </summary>
+    /// <returns></returns>
+    public static Project[] GetProjects()
+    {
+        //  [HttpGet("external/api/v1/impact/project")]
+        var request = new RestRequest("api/v1/impact/project");
+        request.Method = Method.Get;
+
+        return Rest.GetResponseData<Project[]>(request).ThrowIfNull();
+    }
+
+    /// <summary>
+    /// Returns a list of <see cref="Project"/>s that have been shared with the currently Authorized Implan User
+    /// </summary>
+    /// <returns></returns>
+    public static Project[] GetSharedProjects()
+    {
+        //  [HttpGet("external/api/v1/impact/project/shared")]
+        var request = new RestRequest("api/v1/impact/project/shared");
+        request.Method = Method.Get;
+
+        return Rest.GetResponseData<Project[]>(request).ThrowIfNull();
+    }
 }

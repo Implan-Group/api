@@ -2,7 +2,7 @@
 
 public class StartingWorkflow : IWorkflow
 {
-    public static void Execute()
+    public static void Examples()
     {
 /* To build a new Project, we need to start by with the Aggregation Scheme
  GET {{api_domain}}api/v1/aggregationschemes?industrySetId={{industrySetId}}

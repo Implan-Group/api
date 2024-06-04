@@ -2,10 +2,12 @@
 
 public class ImpactResultsWorkflow : IWorkflow
 {
-    public static void Execute()
+    public static void Examples()
     {
-        /* Once the Impact has been started you will have the Impact Run Id needed to pull results
-         */
+        // When you run an Impact it returns the Impact Run Id
+        RunImpactWorkflow.Examples();
+        
+        // You need that Impact Run Id (and not the Project Id) to gather Impact Results
         long impactRunId = 12241;
         
         // In order to pull any results, the Impact must have been completed successfully

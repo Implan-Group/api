@@ -24,6 +24,13 @@ public sealed record class Region
     public bool IsMrioAllowed { get; set; }
 }
 
+public class CombineRegionRequest
+{
+    public long[] Urids { get; set; } = [];
+    public string[] HashIds { get; set; } = [];
+    public string Description { get; set; }
+}   
+
 public static class Regions
 {
     /// <summary>
@@ -39,17 +46,24 @@ public static class Regions
         return Rest.GetResponseData<string[]>(request).ThrowIfNull();
     }
 
-    public static Region GetTopLevelRegion(int aggregationSchemeId, int dataSetId, string? hashIdOrUrid = null)
+    public static Region GetTopLevelRegion(int aggregationSchemeId, int dataSetId)
     {
         // GET {api_domain}api/v1/region/{aggregationSchemeId}/{dataSetId}
         var request = new RestRequest("api/v1/region/{aggregationSchemeId}/{dataSetId}");
         request.Method = Method.Get;
         request.AddUrlSegment("aggregationSchemeId", aggregationSchemeId);
         request.AddUrlSegment("dataSetId", dataSetId);
-        if (!string.IsNullOrWhiteSpace(hashIdOrUrid))
-        {
-            request.AppendUrlSegment("hashIdOrUrid", hashIdOrUrid);
-        }
+
+        return Rest.GetResponseData<Region>(request).ThrowIfNull();
+    }
+
+    public static Region GetRegion(int aggregationSchemeId, int dataSetId, string hashIdOrUrid)
+    {
+        var request = new RestRequest("api/v1/region/{aggregationSchemeId}/{dataSetId}/{hashIdOrUrid}");
+        request.Method = Method.Get;
+        request.AddUrlSegment("aggregationSchemeId", aggregationSchemeId);
+        request.AddUrlSegment("dataSetId", dataSetId);
+        request.AddUrlSegment("hashIdOrUrid", hashIdOrUrid);
 
         return Rest.GetResponseData<Region>(request).ThrowIfNull();
     }
@@ -92,5 +106,22 @@ public static class Regions
         request.AddUrlSegment("dataSetId", dataSetId);
 
         return Rest.GetResponseData<Region[]>(request).ThrowIfNull();
+    }
+
+    public static Region CombineRegions(int aggregationSchemeId, CombineRegionRequest payload)
+    {
+        //[HttpPost("external/api/v1/region/build/combined/{aggregationSchemeId}")]
+        var request = new RestRequest("api/v1/region/build/combined/{aggregationSchemeId}");
+        request.Method = Method.Post;
+        request.AddUrlSegment("aggregationSchemeId", aggregationSchemeId);
+        request.AddJsonBody(payload);
+        
+        // This endpoint returns an array of Regions, but there should only be a single Region in it (the one we're building)
+        Region[] regions = Rest.GetResponseData<Region[]>(request).ThrowIfNull();
+        if (regions.Length != 1)
+            throw new InvalidOperationException();
+
+        Region region = regions[0];
+        return region;
     }
 }

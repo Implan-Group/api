@@ -2,7 +2,7 @@
 
 public class RegionalWorkflow : IWorkflow
 {
-    public static void Execute()
+    public static void Examples()
     {
         /* Region Information can be looked up in a variety of ways.
          * In order of common use: HashId, Urid, ModelId, and UserModelId can all be acquired through

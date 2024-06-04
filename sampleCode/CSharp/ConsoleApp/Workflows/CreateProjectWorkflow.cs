@@ -5,7 +5,7 @@
 /// </summary>
 public class CreateProjectWorkflow : IWorkflow
 {
-    public static void Execute()
+    public static void Examples()
     {
         /* The first step is to create the Project itself
          * Aa unique Title, Aggregation Scheme Id, and HouseholdSetId are all required to define a Project
@@ -73,7 +73,7 @@ public class CreateProjectWorkflow : IWorkflow
         };
 
         // Every Group requires a Single Region
-        RegionalWorkflow.Execute(); // <- Use these endpoints to explore Regional Information
+        RegionalWorkflow.Examples(); // <- Use these endpoints to explore Regional Information
         
         // A HashId, Urid, ModelId, _or_ UserModelId must be defined
         // Including excess Regional information can cause mismatch failures        
@@ -86,14 +86,8 @@ public class CreateProjectWorkflow : IWorkflow
         // Then you can add the fully-defined Group to the Project -- will return a new Group with additional information
         group = Groups.AddGroup(project.Id, group);
         
-/*  Now that we have at least one group defined, we can Run the Impact  */
-
-        long impactRunId = Impacts.RunImpact(project.Id);
-
-        // The impact can take a while to run depending on the number of regions, number of events,
-        // and whether it is MRIO
-        // there are many ways to gather results,
-        // see the workflow below for many examples
-        ImpactResultsWorkflow.Execute();
+        
+        // Now that the Project has been fully defined, see:
+        ImpactResultsWorkflow.Examples();
     }
 }

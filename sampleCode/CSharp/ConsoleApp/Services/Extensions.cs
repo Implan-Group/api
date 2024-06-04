@@ -20,18 +20,4 @@ public static class Extensions
     {
         return string.IsNullOrWhiteSpace(str);
     }
-
-    public static void AppendUrlSegment<T>(this RestRequest restRequest, string name, T value)
-    {
-        ArgumentNullException.ThrowIfNull(value);
-        string? valueStr = value.ToString();
-        ArgumentException.ThrowIfNullOrWhiteSpace(valueStr);
-
-        StringBuilder uriBuilder = new StringBuilder(restRequest.Resource);
-        if (uriBuilder[^1] != '/')
-            uriBuilder.Append('/');
-        uriBuilder.Append('{').Append(name).Append('}');
-        restRequest.Resource = uriBuilder.ToString();
-        restRequest.AddUrlSegment(name, valueStr);
-    }
 }

@@ -2,7 +2,7 @@
 
 public class AuthenticationWorkflow : IWorkflow
 {
-    public static void Execute()
+    public static void Examples()
     {
 #if DEBUG
         Rest.SetAuthentication(
