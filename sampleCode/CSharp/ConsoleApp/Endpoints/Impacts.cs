@@ -40,7 +40,7 @@ public static class Impacts
         request.Method = Method.Get;
         request.AddUrlSegment("impactRunId", impactRunId);
 
-        return Rest.GetResponseData<string>(request)
-            .ThrowIfNull();
+        string status = Rest.GetResponseData<string>(request).ThrowIfNull();
+        return status;
     }
 }

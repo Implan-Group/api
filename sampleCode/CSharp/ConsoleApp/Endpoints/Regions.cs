@@ -50,8 +50,8 @@ public static class Regions
         {
             request.AppendUrlSegment("hashIdOrUrid", hashIdOrUrid);
         }
-        
-        return Rest.GetResponseData<Region>(request);
+
+        return Rest.GetResponseData<Region>(request).ThrowIfNull();
     }
 
     public static Region[] GetRegionChildren(

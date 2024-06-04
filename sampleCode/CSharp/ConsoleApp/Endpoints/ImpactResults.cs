@@ -1,5 +1,12 @@
 ﻿namespace ConsoleApp.Endpoints;
 
+public enum ImpactType
+{
+    Direct = 1,
+    Indirect = 2,
+    Induced = 3        
+}
+
 public static class ImpactResults
 {
     public static dynamic GetImpactTotals(long impactRunId)
@@ -22,59 +29,66 @@ public static class ImpactResults
     {
         public static string GetDetailedEconomicIndicators(long impactRunId)
         {
-            //  [HttpGet("external/api/v1/impact/results/ExportDetailEconomicIndicators/{runId}")]
             var request = new RestRequest("api/v1/impact/results/ExportDetailEconomicIndicators/{impactRunId}");
             request.Method = Method.Get;
             request.AddUrlSegment("impactRunId", impactRunId);
 
-            return Rest.GetResponseContent(request).ThrowIfNull();
+            string csv = Rest.GetResponseContent(request).ThrowIfNull();
+            return csv;
         }
         
         public static string GetSummaryEconomicIndicators(long impactRunId)
         {
-            //[HttpGet("external/api/v1/impact/results/SummaryEconomicIndicators/{runId}")]
             var request = new RestRequest("api/v1/impact/results/SummaryEconomicIndicators/{impactRunId}");
             request.Method = Method.Get;
             request.AddUrlSegment("impactRunId", impactRunId);
 
-            return Rest.GetResponseContent(request).ThrowIfNull();
+            string csv = Rest.GetResponseContent(request).ThrowIfNull();
+            return csv;
         }
 
         public static string GetDetailedTaxes(long impactRunId)
         {
-            //[HttpGet("external/api/v1/impact/results/DetailedTaxes/{runId}")]
             var request = new RestRequest("api/v1/impact/results/DetailedTaxes/{impactRunId}");
             request.Method = Method.Get;
             request.AddUrlSegment("impactRunId", impactRunId);
 
-            return Rest.GetResponseContent(request).ThrowIfNull();
+            string csv = Rest.GetResponseContent(request).ThrowIfNull();
+            return csv;
         }
         
         public static string GetSummaryTaxes(long impactRunId)
         {
-            // [HttpGet("external/api/v1/impact/results/SummaryTaxes/{runId}")]
             var request = new RestRequest("api/v1/impact/results/SummaryTaxes/{impactRunId}");
             request.Method = Method.Get;
             request.AddUrlSegment("impactRunId", impactRunId);
 
-            return Rest.GetResponseContent(request).ThrowIfNull();
+            string csv = Rest.GetResponseContent(request).ThrowIfNull();
+            return csv;
         }
 
-
-        public static string GetEstimatedGrowthPercentage(long impactRunId)
+      
+        
+        public class EstimatedGrowthPercentageFilter
         {
-            //    [HttpGet("external/api/v1/impact/results/estimated-growth-percentage/{runId}")]
+            public required int DollarYear { get; set; }
+
+            public string[] Regions { get; set; } = [];
+            public ImpactType[] Impacts { get; set; } = [];
+            public string[] GroupNames { get; set; } = [];
+            public string[] EventNames { get; set; } = [];
+            public string[] EventTags { get; set; } = [];
+        }
+
+        public static string GetEstimatedGrowthPercentage(long impactRunId, EstimatedGrowthPercentageFilter filter)
+        {
             var request = new RestRequest("api/v1/impact/results/EstimatedGrowthPercentage/{impactRunId}");
-            // request.AddHeader("accept", "text/csv");
-            // request.AddHeader("content-type", "text/csv");
             request.Method = Method.Get;
             request.AddUrlSegment("impactRunId", impactRunId);
-            //request.
+            request.AddJsonBody(filter);
 
-            var data = Rest.GetResponse(request);
-            Debugger.Break();
-
-            throw new NotImplementedException();
+            string csv = Rest.GetResponseContent(request).ThrowIfNull();
+            return csv;
         }
     }
 }

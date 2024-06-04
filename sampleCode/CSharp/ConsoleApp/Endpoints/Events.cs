@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ConsoleApp.Endpoints;
 
@@ -66,10 +67,10 @@ public enum ImpactEventType
 
 public record class Event
 {
+    public virtual ImpactEventType ImpactEventType => ImpactEventType.Empty;
+    public required string Title { get; set; }
     public Guid Id { get; set; }
     public Guid ProjectId { get; set; }
-    public virtual ImpactEventType ImpactEventType { get; set; }
-    public string Title { get; set; }
     public string[] Tags { get; set; } = [];
 }
 
@@ -81,7 +82,7 @@ public enum MarginType
 
 public record class IndustryOutputEvent : Event
 {
-    public double? Output { get; set; }
+    public required double? Output { get; set; }
     public double? Employment { get; set; }
     public double? EmployeeCompensation { get; set; }
     public double? ProprietorIncome { get; set; }
@@ -91,6 +92,39 @@ public record class IndustryOutputEvent : Event
     public int? DatasetId { get; set; }
 
     public override ImpactEventType ImpactEventType => ImpactEventType.IndustryOutput;
+}
+
+public record class IndustryEmploymentEvent : Event
+{
+    public double? Output { get; set; }
+    public required double? Employment { get; set; }
+    public double? EmployeeCompensation { get; set; }
+    public double? ProprietorIncome { get; set; }
+    public int IndustryCode { get; set; }
+
+    public override ImpactEventType ImpactEventType => ImpactEventType.IndustryEmployment;
+}
+
+public record class IndustryEmployeeCompensationEvent : Event
+{
+    public double? Output { get; set; }
+    public double? Employment { get; set; }
+    public required double? EmployeeCompensation { get; set; }
+    public double? ProprietorIncome { get; set; }
+    public int IndustryCode { get; set; }
+
+    public override ImpactEventType ImpactEventType => ImpactEventType.IndustryEmployeeCompensation;
+}
+
+public record class IndustryProprietorIncomeEvent : Event
+{
+    public double? Output { get; set; }
+    public double? Employment { get; set; }
+    public double? EmployeeCompensation { get; set; }
+    public required double? ProprietorIncome { get; set; }
+    public int IndustryCode { get; set; }
+
+    public override ImpactEventType ImpactEventType => ImpactEventType.IndustryProprietorIncome;
 }
 
 public class Events

@@ -15,10 +15,10 @@ public static class IndustrySets
 {
     public static IndustrySet? GetIndustrySet(int industrySetId)
     {
-        //[Route("external/api/v1/industry-sets")]
         var request = new RestRequest("api/v1/industry-sets/{industrySetId}");
         request.Method = Method.Get;
         request.AddUrlSegment("industrySetId", industrySetId);
+        
         return Rest.GetResponseData<IndustrySet?>(request);
     }
     

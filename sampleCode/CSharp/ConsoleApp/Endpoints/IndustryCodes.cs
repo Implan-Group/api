@@ -28,6 +28,6 @@ public static class IndustryCodes
             request.AddParameter("industrySetId", industrySetId.Value);
         }
 
-        return Rest.GetResponseData<IndustryCode[]>(request);
+        return Rest.GetResponseData<IndustryCode[]>(request).ThrowIfNull();
     }
 }

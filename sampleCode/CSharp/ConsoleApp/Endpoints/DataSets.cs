@@ -16,6 +16,6 @@ public class DataSets
         request.AddUrlSegment("aggregationSchemeId", aggregationSchemeId);
         request.Method = Method.Get;
 
-        return Rest.GetResponseData<DataSet[]>(request);
+        return Rest.GetResponseData<DataSet[]>(request).ThrowIfNull();
     }
 }

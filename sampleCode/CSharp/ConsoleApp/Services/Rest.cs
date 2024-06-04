@@ -8,7 +8,7 @@ namespace ConsoleApp.Services;
 public static class Rest
 {
     private static readonly RestClientOptions _restClientOptions;
-    private static readonly RestClient _restClient;
+    internal static readonly RestClient _restClient;
     private static readonly JwtAuthenticator _jwtAuthenticator;
     private static ImplanAuthentication? _implanAuthentication;
 
@@ -21,9 +21,9 @@ public static class Rest
             // This is the base endpoint for all Implan ImpactAPI Requests
             BaseUrl = new Uri("https://api.implan.com/int/"),
             //BaseUrl = new Uri("https://localhost:5001/external/"),
-            
+
             AutomaticDecompression = DecompressionMethods.All,
-            
+
             // We use JWT Bearer Tokens (https://jwt.io/) that must be passed with every Request
             Authenticator = _jwtAuthenticator,
 
@@ -34,34 +34,15 @@ public static class Rest
             configureSerialization: s => s.UseSystemTextJson(Json.JsonSerializerOptions));
     }
 
-    /// <summary>
-    /// Sets the authentication credentials used for all REST Requests
-    /// </summary>
-    /// <param name="username">The username of the Implan User</param>
-    /// <param name="password">The password of the Implan User</param>
-    /// <exception cref="AuthenticationException">
-    /// Thrown if the <paramref name="username"/> or <paramref name="password"/> is invalid
-    /// </exception>
-    public static void SetAuthentication(string username, string password)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(username);
-        ArgumentException.ThrowIfNullOrWhiteSpace(password);
-        
-        _implanAuthentication = new ImplanAuthentication()
-        {
-            Username = username,
-            Password = password,
-        };
-        Authenticate(); // verify immediately
-    }
-
     public static void SetAuthentication(string bearerToken)
     {
         _jwtAuthenticator.SetBearerToken(bearerToken);
         // Validate that we can hit a small endpoint
         try
         {
+#if !DEBUG
             Regions.GetRegionTypes();
+#endif
         }
         catch (Exception ex)
         {
@@ -69,43 +50,6 @@ public static class Rest
         }
     }
 
-    /// <summary>
-    /// Authenticate to Implan API and store the JWT Bearer Token for subsequent re-use
-    /// </summary>
-    /// <exception cref="AuthenticationException"></exception>
-    private static void Authenticate()
-    {
-        if (_implanAuthentication is null)
-        {
-            throw new AuthenticationException(
-                $"You must call {nameof(Rest)}.{nameof(SetAuthentication)}() before using {nameof(Rest)}");
-        }
-
-        // The /auth endpoint handles authentication for all of ImpactApi
-        var authRequest = new RestRequest("/auth");
-        authRequest.Method = Method.Post;
-        // The username + password must be passed in via Json body
-        authRequest.AddJsonBody(_implanAuthentication);
-
-        // Authentication must succeed and return a valid Bearer Token for any other ImpactApi calls to work
-        var response = _restClient.ExecutePost(authRequest);
-        if (!response.IsSuccessStatusCode)
-        {
-            // This is a service timeout
-            throw new AuthenticationException("Cannot currently Authenticate to Impact Api");
-            
-            // TODO: Wait + Retry Loop
-        }
-        
-        // The response from this endpoint is a JWT Bearer token string "Bearer XXX...XXX"
-        var token = response.Content;
-        if (token.IsNullOrWhiteSpace())
-            throw new AuthenticationException("Cannot currently Authenticate to Impact Api");
-
-        // Store the JWT Bearer Token for all future requests
-        _jwtAuthenticator.SetBearerToken(token);
-    }
-    
     public static RestResponse GetResponse(RestRequest request)
     {
         RestResponse? response = null;
@@ -160,7 +104,7 @@ public static class Rest
     public static string? GetResponseContent(RestRequest request)
     {
         var response = GetResponse(request);
-        return response.Content;//.ThrowIfNull();
+        return response.Content; //.ThrowIfNull();
     }
 
     /// <summary>
@@ -173,6 +117,6 @@ public static class Rest
     {
         var response = GetResponse<T>(request);
         // Response.Data is the deserialized value from the json response body
-        return response.Data;//.ThrowIfNull();
+        return response.Data; //.ThrowIfNull();
     }
 }
