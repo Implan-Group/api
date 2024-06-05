@@ -19,8 +19,8 @@ public static class Rest
         _restClientOptions = new RestClientOptions
         {
             // This is the base endpoint for all Implan ImpactAPI Requests
-            BaseUrl = new Uri("https://api.implan.com/int/"),
-            //BaseUrl = new Uri("https://localhost:5001/external/"),
+            //BaseUrl = new Uri("https://api.implan.com/int/"),
+            BaseUrl = new Uri("https://localhost:5001/external/"),
 
             AutomaticDecompression = DecompressionMethods.All,
 
@@ -34,6 +34,16 @@ public static class Rest
             configureSerialization: s => s.UseSystemTextJson(Json.JsonSerializerOptions));
     }
 
+    private static void ThrowOnError(RestResponse response)
+    {
+        if (response.IsSuccessStatusCode &&
+            response.ErrorException is null &&
+            response.ErrorMessage is null) return;
+
+        Exception ex = response.ErrorException ?? new InvalidOperationException("Rest Request Failed");
+        throw ex;
+    }
+    
     public static void SetAuthentication(string bearerToken)
     {
         _jwtAuthenticator.SetBearerToken(bearerToken);
@@ -58,6 +68,7 @@ public static class Rest
         {
             timer.Start();
             response = _restClient.Execute(request, request.Method);
+            //ThrowOnError(response);
         }
         catch (Exception ex)
         {
@@ -81,6 +92,7 @@ public static class Rest
         {
             timer.Start();
             response = _restClient.Execute<T>(request, request.Method);
+            //ThrowOnError(response);
         }
         catch (Exception ex)
         {

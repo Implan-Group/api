@@ -1,4 +1,6 @@
-﻿namespace ConsoleApp.Endpoints;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace ConsoleApp.Endpoints;
 
 public sealed record class Region
 {
@@ -39,8 +41,8 @@ public static class Regions
     /// <returns></returns>
     public static string[] GetRegionTypes()
     {
-        var request = new RestRequest("api/v1/region/RegionTypes");
-        //var request = new RestRequest("api/v1/region/region-types");
+        //var request = new RestRequest("api/v1/region/RegionTypes");
+        var request = new RestRequest("api/v1/region/region-types");
         request.Method = Method.Get;
 
         return Rest.GetResponseData<string[]>(request).ThrowIfNull();
@@ -57,7 +59,8 @@ public static class Regions
         return Rest.GetResponseData<Region>(request).ThrowIfNull();
     }
 
-    public static Region GetRegion(int aggregationSchemeId, int dataSetId, string hashIdOrUrid)
+    [return: MaybeNull]
+    public static Region? GetRegion(int aggregationSchemeId, int dataSetId, string hashIdOrUrid)
     {
         var request = new RestRequest("api/v1/region/{aggregationSchemeId}/{dataSetId}/{hashIdOrUrid}");
         request.Method = Method.Get;
@@ -65,7 +68,7 @@ public static class Regions
         request.AddUrlSegment("dataSetId", dataSetId);
         request.AddUrlSegment("hashIdOrUrid", hashIdOrUrid);
 
-        return Rest.GetResponseData<Region>(request).ThrowIfNull();
+        return Rest.GetResponseData<Region>(request);
     }
 
     public static Region[] GetRegionChildren(

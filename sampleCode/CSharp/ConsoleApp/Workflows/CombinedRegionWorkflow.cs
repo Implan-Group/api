@@ -12,8 +12,9 @@ public class CombinedRegionWorkflow : IWorkflow
         
         /* Combine Regions */
 
-        string hashId_1 = "W1aQl9wzxj";     // Lane County, OR
-        string hashId_2 = "Rgxp4eA3xK";     // Douglas County, OR
+        // These are from Aggregation Scheme 8, DataSet 96
+        string hashId_1 = "W1aQl9wzxj";     // Lane County, OR      URID:1857994
+        string hashId_2 = "Rgxp4eA3xK";     // Douglas County, OR   URID:1857642
         
         // Create the request payload
         // Note: Specify either HashIds or Urids, not both
@@ -22,21 +23,24 @@ public class CombinedRegionWorkflow : IWorkflow
             // The description for this Combined Region must be Unique
             Description = $"Workflow - Combine Regions - {Guid.NewGuid()}",
             HashIds = [hashId_1, hashId_2],
+            //Urids = [1857994,1857642],
         };
         
         // Send the request to be build
-        var result = Regions.CombineRegions(aggregationSchemeId, combineRegionPayload);
-        
+        Region combinedRegion = Regions.CombineRegions(aggregationSchemeId, combineRegionPayload);
+       
         // It may take a while for a Region to build (especially for more complex ones)
         // To wait for this, you can use a small polling loop:
         do
         {
-            // Get the current status by getting the region again
-            Region region = Regions.GetRegion(result.AggregationSchemeId, result.DatasetId, result.HashId);
-
+            // Find the user model being built
+            var userRegions = Regions.GetUserRegions(combinedRegion.AggregationSchemeId, combinedRegion.DatasetId);
+            var userRegion = userRegions.FirstOrDefault(r => r.HashId == combinedRegion.HashId);
+            string? status = userRegion?.ModelBuildStatus;
+            
             // New, Complete, Error
             // If it is 'Complete' the model build is done
-            if (string.Equals(region.ModelBuildStatus, "Complete", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(status, "Complete", StringComparison.OrdinalIgnoreCase))
                 break;
 
             // Give the build 30 more seconds to process
