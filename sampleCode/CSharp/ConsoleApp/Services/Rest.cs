@@ -5,6 +5,9 @@ using RestSharp.Serializers.Json;
 
 namespace ConsoleApp.Services;
 
+/// <summary>
+/// Contains all the boilerplate to send Rest Requests, handle errors, log, and return Responses
+/// </summary>
 public static class Rest
 {
     private static readonly RestClientOptions _restClientOptions;
@@ -14,8 +17,9 @@ public static class Rest
 
     static Rest()
     {
-        // start with a bad token that will be overwritten by ReAuthenticate
+        // start with a placeholder token (to be overriden with SetAuthentication)
         _jwtAuthenticator = new JwtAuthenticator("BAD_TOKEN");
+        // setup the defaults for all Rest requests
         _restClientOptions = new RestClientOptions
         {
             // This is the base endpoint for all Implan ImpactAPI Requests

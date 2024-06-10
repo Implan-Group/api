@@ -1,4 +1,6 @@
-﻿using ConsoleApp.Workflows;
+﻿#define LOCAL
+
+using ConsoleApp.Workflows;
 
 // How to authenticate to Implan's Impact + Batch Apis
 AuthenticationWorkflow.Examples();

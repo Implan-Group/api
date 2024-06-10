@@ -1,14 +1,27 @@
 ﻿namespace ConsoleApp.Services;
 
+/// <summary>
+/// All the code that logs details to the <see cref="Console"/>
+/// </summary>
 public static class Logging
 {
+    // shared instance
     private static readonly StringBuilder _stringBuilder = new();
     
     static Logging()
     {
+        // Ensure that the Console can display all UTF8 characters
         Console.OutputEncoding = Encoding.UTF8;
     }
 
+    /// <summary>
+    /// Logs a <see cref="RestRequest"/> + <see cref="RestResponse{T}"/> to the Console
+    /// </summary>
+    /// <param name="client"></param>
+    /// <param name="request"></param>
+    /// <param name="response"></param>
+    /// <param name="elapsedTime"></param>
+    /// <param name="responseDataType"></param>
     internal static void LogRequestResponse(
         RestClient client,
         RestRequest request,
@@ -55,7 +68,8 @@ public static class Logging
                 continue;
             }
             
-            Debugger.Break();
+            // Unknown Parameter, skip it
+            continue;
         }
         
         // Response
@@ -75,6 +89,7 @@ public static class Logging
             {
                 log.Append($"-{response.ErrorException.GetType().Name}: ");
                 var message = response.ErrorException.Message;
+                // Clip overly-long messages
                 if (message.Length > 80)
                 {
                     log.AppendLine()
@@ -103,13 +118,14 @@ public static class Logging
             }
             else
             {
+                // Clip overly-long messages
                 log.AppendLine($" '{content.AsSpan(..80)}…'");
             }
         }
 
         string logMessage = log.ToString();
         
-        // Write
+        // Write the final log to the Console
         Console.WriteLine(logMessage);
     }
 }
