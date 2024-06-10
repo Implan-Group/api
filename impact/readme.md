@@ -188,7 +188,7 @@ Take a dataset id from the dataset API request and use it for the model’s API 
     * MSA
     * County
 * Region Name
-**  **   	
+**  **
 Will return Models
 ```
     [
@@ -251,46 +251,73 @@ Will return Models
 In 2022, the BEA will redefine the North American Industry Classifications System (NAICS) codes. This change will result in a change to the IMPLAN industry scheme for the 2023 IMPLAN data release. The API will then be updated to include these new industry designations when that data is added to the system.
 #### Parameters
 * Bearer Token
-#### Response (List)
-* Industry Id 
-* Industry Codes
-* Industry Description
-
-Will return Industries
-```
+* `IndustrySetId` _(optional)_
+  * If no `IndustrySetId` is specifed, the current default Industry Set will be used
+#### Response
+- A `json` response will include _all_ Industry Codes unless an optional `IndustrySetId` is specific, in which case the response will be filtered to only the Industry Codes from that Industry Set
+```json
 [
-
     {
-
         "id": 4638,
-
         "code": 1,
-
         "description": "Oilseed farming"
-
     },
-
+    ...
     {
-
-        "id": 4639,
-
-        "code": 2,
-
-        "description": "Grain farming"
-
+        "id": 5183,
+        "code": 546,
+        "description": "* Employment and payroll of federal govt, non-military"
     }
-
 ]
 ```
 #### Endpoint
-**GET {{api_domain}}api/v1/IndustryCodes**
+`GET {{api_domain}}api/v1/IndustryCodes`
+`GET {{api_domain}}api/v1/IndustryCodes?industrySetId={{industrySetId}}`
+
+## Industry Sets
+- This endpoint provides a list of all the details about all existing Industry Sets
+#### Parameters
+- Bearer Token
+#### Response
+- `json` list of Industry Set details:
+```json
+[
+    {
+        "id": 1,
+        "description": "440 Industries",
+        "defaultAggregationSchemeId": null,
+        "activeStatus": null,
+        "isDefault": null,
+        "mapTypeId": 1,
+        "isNaicsCompatible": false,
+        "sort": null
+    },
+    ...
+    {
+        "id": 11,
+        "description": "46 Industries (2018 International)",
+        "defaultAggregationSchemeId": 13,
+        "activeStatus": true,
+        "isDefault": null,
+        "mapTypeId": 3,
+        "isNaicsCompatible": false,
+        "sort": 4
+    }
+]
+```
+#### Endpoint
+`GET {{api_domain}}api/v1/industry-sets`
+
+---
+
+# Aggregation Schemes
 
 
 ## Aggregation Schemes Endpoint (Get)
 This endpoint will return a list of aggregation schemes available for use.
 #### Parameters
 * Bearer Token
-* IndustrySetId (optional filter)
+* `IndustrySetId` _(optional)_
 #### Response (List)
 * Id (Aggregation Scheme Id)
 * Description
@@ -298,8 +325,35 @@ This endpoint will return a list of aggregation schemes available for use.
 * Household Set Ids []
 * Map Code
 * Status
-#### Endpoint
-**GET {{api_domain}}api/v1/aggregationschemes?industrySetId={{industrySetId}}**
+```json
+[
+    {
+        "id": 1,
+        "description": "536 Unaggregated",
+        "industrySetId": 2,
+        "householdSetIds": [
+            1,
+            2
+        ],
+        "mapCode": "US",
+        "status": "Complete"
+    },
+    ...
+    {
+        "id": 1090,
+        "description": "PHX-10001 Test",
+        "industrySetId": 8,
+        "householdSetIds": [
+            1
+        ],
+        "mapCode": "US",
+        "status": "Complete"
+    }
+]
+```
+#### Endpoints
+`GET {{api_domain}}api/v1/aggregationschemes`
+`GET {{api_domain}}api/v1/aggregationschemes?industrySetId={{industrySetId}}`
 
 
 ## Industry Margins Endpoint (Get)
@@ -331,8 +385,173 @@ This endpoint will return commodity margins data in CSV format.
 #### Endpoint
 **GET {{api_domain}}api/v1/margins/{{aggregationSchemeId}}/{{datasetId}}/commodity-margins**
 
+## Aggregation Scheme Details
+
+- This endpoint returns the details for a single Aggregation Scheme
+
+### Parameters
+
+- Bearer Token
+- `AggregationSchemeId` - Number - URL
+
+### Response
+
+```json
+{
+    "id": 10,
+    "description": "IMPLAN 3 Digit NAICS 546",
+    "industrySetId": 8,
+    "householdSetIds": [
+        1
+    ],
+    "mapCode": "US",
+    "status": "Complete"
+}
+```
+
+### Endpoint
+
+- `GET {{api_domain}}api/v1/aggregationSchemes/{{AggregationSchemeId}}`
+
+
+
+## Aggregation Scheme Industries
+
+- This endpoint returns a list of my industries and the IMPLAN codes mapped to them for a single Aggregation Scheme
+
+### Parameters
+
+- Bearer Token
+- `AggregationSchemeId` - Number - URL
+
+### Response
+
+```json
+[
+    {
+        "displayCode": "492",
+        "displayDescription": "Residential intellectual disability, mental health, substance abuse and other facilities",
+        "codeFrom": 492,
+        "codeTo": 492,
+        "industryIdFrom": 5129,
+        "industryIdTo": 5129
+    },
+    ...
+    {
+        "displayCode": "546",
+        "displayDescription": "* Employment and payroll of federal govt, non-military",
+        "codeFrom": 546,
+        "codeTo": 546,
+        "industryIdFrom": 5183,
+        "industryIdTo": 5183
+    }
+]
+```
+
+### Endpoint
+
+- `GET {{api_domain}}api/v1/aggregationSchemes/{{AggregationSchemeId}}/industry-mapping`
+
+
+
+## Aggregation Scheme Commodities
+
+- This endpoint returns a list of my commodities and the IMPLAN codes mapped to them for a single Aggregation Scheme
+
+### Parameters
+
+- Bearer Token
+- `AggregationSchemeId` - Number - URL
+
+### Response
+
+```json
+[
+    {
+        "displayCode": "3001",
+        "displayDescription": "Oilseeds",
+        "codeFrom": 3001,
+        "codeTo": 3001,
+        "commodityIdFrom": 1692,
+        "commodityIdTo": 1692
+    },
+    ...
+    {
+        "displayCode": "3533",
+        "displayDescription": "* Not a unique commodity (electricity from local govt utilities)",
+        "codeFrom": 3533,
+        "codeTo": 3533,
+        "commodityIdFrom": 2237,
+        "commodityIdTo": 2237
+    }
+]
+```
+
+### Endpoint
+- `GET {{api_domain}}api/v1/aggregationSchemes/{{AggregationSchemeId}}/commodity-mapping`
+
+  
+
+## Create Custom Aggregation Scheme
+
+- This endpoints lets an ImpactAPI consumer define a Custom Aggregation Scheme
+- Just like in the IMPLAN Cloud platform, not all Industry Codes must be defined as part of a Sector. Any unmapped industries will automatically be added as-is to the Custom Aggregation Scheme.
+
+### Parameters
+- Bearer Token
+
+### Request
+```json
+{  
+    "description": "{{Custom Aggregation Scheme Name}}",  
+    "industrysetid": {{IndustrySetId}},
+    "groups": [  
+        {  
+            "description": "{{Group Description}}",  
+            "sectors": [  
+                {  
+                    "description": "{{Sector Description}}",  
+                    "code": {{Industry Code grouped in this Sector}}
+                },  
+            ...
+                {  
+                    "description": "{{Sector Description}}",  
+                    "code": {{Industry Code grouped in this Sector}}
+                }
+            ]  
+        },  
+    ...
+     {  
+            "description": "{{Group Description}}",  
+            "sectors": [  
+                {  
+                    "description": "{{Sector Description}}",  
+                    "code": {{Industry Code grouped in this Sector}}
+                },  
+            ...
+                {  
+                    "description": "{{Sector Description}}",  
+                    "code": {{Industry Code grouped in this Sector}}
+                }
+            ]  
+        }  
+    ]  
+}
+```
+
+### Response
+- A successful Custom Aggregation Scheme Creation request will respond with a single Number, the newly created `AggregationSchemeId`
+- Other endpoints, such as `Aggregation Scheme Details`, can be used to determine when the Custom Aggregation Scheme finishes building
+
+### Endpoint
+- `GET {{api_domain}}api/v1/aggregationSchemes/create-custom-industry-aggregation-scheme`
+
+
+
+---
 
 # Regions
+
 ## Getting Regional Data
 If you need to download study area data or obtain regional information to build regions, these endpoints will be helpful.
 ### Get Region Types (Get)
@@ -1583,7 +1802,48 @@ This endpoint provides a list of possible dollar year deflators that can be appl
 #### Response
 * Array of valid dollar years for the given aggregation scheme and dataset combo
 #### Endpoint
-**GET {{api_domain}}api/v1/dollarYears/{{aggregationSchemeId}}/{{datasetId}}**
+**GET {{api_domain}}api/v1/dollar-years/{{aggregationSchemeId}}/{{datasetId}}**
+
+# Deflators
+## Get Deflators
+- This endpoint retrieves a list of Deflators
+
+### Parameters
+- `Bearer Token`
+- `aggregationSchemeId` (required)
+- `dataSetId` (required)
+- `deflatorType` (required)
+  - Valid deflator types are:
+    - **1** - Industry
+    - **2** - Commodity
+    - **4** - Other Institution
+    - **7** - Household
+    - **8** - Trade Institution
+    - **9** - Value Added Factor
+### Response
+- A `json` array of deflator information, broken down into `dollar_year`, `code`, `value`, and `description` for all deflators matching the **Parameters**
+```json
+[
+    {
+        "dollar_year": 1997,
+        "code": 1,
+        "value": 0.598,
+        "description": "Oilseed farming"
+    },
+    ...
+    {
+        "dollar_year": 2060,
+        "code": 546,
+        "value": 1.098,
+        "description": "* Employment and payroll of federal govt, non-military"
+    }
+]
+```
+### Endpoint
+- `GET {{api_domain}}api/v1/deflators/:aggregationSchemeId/:dataSetId/:deflatorType`
+
+
+
 
 
 ## Results Totals (GET)
@@ -2357,7 +2617,7 @@ res = conn.getresponse()
 data = res.read()
 print(data.decode("utf-8"))
 ```
-	
+
 ### R Example
 ```
 library(RCurl)
