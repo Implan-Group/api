@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a02d2c0f-9f0b-4427-a7fd-a0699ecd10c8",
+		"_postman_id": "be0d7119-60b9-4716-b84b-4cf574d99fb5",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12725670"
+		"_exporter_id": "28583816"
 	},
 	"item": [
 		{
@@ -4184,7 +4184,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/eventtype/IndustryOutput/specification",
+							"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/eventtype/:eventType/specification",
 							"host": [
 								"{{api_domain}}api"
 							],
@@ -4194,13 +4194,18 @@
 								"project",
 								":projectGuid",
 								"eventtype",
-								"IndustryOutput",
+								":eventType",
 								"specification"
 							],
 							"variable": [
 								{
 									"key": "projectGuid",
 									"value": "{{project_guid}}"
+								},
+								{
+									"key": "eventType",
+									"value": "",
+									"description": "The Event Type to get Specifications for"
 								}
 							]
 						}
