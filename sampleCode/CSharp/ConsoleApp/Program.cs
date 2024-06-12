@@ -1,25 +1,27 @@
-﻿#define LOCAL
+﻿using ConsoleApp.Workflows;
 
-using ConsoleApp.Workflows;
+/* IMPLAN ImpactAPI Workflow Examples - C#
+ 
+ Please see the Services folder for all the utilities used to define and send REST requests,
+ control JSON serialization, and log to Console
+ 
+ Please see the Endpoints folder for collections of Endpoints grouped together by functionality
+ 
+ Please see the Workflows folder for collections of various Workflows
+ 
+ */
 
-// How to authenticate to Implan's Impact + Batch Apis
+// Before any workflow, you must Authenticate to IMPLAN's ImpactAPI
 AuthenticationWorkflow.Examples();
 
-
-// var temp = Regions.GetRegionChildren(8, 96, regionType: "County")
-//     .Where(r => r.Description.Contains("Douglas") || r.Description.Contains("Lane"))
-//     .ToList();
+// Workflow for combining two or more Regions
 CombinedRegionWorkflow.Examples();
 
-//Debugger.Break();
 
 
-// Contains an explanation and sample workflow for creating a Project
-//CreateProjectWorkflow.Examples();
-
-// Contains an explanation and sample workflow for examining a Project's Impact Results
-//ImpactResultsWorkflow.Examples();
 
 
+
+// These lines keep the Console Window open until manually closed
 Console.WriteLine("Press Enter to close this window");
 Console.ReadLine();
