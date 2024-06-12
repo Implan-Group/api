@@ -15,7 +15,6 @@
         <Using Include="RestSharp"/>
         
         <Using Include="ConsoleApp.Endpoints"/>
-        <Using Include="ConsoleApp.Models"/>
         <Using Include="ConsoleApp.Services"/>
     </ItemGroup>
     

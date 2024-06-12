@@ -11,14 +11,14 @@ AuthenticationWorkflow.Examples();
 //     .ToList();
 CombinedRegionWorkflow.Examples();
 
-Debugger.Break();
+//Debugger.Break();
 
 
 // Contains an explanation and sample workflow for creating a Project
-CreateProjectWorkflow.Examples();
+//CreateProjectWorkflow.Examples();
 
 // Contains an explanation and sample workflow for examining a Project's Impact Results
-ImpactResultsWorkflow.Examples();
+//ImpactResultsWorkflow.Examples();
 
 
 Console.WriteLine("Press Enter to close this window");

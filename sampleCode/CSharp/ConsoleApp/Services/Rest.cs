@@ -23,8 +23,8 @@ public static class Rest
         _restClientOptions = new RestClientOptions
         {
             // This is the base endpoint for all Implan ImpactAPI Requests
-            //BaseUrl = new Uri("https://api.implan.com/int/"),
-            BaseUrl = new Uri("https://localhost:5001/external/"),
+            BaseUrl = new Uri("https://api.implan.com/int/"),
+            //BaseUrl = new Uri("https://localhost:5001/external/"),
 
             AutomaticDecompression = DecompressionMethods.All,
 

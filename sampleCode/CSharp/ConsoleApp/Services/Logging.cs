@@ -1,4 +1,8 @@
-﻿namespace ConsoleApp.Services;
+﻿#if DEBUG
+#define VERBOSE
+#endif
+
+namespace ConsoleApp.Services;
 
 /// <summary>
 /// All the code that logs details to the <see cref="Console"/>
@@ -7,7 +11,7 @@ public static class Logging
 {
     // shared instance
     private static readonly StringBuilder _stringBuilder = new();
-    
+
     static Logging()
     {
         // Ensure that the Console can display all UTF8 characters
@@ -30,10 +34,10 @@ public static class Logging
         Type? responseDataType = null)
     {
         var log = _stringBuilder.Clear();
-        
+
         // Timestamp header
         log.AppendLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]");
-        
+
         // Request
         string method = request.Method.ToString().ToUpper();
         log.AppendLine($"Request: {method} '{client.BuildUri(request)}'");
@@ -41,7 +45,7 @@ public static class Logging
         {
             // These parameter types will be resolved as part of BuildUri
             if (param is UrlSegmentParameter or GetOrPostParameter) continue;
-            
+
             // Skip logging common parameters
             if (param.Name == "Authorization") continue;
 
@@ -50,6 +54,9 @@ public static class Logging
             {
                 log.AppendLine($"-Body: '{jsonParameter.ContentType}' from {jsonParameter.Value?.GetType().Name}");
                 string json = Json.Serialize(jsonParameter.Value);
+#if VERBOSE
+                log.AppendLine($" '{json}'");
+#else
                 if (json.Length <= 80)
                 {
                     log.AppendLine($" '{json}'");
@@ -58,23 +65,25 @@ public static class Logging
                 {
                     log.AppendLine($" '{json.AsSpan(..80)}…'");
                 }
+#endif
                 continue;
             }
-            
+
             // Header?
             if (param is HeaderParameter headerParameter)
             {
                 log.AppendLine($"-H {headerParameter.Name} {headerParameter.Value}");
                 continue;
             }
-            
+
             // Unknown Parameter, skip it
             continue;
         }
-        
+
         // Response
-        log.AppendLine($"Response: '{(int)response.StatusCode} {response.StatusCode}' in {elapsedTime.TotalMilliseconds:N1}ms");
-         
+        log.AppendLine(
+            $"Response: '{(int)response.StatusCode} {response.StatusCode}' in {elapsedTime.TotalMilliseconds:N1}ms");
+
         // Failed?
         if (!response.IsSuccessStatusCode ||
             !response.ErrorMessage.IsNullOrWhiteSpace() ||
@@ -89,16 +98,17 @@ public static class Logging
             {
                 log.Append($"-{response.ErrorException.GetType().Name}: ");
                 var message = response.ErrorException.Message;
-                // Clip overly-long messages
+                // Push long messages to the next line
                 if (message.Length > 80)
                 {
                     log.AppendLine()
                         .Append(' ');
                 }
+
                 log.AppendLine($"'{message}'");
             }
         }
-        
+
         if (!response.Content.IsNullOrWhiteSpace())
         {
             log.Append($"-Content: '{response.ContentType}'");
@@ -110,8 +120,11 @@ public static class Logging
             {
                 log.AppendLine();
             }
-            
+
             var content = response.Content;
+#if VERBOSE
+            log.AppendLine($" '{content}'");
+#else
             if (content.Length <= 80)
             {
                 log.AppendLine($" '{content}'");
@@ -121,10 +134,11 @@ public static class Logging
                 // Clip overly-long messages
                 log.AppendLine($" '{content.AsSpan(..80)}…'");
             }
+#endif
         }
 
         string logMessage = log.ToString();
-        
+
         // Write the final log to the Console
         Console.WriteLine(logMessage);
     }
