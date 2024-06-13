@@ -1,5 +1,5 @@
 ﻿#if DEBUG
-#define VERBOSE
+#define VERBOSE // This turns on verbose logging for debugging purposes
 #endif
 
 namespace ConsoleApp.Services;

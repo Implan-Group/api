@@ -110,9 +110,9 @@
 - `modelId` (number): Unique identifier for a particular model, used internally
 - `modelBuildStatus` (text): The current status of the Model's Build progress. Certain complex Models may take time to process until they are `Complete`
     - You can query the User's Regions and search for a matching HashId in order to determine when the status has changed
-- `employment` (number): Total employment value for this Region
-- `output` (number): Total industry output value for this Region
-- `valueAdded` (number): Total value-added for this Region
+- `employment` (number, optional): Total employment value for this Region
+- `output` (number, optional): Total industry output value for this Region
+- `valueAdded` (number, optional): Total value-added for this Region
 - `aggregationSchemeId` (number): The Aggregation Scheme that includes this Region
 - `datasetId` (number): The Dataset that includes this Region
 - `datasetDescription` (text): A description of the Dataset that usually includes the Data Year

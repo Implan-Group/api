@@ -31,19 +31,28 @@ public class CombinedRegionWorkflow : IWorkflow
         /* Now that you have an Aggregation Scheme + Dataset picked out, there are various ways that Regions
          * can be explored
          */
-        
         // See these examples for ways to find Region(s) -- You will require an Aggregation Scheme Id and Dataset Id
         RegionalWorkflow.Examples();
+        
+        // For this example, we're going to search through the Child Regions of the US for a few particular counties.
+        Region[] regions = Regions.GetRegionChildren(aggregationSchemeId, dataSetId, regionType: "County");
+        // Convert to a dictionary so that we can quickly search by Description
+        Dictionary<string, Region> descriptionToRegionDict = new Dictionary<string, Region>(StringComparer.OrdinalIgnoreCase);
+        foreach (Region region in regions)
+        {
+            descriptionToRegionDict.Add(region.Description, region);
+        }
+
+        // Find the HashId for the first county we want to combine
+        string hashId1 = descriptionToRegionDict["Lane County, OR"].HashId;     // W1aQl9wzxj
+        // Find the other HashId
+        string hashId2 = descriptionToRegionDict["Douglas County, OR"].HashId;  // Rgxp4eA3xK
         
         
         /* Combine Regions
          * Once you have found the HashIds of the Regions you wish to combine (using the endpoints above),
          * you can combine them together into a single Region         
          */
-
-        // These examples are from Aggregation Scheme 8, DataSet 96
-        string hashId1 = "W1aQl9wzxj";     // Lane County, OR
-        string hashId2 = "Rgxp4eA3xK";     // Douglas County, OR
         
         // Create the request payload
         // Note: Specify either HashIds or Urids, not both

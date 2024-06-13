@@ -30,7 +30,8 @@ public class CreateProjectWorkflow : IWorkflow
         // Now we can define the project with its required properties
         Project project = new Project
         {
-            Title = $"PHX-11757 - Test - {Guid.NewGuid()}",
+            // The title must be unique, so we're using the timestamp here
+            Title = $"PROJECT NAME - {DateTime.Now:s}",
             AggregationSchemeId = aggregationSchemeId,
             HouseholdSetId = householdSetId,
         };

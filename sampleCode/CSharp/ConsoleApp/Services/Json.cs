@@ -18,6 +18,10 @@ public static class Json
         // Convert our Model Properties to CamelCase
         // e.g.: "Name" -> "name", "ThingId" -> "thingId"
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        // Add newlines and indents to the output to make it more readable
+        WriteIndented = true,
+        // Allow trailing commas
+        AllowTrailingCommas = true,
         Converters =
         {
             // Configure Enums

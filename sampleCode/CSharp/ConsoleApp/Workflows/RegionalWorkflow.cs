@@ -28,9 +28,29 @@ public class RegionalWorkflow : IWorkflow
         Region topLevelRegion = Regions.GetTopLevelRegion(aggregationSchemeId, dataSetId);
         
         // You can also dig into all the sub-regions (with optional RegionType filter)
-        Region[] childRegions = Regions.GetRegionChildren(aggregationSchemeId, dataSetId, regionType: "County");
+        Region[] childRegions = Regions.GetRegionChildren(aggregationSchemeId, dataSetId);
 
         // And also access your Combined + Customized Regions
         Region[] userRegions = Regions.GetUserRegions(aggregationSchemeId, dataSetId);
+        
+        
+        /* Search Regions Example
+         * For this example, we're going to store all State Regions in a Dictionary / Map so that we can easily
+         * look them up via their Name.
+         */
+        
+        // Start by getting all Regions that have a RegionType of `State`
+        Region[] regions = Regions.GetRegionChildren(aggregationSchemeId, dataSetId, regionType: "State");
+        
+        // Convert to a dictionary (with case-insensitive keys)
+        Dictionary<string, Region> descriptionToRegionDict = new Dictionary<string, Region>(StringComparer.OrdinalIgnoreCase);
+        foreach (Region region in regions)
+        {
+            descriptionToRegionDict.Add(region.Description, region);
+        }
+
+        // Lookup a few states by their names
+        Region ohio = descriptionToRegionDict["Ohio"];
+        Region northCarolina = descriptionToRegionDict["North Carolina"];
     }
 }
