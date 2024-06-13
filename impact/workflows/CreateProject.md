@@ -2,6 +2,7 @@
 - This document is a supplement to the [Impact ReadMe](https://github.com/Implan-Group/api/blob/main/impact/readme.md)
 - Further detail on additional workflow topics can be found on [support.implan.com](https://support.implan.com/hc/en-us)
 
+---
 ## Overview
 - Projects are the top level of organization for an analysis and contain the specifics of the aggregation scheme, household set, MRIO status, and folder placement.
 - This document describes the basic IMPLAN ImpactAPI workflow to create a Project
@@ -16,10 +17,10 @@
 #### Data Limitations
 - Endpoints that combine IMPLAN's economic data with other data are limited to only those datasets to which those other data are available. (This primarily effects Canada + International customers)
 
-
+---
 ## Workflow
 
-#### Find a Region and Industry to Study
+### Find a Region and Industry to Study
 - All region data in IMPLAN are unique based upon the Aggregation Scheme, Dataset (data year), and geographic demarcation (zip, county, state, etc...).
 - The unique regional identifiers used with the IMPLAN API are:
   - [HashID](https://github.com/Implan-Group/api/blob/main/impact/readme.md#hashid)
@@ -30,14 +31,11 @@
 ### Aggregation Schemes
 - As the region identifiers are specific to both Aggregation Scheme and Dataset, both need to be determined before finally pulling a specific region identifier.
 - This endpoint will return a list of all aggregation schemes available for use.
-
-#### Endpoints
 - `GET {{api_domain}}api/v1/aggregationSchemes`
 - `GET {{api_domain}}api/v1/aggregationSchemes?industrySetId={{industry_set_id}}`
   - The `industrySetId` is an optional filter that can be applied to limit the returned Aggregation Schemes further
   - See [Industry Sets](https://github.com/Implan-Group/api/blob/main/impact/readme.md#industry-sets) in the main Readme
-##### Response
-- A `json` array of valid Aggregation Schemes
+- Returns a `json` array of valid Aggregation Schemes
 ```json
 [
     {

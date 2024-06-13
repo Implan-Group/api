@@ -27,6 +27,7 @@ public class Projects
     public static Project GetProject(Guid projectGuid)
     {
         var request = new RestRequest("api/v1/impact/project/{projectGuid}");
+        request.Method = Method.Get;
         request.AddUrlSegment("projectGuid", projectGuid);
 
         return Rest.GetResponseData<Project>(request).ThrowIfNull();
@@ -38,7 +39,6 @@ public class Projects
     /// <returns></returns>
     public static Project[] GetProjects()
     {
-        //  [HttpGet("external/api/v1/impact/project")]
         var request = new RestRequest("api/v1/impact/project");
         request.Method = Method.Get;
 
@@ -51,7 +51,6 @@ public class Projects
     /// <returns></returns>
     public static Project[] GetSharedProjects()
     {
-        //  [HttpGet("external/api/v1/impact/project/shared")]
         var request = new RestRequest("api/v1/impact/project/shared");
         request.Method = Method.Get;
 
