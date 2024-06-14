@@ -12,7 +12,7 @@ public class CreateProjectWorkflow : IWorkflow
          */
 
         // Get a list of all valid Aggregation Schemes
-        var aggregationSchemes = AggregationSchemes.GetAggregationSchemes();
+        AggregationScheme[] aggregationSchemes = AggregationSchemes.GetAggregationSchemes();
         // Choose the one you would like to use
         int aggregationSchemeId = 8; // The default
         
@@ -22,7 +22,7 @@ public class CreateProjectWorkflow : IWorkflow
 
         
         // Get a list of all valid Data Sets for the Aggregation Scheme
-        var datasets = DataSets.GetDataSets(aggregationSchemeId);
+        DataSet[] datasets = DataSets.GetDataSets(aggregationSchemeId);
         // Choose the one you would like to use -- must be compatible with your chosen HouseholdSetId
         int dataSetId = 96;
 
@@ -43,16 +43,16 @@ public class CreateProjectWorkflow : IWorkflow
         /* Once a Project has been created, it needs to be filled with Impact Events */
         
         // Industries are seperated into different Industry Sets
-        var industrySets = IndustrySets.GetIndustrySets();
+        IndustrySet[] industrySets = IndustrySets.GetIndustrySets();
         
         // You need to get an Industry Code for the Impact Event -- which can be further filtered by an Industry Set
-        var industryCodes = IndustryCodes.GetIndustryCodes(aggregationSchemeId, industrySetId: null);
+        IndustryCode[] industryCodes = IndustryCodes.GetIndustryCodes(aggregationSchemeId, industrySetId: null);
         
         // Now we can create an event. There are many types of event
         // TODO: PHX-11909 - Get Event Types
         
         // Once you have all the details, you can define the Event
-        var industryOutputEvent = new IndustryOutputEvent()
+        IndustryOutputEvent industryOutputEvent = new IndustryOutputEvent()
         {
             Title = "Industry Output",
             IndustryCode = 1,
@@ -88,7 +88,8 @@ public class CreateProjectWorkflow : IWorkflow
         group = Groups.AddGroup(project.Id, group);
         
         
-        // Now that the Project has been fully defined, see:
-        ImpactResultsWorkflow.Examples();
+        // Now that the Project has been fully defined, see
+        RunImpactAnalysisWorkflow.Examples();
+        // for ways to run an Analysis and view the Results
     }
 }

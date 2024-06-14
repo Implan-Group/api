@@ -20,7 +20,7 @@ public static class AggregationSchemes
     public static AggregationScheme[] GetAggregationSchemes(int? industrySetId = null)
     {
         //GET {api_domain}api/v1/aggregationschemes?industrySetId={industrySetId}
-        var request = new RestRequest("api/v1/aggregationSchemes");
+        RestRequest request = new RestRequest("api/v1/aggregationSchemes");
         request.Method = Method.Get;
         if (industrySetId is not null)
         {

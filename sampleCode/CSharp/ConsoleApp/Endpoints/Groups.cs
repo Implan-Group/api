@@ -26,7 +26,7 @@ public static class Groups
     public static Group AddGroup(Guid projectGuid, Group group)
     {
         // [HttpPost("external/api/v1/impact/project/{projectId}/group")]
-        var request = new RestRequest("api/v1/impact/project/{projectId}/group");
+        RestRequest request = new RestRequest("api/v1/impact/project/{projectId}/group");
         request.Method = Method.Post;
         request.AddUrlSegment("projectId", projectGuid);
         request.AddJsonBody(group);

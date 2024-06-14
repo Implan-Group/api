@@ -15,7 +15,7 @@ public class Projects
 {
     public static Project Create(Project project)
     {
-        var request = new RestRequest("api/v1/impact/project");
+        RestRequest request = new RestRequest("api/v1/impact/project");
         request.Method = Method.Post;
         
         // The body must be the Jsonified Project model
@@ -26,7 +26,7 @@ public class Projects
 
     public static Project GetProject(Guid projectGuid)
     {
-        var request = new RestRequest("api/v1/impact/project/{projectGuid}");
+        RestRequest request = new RestRequest("api/v1/impact/project/{projectGuid}");
         request.Method = Method.Get;
         request.AddUrlSegment("projectGuid", projectGuid);
 
@@ -39,7 +39,7 @@ public class Projects
     /// <returns></returns>
     public static Project[] GetProjects()
     {
-        var request = new RestRequest("api/v1/impact/project");
+        RestRequest request = new RestRequest("api/v1/impact/project");
         request.Method = Method.Get;
 
         return Rest.GetResponseData<Project[]>(request).ThrowIfNull();
@@ -51,7 +51,7 @@ public class Projects
     /// <returns></returns>
     public static Project[] GetSharedProjects()
     {
-        var request = new RestRequest("api/v1/impact/project/shared");
+        RestRequest request = new RestRequest("api/v1/impact/project/shared");
         request.Method = Method.Get;
 
         return Rest.GetResponseData<Project[]>(request).ThrowIfNull();

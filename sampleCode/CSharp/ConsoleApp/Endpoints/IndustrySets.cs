@@ -15,7 +15,7 @@ public static class IndustrySets
 {
     public static IndustrySet? GetIndustrySet(int industrySetId)
     {
-        var request = new RestRequest("api/v1/industry-sets/{industrySetId}");
+        RestRequest request = new RestRequest("api/v1/industry-sets/{industrySetId}");
         request.Method = Method.Get;
         request.AddUrlSegment("industrySetId", industrySetId);
         
@@ -24,7 +24,7 @@ public static class IndustrySets
     
     public static IndustrySet[] GetIndustrySets()
     {
-        var request = new RestRequest("api/v1/industry-sets");
+        RestRequest request = new RestRequest("api/v1/industry-sets");
         request.Method = Method.Get;
 
         return Rest.GetResponseData<IndustrySet[]>(request).ThrowIfNull();

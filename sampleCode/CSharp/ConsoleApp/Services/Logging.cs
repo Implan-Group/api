@@ -33,7 +33,7 @@ public static class Logging
         TimeSpan elapsedTime,
         Type? responseDataType = null)
     {
-        var log = _stringBuilder.Clear();
+        StringBuilder log = _stringBuilder.Clear();
 
         // Timestamp header
         log.AppendLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]");
@@ -41,7 +41,7 @@ public static class Logging
         // Request
         string method = request.Method.ToString().ToUpper();
         log.AppendLine($"Request: {method} '{client.BuildUri(request)}'");
-        foreach (var param in request.Parameters)
+        foreach (Parameter param in request.Parameters)
         {
             // These parameter types will be resolved as part of BuildUri
             if (param is UrlSegmentParameter or GetOrPostParameter) continue;
@@ -97,7 +97,7 @@ public static class Logging
             if (response.ErrorException is not null)
             {
                 log.Append($"-{response.ErrorException.GetType().Name}: ");
-                var message = response.ErrorException.Message;
+                string message = response.ErrorException.Message;
                 // Push long messages to the next line
                 if (message.Length > 80)
                 {
@@ -121,7 +121,7 @@ public static class Logging
                 log.AppendLine();
             }
 
-            var content = response.Content;
+            string? content = response.Content;
 #if VERBOSE
             log.AppendLine($" '{content}'");
 #else

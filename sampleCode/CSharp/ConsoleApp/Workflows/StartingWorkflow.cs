@@ -8,7 +8,7 @@ public class StartingWorkflow : IWorkflow
  GET {{api_domain}}api/v1/aggregationschemes?industrySetId={{industrySetId}}
   */
 
-        var aggSchemes = AggregationSchemes.GetAggregationSchemes();
+        AggregationScheme[] aggSchemes = AggregationSchemes.GetAggregationSchemes();
 // Note: the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
         int aggregationSchemeId = 8;
 
@@ -16,7 +16,7 @@ public class StartingWorkflow : IWorkflow
 /* Once you have chosen an Aggregation Scheme, you can use it to retrieve valid Data Sets
  */
 
-        var dataSets = DataSets.GetDataSets(8);
+        DataSet[] dataSets = DataSets.GetDataSets(8);
 // Note: The 2022 DataSetId is 96
         int dataSetId = 87; //96;
 

@@ -17,13 +17,13 @@ public class CombinedRegionWorkflow : IWorkflow
         
         
         // Get a list of all valid Aggregation Schemes
-        var aggregationSchemes = AggregationSchemes.GetAggregationSchemes();
+        AggregationScheme[] aggregationSchemes = AggregationSchemes.GetAggregationSchemes();
         // Choose the one you would like to use
         int aggregationSchemeId = 8; // 8 = Implan 546 Unaggregated
         
         
         // Get a list of all valid Data Sets for the Aggregation Scheme
-        var datasets = DataSets.GetDataSets(aggregationSchemeId);
+        DataSet[] datasets = DataSets.GetDataSets(aggregationSchemeId);
         // Choose the one you would like to use -- must be compatible with your chosen HouseholdSetId
         int dataSetId = 96; // 96 = 2022 Data
         
@@ -58,8 +58,8 @@ public class CombinedRegionWorkflow : IWorkflow
         // Note: Specify either HashIds or Urids, not both
         CombineRegionRequest combineRegionPayload = new CombineRegionRequest()
         {
-            // The description for this Combined Region must be Unique
-            Description = $"Workflow - Combine Regions - {Guid.NewGuid()}",
+            // The description for this Combined Region must be Unique, so we'll use the timestamp
+            Description = $"Combined Region - {DateTime.Now:s}",
             HashIds = [hashId1, hashId2],
             //Urids = [1857994,1857642],
         };
@@ -85,9 +85,9 @@ public class CombinedRegionWorkflow : IWorkflow
             //    combinedRegion.HashId);
             
             // Get a list of all User Regions (which includes Customized + Combined)
-            var userRegions = Regions.GetUserRegions(combinedRegion.AggregationSchemeId, combinedRegion.DatasetId);
+            Region[] userRegions = Regions.GetUserRegions(combinedRegion.AggregationSchemeId, combinedRegion.DatasetId);
             // Find the one that has a matching HashId
-            var region = userRegions.FirstOrDefault(r => r.HashId == combinedRegion.HashId);
+            Region? region = userRegions.FirstOrDefault(r => r.HashId == combinedRegion.HashId);
             
             // Check the status -- if it is `Complete`, the Build is done
             if (string.Equals(region?.ModelBuildStatus, "Complete", StringComparison.OrdinalIgnoreCase))

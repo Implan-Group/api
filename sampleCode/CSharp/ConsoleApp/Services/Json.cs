@@ -78,17 +78,17 @@ public static class Json
     private static void ThrowNullAssignedToNonNull(JsonTypeInfo jsonTypeInfo)
     {
         if (jsonTypeInfo.Kind != JsonTypeInfoKind.Object) return;
-        foreach (var property in jsonTypeInfo.Properties)
+        foreach (JsonPropertyInfo property in jsonTypeInfo.Properties)
         {
             if (!property.PropertyType.IsValueType &&
                 property.Set is not null &&
                 property.AttributeProvider is PropertyInfo propertyInfo)
             {
-                var nullabilityInfo = _nullabilityInfoContext.Create(propertyInfo);
+                NullabilityInfo nullabilityInfo = _nullabilityInfoContext.Create(propertyInfo);
                 if (nullabilityInfo.WriteState != NullabilityState.NotNull)
                     continue;
                 // Override the setter to include a null check
-                var setter = property.Set;
+                Action<object, object?>? setter = property.Set;
                 property.Set = (instance, value) =>
                 {
                     if (value is null)

@@ -125,7 +125,7 @@ public static class Rest
     /// <returns></returns>
     public static string? GetResponseContent(RestRequest request)
     {
-        var response = GetResponse(request);
+        RestResponse response = GetResponse(request);
         return response.Content; //.ThrowIfNull();
     }
 
@@ -137,7 +137,7 @@ public static class Rest
     /// <returns></returns>
     public static T? GetResponseData<T>(RestRequest request)
     {
-        var response = GetResponse<T>(request);
+        RestResponse<T> response = GetResponse<T>(request);
         // Response.Data is the deserialized value from the json response body
         return response.Data; //.ThrowIfNull();
     }

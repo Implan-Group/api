@@ -23,7 +23,7 @@ public class AuthenticationWorkflow : IWorkflow
         };
 
         // Retrieve the token
-        var bearerToken = Authentication.GetBearerToken(auth);
+        string bearerToken = Authentication.GetBearerToken(auth);
 
         // Set it so that RestSharp automatically includes it with all requests
         Rest.SetAuthentication(bearerToken);

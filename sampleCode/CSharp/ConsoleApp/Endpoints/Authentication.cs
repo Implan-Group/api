@@ -15,13 +15,13 @@ public static class Authentication
     public static string GetBearerToken(ImplanAuthentication auth)
     {
         // The /auth endpoint handles authentication for all of ImpactApi
-        var authRequest = new RestRequest("/auth");
+        RestRequest authRequest = new RestRequest("/auth");
         authRequest.Method = Method.Post;
         // The username + password must be passed in via Json body
         authRequest.AddJsonBody(auth);
 
         // Authentication must succeed and return a valid Bearer Token for any other ImpactApi calls to work
-        var response = Rest._restClient.ExecutePost(authRequest);
+        RestResponse response = Rest._restClient.ExecutePost(authRequest);
         if (!response.IsSuccessStatusCode)
         {
             throw new AuthenticationException("Cannot currently Authenticate to Impact Api");
@@ -29,7 +29,7 @@ public static class Authentication
         }
 
         // The response from this endpoint is a JWT Bearer token string "Bearer XXX...XXX"
-        var token = response.Content;
+        string? token = response.Content;
         if (token.IsNullOrWhiteSpace())
             throw new AuthenticationException("Cannot currently Authenticate to Impact Api");
 

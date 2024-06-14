@@ -113,7 +113,7 @@ public static class Regions
     /// </summary>
     public static string[] GetRegionTypes()
     {
-        var request = new RestRequest("api/v1/region/RegionTypes");
+        RestRequest request = new RestRequest("api/v1/region/RegionTypes");
         //var request = new RestRequest("api/v1/region/region-types");
         request.Method = Method.Get;
 
@@ -128,7 +128,7 @@ public static class Regions
     /// <returns></returns>
     public static Region GetTopLevelRegion(int aggregationSchemeId, int dataSetId)
     {
-        var request = new RestRequest("api/v1/region/{aggregationSchemeId}/{dataSetId}");
+        RestRequest request = new RestRequest("api/v1/region/{aggregationSchemeId}/{dataSetId}");
         request.Method = Method.Get;
         request.AddUrlSegment("aggregationSchemeId", aggregationSchemeId);
         request.AddUrlSegment("dataSetId", dataSetId);
@@ -208,7 +208,7 @@ public static class Regions
     /// </returns>
     public static Region[] GetUserRegions(int aggregationSchemeId, int dataSetId)
     {
-        var request = new RestRequest("api/v1/region/{aggregationSchemeId}/{dataSetId}/user");
+        RestRequest request = new RestRequest("api/v1/region/{aggregationSchemeId}/{dataSetId}/user");
         request.Method = Method.Get;
         request.AddUrlSegment("aggregationSchemeId", aggregationSchemeId);
         request.AddUrlSegment("dataSetId", dataSetId);
@@ -231,7 +231,7 @@ public static class Regions
     /// </returns>
     public static Region CombineRegions(int aggregationSchemeId, CombineRegionRequest payload)
     {
-        var request = new RestRequest("api/v1/region/build/combined/{aggregationSchemeId}");
+        RestRequest request = new RestRequest("api/v1/region/build/combined/{aggregationSchemeId}");
         request.Method = Method.Post;
         request.AddUrlSegment("aggregationSchemeId", aggregationSchemeId);
         request.AddJsonBody(payload);

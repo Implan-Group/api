@@ -132,7 +132,7 @@ public class Events
     public static Event? GetEvent(Guid projectGuid, Guid eventGuid)
     {
         // {{api_domain}}api/v1/impact/project/:projectGuid/event/:eventGuid
-        var request = new RestRequest("api/v1/impact/project/{projectGuid}/event/{eventGuid}");
+        RestRequest request = new RestRequest("api/v1/impact/project/{projectGuid}/event/{eventGuid}");
         request.Method = Method.Get;
         request.AddUrlSegment("projectGuid", projectGuid);
         request.AddUrlSegment("eventGuid", eventGuid);
@@ -143,7 +143,7 @@ public class Events
     public static TEvent? GetEvent<TEvent>(Guid projectGuid, Guid eventGuid)
         where TEvent : Event
     {
-        var request = new RestRequest("api/v1/impact/project/{projectGuid}/event/{eventGuid}");
+        RestRequest request = new RestRequest("api/v1/impact/project/{projectGuid}/event/{eventGuid}");
         request.Method = Method.Get;
         request.AddUrlSegment("projectGuid", projectGuid);
         request.AddUrlSegment("eventGuid", eventGuid);
@@ -153,7 +153,7 @@ public class Events
     public static Event[] GetEvents(Guid projectGuid)
     {
         // {{api_domain}}api/v1/impact/project/:projectGuid/event
-        var request = new RestRequest("api/v1/impact/project/{projectGuid}/event");
+        RestRequest request = new RestRequest("api/v1/impact/project/{projectGuid}/event");
         request.Method = Method.Get;
         request.AddUrlSegment("projectGuid", projectGuid);
 
@@ -166,7 +166,7 @@ public class Events
     public static IndustryOutputEvent AddEvent(Guid projectGuid, IndustryOutputEvent industryOutputEvent)
     {
         // [HttpPost("external/api/v1/impact/project/{projectId}/event")]
-        var request = new RestRequest("api/v1/impact/project/{projectId}/event");
+        RestRequest request = new RestRequest("api/v1/impact/project/{projectId}/event");
         request.Method = Method.Post;
         request.AddUrlSegment("projectId", projectGuid);
         request.AddJsonBody(industryOutputEvent);
