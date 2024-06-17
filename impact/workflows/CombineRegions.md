@@ -1,8 +1,8 @@
-﻿# Impact API - Combined Region Workflow
+# Impact API - Combined Region Workflow
 - This document is a supplement to the [Impact ReadMe](https://github.com/Implan-Group/api/blob/main/impact/readme.md)
 - Further detail on additional workflow topics can be found on [support.implan.com](https://support.implan.com/hc/en-us)
 
-### Notes:
+### Notes
 - All API Endpoints require a valid JWT Bearer Token ([JWT.IO](https://jwt.io/))
   -	Please see the [authentication](https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication---retrieving-bearer-access-token) section of the primary Readme to review authentication steps
 - Variables for endpoints will appear inside of double-brackets, those must be replaced with valid values before execution
