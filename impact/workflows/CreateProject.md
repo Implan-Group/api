@@ -1,10 +1,12 @@
 # Impact API - Create Project Workflow
 - This document is a supplement to the [Impact ReadMe](https://github.com/Implan-Group/api/blob/main/impact/readme.md)
 - Further detail on additional workflow topics can be found on [support.implan.com](https://support.implan.com/hc/en-us)
+- Projects are the top level of organization for an analysis and contain the specifics of the Aggregation Scheme, Household Set, MRIO status, and folder placement.
+- This document describes the basic IMPLAN ImpactAPI workflow to create a Project, add Events, and link Events and Regions in Groups
 
 ### Notes:
 - All API Endpoints require a valid JWT Bearer Token ([JWT.IO](https://jwt.io/))
-  -	Please see the [authentication](https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication---retrieving-bearer-access-token) section of the primary Readme to review authentication steps
+  - Please see the [authentication](https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication---retrieving-bearer-access-token) section of the primary Readme to review authentication steps
 - Variables for endpoints will appear inside of double-braces, those must be replaced with valid values before execution
   - e.g. `{{api_domain}}` should be replaced with `https://api.implan.com/`
   - See the [Development Variables](https://github.com/Implan-Group/api/blob/main/impact/readme.md#development-variables) section of the Readme for more information
@@ -12,11 +14,7 @@
 
 
 ---
-# Workflow Overview
-- Projects are the top level of organization for an analysis and contain the specifics of the Aggregation Scheme, Household Set, MRIO status, and folder placement.
-- This document describes the basic IMPLAN ImpactAPI workflow to create a Project, add Events, and link Events and Regions in Groups
-
-### Aggregation Schemes
+## Aggregation Schemes
 - [Impact Readme - Aggregation Schemes](https://github.com/Implan-Group/api/blob/main/impact/readme.md#aggregation-schemes)
 - The first step to create a Project is to find the Aggregation Scheme
 - `GET {{api_domain}}api/v1/aggregationSchemes`
@@ -57,35 +55,10 @@
 - `mapCode` (text): A code to describe
 - `status` (text): Whether or not this aggregation scheme has been built yet
 
-### Datasets
-- To explore further, a Dataset Id is required -- this specifies the Data Year
-- `GET {{api_domain}}api/v1/datasets`
-- `GET {{api_domain}}api/v1/datasets/{{aggregationSchemeId}}`
-  - Use this endpoint to further filter the Datasets by Aggregation Scheme Id
-- Returns a `json` array of valid Datasets
-  ```json
-  [
-      {
-          "id": 60,
-          "description": "2001",
-          "isDefault": false
-      },
-      ...
-      {
-          "id": 96,
-          "description": "2022",
-          "isDefault": true
-      }
-  ]
-  ```
-  - `id` (number): Dataset Identifier
-  - `description` (text): Description of the Dataset
-  - `isDefault` (boolean): Whether or not this Dataset is the default
-
 
 ---
-## Project Creation
-- Once you have chosen your Aggregation Scheme Id one of its Household Set Ids, you can create your Project
+## Create Project
+- Once you have chosen your Aggregation Scheme Id and one of its Household Set Ids, you can create your Project
 
 #### Project Json
 - The `json` representation of a Project looks like this:
@@ -116,9 +89,9 @@
 
 
 ---
-## Project Events
+## Add Project Events
 
-### Industry Codes
+#### Industry Codes
 - [Impact Readme - Industry Codes](https://github.com/Implan-Group/api/blob/main/impact/readme.md#industry-codes-endpoint-get)
 - With a Project created, you will next need to determine an industry code to use for your event. A list of industries that can be utilized for your analysis. Events created later will require reference to one of the industry codes (`code`) returned here.
 - `GET {{api_domain}}api/v1/IndustryCodes/{{aggregationSchemeId}}`
@@ -138,6 +111,14 @@
 	...
 ]
 ```
+
+#### Event Types
+- [Impact Readme - Event Types](TODO)
+- There are many types of Events that can be added to a Group, this endpoint retrieves a list of them
+- `GET {{api_domain}}api/v1/impact/project/{{projectId}}/eventtype`
+  - The Project Id for the created Project must be passed into this endpoint in order to filter the results to only applicable Events
+- This endpoint returns an array of the names of valid Event Types
+	- _e.g. `IndustryOutput`, `IndustrySpendingPattern`, ..._
 
 ### Add Events
 - [Impact Readme - Create Events](https://github.com/Implan-Group/api/blob/main/impact/readme.md#create-event-post)
@@ -184,8 +165,10 @@
   ```
   - `id` (guid): Unique identifier for this Event
   - `projectId` (guid): Unique identifier for the Project this Event belongs to
-  - `impactEventType` (text): The specific Impact Event Type for this event. _Note:_ Each Impact Event Type has slightly different input/output Properties, see below.
-  - `title` (text): Unique-per-Project 
+  - `impactEventType` (text): The specific Impact Event Type for this event. 
+    - _Note:_ Each Impact Event Type has slightly different input/output Properties, see below.
+  - `title` (text): Unique-per-Project description of this Event
+  - `tags` (array of text, optional): Additional Tags to associate with this Event
   
 #### Additional Industry Output Event Json
 - [support.implan.com](https://support.implan.com/hc/en-us/articles/360051441834-Industry-Events)
@@ -253,6 +236,31 @@
     - URIDs are slowly being depreciated, prefer HashIds whenever possible
 - One or the other of the above identifiers are used for calls to build combined Regions, pull Region data, and assign to Groups for Impacts.
 
+#### Datasets
+- To explore Regions further, a Dataset Id is required -- this specifies the Data Year
+- `GET {{api_domain}}api/v1/datasets`
+- `GET {{api_domain}}api/v1/datasets/{{aggregationSchemeId}}`
+  - Use this endpoint to further filter the Datasets by Aggregation Scheme Id
+- Returns a `json` array of valid Datasets
+  ```json
+  [
+      {
+          "id": 60,
+          "description": "2001",
+          "isDefault": false
+      },
+      ...
+      {
+          "id": 96,
+          "description": "2022",
+          "isDefault": true
+      }
+  ]
+  ```
+  - `id` (number): Dataset Identifier
+  - `description` (text): Description of the Dataset
+  - `isDefault` (boolean): Whether or not this Dataset is the default
+
 #### Region Json
 - The `json` response from regional endpoints is either a single Region or an Array of Regions, shaped like this:
   - _Note: Some information may be `null` as it is not relevant for the Region_
@@ -305,6 +313,9 @@
 - `geoId` (text, optional): The first non-`null` value among `provinceCode`, `fipsCode`, or `m49Code` (in that order) (used internally)
 - `isMrioAllowed` (boolean): Whether or not the Region supports Multi-Region Input/Ouput  (MRIO) Analysis
 
+
+## Region Endpoints
+
 ### Region Types
 - `GET {{api_domain}}api/v1/region/RegionTypes`
   - Returns a `json` array of Regions
@@ -327,7 +338,7 @@
   - This includes all customized and combined Regions
 
 
-
+---
 ## Add Groups
 - [Impact Readme - Create Group](https://github.com/Implan-Group/api/blob/main/impact/readme.md#create-group-post)
 - Groups represent the Region and timeframe in which an Event takes place. Use the following endpoints to arrange Groups in your project. Reference the `ProjectId` and `EventId`s from the created Project and Events where required.
@@ -371,3 +382,9 @@
 - `groupEvents` (json-array): An array of the Events to associate with this Group
   - `eventId` (guid): The guid Id for the Event to associate
   - `scalingFactor` (number): Percentage (0.0 .. 1.0) of Scaling to apply to this Event
+
+
+---
+## Finishing Up
+- Once a Project has been created, one or more Events have been added, and then one or more Groups have been added to link those Events to Regions, your Impact can be executed.
+- See `RunImpactAnalysis.md` in the same folder as this document in order to see the Workflow around executing a Project Impact Analysis

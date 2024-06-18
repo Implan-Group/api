@@ -3,74 +3,31 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ConsoleApp.Endpoints;
 
-/// <summary>
-/// PHX-11909
-/// </summary>
-public enum ImpactEventType
-{
-    Empty = 0,
-    [Description("Industry Output")] IndustryOutput = 1,
-
-    [Description("Industry Employment")] IndustryEmployment = 2,
-
-    [Description("Industry Employee Compensation")]
-    IndustryEmployeeCompensation = 3,
-
-    [Description("Industry Proprietor Income")]
-    IndustryProprietorIncome = 4,
-
-    [Description("Commodity Output")] CommodityOutput = 5,
-
-    [Description("Labor Income")] LaborIncome = 6,
-
-    [Description("Household Income")] HouseholdIncome = 7,
-
-    [Description("2018 Industry Spending Pattern")]
-    IndustrySpendingPattern2018 = 8,
-
-    [Description("2018 Institutional Spending Pattern")]
-    InstitutionalSpendingPattern2018 = 30,
-
-    [Description("2019 Industry Spending Pattern")]
-    IndustrySpendingPattern2019 = 9,
-
-    [Description("2019 Institutional Spending Pattern")]
-    InstitutionalSpendingPattern2019 = 40,
-
-    [Description("Industry Spending Pattern")]
-    IndustrySpendingPattern = 12,
-
-    [Description("Institutional Spending Pattern")]
-    InstitutionalSpendingPattern = 11,
-
-    [Description("Industry Contribution Analysis")]
-    IndustryContributionAnalysis = 20,
-
-    [Description("Industry Impact Analysis (Detailed)")]
-    IndustryImpactAnalysis = 10,
-
-    [Description("Custom Spending Pattern")]
-    CustomSpendingPattern = 13,
-
-    [Description("Household Spending Pattern")]
-    HouseholdSpendingPattern = 14,
-
-    [Description("Industry Impact Analysis (Detailed)")]
-    InternationalIndustryImpactAnalysis = 15,
-
-    [Description("Industry Impact Analysis (Custom)")]
-    CustomIndustryImpactAnalysis = 16,
-
-    [Description("Industry Impact Analysis (Custom)")]
-    CustomInternationalIndustryImpactAnalysis = 17,
-}
-
 public record class Event
 {
-    public virtual ImpactEventType ImpactEventType => ImpactEventType.Empty;
+    /// <summary>
+    /// The specific Impact Event Type for this event. 
+    /// </summary>
+    public virtual string ImpactEventType => "Empty";
+
+    /// <summary>
+    /// Unique-per-Project description of this Event
+    /// </summary>
     public required string Title { get; set; }
+
+    /// <summary>
+    /// Unique identifier for this Event
+    /// </summary>
     public Guid Id { get; set; }
+
+    /// <summary>
+    /// Unique identifier for the Project this Event belongs to
+    /// </summary>
     public Guid ProjectId { get; set; }
+
+    /// <summary>
+    /// Additional Tags to associate with this Event
+    /// </summary>
     public string[] Tags { get; set; } = [];
 }
 
@@ -80,18 +37,42 @@ public enum MarginType
     PurchaserPrice
 }
 
-public record class IndustryOutputEvent : Event
+public sealed record class IndustryOutputEvent : Event
 {
+    public override string ImpactEventType => "IndustryOutput";
+
+    /// <summary>
+    /// Total output value of this Industry Output Event
+    /// </summary>
     public required double? Output { get; set; }
+
+    /// <summary>
+    /// Total employment value
+    /// </summary>
     public double? Employment { get; set; }
+
+    /// <summary>
+    /// Total employee compensation
+    /// </summary>
     public double? EmployeeCompensation { get; set; }
+
+    /// <summary>
+    /// Total proprietor compensation
+    /// </summary>
     public double? ProprietorIncome { get; set; }
+
+    /// <summary>
+    /// The Industry's Code (see <see cref="IndustryCodes"/>)
+    /// </summary>
     public int IndustryCode { get; set; }
-    public MarginType? MarginType { get; set; }
-    public double? Percentage { get; set; }
+
+    /// <summary>
+    ///  The Dataset Id (see <see cref="DataSets"/>)
+    /// </summary>
     public int? DatasetId { get; set; }
 
-    public override ImpactEventType ImpactEventType => ImpactEventType.IndustryOutput;
+    public MarginType? MarginType { get; set; }
+    public double? Percentage { get; set; }
 }
 
 public record class IndustryEmploymentEvent : Event
@@ -102,7 +83,7 @@ public record class IndustryEmploymentEvent : Event
     public double? ProprietorIncome { get; set; }
     public int IndustryCode { get; set; }
 
-    public override ImpactEventType ImpactEventType => ImpactEventType.IndustryEmployment;
+    public override string ImpactEventType => "IndustryEmployment";
 }
 
 public record class IndustryEmployeeCompensationEvent : Event
@@ -113,7 +94,7 @@ public record class IndustryEmployeeCompensationEvent : Event
     public double? ProprietorIncome { get; set; }
     public int IndustryCode { get; set; }
 
-    public override ImpactEventType ImpactEventType => ImpactEventType.IndustryEmployeeCompensation;
+    public override string ImpactEventType => "IndustryEmployeeCompensation";
 }
 
 public record class IndustryProprietorIncomeEvent : Event
@@ -124,14 +105,63 @@ public record class IndustryProprietorIncomeEvent : Event
     public required double? ProprietorIncome { get; set; }
     public int IndustryCode { get; set; }
 
-    public override ImpactEventType ImpactEventType => ImpactEventType.IndustryProprietorIncome;
+    public override string ImpactEventType => "IndustryProprietorIncome";
 }
 
+
+public enum SpendingPatternValueType
+{
+    IntermediateExpenditure,
+    Output
+}
+
+public sealed record class SpendingPatternCommodity
+{
+    public double? Coefficient { get; set; }
+    public int CommodityCode { get; set; }
+    public string CommodityDescription { get; set; }
+    public bool IsSamValue { get; set; }
+    public bool IsUserCoefficient { get; set; }
+    public double LocalPurchasePercentage { get; set; } = 1.0d; // 100%
+}
+
+public sealed record class IndustryImpactAnalysisEvent : Event
+{
+    public required int IndustryCode { get; set; }
+    public double? IntermediateInputs { get; set; }
+    public double? TotalEmployment { get; set; }
+    public double? EmployeeCompensation { get; set; }
+    public double? ProprietorIncome { get; set; }
+    public double? WageAndSalaryEmployment { get; set; }
+    public double? ProprietorEmployment { get; set; }
+    public double? TotalLaborIncome { get; set; }
+    public double? OtherPropertyIncome { get; set; }
+    public double? TaxOnProductionAndImports { get; set; }
+    public double? LocalPurchasePercentage { get; set; } = 1.0;
+    public double? TotalOutput { get; set; }
+    public bool IsSam { get; set; }
+    public int? SpendingPatternDatasetId { get; set; }
+    public SpendingPatternValueType SpendingPatternValueType { get; set; }
+    public SpendingPatternCommodity[] SpendingPatternCommodities { get; set; } = [];
+}
+
+/// <summary>
+/// Endpoints related to Impact Events
+/// </summary>
 public class Events
 {
+    public static string[] GetEventsTypes(Guid projectGuid)
+    {
+        var request = new RestRequest("api/v1/impact/project/{projectGuid}/eventtype");
+        request.Method = Method.Get;
+        request.AddUrlSegment("projectGuid", projectGuid);
+
+        string[] response = Rest.GetResponseData<string[]>(request).ThrowIfNull();
+        return response;
+    }
+
     public static Event? GetEvent(Guid projectGuid, Guid eventGuid)
     {
-        // {{api_domain}}api/v1/impact/project/:projectGuid/event/:eventGuid
         RestRequest request = new RestRequest("api/v1/impact/project/{projectGuid}/event/{eventGuid}");
         request.Method = Method.Get;
         request.AddUrlSegment("projectGuid", projectGuid);
@@ -149,28 +179,37 @@ public class Events
         request.AddUrlSegment("eventGuid", eventGuid);
         return Rest.GetResponseData<TEvent>(request);
     }
-    
+
     public static Event[] GetEvents(Guid projectGuid)
     {
-        // {{api_domain}}api/v1/impact/project/:projectGuid/event
         RestRequest request = new RestRequest("api/v1/impact/project/{projectGuid}/event");
         request.Method = Method.Get;
         request.AddUrlSegment("projectGuid", projectGuid);
 
         return Rest.GetResponseData<Event[]>(request).ThrowIfNull();
     }
-    
+
     // Though there are 17? different Impact Event Types, there is technically only one endpoint to add them
     // They are split up here for clarity of input Model
-    
+
     public static IndustryOutputEvent AddEvent(Guid projectGuid, IndustryOutputEvent industryOutputEvent)
     {
-        // [HttpPost("external/api/v1/impact/project/{projectId}/event")]
         RestRequest request = new RestRequest("api/v1/impact/project/{projectId}/event");
         request.Method = Method.Post;
         request.AddUrlSegment("projectId", projectGuid);
         request.AddJsonBody(industryOutputEvent);
-        
+
         return Rest.GetResponseData<IndustryOutputEvent>(request).ThrowIfNull();
+    }
+    
+    public static IndustryImpactAnalysisEvent AddEvent(Guid projectGuid, IndustryImpactAnalysisEvent industryImpactAnalysisEvent)
+    {
+        RestRequest request = new RestRequest("api/v1/impact/project/{projectId}/event");
+        request.Method = Method.Post;
+        request.AddUrlSegment("projectId", projectGuid);
+        request.AddJsonBody(industryImpactAnalysisEvent);
+
+        IndustryImpactAnalysisEvent @event = Rest.GetResponseData<IndustryImpactAnalysisEvent>(request).ThrowIfNull();
+        return @event;
     }
 }
