@@ -2,4 +2,32 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs
+# Visual Studio
+[Bb]in/
+[Oo]bj/
+packages/
+artifacts/
+.vs/
+.vscode/
+*.lock.json
+*.orig
+.DS_Store
+*.sln.ide
+*.user
+*.suo
+*.userprefs
+
+# Nuget
+.nuget/
+*.nuget.targets
+*.nuget.props
+
+# JetBrains
+_ReSharper.*
+*.ReSharper.user
+*.resharper.user
+.idea/
+*.DotSettings.*
+
+# Obsidian (Markdown Editor)
+.obsidian/
