@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "be0d7119-60b9-4716-b84b-4cf574d99fb5",
+		"_postman_id": "e7768d85-f4f6-4b01-af1c-45c7d77c48a6",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28583816"
+		"_exporter_id": "12725670"
 	},
 	"item": [
 		{
@@ -4172,6 +4172,33 @@
 								{
 									"key": "projectGuid",
 									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project Event Types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/eventtype",
+							"host": [
+								"{{api_domain}}api"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"project",
+								":projectGuid",
+								"eventtype"
+							],
+							"variable": [
+								{
+									"key": "projectGuid",
+									"value": "{{project_guid}}"
 								}
 							]
 						}
