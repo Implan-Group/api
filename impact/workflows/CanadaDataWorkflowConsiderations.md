@@ -1,4 +1,4 @@
-﻿# Canada Data Workflow Considerations
+# Canada Data Workflow Considerations
 This document is a supplement to the [Impact ReadMe](https://github.com/Implan-Group/api/blob/main/impact/readme.md) and contains workflow instructions and considerations for those seeking to work with Canadian data.
 This document describes the basic IMPLAN workflow as it relates the IMPLAN's Impact API. More detail on additional IMPLAN workflow topics can be found on [support.implan.com](https://support.implan.com/hc/en-us).
 

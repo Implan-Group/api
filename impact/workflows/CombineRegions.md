@@ -9,7 +9,8 @@
   - _e.g. `{{api_domain}}`_
   - See the [Development Variables](https://github.com/Implan-Group/api/blob/main/impact/readme.md#development-variables) section of the Readme for more information
 
-## Overview
+---
+# Overview
 - Not all economic models are built for Regions by default, or sometimes you may want to combine regions. Combining regions is used to create a custom group of counties, ZIP codes, MSAs, and/or states and treat them as one economic region that can be studied. The endpoints defined in this section may be used to build single or combined regions.
 - [Impact Readme](https://github.com/Implan-Group/api/blob/main/impact/readme.md#building-regions)
 

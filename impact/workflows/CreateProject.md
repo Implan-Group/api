@@ -1,8 +1,7 @@
 # Impact API - Create Project Workflow
 - This document is a supplement to the [Impact ReadMe](https://github.com/Implan-Group/api/blob/main/impact/readme.md)
 - Further detail on additional workflow topics can be found on [support.implan.com](https://support.implan.com/hc/en-us)
-- Projects are the top level of organization for an analysis and contain the specifics of the Aggregation Scheme, Household Set, MRIO status, and folder placement.
-- This document describes the basic IMPLAN ImpactAPI workflow to create a Project, add Events, and link Events and Regions in Groups
+
 
 ### Notes:
 - All API Endpoints require a valid JWT Bearer Token ([JWT.IO](https://jwt.io/))
@@ -11,6 +10,12 @@
   - e.g. `{{api_domain}}` should be replaced with `https://api.implan.com/`
   - See the [Development Variables](https://github.com/Implan-Group/api/blob/main/impact/readme.md#development-variables) section of the Readme for more information
 - Endpoints that combine IMPLAN's economic data with other data are limited to only those datasets to which those other data are available. (This primarily effects Canada + International customers)
+
+---
+# Overview
+- [Impact Readme](https://github.com/Implan-Group/api/blob/main/impact/readme.md#impacts)
+- Projects are the top level of organization for an analysis and contain the specifics of the Aggregation Scheme, Household Set, MRIO status, and folder placement.
+- Inside the project, you will define the Events, which are the changes to an economy that you want to analyze, and the Groups, which are the Regions and time frame the changes take place. 
 
 
 ---
