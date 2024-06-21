@@ -711,6 +711,61 @@
 							"response": []
 						},
 						{
+							"name": "User Custom and Combined Regions by Parameters",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/region/user?aggregationSchemeId=8&datasetId=96",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"region",
+										"user"
+									],
+									"query": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "datasetId",
+											"value": "96"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Custom and Combined Region",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/region/user/:hashId",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"region",
+										"user",
+										":hashId"
+									],
+									"variable": [
+										{
+											"key": "hashId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Regions Built",
 							"request": {
 								"method": "GET",

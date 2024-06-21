@@ -599,6 +599,28 @@ This endpoint will return all combined and custom regions that a user created by
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
 
+### User Custom and Combined Regions (Get)
+This endpoint will return all combined and custom regions that a user created. Parameters can be provided for filtering.
+#### Parameters
+* Bearer Token
+* Aggregation Scheme ID (Optional Parameter)
+* Data Set ID (Optional Parameter)
+#### Endpoint
+**GET {{api_domain}}api/v1/region/user**\
+**GET {{api_domain}}api/v1/region/user?aggregationSchemeId={{aggregationSchemeId}}**\
+**GET {{api_domain}}api/v1/region/user?datasetId={{datasetId}}**\
+**GET {{api_domain}}api/v1/region/user?aggregationSchemeId={{aggregationSchemeId}}&datsetId={{datasetId}}**
+
+
+#### Get User Custom and/or Combined Region (Get)
+This endpoint returns a region card for a specific user created combined and/or custom region.
+#### Parameters
+* Bearer Token
+* HashId ID (in URL)
+#### Endpoint
+**GET {{api_domain}}api/v1/region/user/{{hashId}}**
+
+
 ### Get Regions by Urid (Get)
 This endpoint allows a user to pull high level region information by a specific urid, within an aggregation scheme and data set.
 #### Parameters
