@@ -1882,15 +1882,14 @@ This endpoint provides a list of possible dollar year deflators that can be appl
 - `GET {{api_domain}}api/v1/deflators/:aggregationSchemeId/:dataSetId/:deflatorType`
 
 
-
-
-
-## Results Totals (GET)
-To provide an asynchronous environment, IMPLAN has developed an endpoint that you can call to return the final results when the analysis run has been completed.  
+---
+## Result Totals
+- To provide an asynchronous environment, IMPLAN has developed an endpoint that you can call to return the final results when the analysis run has been completed.
 #### Parameters
 * Bearer Token
 * User Email Address
 * Analysis Run Id (Obtained from Impact Analysis Endpoint)
+* Dollar Year (Optional) - Overrides the Dollar Year only for Results
 #### Response
 The API response when the impact analysis is complete will provide Direct, Indirect, and Induced estimates for the following outputs:
 * Total Output
@@ -1909,214 +1908,76 @@ The API response when the impact analysis is complete will provide Direct, Indir
 * Total Sub-County Special District Taxes
 #### Endpoint
 **GET {{api_domain}}api/v1/impact/results/{{runId}}**
+**GET {{api_domain}}api/v1/impact/results/{{runId}}?dollarYear=2020**
 
 Call after Status API request returns “Complete”
 
 Will return.
 ```
-
-        [
-
-
-            {
-
-
-                "runId": 5923,
-
-
-                "regionName": "group 1",
-
-
-                "dataYear": "2019",
-
-
-                "impactType": "Direct",
-
-
-                "impactTypeId": 1,
-
-
-                "output": 24.0,
-
-
-                "employment": 4.0,
-
-
-                "wagesalaryemployment": 2.4822851604905343,
-
-
-                "proprietoremployment": 1.5177148395094657,
-
-
-                "laborIncome": 7.0,
-
-
-                "employeeCompensation": 2.0,
-
-
-                "proprietorIncome": 5.0,
-
-
-                "otherPropertyTypeIncome": 0.0,
-
-
-                "taxOnProductionAndImports": 8.0,
-
-
-                "subCountyGeneralTaxes": 1.101089247979291,
-
-
-                "subCountySpecialDistrictsTaxes": 0.028253130986610593,
-
-
-                "countyTaxes": 2.5595949962726197,
-
-
-                "stateTaxes": 3.8802588214347797,
-
-
-                "federalTaxes": 1.7467052842402941,
-
-
-                "totalTaxes": 9.315901480913599
-
-
-            },
-
-
-            {
-
-
-                "runId": 5923,
-
-
-                "regionName": "group 1",
-
-
-                "dataYear": "2019",
-
-
-                "impactType": "Indirect",
-
-
-                "impactTypeId": 2,
-
-
-                "output": 9.699506942871064,
-
-
-                "employment": 7.400741336145475E-05,
-
-
-                "wagesalaryemployment": 4.8929139183874765E-05,
-
-
-                "proprietoremployment": 2.5078274177579972E-05,
-
-
-                "laborIncome": 3.1328411658052837,
-
-
-                "employeeCompensation": 2.639137394626877,
-
-
-                "proprietorIncome": 0.49370377117840725,
-
-
-                "otherPropertyTypeIncome": 1.5189950934401746,
-
-
-                "taxOnProductionAndImports": 0.328375904808993,
-
-
-                "subCountyGeneralTaxes": 0.0459388732807516,
-
-
-                "subCountySpecialDistrictsTaxes": 0.0011637874191108516,
-
-
-                "countyTaxes": 0.10656839299602032,
-
-
-                "stateTaxes": 0.24216331544802466,
-
-
-                "federalTaxes": 0.6572300301071354,
-
-
-                "totalTaxes": 1.053064399251043
-
-
-            },
-
-
-            {
-
-
-                "runId": 5923,
-
-
-                "regionName": "group 1",
-
-
-                "dataYear": "2019",
-
-
-                "impactType": "Induced",
-
-
-                "impactTypeId": 3,
-
-
-                "output": 8.249318632893182,
-
-
-                "employment": 5.4272050051040594E-05,
-
-
-                "wagesalaryemployment": 4.1573718824725244E-05,
-
-
-                "proprietoremployment": 1.2698331226315353E-05,
-
-
-                "laborIncome": 2.535111474066722,
-
-
-                "employeeCompensation": 2.2261088294006215,
-
-
-                "proprietorIncome": 0.30900264466610067,
-
-
-                "otherPropertyTypeIncome": 1.8113055734548382,
-
-
-                "taxOnProductionAndImports": 0.39273146899403416,
-
-
-                "subCountyGeneralTaxes": 0.05462384320448541,
-
-
-                "subCountySpecialDistrictsTaxes": 0.0013901409115902555,
-
-
-                "countyTaxes": 0.12680935896957896,
-
-
-                "stateTaxes": 0.2560977675589298,
-
-
-                "federalTaxes": 0.5652103372346008,
-
-
-                "totalTaxes": 1.0041314478791852
-
-
-            }
-
-
-        ]
+[{
+	"runId": 5923,
+	"regionName": "group 1",
+	"dataYear": "2019",
+	"impactType": "Direct",
+	"impactTypeId": 1,
+	"output": 24.0,
+	"employment": 4.0,
+	"wagesalaryemployment": 2.4822851604905343,
+	"proprietoremployment": 1.5177148395094657,
+	"laborIncome": 7.0,
+	"employeeCompensation": 2.0,
+	"proprietorIncome": 5.0,
+	"otherPropertyTypeIncome": 0.0,
+	"taxOnProductionAndImports": 8.0,
+	"subCountyGeneralTaxes": 1.101089247979291,
+	"subCountySpecialDistrictsTaxes": 0.028253130986610593,
+	"countyTaxes": 2.5595949962726197,
+	"stateTaxes": 3.8802588214347797,
+	"federalTaxes": 1.7467052842402941,
+	"totalTaxes": 9.315901480913599
+}, {
+	"runId": 5923,
+	"regionName": "group 1",
+	"dataYear": "2019",
+	"impactType": "Indirect",
+	"impactTypeId": 2,
+	"output": 9.699506942871064,
+	"employment": 7.400741336145475E-05,
+	"wagesalaryemployment": 4.8929139183874765E-05,
+	"proprietoremployment": 2.5078274177579972E-05,
+	"laborIncome": 3.1328411658052837,
+	"employeeCompensation": 2.639137394626877,
+	"proprietorIncome": 0.49370377117840725,
+	"otherPropertyTypeIncome": 1.5189950934401746,
+	"taxOnProductionAndImports": 0.328375904808993,
+	"subCountyGeneralTaxes": 0.0459388732807516,
+	"subCountySpecialDistrictsTaxes": 0.0011637874191108516,
+	"countyTaxes": 0.10656839299602032,
+	"stateTaxes": 0.24216331544802466,
+	"federalTaxes": 0.6572300301071354,
+	"totalTaxes": 1.053064399251043
+}, {
+	"runId": 5923,
+	"regionName": "group 1",
+	"dataYear": "2019",
+	"impactType": "Induced",
+	"impactTypeId": 3,
+	"output": 8.249318632893182,
+	"employment": 5.4272050051040594E-05,
+	"wagesalaryemployment": 4.1573718824725244E-05,
+	"proprietoremployment": 1.2698331226315353E-05,
+	"laborIncome": 2.535111474066722,
+	"employeeCompensation": 2.2261088294006215,
+	"proprietorIncome": 0.30900264466610067,
+	"otherPropertyTypeIncome": 1.8113055734548382,
+	"taxOnProductionAndImports": 0.39273146899403416,
+	"subCountyGeneralTaxes": 0.05462384320448541,
+	"subCountySpecialDistrictsTaxes": 0.0013901409115902555,
+	"countyTaxes": 0.12680935896957896,
+	"stateTaxes": 0.2560977675589298,
+	"federalTaxes": 0.5652103372346008,
+	"totalTaxes": 1.0041314478791852
+}]
 ```
 
 ## Detail Economic Indicators Export (Get)
