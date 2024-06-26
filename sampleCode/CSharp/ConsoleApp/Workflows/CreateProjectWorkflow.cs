@@ -78,15 +78,15 @@ public class CreateProjectWorkflow : IWorkflow
         {
             Title = "Industry Impact Analysis Event",
             IndustryCode = industryCode.Code,
-            IntermediateInputs = 56,
-            TotalEmployment = 3,
-            EmployeeCompensation = 4,
-            ProprietorIncome = 5,
-            WageAndSalaryEmployment = 1,
-            ProprietorEmployment = 2,
-            TotalLaborIncome = 9,
-            OtherPropertyIncome = 34,
-            TaxOnProductionAndImports = 23,
+            IntermediateInputs = 500_000,
+            EmployeeCompensation = 250_000,
+            ProprietorIncome = 50_000,
+            WageAndSalaryEmployment = 4,
+            ProprietorEmployment = 1,
+            TotalEmployment = 5,
+            TotalLaborIncome = 300_000,
+            OtherPropertyIncome = 100_000,
+            TaxOnProductionAndImports = 100_000,
             SpendingPatternDatasetId = 87,
             SpendingPatternValueType = SpendingPatternValueType.IntermediateExpenditure,
         };
@@ -139,6 +139,7 @@ public class CreateProjectWorkflow : IWorkflow
         
         
         // Now that the Project has been fully defined, see
+        RunImpactAnalysisWorkflow.ProjectId = project.Id;
         RunImpactAnalysisWorkflow.Examples();
         // for ways to run an Analysis and view the Results
     }

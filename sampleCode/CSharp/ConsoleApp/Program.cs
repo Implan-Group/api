@@ -14,11 +14,14 @@
 // Before any workflow, you must Authenticate to IMPLAN's ImpactAPI
 AuthenticationWorkflow.Examples();
 
+// Workflow for Creating a Project and filling it
+CreateProjectWorkflow.Examples();
+
 // Workflow for Combining two or more Regions
-CombinedRegionWorkflow.Examples();
+//CombinedRegionWorkflow.Examples();
 
 // Workflow for Running an Impact Analysis and retrieving the Results
-RunImpactAnalysisWorkflow.Examples();
+//RunImpactAnalysisWorkflow.Examples();
 
 
 

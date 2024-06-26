@@ -143,6 +143,8 @@ public sealed record class IndustryImpactAnalysisEvent : Event
     public int? SpendingPatternDatasetId { get; set; }
     public SpendingPatternValueType SpendingPatternValueType { get; set; }
     public SpendingPatternCommodity[] SpendingPatternCommodities { get; set; } = [];
+
+    public override string ImpactEventType => "IndustryImpactAnalysis";
 }
 
 /// <summary>
