@@ -1,8 +1,4 @@
-﻿#if DEBUG
-#define VERBOSE // This turns on verbose logging for debugging purposes
-#endif
-
-namespace ConsoleApp.Services;
+﻿namespace ConsoleApp.Services;
 
 /// <summary>
 /// All the code that logs details to the <see cref="Console"/>
@@ -54,7 +50,7 @@ public static class Logging
             {
                 log.AppendLine($"-Body: '{jsonParameter.ContentType}' from {jsonParameter.Value?.GetType().Name}");
                 string json = Json.Serialize(jsonParameter.Value);
-#if VERBOSE
+#if LOCAL
                 log.AppendLine($" '{json}'");
 #else
                 if (json.Length <= 80)
@@ -122,7 +118,7 @@ public static class Logging
             }
 
             string? content = response.Content;
-#if VERBOSE
+#if LOCAL
             log.AppendLine($" '{content}'");
 #else
             if (content.Length <= 80)

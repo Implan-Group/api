@@ -25,8 +25,9 @@ public static class Rest
             // This is the base endpoint for all Implan ImpactAPI Requests
 #if DEBUG
             // TODO: Remove these testing URLs
-            BaseUrl = new Uri("https://api.implan.com/int/"),           // Running against External INT
-            //BaseUrl = new Uri("https://localhost:5001/external/"),    // Running against Local INT
+            BaseUrl = new Uri("https://api.implan.com/int/"), // Running against External INT
+#elif LOCAL
+            BaseUrl = new Uri("https://localhost:5001/external/"),    // Running against Local INT
 #else
             BaseUrl = new Uri("https://api.implan.com/"),
 #endif
@@ -56,17 +57,16 @@ public static class Rest
 
     public static void SetAuthentication(string bearerToken)
     {
+        // Set the bearer token
         _jwtAuthenticator.SetBearerToken(bearerToken);
         // Validate that we can hit a small endpoint
         try
         {
-#if !DEBUG
             Regions.GetRegionTypes();
-#endif
         }
         catch (Exception ex)
         {
-            throw new AuthenticationException("Invalid Bearer Token");
+            throw new AuthenticationException("Invalid Bearer Token", ex);
         }
     }
 
