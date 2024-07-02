@@ -1613,7 +1613,65 @@ A list of specifications data containing the following fields:
 #### Endpoint
 **GET {{api_domain}}api/v1/impact/project/{{projectGUID}}/eventtype/{{eventtype}}/specification**
 
+---
+## Spending Pattern Details and Commodities
+- You can query for a list of the defined Spending Patterns, their details, and their commodities
+- This endpoint takes many optional query parameters to control the filtering of the response
 
+#### Request
+- `GET {{api_domain}}api/v1/impact/spending-patterns`
+	- **Optional Query Params:**
+    - `aggregationSchemeId` (number)
+    - `datasetId` (number)
+    - `industrySetId` (number)
+    - `templateType` (text)
+        - One of `Industry`, `Institution`, `Custom`, or `Household`
+    - `specificationCode` (number)
+    - `regionHashId` (text)
+
+#### Response
+- Returns a list of the Spending Patterns and their Commodities
+```json
+[
+    {
+        "id": 28648,
+        "title": "Import Config Test Custom Spending Pattern Test 2-20-24 - IMPORT 20240301184148",
+        "aggregationSchemeId": 8,
+        "datasetId": 92,
+        "industrySetId": 8,
+        "industryCode": 21,
+        "eventType": 0,
+        "templateType": 1,
+        "isSam": true,
+        "isIntermediate": true,
+        "regionHashId": null,
+        "commodities": [
+            {
+                "code": 3010,
+                "description": "All other crops",
+                "coefficient": 0.0021,
+                "isUserLocalPurchasePercentage": false,
+                "localPurchasePercentage": 1.0,
+                "isSamValue": true,
+                "commodityEffect": null
+            },
+            ...
+             {
+                "code": 3538,
+                "description": "Noncomparable imports",
+                "coefficient": 0.0017839409056852793,
+                "isUserLocalPurchasePercentage": false,
+                "localPurchasePercentage": 1.0,
+                "isSamValue": true,
+                "commodityEffect": null
+            }
+        ]
+    },
+    ...
+]
+```
+
+---
 ### Create Event (Post)
 #### Parameters
 * Project Id (In URL)
