@@ -158,6 +158,7 @@ public class Events
         request.Method = Method.Get;
         request.AddUrlSegment("projectGuid", projectGuid);
 
+        string? c = Rest.GetResponseContent(request);
         string[] response = Rest.GetResponseData<string[]>(request).ThrowIfNull();
         return response;
     }
