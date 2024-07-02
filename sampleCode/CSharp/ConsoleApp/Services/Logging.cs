@@ -7,32 +7,46 @@ public static class Logging
 {
     // shared instance
     private static readonly StringBuilder _stringBuilder = new();
+    // the path to the log file
+    private static readonly string _logFilePath;
 
     static Logging()
     {
         // Ensure that the Console can display all UTF8 characters
         Console.OutputEncoding = Encoding.UTF8;
+
+        // Start with the directory we're executing from
+        var dir = AppDomain.CurrentDomain.BaseDirectory;
+        // We want to be in the same root as the /bin/ directory
+        var binIndex = dir.IndexOf(@"\bin", StringComparison.OrdinalIgnoreCase);
+        if (binIndex >= 0)
+            dir = dir.Substring(0, binIndex);
+        var logDir = Path.Combine(dir, "logs");
+        
+        // Ensure that directory exists so that we can write log files to it
+        Directory.CreateDirectory(logDir);
+
+        // Log file uses the day's timestamp
+        var fileName = $"Log_{DateTime.Now:yyyyMMdd}.txt";
+        _logFilePath = Path.Combine(logDir, fileName);
     }
 
     /// <summary>
-    /// Logs a <see cref="RestRequest"/> + <see cref="RestResponse{T}"/> to the Console
+    /// Logs a <see cref="RestRequest"/> + <see cref="RestResponse"/> to the Console
     /// </summary>
-    /// <param name="client"></param>
-    /// <param name="request"></param>
-    /// <param name="response"></param>
-    /// <param name="elapsedTime"></param>
-    /// <param name="responseDataType"></param>
     internal static void LogRequestResponse(
         RestClient client,
         RestRequest request,
         RestResponse response,
+        object? responseData,
         TimeSpan elapsedTime,
         Type? responseDataType = null)
     {
         StringBuilder log = _stringBuilder.Clear();
 
         // Timestamp header
-        log.AppendLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]");
+        log.AppendLine("-------------")
+            .AppendLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]");
 
         // Request
         string method = request.Method.ToString().ToUpper();
@@ -49,19 +63,9 @@ public static class Logging
             if (param is JsonParameter jsonParameter)
             {
                 log.AppendLine($"-Body: '{jsonParameter.ContentType}' from {jsonParameter.Value?.GetType().Name}");
+                // Prettify the json
                 string json = Json.Serialize(jsonParameter.Value);
-#if LOCAL
-                log.AppendLine($" '{json}'");
-#else
-                if (json.Length <= 80)
-                {
-                    log.AppendLine($" '{json}'");
-                }
-                else
-                {
-                    log.AppendLine($" '{json.AsSpan(..80)}…'");
-                }
-#endif
+                log.AppendLine(json);
                 continue;
             }
 
@@ -104,7 +108,8 @@ public static class Logging
                 log.AppendLine($"'{message}'");
             }
         }
-
+        
+        // We want to log the content for debugging + verification
         if (!response.Content.IsNullOrWhiteSpace())
         {
             log.Append($"-Content: '{response.ContentType}'");
@@ -116,26 +121,29 @@ public static class Logging
             {
                 log.AppendLine();
             }
-
-            string? content = response.Content;
-#if LOCAL
-            log.AppendLine($" '{content}'");
-#else
-            if (content.Length <= 80)
+            
+            if (responseData is not null)
             {
-                log.AppendLine($" '{content}'");
+                // prettify the json
+                string json = Json.Serialize(responseData);
+                log.AppendLine(json);
             }
             else
             {
-                // Clip overly-long messages
-                log.AppendLine($" '{content.AsSpan(..80)}…'");
+                string? content = response.Content;
+                log.AppendLine(content);
             }
-#endif
         }
+        
+        // Final empty line
+        log.AppendLine();
 
         string logMessage = log.ToString();
 
         // Write the final log to the Console
         Console.WriteLine(logMessage);
+
+        // Append to the log file
+        File.AppendAllText(_logFilePath, logMessage, Encoding.UTF8);
     }
 }

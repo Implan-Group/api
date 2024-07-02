@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-
-namespace ConsoleApp.Endpoints;
+﻿namespace ConsoleApp.Endpoints;
 
 public record class Event
 {
@@ -192,6 +189,7 @@ public class Events
         return Rest.GetResponseData<Event[]>(request).ThrowIfNull();
     }
 
+    
     // Though there are 17? different Impact Event Types, there is technically only one endpoint to add them
     // They are split up here for clarity of input Model
 

@@ -56,7 +56,6 @@ public static class ImpactResults
         }
 
       
-        
         public class EstimatedGrowthPercentageFilter
         {
             public required int DollarYear { get; set; }

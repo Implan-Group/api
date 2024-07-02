@@ -88,7 +88,7 @@ public static class Rest
         finally
         {
             timer.Stop();
-            Logging.LogRequestResponse(_restClient, request, response!, timer.Elapsed);
+            Logging.LogRequestResponse(_restClient, request, response!, null, timer.Elapsed);
         }
 
         return response;
@@ -112,7 +112,7 @@ public static class Rest
         finally
         {
             timer.Stop();
-            Logging.LogRequestResponse(_restClient, request, response!, timer.Elapsed, typeof(T));
+            Logging.LogRequestResponse(_restClient, request, response!, response.Data, timer.Elapsed, typeof(T));
         }
 
         return response;
@@ -126,7 +126,7 @@ public static class Rest
     public static string? GetResponseContent(RestRequest request)
     {
         RestResponse response = GetResponse(request);
-        return response.Content; //.ThrowIfNull();
+        return response.Content;
     }
 
     /// <summary>
@@ -139,6 +139,6 @@ public static class Rest
     {
         RestResponse<T> response = GetResponse<T>(request);
         // Response.Data is the deserialized value from the json response body
-        return response.Data; //.ThrowIfNull();
+        return response.Data;
     }
 }

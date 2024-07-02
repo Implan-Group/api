@@ -24,8 +24,6 @@ CreateProjectWorkflow.Examples();
 //RunImpactAnalysisWorkflow.Examples();
 
 
-
-
 // These lines keep the Console Window open until manually closed
 Console.WriteLine("Press Enter to close this window");
 Console.ReadLine();
