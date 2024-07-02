@@ -18,3 +18,9 @@
   - `Extension` - C#-specific helpers to clean up the code
 - `Workflows`
   - Each file in this folder contains an example workflow, demonstrating the minimum steps necessary to accomplish a particular task
+
+## Logging
+- All `REST` requests and responses will be logged to both the running Console but also into a file
+  - Upon starting the application, a `logs\` directory will be created in the root of the project (`git\api\sampleCode\CSharp\ConsoleApp\`) that contains one log file for each day that the application runs.
+  - It will be formatted as `Log_YYYYMMDD.txt` (using the current Year, Month, and Date) and it contains the same exact output as the Console
+- All `json` that is sent with a Request or received with a Response will be fully written to the logs so that comparisons can be more easily made

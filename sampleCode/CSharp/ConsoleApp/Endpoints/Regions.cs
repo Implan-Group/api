@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace ConsoleApp.Endpoints;
+﻿namespace ConsoleApp.Endpoints;
 
 public sealed record class Region
 {
@@ -157,19 +155,17 @@ public static class Regions
 
         return Rest.GetResponseData<Region>(request).ThrowIfNull();
     }
-
-    // TODO: This endpoint does not currently work with HashIds, PHX-12050 will add this feature
-    // [return: MaybeNull]
-    // public static Region? GetRegion(int aggregationSchemeId, int dataSetId, string hashIdOrUrid)
-    // {
-    //     var request = new RestRequest("api/v1/region/{aggregationSchemeId}/{dataSetId}/{hashIdOrUrid}");
-    //     request.Method = Method.Get;
-    //     request.AddUrlSegment("aggregationSchemeId", aggregationSchemeId);
-    //     request.AddUrlSegment("dataSetId", dataSetId);
-    //     request.AddUrlSegment("hashIdOrUrid", hashIdOrUrid);
-    //
-    //     return Rest.GetResponseData<Region>(request);
-    // }
+    
+    public static Region? GetRegion(int aggregationSchemeId, int dataSetId, string hashIdOrUrid)
+    {
+        var request = new RestRequest("api/v1/region/{aggregationSchemeId}/{dataSetId}/{hashIdOrUrid}");
+        request.Method = Method.Get;
+        request.AddUrlSegment("aggregationSchemeId", aggregationSchemeId);
+        request.AddUrlSegment("dataSetId", dataSetId);
+        request.AddUrlSegment("hashIdOrUrid", hashIdOrUrid);
+    
+        return Rest.GetResponseData<Region>(request);
+    }
 
     /// <summary>
     /// Returns all the child Regions for an Aggregation Scheme and Dataset
@@ -195,6 +191,8 @@ public static class Regions
         string? regionType = null)
     {
         RestRequest request;
+        
+        // There are different routes depending on our filters
         if (!string.IsNullOrWhiteSpace(hashIdOrUrid))
         {
             request = new RestRequest("api/v1/region/{aggregationSchemeId}/{dataSetId}/{hashIdOrUrid}/children");
