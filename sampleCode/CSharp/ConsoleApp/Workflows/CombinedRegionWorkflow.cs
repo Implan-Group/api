@@ -58,8 +58,8 @@ public class CombinedRegionWorkflow : IWorkflow
         // Note: Specify either HashIds or Urids, not both
         CombineRegionRequest combineRegionPayload = new CombineRegionRequest()
         {
-            // The description for this Combined Region must be Unique, so we'll use the timestamp
-            Description = $"Combined Region - {DateTime.Now:s}",
+            // Region Description must be unique and can only contain alphanumeric characters and spaces
+            Description = $"Combined Region - {DateTime.Now:yyyyMMdd_HHmmss}",
             HashIds = [hashId1, hashId2],
             //Urids = [1857994,1857642],
         };

@@ -10,8 +10,9 @@ public sealed record class ImplanAuthentication
 
 public static class Authentication
 {
-    //TODO: Try setting the auth timeout in Gateway higher? (1min?)
-    
+    /// <summary>
+    /// Retrieves a JWT Bearer Token from the Auth endpoint for the user with the given credentials
+    /// </summary>
     public static string GetBearerToken(ImplanAuthentication auth)
     {
         // The /auth endpoint handles authentication for all of ImpactApi
@@ -25,7 +26,7 @@ public static class Authentication
         if (!response.IsSuccessStatusCode)
         {
             throw new AuthenticationException("Cannot currently Authenticate to Impact Api");
-            // TODO: Wait + Retry Loop
+            // TODO: Wait + Retry Loop?
         }
 
         // The response from this endpoint is a JWT Bearer token string "Bearer XXX...XXX"

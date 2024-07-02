@@ -31,3 +31,6 @@ _ReSharper.*
 
 # Obsidian (Markdown Editor)
 .obsidian/
+
+# Output Logs
+logs/

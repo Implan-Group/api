@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-
-namespace ConsoleApp.Endpoints;
+﻿namespace ConsoleApp.Endpoints;
 
 public record class Event
 {
@@ -143,6 +140,8 @@ public sealed record class IndustryImpactAnalysisEvent : Event
     public int? SpendingPatternDatasetId { get; set; }
     public SpendingPatternValueType SpendingPatternValueType { get; set; }
     public SpendingPatternCommodity[] SpendingPatternCommodities { get; set; } = [];
+
+    public override string ImpactEventType => "IndustryImpactAnalysis";
 }
 
 /// <summary>
@@ -156,6 +155,7 @@ public class Events
         request.Method = Method.Get;
         request.AddUrlSegment("projectGuid", projectGuid);
 
+        string? c = Rest.GetResponseContent(request);
         string[] response = Rest.GetResponseData<string[]>(request).ThrowIfNull();
         return response;
     }
@@ -189,6 +189,7 @@ public class Events
         return Rest.GetResponseData<Event[]>(request).ThrowIfNull();
     }
 
+    
     // Though there are 17? different Impact Event Types, there is technically only one endpoint to add them
     // They are split up here for clarity of input Model
 

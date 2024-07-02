@@ -5,8 +5,10 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Configurations>Debug;Release;Local</Configurations>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
-
+    
     <!-- Global Usings -->
     <ItemGroup>
         <Using Include="System.Diagnostics"/>
@@ -20,7 +22,7 @@
     
     <!-- NuGet Packages -->
     <ItemGroup>
-      <PackageReference Include="RestSharp" Version="111.1.0" />
+      <PackageReference Include="RestSharp" Version="111.3.0" />
     </ItemGroup>
 
 </Project>

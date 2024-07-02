@@ -5,6 +5,9 @@ public class AuthenticationWorkflow : IWorkflow
     public static void Examples()
     {
 #if DEBUG
+        // During debugging, it may be helpful to just pass the Bearer Token directly, rather than having to authenticate
+        // every single time the application is run
+        
         Rest.SetAuthentication("");
         return;
 #endif

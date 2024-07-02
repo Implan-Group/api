@@ -25,8 +25,9 @@ public static class Rest
             // This is the base endpoint for all Implan ImpactAPI Requests
 #if DEBUG
             // TODO: Remove these testing URLs
-            BaseUrl = new Uri("https://api.implan.com/int/"),           // Running against External INT
-            //BaseUrl = new Uri("https://localhost:5001/external/"),    // Running against Local INT
+            BaseUrl = new Uri("https://api.implan.com/int/"), // Running against External INT
+#elif LOCAL
+            BaseUrl = new Uri("https://localhost:5001/external/"),    // Running against Local INT
 #else
             BaseUrl = new Uri("https://api.implan.com/"),
 #endif
@@ -56,17 +57,16 @@ public static class Rest
 
     public static void SetAuthentication(string bearerToken)
     {
+        // Set the bearer token
         _jwtAuthenticator.SetBearerToken(bearerToken);
         // Validate that we can hit a small endpoint
         try
         {
-#if !DEBUG
             Regions.GetRegionTypes();
-#endif
         }
         catch (Exception ex)
         {
-            throw new AuthenticationException("Invalid Bearer Token");
+            throw new AuthenticationException("Invalid Bearer Token", ex);
         }
     }
 
@@ -88,7 +88,7 @@ public static class Rest
         finally
         {
             timer.Stop();
-            Logging.LogRequestResponse(_restClient, request, response!, timer.Elapsed);
+            Logging.LogRequestResponse(_restClient, request, response!, null, timer.Elapsed);
         }
 
         return response;
@@ -112,7 +112,7 @@ public static class Rest
         finally
         {
             timer.Stop();
-            Logging.LogRequestResponse(_restClient, request, response!, timer.Elapsed, typeof(T));
+            Logging.LogRequestResponse(_restClient, request, response!, response.Data, timer.Elapsed, typeof(T));
         }
 
         return response;
@@ -126,7 +126,7 @@ public static class Rest
     public static string? GetResponseContent(RestRequest request)
     {
         RestResponse response = GetResponse(request);
-        return response.Content; //.ThrowIfNull();
+        return response.Content;
     }
 
     /// <summary>
@@ -139,6 +139,6 @@ public static class Rest
     {
         RestResponse<T> response = GetResponse<T>(request);
         // Response.Data is the deserialized value from the json response body
-        return response.Data; //.ThrowIfNull();
+        return response.Data;
     }
 }

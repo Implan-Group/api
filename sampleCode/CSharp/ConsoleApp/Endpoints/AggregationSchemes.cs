@@ -10,13 +10,9 @@ public sealed record class AggregationScheme
     public string Status { get; set; }
 }
 
+/// <remarks>the default Aggregation Scheme ID is 8: Unaggregated 546 Industries</remarks>
 public static class AggregationSchemes
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="industrySetId"></param>
-    /// <returns></returns>
     public static AggregationScheme[] GetAggregationSchemes(int? industrySetId = null)
     {
         //GET {api_domain}api/v1/aggregationschemes?industrySetId={industrySetId}
@@ -30,5 +26,3 @@ public static class AggregationSchemes
         return Rest.GetResponseData<AggregationScheme[]>(request);
     }
 }
-
-// Note: the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries

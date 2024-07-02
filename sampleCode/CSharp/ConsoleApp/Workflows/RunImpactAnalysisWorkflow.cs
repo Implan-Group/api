@@ -5,6 +5,11 @@
 /// </summary>
 public class RunImpactAnalysisWorkflow : IWorkflow
 {
+    /// <summary>
+    /// This Project ID will be used to lookup Projects and their Impact Run Results
+    /// </summary>
+    public static Guid ProjectId { get; set; } = Guid.Empty;
+    
     public static void Examples()
     {
         /* Once a Project has been created and Events and Groups have been added,
@@ -24,12 +29,10 @@ public class RunImpactAnalysisWorkflow : IWorkflow
         Project[] shared = Projects.GetSharedProjects();
         
         // If you want the details for a specific Project you need the Project Id
-        Project project = Projects.GetProject(Guid.Parse("deadbeef-2600-1337-cafe-123456789abc"));
-        
-        
+        Project project = Projects.GetProject(ProjectId);
         
         // Once you have located the Project Id for the Project you can run an Analysis on that Project
-        long impactRunId = Impacts.RunImpact(Guid.Parse("deadbeef-2600-1337-cafe-123456789abc"));
+        long impactRunId = Impacts.RunImpact(ProjectId);
         
         /* Once you have the Impact Run Id, you can query the system to see when it completes
          * Since this can take a while, it is recommended to create a polling loop to check the status every few minutes until it returns `Complete`
@@ -40,19 +43,19 @@ public class RunImpactAnalysisWorkflow : IWorkflow
             string status = Impacts.GetImpactStatus(impactRunId);
 
             // If it is 'Complete', then results can be queried
-            if (string.Equals(status, "Complete", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(status, "\"Complete\"", StringComparison.OrdinalIgnoreCase))
                 break;
 
             // If it has not yet completed, give it more time to process
-            Thread.Sleep(TimeSpan.FromMinutes(1));
+            Thread.Sleep(TimeSpan.FromSeconds(10));
         }
         
-        // If the Impact seems to be taking an unusually long time to run or you want to make changes, you can also Cancel a running Impact Analysis
-        bool cancelled = Impacts.CancelImpact(14710);
+        /* If the Impact seems to be taking an unusually long time to run or you want to make changes, you can also Cancel a running Impact Analysis
+        bool cancelled = Impacts.CancelImpact(impactRunId: 00000);
+        */
         
         
         // Once the `status` of an Impact Run is `Complete`, the results of that Impact can be retrieved
-        
         // Some of the Reports return CSV data, simply save the returned text into a file with the .csv extension
         // and open with Excel / Sheets
         
@@ -73,9 +76,10 @@ public class RunImpactAnalysisWorkflow : IWorkflow
         string estimatedGrowthPercentage = ImpactResults.CsvReports.GetEstimatedGrowthPercentage(impactRunId, estimatedGrowthPercentageFilter);
 
         
-        /* There are many other types of Reports and Results to retreive, see the
+        /* There are many other types of Reports and Results to retrieve, see the
          * main Impact Readme at https://github.com/Implan-Group/api/blob/main/impact/readme.md
          * for more information
          */
+        return;
     }
 }
