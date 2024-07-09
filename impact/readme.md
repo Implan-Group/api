@@ -1672,36 +1672,92 @@ A list of specifications data containing the following fields:
 ```
 
 ---
-### Create Event (Post)
-#### Parameters
-* Project Id (In URL)
-* ImpactEventType (see Get Event Types above)
-* Title
-* industryCode
-* Output (Optional, unless event type is IndustryOutput)
-* Employment (Optional, unless event type is IndustryEmployment)
-* EmployeeCompensation (Optional, unless event type is IndustryEmployeeCompensation)
-* ProprietorIncome (Optional, unless event type is IndustryProprietorIncome)
-* Tags (Optional)
-#### Parameters for a Marginable Event
-These should only be used if you are adding an event that is marginable, such as a retail or wholesale industry.  
-* Percentage
-* DataSetId
-* MarginType (PurchaserPrice, ProducerPrice)
-#### Response
-* Output
-* Employment
-* employeeCompensation
-* proprietorIncome
-* IndustryCode
-* Id - this is the event id, and will be used for associating an event with a group
-* projectId
-* impactEventType
-* title
-#### Endpoint
-**POST {{api_domain}}api/v1/impact/project/{{project id}}/event**
+# Create Event (Post)
+- Adds an Event to an existing Project
+
+### Endpoint
+- `POST {{api_domain}}api/v1/impact/project/{{project_id}}/event`
+
+##### Request
+- The existing Project's `guid` Id must be passed in the URL
+- A `json` body that defines the event must be included
+```json
+{
+    "impactEventType": "IndustryOutput",
+    "title" : "Custom_Event_Title",
+    "output" : 100000.01,
+    "employment" : 20.25,
+    "employeeCompensation" : 50000.23,
+    "proprietorIncome" : 3400.233,
+    "tags": ["Testing"]
+}
+```
+- `impactEventType` (text, required) - See `Get Event Types` above for a list of valid Event Types
+- `title` (text, required) - A unique-per-project title for this Event
+- `output` (number, optional except for `IndustryOutput` events) - The total output value for this Event
+- `employment` (number, optional except for `IndustryEmployment` events) - The total number of people employed
+- `employeeCompensation` (number, optional except for `IndustryEmployeeCompensation` events) - The total compensation paid to non-proprietor employees
+- `proprietorIncome` (number, optional except for `IndustryProprietorIncome` events) - The total compensation paid to proprietors
+- `tags` (array of text, optional): Additional tags to associate with this Event
+
+###### Additional Request Parameters
+- These should only be used if you are adding an Event that is marginable, such as a Retail or Wholesale Industry
+- Percentage
+- DataSetId
+- MarginType (`PurchaserPrice`, `ProducerPrice`)
+
+###### Custom Industry Impact Analysis Json
+```json
+{
+    "impactEventType": "CustomIndustryImpactAnalysis",
+    "title": "CustomIndustryImpactAnalysis_API_Example",
+    "SpendingPatternDatasetId": 96,
+    "SpecificationCode" : 21059,
+    "WageAndSalaryEmployment" : 10,
+    "ProprietorEmployment" : 2,
+    "TotalEmployment": 12,
+    "EmployeeCompensation": 40000,
+    "ProprietorIncome": 100000,
+    "TotalLaborIncome" : 140000,
+    "TaxOnProductionAndImports" : 2300,
+    "OtherPropertyIncome" : 3400,
+    "IntermediateInputs": 5600,    
+    "TotalOutput": null,
+    "LocalPurchasePercentage": 1,
+    "IsSam": false,
+    "SpendingPatternValueType": "IntermediateExpenditure",
+    "SpendingPatternCommodities": null,
+    "Tags": ["Testing"]
+}
+```
+
+##### Response
+- A `json` response will be returned that is the same Event `json` will additional properties filled out
+```json
+{
+    "output": 100000.01,
+    "employment": 20.25,
+    "employeeCompensation": 50000.23,
+    "proprietorIncome": 3400.233,
+    "industryCode": 0,
+    "marginType": "ProducerPrice",
+    "percentage": null,
+    "datasetId": null,
+    "id": "5339adf1-f1c9-4b59-982c-55945ec1ca72",
+    "projectId": "3b7ad1e0-3d3c-11ef-aaf6-1266878a14f1",
+    "impactEventType": "IndustryOutput",
+    "title": "IndustryOutput_api",
+    "tags": [
+        "Testing"
+    ]
+}
+```
+- Some of the fields will be the same, such as `title` and `output`
+- `projectId` (guid) - This is the `guid` for the Project
+- `id` (guid) - This is the `guid` for the Event
 
 
+---
 ### Get Event (Get)
 #### Parameters
 * projectId (in URL)
