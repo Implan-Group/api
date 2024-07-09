@@ -3298,6 +3298,42 @@
 							"response": []
 						},
 						{
+							"name": "Create Impact - Custom Industry Impact Analysis",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"impactEventType\": \"CustomIndustryImpactAnalysis\",\r\n    \"title\": \"CustomIndustryImpactAnalysis_API_Example\",\r\n    \"SpendingPatternDatasetId\": 96,\r\n    \"SpecificationCode\" : 21059,\r\n    \"WageAndSalaryEmployment\" : 10,\r\n    \"ProprietorEmployment\" : 2,\r\n    \"TotalEmployment\": 12,\r\n    \"EmployeeCompensation\": 40000,\r\n    \"ProprietorIncome\": 100000,\r\n    \"TotalLaborIncome\" : 140000,\r\n    \"TaxOnProductionAndImports\" : 2300,\r\n    \"OtherPropertyIncome\" : 3400,\r\n    \"IntermediateInputs\": 5600,    \r\n    \"TotalOutput\": null,\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"SpendingPatternCommodities\": null,\r\n    \"Tags\": [\"Testing\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"project",
+										":projectGuid",
+										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Create Industry Spending Pattern Event",
 							"event": [
 								{
