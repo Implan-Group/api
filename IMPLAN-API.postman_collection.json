@@ -3509,6 +3509,58 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Spending Patterns and Commodities",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/impact/spending-patterns/:aggregationSchemeId/:spendingPatternType/:specificationCode",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"spending-patterns",
+										":aggregationSchemeId",
+										":spendingPatternType",
+										":specificationCode"
+									],
+									"query": [
+										{
+											"key": "datasetId",
+											"value": "",
+											"description": "Optional Data Set Id",
+											"disabled": true
+										},
+										{
+											"key": "regionHashId",
+											"value": "",
+											"description": "Optional Region Hash Id",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "",
+											"description": "Required Aggregation Scheme Id"
+										},
+										{
+											"key": "spendingPatternType",
+											"value": "",
+											"description": "Required Spending Pattern Type (Industry, Institution, Household, Custom)"
+										},
+										{
+											"key": "specificationCode",
+											"value": "",
+											"description": "Required Specification Code"
+										}
+									]
+								}
+							}
 						}
 					]
 				},
