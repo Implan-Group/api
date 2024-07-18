@@ -3334,6 +3334,42 @@
 							"response": []
 						},
 						{
+							"name": "Create Impact - Custom Spending Pattern",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"impactEventType\": \"CustomSpendingPattern\",\r\n    \"title\": \"ImpactApi - Example - CustomSpendingPattern\",\r\n    \"value\": 1000000,\r\n    \"specificationCode\": 21059,\r\n    \"spendingPatternDatasetId\": 96,\r\n    \"tags\": [\"Testing\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"project",
+										":projectGuid",
+										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Create Industry Spending Pattern Event",
 							"event": [
 								{

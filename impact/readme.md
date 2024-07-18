@@ -1727,6 +1727,18 @@ A list of specifications data containing the following fields:
 }
 ```
 
+###### Custom Spending Pattern Json
+```json
+{
+    "impactEventType": "CustomSpendingPattern",
+    "title": "ImpactApi - Example - CustomSpendingPattern",
+    "value": 1000000,
+    "specificationCode": 21059,
+    "spendingPatternDatasetId": 96,
+    "tags": ["Testing"]
+}
+```
+
 ##### Response
 - A `json` response will be returned that is the same Event `json` will additional properties filled out
 ```json
