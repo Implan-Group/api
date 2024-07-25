@@ -11,8 +11,9 @@ public static class IndustryCodes
 {
     public static IndustryCode[] GetIndustryCodes(int? aggregationSchemeId = null, int? industrySetId = null)
     {
-        // {{api_domain}}api/v1/IndustryCodes?industrySetId=
         RestRequest request;
+        
+        // There are different routes depending on whether or not we have an Aggregation Scheme
         if (aggregationSchemeId is null)
         {
             request = new RestRequest("api/v1/IndustryCodes");
