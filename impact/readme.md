@@ -2315,28 +2315,7 @@ The API response when the analysis is complete will provide a zip file with a co
 **GET {{api_domain}}api/v1/impact/results/ImpactOccupationCoreCompetencies/{{runId}}**
 
 
-## Environment Categories By Impact (Get)
-This endpoint will provide environment category impact results by impact from an impact analysis.
-#### Parameters
-* Bearer Token
-* Analysis Run Id
-* Dollar Year (in body)
-* Environmental Release Year (in body)
-* Environment Name (in body; *optional)
-* Environment Categories (in body; *optional)
-* Industry Code (in body; *optional)
-* Regions (in body; *optional)
-* Impacts (in body; *optional)
-* Group Names (in body; *optional)
-* Event Names (in body; *optional)
-* Event Tags (in body; *optional)
-#### Response
-The API response when the analysis is complete will provide a CSV file with environment category impact data by impact type.
-#### Endpoint
-**GET {{api_domain}}api/v1/impact/results/EnvironmentCategoriesByImpact/{{runId}}**
-
-
-## Environment Industry Summary (Get)
+## Environment Impact Industry Summary (Get)
 This endpoint will provide environment category impact results by industry from an impact analysis.
 #### Parameters
 * Bearer Token
@@ -2351,31 +2330,11 @@ This endpoint will provide environment category impact results by industry from 
 * Group Names (in body; *optional)
 * Event Names (in body; *optional)
 * Event Tags (in body; *optional)
+* NaicsAggregationSchemeId (in body; *optional; only works with impacts run using the default U.S. Data aggregation scheme)
 #### Response
 The API response when the analysis is complete will provide a CSV file with environment category impact data by industry.
 #### Endpoint
 **GET {{api_domain}}api/v1/impact/results/EnvironmentIndustrySummary/{{runId}}**
-
-
-## Environment Impact Details (Get)
-This endpoint will provide environment name impact results by impact type from an impact analysis.
-#### Parameters
-* Bearer Token
-* Analysis Run Id
-* Dollar Year (in body)
-* Environmental Release Year (in body)
-* Environment Name (in body; *optional)
-* Environment Categories (in body; *optional)
-* Industry Code (in body; *optional)
-* Regions (in body; *optional)
-* Impacts (in body; *optional)
-* Group Names (in body; *optional)
-* Event Names (in body; *optional)
-* Event Tags (in body; *optional)
-#### Response
-The API response when the analysis is complete will provide a CSV file with environment name impact data by impact type.
-#### Endpoint
-**GET {{api_domain}}api/v1/impact/results/EnvironmentImpactDetails/{{runId}}**
 
 
 ## Environment Impact Industry Details (Get)
@@ -2393,6 +2352,7 @@ This endpoint will provide detailed industry and environment name environmental 
 * Group Names (in body; *optional)
 * Event Names (in body; *optional)
 * Event Tags (in body; *optional)
+* NaicsAggregationSchemeId (in body; *optional; only works with impacts run using the default U.S. Data aggregation scheme)
 #### Response
 The API response when the analysis is complete will provide a CSV file with detailed industry environment impact data. There is a 5000 row limit to the amount of data returned.
 #### Endpoint
