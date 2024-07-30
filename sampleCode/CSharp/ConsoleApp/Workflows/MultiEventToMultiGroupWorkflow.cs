@@ -18,8 +18,8 @@ public class MultiEventToMultiGroupWorkflow : IWorkflow
          * a simple nested loop is the easiest solution.
          *
          * Our hypothetical example here is a Mixed-Use Housing Development
-         * Low-income housing will be built in the basement, restaurants on the first floor,
-         * and mid-incoming housing built above.
+         * Apartments for `Households 15-30k` will be built in the basement, several restaurants on the first floor,
+         * and accommodations for `Households 50-70k` above 
          *
          * More details about creating a project and looking up the Ids below can be found in the CreateProjectWorkflow example
          *
@@ -55,17 +55,17 @@ public class MultiEventToMultiGroupWorkflow : IWorkflow
         // You need to lookup all the specification codes for Household Income Events
         var householdIncomeSpecifications = SpecificationEndpoints.GetSpecifications(projectGuid, "HouseholdIncome");
         
-        // Create our low-income Housing Event
-        HouseholdIncomeEvent lowIncomeHousingEvent = new HouseholdIncomeEvent
+        // Create the 15-30k Household Event
+        HouseholdIncomeEvent firstHouseholdIncomeEvent = new HouseholdIncomeEvent
         {
-            Title = "Low-Income Housing",
+            Title = "Households 15-30k",
             HouseholdIncomeCode = 10002, // Households 15-30k (spec code from above)
             Value = 25_000.00,
         };
-        // Create our mid-income Housing Event
-        HouseholdIncomeEvent midIncomeHousingEvent = new HouseholdIncomeEvent
+        // Create the 50-70k Household Event
+        HouseholdIncomeEvent secondHouseholdIncomeEvent = new HouseholdIncomeEvent
         {
-            Title = "Mid-Income Housing",
+            Title = "Households 50-70k",
             HouseholdIncomeCode = 10005, // Households 50-70k (spec code from above)
             Value = 125_000.00,
         };
@@ -76,10 +76,10 @@ public class MultiEventToMultiGroupWorkflow : IWorkflow
          * We'll store them to an Array for future processing
          */
         restaurantOutput = EventEndpoints.AddEvent(projectGuid, restaurantOutput);
-        lowIncomeHousingEvent = EventEndpoints.AddEvent(projectGuid, lowIncomeHousingEvent);
-        midIncomeHousingEvent = EventEndpoints.AddEvent(projectGuid, midIncomeHousingEvent);
+        firstHouseholdIncomeEvent = EventEndpoints.AddEvent(projectGuid, firstHouseholdIncomeEvent);
+        secondHouseholdIncomeEvent = EventEndpoints.AddEvent(projectGuid, secondHouseholdIncomeEvent);
         
-        Event[] events = [restaurantOutput, lowIncomeHousingEvent, midIncomeHousingEvent];
+        Event[] events = [restaurantOutput, firstHouseholdIncomeEvent, secondHouseholdIncomeEvent];
         
         
         /* Now we need to create our Groups.
