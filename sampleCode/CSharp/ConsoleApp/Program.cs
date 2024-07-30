@@ -15,7 +15,8 @@
 AuthenticationWorkflow.Examples();
 
 // Workflow for Creating a Project and filling it
-CreateProjectWorkflow.Examples();
+//CreateProjectWorkflow.Examples();
+MultiEventToMultiGroupWorkflow.Examples();
 
 // Workflow for Combining two or more Regions
 //CombinedRegionWorkflow.Examples();

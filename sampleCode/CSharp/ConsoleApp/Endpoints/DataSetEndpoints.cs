@@ -7,7 +7,7 @@ public sealed record class DataSet
     public bool IsDefault { get; set; }
 }
 
-public class DataSets
+public static class DataSetEndpoints
 {
     public static DataSet[] GetDataSets(int aggregationSchemeId)
     {

@@ -1,4 +1,6 @@
-﻿namespace ConsoleApp.Workflows;
+﻿using ConsoleApp.Regions;
+
+namespace ConsoleApp.Workflows;
 
 public class CombinedRegionWorkflow : IWorkflow
 {
@@ -17,13 +19,13 @@ public class CombinedRegionWorkflow : IWorkflow
         
         
         // Get a list of all valid Aggregation Schemes
-        AggregationScheme[] aggregationSchemes = AggregationSchemes.GetAggregationSchemes();
+        AggregationScheme[] aggregationSchemes = AggregationSchemeEndpoints.GetAggregationSchemes();
         // Choose the one you would like to use
         int aggregationSchemeId = 8; // 8 = Implan 546 Unaggregated
         
         
         // Get a list of all valid Data Sets for the Aggregation Scheme
-        DataSet[] datasets = DataSets.GetDataSets(aggregationSchemeId);
+        DataSet[] datasets = DataSetEndpoints.GetDataSets(aggregationSchemeId);
         // Choose the one you would like to use -- must be compatible with your chosen HouseholdSetId
         int dataSetId = 96; // 96 = 2022 Data
         
@@ -35,7 +37,7 @@ public class CombinedRegionWorkflow : IWorkflow
         RegionalWorkflow.Examples();
         
         // For this example, we're going to search through the Child Regions of the US for a few particular counties.
-        Region[] regions = Regions.GetRegionChildren(aggregationSchemeId, dataSetId, regionType: "County");
+        Region[] regions = RegionEndpoints.GetRegionChildren(aggregationSchemeId, dataSetId, regionType: "County");
         // Convert to a dictionary so that we can quickly search by Description
         Dictionary<string, Region> descriptionToRegionDict = new Dictionary<string, Region>(StringComparer.OrdinalIgnoreCase);
         foreach (Region region in regions)
@@ -65,7 +67,7 @@ public class CombinedRegionWorkflow : IWorkflow
         };
         
         // Send the combine region request
-        Region combinedRegion = Regions.CombineRegions(aggregationSchemeId, combineRegionPayload);
+        Region combinedRegion = RegionEndpoints.CombineRegions(aggregationSchemeId, combineRegionPayload);
        
         
         /* Complicated and numerous Regions may take a while to fully process (Build) in our system
@@ -85,7 +87,7 @@ public class CombinedRegionWorkflow : IWorkflow
             //    combinedRegion.HashId);
             
             // Get a list of all User Regions (which includes Customized + Combined)
-            Region[] userRegions = Regions.GetUserRegions(combinedRegion.AggregationSchemeId, combinedRegion.DatasetId);
+            Region[] userRegions = RegionEndpoints.GetUserRegions(combinedRegion.AggregationSchemeId, combinedRegion.DatasetId);
             // Find the one that has a matching HashId
             Region? region = userRegions.FirstOrDefault(r => r.HashId == combinedRegion.HashId);
             

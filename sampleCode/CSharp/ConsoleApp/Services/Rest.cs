@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Security.Authentication;
+using ConsoleApp.Regions;
 using RestSharp.Authenticators;
 using RestSharp.Serializers.Json;
 
@@ -62,7 +63,7 @@ public static class Rest
         // Validate that we can hit a small endpoint
         try
         {
-            Regions.GetRegionTypes();
+            RegionEndpoints.GetRegionTypes();
         }
         catch (Exception ex)
         {

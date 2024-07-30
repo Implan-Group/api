@@ -22,7 +22,7 @@
     
     <!-- NuGet Packages -->
     <ItemGroup>
-      <PackageReference Include="RestSharp" Version="111.3.0" />
+      <PackageReference Include="RestSharp" Version="111.4.1" />
     </ItemGroup>
 
 </Project>

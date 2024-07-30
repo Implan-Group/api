@@ -11,7 +11,7 @@ public sealed record class AggregationScheme
 }
 
 /// <remarks>the default Aggregation Scheme ID is 8: Unaggregated 546 Industries</remarks>
-public static class AggregationSchemes
+public static class AggregationSchemeEndpoints
 {
     public static AggregationScheme[] GetAggregationSchemes(int? industrySetId = null)
     {
