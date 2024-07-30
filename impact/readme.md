@@ -1783,42 +1783,34 @@ A list of specifications data containing the following fields:
 #### Endpoint
 **GET {{api_domain}}api/v1/impact/project/{{project id}}/event/{{event id}}**
 
+---
+## Update Events
+- You can also update existing Events (including changing them entirely from one type to another)
+- This endpoint supports all the same Impact Event Types as `Event Create` (above)
+	- A list of these supported types can be acquired through `Get Event Types` (below)
 
-### Update Event (Put)
-#### Parameters
-* Project Id (In URL)
-* Event Id (In URL)
-* ImpactEventType
-    * IndustryEmployment
-    * IndustryOutput
-    * IndustryEmployeeCompensation
-    * IndustryProprietorIncome 
-* Title
-* industryCode
-* Output (Optional, unless event type is IndustryOutput)
-* Employment (Optional, unless event type is IndustryEmployment)
-* EmployeeCompensation (Optional, unless event type is IndustryEmployeeCompensation)
-* ProprietorIncome (Optional, unless event type is IndustryProprietorIncome)
-* Tags (Optional)
-#### Parameters for a Marginable Event
-These should only be used if you are adding an event that is marginable, such as a retail or wholesale industry.  
-* Percentage
-* DataSetId
-* MarginType (PurchaserPrice, ProducerPrice)
-#### Response
-* Output
-* Employment
-* employeeCompensation
-* proprietorIncome
-* IndustryCode
-* Id - this is the event id, and will be used for associating an event with a group
-* projectId
-* impactEventType
-* title
-#### Endpoint
-**PUT {{api_domain}}api/v1/impact/project/{{project id}}/event/{{event id}}**
+---
+##### Request
+- `PUT {{api_domain}}api/v1/impact/project/{{projectGuid}}/event/{{eventGuid}}`
+	- Along with the `api_domain`, `projectGuid`, and `eventGuid`, a `json` body must be included that defines the changes to the event.
+	- This `json` body is exactly the same as for the `Event Create` endpoint (above)
+	  - Also supports editing Spending Patterns by sending through a list of commodities (as above)
+```json
+{
+    "impactEventType": "CustomSpendingPattern",
+    "title": "ImpactApi - Example - CustomSpendingPattern - Updated",
+    "value": 123000.78,
+    "specificationCode": 21059,
+    "spendingPatternDatasetId": 96,
+    "tags": ["Updated"]
+}
+```
+
+##### Response
+- As with the `Event Create` endpoint, the response from `Event Update` is the fully-hydrated `json` representation of the Event after it has been updated
 
 
+---
 ### Delete Event (Delete)
 Use this endpoint to delete an event.
 #### Parameters
