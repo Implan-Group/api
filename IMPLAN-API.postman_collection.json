@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a02d2c0f-9f0b-4427-a7fd-a0699ecd10c8",
+		"_postman_id": "e7768d85-f4f6-4b01-af1c-45c7d77c48a6",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "12725670"
@@ -704,6 +704,61 @@
 										{
 											"key": "datasetId",
 											"value": "87"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Custom and Combined Regions by Parameters",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/region/user?aggregationSchemeId=8&datasetId=96",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"region",
+										"user"
+									],
+									"query": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "datasetId",
+											"value": "96"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Custom and Combined Region",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/region/user/:hashId",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"region",
+										"user",
+										":hashId"
+									],
+									"variable": [
+										{
+											"key": "hashId",
+											"value": ""
 										}
 									]
 								}
@@ -4179,12 +4234,39 @@
 					"response": []
 				},
 				{
+					"name": "Get Project Event Types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/eventtype",
+							"host": [
+								"{{api_domain}}api"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"project",
+								":projectGuid",
+								"eventtype"
+							],
+							"variable": [
+								{
+									"key": "projectGuid",
+									"value": "{{project_guid}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Project Specification",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/eventtype/IndustryOutput/specification",
+							"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/eventtype/:eventType/specification",
 							"host": [
 								"{{api_domain}}api"
 							],
@@ -4194,13 +4276,18 @@
 								"project",
 								":projectGuid",
 								"eventtype",
-								"IndustryOutput",
+								":eventType",
 								"specification"
 							],
 							"variable": [
 								{
 									"key": "projectGuid",
 									"value": "{{project_guid}}"
+								},
+								{
+									"key": "eventType",
+									"value": "",
+									"description": "The Event Type to get Specifications for"
 								}
 							]
 						}

@@ -599,6 +599,28 @@ This endpoint will return all combined and custom regions that a user created by
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
 
+### User Custom and Combined Regions (Get)
+This endpoint will return all combined and custom regions that a user created. Parameters can be provided for filtering.
+#### Parameters
+* Bearer Token
+* Aggregation Scheme ID (Optional Parameter)
+* Data Set ID (Optional Parameter)
+#### Endpoint
+**GET {{api_domain}}api/v1/region/user**\
+**GET {{api_domain}}api/v1/region/user?aggregationSchemeId={{aggregationSchemeId}}**\
+**GET {{api_domain}}api/v1/region/user?datasetId={{datasetId}}**\
+**GET {{api_domain}}api/v1/region/user?aggregationSchemeId={{aggregationSchemeId}}&datsetId={{datasetId}}**
+
+
+#### Get User Custom and/or Combined Region (Get)
+This endpoint returns a region card for a specific user created combined and/or custom region.
+#### Parameters
+* Bearer Token
+* HashId ID (in URL)
+#### Endpoint
+**GET {{api_domain}}api/v1/region/user/{{hashId}}**
+
+
 ### Get Regions by Urid (Get)
 This endpoint allows a user to pull high level region information by a specific urid, within an aggregation scheme and data set.
 #### Parameters
@@ -1558,6 +1580,27 @@ A status code of 200 if the project has been successfully deleted.
 **DELETE {{api_domain}}api/v1/impact/project/{{projectGUID}}**
 
 
+### Get Event Types (Get)
+This endpoint returns a list of valid event type options that can be used for the project.
+#### Parameters
+* Project Id (In Url)
+#### Response
+An array of event types (string) to use with Get Project Specification and Create Event endpoints. Options will be specific to the industry set used to create the project. Possible returns include:
+* IndustryEmployment
+* IndustryOutput
+* IndustryEmployeeCompensation
+* IndustryProprietorIncome
+* IndustryContributionAnalysis
+* CommodityOutput
+* LaborIncome
+* HouseholdIncome
+* IndustrySpendingPattern
+* InstitutionalSpendingPattern
+* IndustryImpactAnalysis
+#### Endpoint
+**POST {{api_domain}}api/v1/impact/project/{{projectGUID}}/eventtype**
+
+
 ### Get Project Specification (Get)
 Use this endpoint to get event type specifications, such as industry codes for industry change events and commodity codes for commodity output change events.
 ### Parameters
@@ -1574,11 +1617,7 @@ A list of specifications data containing the following fields:
 ### Create Event (Post)
 #### Parameters
 * Project Id (In URL)
-* ImpactEventType
-    * IndustryEmployment
-    * IndustryOutput
-    * IndustryEmployeeCompensation
-    * IndustryProprietorIncome 
+* ImpactEventType (see Get Event Types above)
 * Title
 * industryCode
 * Output (Optional, unless event type is IndustryOutput)
