@@ -23,16 +23,16 @@ public class RunImpactAnalysisWorkflow : IWorkflow
          */
         
         // If you want to look at all Projects that you created
-        Project[] projects = Projects.GetProjects();
+        Project[] projects = ProjectEndpoints.GetProjects();
         
         // If you want to look at all Projects that have been shared with you
-        Project[] shared = Projects.GetSharedProjects();
+        Project[] shared = ProjectEndpoints.GetSharedProjects();
         
         // If you want the details for a specific Project you need the Project Id
-        Project project = Projects.GetProject(ProjectId);
+        Project project = ProjectEndpoints.GetProject(ProjectId);
         
         // Once you have located the Project Id for the Project you can run an Analysis on that Project
-        long impactRunId = Impacts.RunImpact(ProjectId);
+        long impactRunId = ImpactEndpoints.RunImpact(ProjectId);
         
         /* Once you have the Impact Run Id, you can query the system to see when it completes
          * Since this can take a while, it is recommended to create a polling loop to check the status every few minutes until it returns `Complete`
@@ -40,7 +40,7 @@ public class RunImpactAnalysisWorkflow : IWorkflow
         while (true)
         {
             // Get the current status
-            string status = Impacts.GetImpactStatus(impactRunId);
+            string status = ImpactEndpoints.GetImpactStatus(impactRunId);
 
             // If it is 'Complete', then results can be queried
             if (string.Equals(status, "\"Complete\"", StringComparison.OrdinalIgnoreCase))
@@ -60,20 +60,20 @@ public class RunImpactAnalysisWorkflow : IWorkflow
         // and open with Excel / Sheets
         
         // Reports about Economic Indicators
-        string detailedEconomicIndicators = ImpactResults.CsvReports.GetDetailedEconomicIndicators(impactRunId);
-        string summaryEconomicIndicators = ImpactResults.CsvReports.GetSummaryEconomicIndicators(impactRunId);
+        string detailedEconomicIndicators = ImpactResultEndpoints.CsvReports.GetDetailedEconomicIndicators(impactRunId);
+        string summaryEconomicIndicators = ImpactResultEndpoints.CsvReports.GetSummaryEconomicIndicators(impactRunId);
         
         // Reports about Taxes
-        string detailedTaxes = ImpactResults.CsvReports.GetDetailedTaxes(impactRunId);
-        string summaryTaxes = ImpactResults.CsvReports.GetSummaryTaxes(impactRunId);
+        string detailedTaxes = ImpactResultEndpoints.CsvReports.GetDetailedTaxes(impactRunId);
+        string summaryTaxes = ImpactResultEndpoints.CsvReports.GetSummaryTaxes(impactRunId);
         
         // For Estimated Growth Percentage, we need to specify additional filters
-        ImpactResults.CsvReports.EstimatedGrowthPercentageFilter estimatedGrowthPercentageFilter = new()
+        ImpactResultEndpoints.CsvReports.EstimatedGrowthPercentageFilter estimatedGrowthPercentageFilter = new()
         {
             // Dollar Year always has to be specified, the other properties are optional
             DollarYear = 2024,
         };
-        string estimatedGrowthPercentage = ImpactResults.CsvReports.GetEstimatedGrowthPercentage(impactRunId, estimatedGrowthPercentageFilter);
+        string estimatedGrowthPercentage = ImpactResultEndpoints.CsvReports.GetEstimatedGrowthPercentage(impactRunId, estimatedGrowthPercentageFilter);
 
         
         /* There are many other types of Reports and Results to retrieve, see the

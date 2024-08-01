@@ -3467,7 +3467,7 @@
 							"response": []
 						},
 						{
-							"name": "Create Institutional Spending Pattern Event",
+							"name": "Create Event - Institutional Spending Pattern - No Commodities",
 							"event": [
 								{
 									"listen": "test",
@@ -3485,7 +3485,55 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"ProjectId\" : \"{{project_guid}}\",\r\n    \"ImpactEventType\": \"InstitutionalSpendingPattern\",\r\n    \"Title\" : \"InstitutionalSpendingPattern_api\",\r\n    \"Value\": 30000,\r\n    \"InstitutionCode\": 11002,\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"Tags\": [],\r\n    \"SpendingPatternDatasetId\": 87,\r\n    \"SpendingPatternCommodities\": null\r\n}",
+									"raw": "{\r\n    \"impactEventType\": \"InstitutionalSpendingPattern\",\r\n    \"title\": \"ImpactApi - Example - InstitutionalSpendingPattern - No Commodities\",\r\n    \"tags\": [\"Example\"],\r\n    \"value\": 30000,\r\n    \"institutionCode\": 11002,\r\n    \"localPurchasePercentage\": 1,\r\n    \"isSam\": false,\r\n    \"spendingPatternDatasetId\": 87,\r\n    \"spendingPatternCommodities\": null\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"project",
+										":projectGuid",
+										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Event - Institutional Spending Pattern w/Household Code - No Commodities",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"impactEventType\": \"InstitutionalSpendingPattern\",\r\n    \"title\": \"ImpactApi - Example - InstitutionalSpendingPattern w/Household Code\",\r\n    \"tags\": [\"Example\"],\r\n    \"value\": 147000.00,\r\n    \"institutionCode\": 10007,\r\n    \"localPurchasePercentage\": 1.0,\r\n    \"isSam\": false,\r\n    \"spendingPatternDatasetId\": 96,\r\n    \"spendingPatternRegionUrid\": 1819520,\r\n    \"spendingPatternCommodities\": null\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

@@ -1622,7 +1622,7 @@ A list of specifications data containing the following fields:
 - `GET {{api_domain}}api/v1/impact/spending-patterns/{{aggregationSchemeId}}/{{spendingPatternType}}/{{specificationCode}}`
 - `GET {{api_domain}}api/v1/impact/spending-patterns/{{aggregationSchemeId}}/{{spendingPatternType}}/{{specificationCode}}?datasetId={{datasetId}}&regionHashId={{regionHashId}}`
 	- `aggregationSchemeId` (number, required): Aggregation Scheme
-	- `spendingPatternType` (text, required): `Industry`, `Institution`, `Custom`, or `Household`
+	- `spendingPatternType` (text, required): `Industry`, `Institution`, or `Custom`
 	- `specificationCode` (number, required): Specification Code
 	- `datasetId` (number, optional): Data Set Id, defaults to the latest Data Year
 	- `regionHashId` (text, optional): Region Hash Id
@@ -1739,8 +1739,40 @@ A list of specifications data containing the following fields:
 }
 ```
 
+###### Institutional Spending Pattern
+```json
+{
+    "impactEventType": "InstitutionalSpendingPattern",
+    "title": "ImpactApi - Example - InstitutionalSpendingPattern - No Commodities",
+    "tags": ["Example"],
+    "value": 30000,
+    "institutionCode": 11002,
+    "localPurchasePercentage": 1.0,
+    "isSam": false,
+    "spendingPatternDatasetId": 87,
+    "spendingPatternCommodities": null
+}
+```
+
+###### Institutional Spending Pattern for Households
+```json
+{
+    "impactEventType": "InstitutionalSpendingPattern",
+    "title": "ImpactApi - Example - InstitutionalSpendingPattern w/Household Code",
+    "tags": ["Example"],
+    "value": 147000.00,
+    "institutionCode": 10007,
+    "localPurchasePercentage": 1.0,
+    "isSam": false,
+    "spendingPatternDatasetId": 96,
+    "spendingPatternRegionUrid": 1819520,
+    "spendingPatternCommodities": null
+}
+```
+
 ##### Response
-- A `json` response will be returned that is the same Event `json` will additional properties filled out
+- The fully-hydrated Event (with all properties) will be returned when the call succeeds
+- An example from a Industry Output event:
 ```json
 {
     "output": 100000.01,
@@ -1755,12 +1787,10 @@ A list of specifications data containing the following fields:
     "projectId": "3b7ad1e0-3d3c-11ef-aaf6-1266878a14f1",
     "impactEventType": "IndustryOutput",
     "title": "IndustryOutput_api",
-    "tags": [
-        "Testing"
-    ]
+    "tags": ["Example"]
 }
 ```
-- Some of the fields will be the same, such as `title` and `output`
+- Any value passed in the original Request will be exactly the same in the Response
 - `projectId` (guid) - This is the `guid` for the Project
 - `id` (guid) - This is the `guid` for the Event
 

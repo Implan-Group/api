@@ -11,7 +11,7 @@ public sealed record class IndustrySet
     public bool IsNaicsCompatible { get; set; }
 }
 
-public static class IndustrySets
+public static class IndustrySetEndpoints
 {
     public static IndustrySet? GetIndustrySet(int industrySetId)
     {

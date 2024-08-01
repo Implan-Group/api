@@ -32,7 +32,7 @@ public sealed record class Project
     public long? LastImpactRunId { get; set; } = null;
 }
 
-public class Projects
+public class ProjectEndpoints
 {
     public static Project Create(Project project)
     {

@@ -89,7 +89,7 @@ public sealed record class Group
     public GroupEvent[] GroupEvents { get; set; } = [];
 }
 
-public static class Groups
+public static class GroupEndpoints
 {
     public static Group AddGroupToProject(Guid projectGuid, Group group)
     {
