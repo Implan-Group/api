@@ -1614,9 +1614,12 @@ A list of specifications data containing the following fields:
 **GET {{api_domain}}api/v1/impact/project/{{projectGUID}}/eventtype/{{eventtype}}/specification**
 
 ---
-## Spending Pattern Details and Commodities
-- You can query for a list of the defined Spending Patterns, their details, and their commodities
-- This endpoint takes many optional parameters to control the filtering of the response
+# Spending Patterns
+- There are three types of Spending Patterns: **Industry**, **Institution**, and **Custom**
+- There are several endpoints that let you query for existing Spending Patterns as well as uploading new ones as part of Create Events
+
+### Spending Pattern Details and Commodities
+- This endpoint returns the details and commodities for a given Spending Pattern
 
 #### Request
 - `GET {{api_domain}}api/v1/impact/spending-patterns/{{aggregationSchemeId}}/{{spendingPatternType}}/{{specificationCode}}`
@@ -1628,7 +1631,7 @@ A list of specifications data containing the following fields:
 	- `regionHashId` (text, optional): Region Hash Id
 
 #### Response
-- Returns a list of the Spending Patterns and their Commodities
+- Returns the details about the Spending Pattern as well as the Commodities defined for it
 ```json
 {
     "id": null,
@@ -1666,6 +1669,36 @@ A list of specifications data containing the following fields:
     ]
 }
 ```
+
+### Create Spending Pattern
+- To add a new Spending Pattern to the system it must be added through an Event
+- For `Create Event`, if `"SpendingPatternCommodities": null,`, then the default Commodities for a Spending Pattern will be used
+  - The defaults can be found with a call to the `Get Spending Pattern Details + Commodities` endpoint above
+- Otherwise, if you want to use your own Spending Pattern, you need to include the commodity breakdown as part of the Event Json
+
+#### Request
+- `
+```json
+...,
+"spendingPatternCommodities": [
+	{
+    	"coefficient": 0.0006737514200153713,
+        "commodityCode": 3001,
+        "effect": "Indirect",
+        ~~"id": null,~~
+        "isSamValue": true,
+        "localPurchasePercentage": 1.0,
+        ~~"commodityDescription": "Oilseeds",~~
+        ~~"userSpendingPatternId": null,~~
+        ~~"isNew": false~~
+	},
+```
+
+
+####
+
+
+
 
 ---
 # Create Event (Post)
