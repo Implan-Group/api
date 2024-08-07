@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d46e7fbc-924c-4014-8d33-41b2fc621610",
+		"_postman_id": "61f4a308-aa82-4ae9-8531-b8de27b76e73",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "12725670"
@@ -83,7 +83,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{api_domain}}api/v1/impact/instant/models/:datasetId",
+							"raw": "{{api_domain}}api/v1/impact/instant/models/:datasetId?regionTypeFilter=MSA",
 							"host": [
 								"{{api_domain}}api"
 							],
@@ -93,6 +93,12 @@
 								"instant",
 								"models",
 								":datasetId"
+							],
+							"query": [
+								{
+									"key": "regionTypeFilter",
+									"value": "MSA"
+								}
 							],
 							"variable": [
 								{
@@ -110,7 +116,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{api_domain}}api/v1/impact/instant/models",
+							"raw": "{{api_domain}}api/v1/impact/instant/models?regionTypeFilter=State",
 							"host": [
 								"{{api_domain}}api"
 							],
@@ -119,6 +125,12 @@
 								"impact",
 								"instant",
 								"models"
+							],
+							"query": [
+								{
+									"key": "regionTypeFilter",
+									"value": "State"
+								}
 							]
 						}
 					},
@@ -2200,7 +2212,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"environmentalReleaseYear\": 2023,\r\n  \"industryCodes\": []  \r\n}",
+									"raw": "{\r\n  \"environmentReleaseString\": \"2023\",\r\n  \"industryCodes\": []  \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2255,7 +2267,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"environmentalReleaseYear\": 2023,\r\n  \"industryCodes\": [],\r\n  \"environmentCategory\": \"Greenhouse Gases\"\r\n}",
+									"raw": "{\r\n  \"environmentReleaseString\": \"2023\",\r\n  \"industryCodes\": [],\r\n  \"environmentCategory\": \"Greenhouse Gases\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5180,7 +5192,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"dollarYear\": 2019,\r\n  \"environmentalReleaseYear\": 2023,\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null\r\n}",
+							"raw": "{\r\n  \"dollarYear\": 2019,\r\n  \"environmentReleaseString\": \"2023\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -5219,7 +5231,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"dollarYear\": 2019,\r\n  \"environmentalReleaseYear\": 2023,\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null\r\n}",
+							"raw": "{\r\n  \"dollarYear\": 2019,\r\n  \"environmentReleaseString\": \"2023\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

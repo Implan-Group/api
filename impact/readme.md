@@ -1374,7 +1374,7 @@ This endpoint provides a CSV file containing environmental summary data as found
 * Bearer Token
 * AggregationSchemeId (In URL)
 * HashId or URID (required)
-* Environmental Release Year (in body)
+* Environment Release String (in body; required)
 * Industry Codes (in body; array)
 #### Response
 The API response will provide a CSV response with the following fields (per industry).
@@ -1390,7 +1390,7 @@ This endpoint provides a CSV file containing environmental detail data as found 
 * Bearer Token
 * AggregationSchemeId (In URL)
 * HashId or URID (required)
-* Environmental Release Year (in body; required)
+* Environment Release String (in body; required)
 * Industry Codes (in body; optional*)
 * Environment Category (in body; required)
 *NOTE: HashId or URID must be supplied, but both are not required.
@@ -2376,7 +2376,7 @@ This endpoint will provide environment category impact results by industry from 
 * Bearer Token
 * Analysis Run Id
 * Dollar Year (in body)
-* Environmental Release Year (in body)
+* Environment Release String (in body)
 * Environment Name (in body; *optional)
 * Environment Categories (in body; *optional)
 * Industry Code (in body; *optional)
@@ -2393,12 +2393,12 @@ The API response when the analysis is complete will provide a CSV file with envi
 
 
 ## Environment Impact Industry Details (Get)
-This endpoint will provide detailed industry and environment name environmental output impact results from an impact analysis.
+This endpoint will provide detailed environment name environmental output impact results from an impact analysis.
 #### Parameters
 * Bearer Token
 * Analysis Run Id
 * Dollar Year (in body)
-* Environmental Release Year (in body)
+* Environment Release String (in body)
 * Environment Name (in body; *optional)
 * Environment Categories (in body; *optional)
 * Industry Code (in body; *optional)
@@ -2409,7 +2409,7 @@ This endpoint will provide detailed industry and environment name environmental 
 * Event Tags (in body; *optional)
 * NaicsAggregationSchemeId (in body; *optional; only works with impacts run using the default U.S. Data aggregation scheme)
 #### Response
-The API response when the analysis is complete will provide a CSV file with detailed industry environment impact data. There is a 5000 row limit to the amount of data returned.
+The API response when the analysis is complete will provide a CSV file with detailed environment impact data. There is a 5000 row limit to the amount of data returned.
 #### Endpoint
 **GET {{api_domain}}api/v1/impact/results/EnvironmentImpactIndustryDetails/{{runId}}**
 

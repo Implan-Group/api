@@ -86,18 +86,10 @@ Use the desired Aggregation Scheme Id with this endpoint to pull a list of avail
 **GET {{api_domain}}/{{env}}/api/v1/datasets/{{aggregationSchemeId}}**
 
 ### Region Model Endpoint (Get)
-This endpoint will return a list of models available for Batch Impact analysis. A `datasetId` from the previously mentioned endpoint is required. The endpoint response will include a list of Region Names, Types, and Model IDs. The response may be cached.
+This endpoint will return a list of models available for Batch Impact analysis. A `datasetId` from the previously mentioned endpoint is required. The response may be cached.
 #### Parameters
 * Bearer Token
-* Data Set Id
-### Response (List)
-* Model Id
-* Region Type Id
-  * 2 = State (Province for Canada Data)
-  * 3 = MSA (Unused for Canada Data)
-  * 4 = County (Unused for Canada Data)
-* Region Name
-**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/models/{{datasetId}}**
+* Data Set Id (in URL)
 ### Sample Response
 ```
 [
@@ -169,6 +161,9 @@ This endpoint will return a list of models available for Batch Impact analysis. 
     },...
 ]
 ```
+**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/models/{{datasetId}}**\
+**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/models/{{datasetId}}?regionTypeFilter={{regionTypeFilter}}**
+
 ### Industry Codes (Get)
 Use the following endpoint to pull a list of industries that can be utilized for your analysis. Batch Impact Requests created later will require reference to one or more of the industry codes (`code`) returned here.
 #### Parameters
