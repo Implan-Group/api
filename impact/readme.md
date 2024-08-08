@@ -1616,19 +1616,20 @@ A list of specifications data containing the following fields:
 ---
 # Spending Patterns
 - There are three types of Spending Patterns: **Industry**, **Institution**, and **Custom**
-- There are several endpoints that let you query for existing Spending Patterns as well as uploading new ones as part of Create Events
+- There are several endpoints that let you query for existing Spending Patterns as well as uploading new ones
 
-### Spending Pattern Details and Commodities
+## Spending Pattern Details and Commodities
 - This endpoint returns the details and commodities for a given Spending Pattern
 
 #### Request
 - `GET {{api_domain}}api/v1/impact/spending-patterns/{{aggregationSchemeId}}/{{spendingPatternType}}/{{specificationCode}}`
-- `GET {{api_domain}}api/v1/impact/spending-patterns/{{aggregationSchemeId}}/{{spendingPatternType}}/{{specificationCode}}?datasetId={{datasetId}}&regionHashId={{regionHashId}}`
 	- `aggregationSchemeId` (number, required): Aggregation Scheme
 	- `spendingPatternType` (text, required): `Industry`, `Institution`, or `Custom`
 	- `specificationCode` (number, required): Specification Code
+- `GET {{api_domain}}api/v1/impact/spending-patterns/{{aggregationSchemeId}}/{{spendingPatternType}}/{{specificationCode}}?datasetId={{datasetId}}&regionHashId={{regionHashId}}`
 	- `datasetId` (number, optional): Data Set Id, defaults to the latest Data Year
 	- `regionHashId` (text, optional): Region Hash Id
+	- *Note*: For `Institutional Household Spending Patterns` the `RegionHashId` is *required* as it is the Region where the base Spending Pattern will be pulled from
 
 #### Response
 - Returns the details about the Spending Pattern as well as the Commodities defined for it
@@ -1669,36 +1670,6 @@ A list of specifications data containing the following fields:
     ]
 }
 ```
-
-### Create Spending Pattern
-- To add a new Spending Pattern to the system it must be added through an Event
-- For `Create Event`, if `"SpendingPatternCommodities": null,`, then the default Commodities for a Spending Pattern will be used
-  - The defaults can be found with a call to the `Get Spending Pattern Details + Commodities` endpoint above
-- Otherwise, if you want to use your own Spending Pattern, you need to include the commodity breakdown as part of the Event Json
-
-#### Request
-- `
-```json
-...,
-"spendingPatternCommodities": [
-	{
-    	"coefficient": 0.0006737514200153713,
-        "commodityCode": 3001,
-        "effect": "Indirect",
-        ~~"id": null,~~
-        "isSamValue": true,
-        "localPurchasePercentage": 1.0,
-        ~~"commodityDescription": "Oilseeds",~~
-        ~~"userSpendingPatternId": null,~~
-        ~~"isNew": false~~
-	},
-```
-
-
-####
-
-
-
 
 ---
 # Create Event (Post)
@@ -1760,51 +1731,101 @@ A list of specifications data containing the following fields:
 }
 ```
 
-###### Custom Spending Pattern Json
+### Create Event - Requests (no Commodities)
+- To use an existing Spending Pattern, simply submit an Event Create request without specifying the `SpendingPatternCommodities` (omit the property or set it to `null`)
+
+#### Industry Spending Pattern
 ```json
 {
-    "impactEventType": "CustomSpendingPattern",
-    "title": "ImpactApi - Example - CustomSpendingPattern",
-    "value": 1000000,
-    "specificationCode": 21059,
-    "spendingPatternDatasetId": 96,
-    "tags": ["Testing"]
+    "ImpactEventType": "IndustrySpendingPattern",
+    "Title" : "ImpactApi - Industry Spending Pattern Example",
+    "Tags": ["Example"],
+    "Output": 147000,
+    "IndustryCode": 1,
+    "LocalPurchasePercentage": 1.0,
+    "IsSam": true,
+    "SpendingPatternDatasetId": 96,
+    "SpendingPatternValueType": "IntermediateExpenditure"
 }
 ```
 
-###### Institutional Spending Pattern
+#### Institutional Spending Pattern (non-Household)
 ```json
 {
     "impactEventType": "InstitutionalSpendingPattern",
-    "title": "ImpactApi - Example - InstitutionalSpendingPattern - No Commodities",
+    "title": "ImpactApi - Institutional Spending Pattern Example - Gov",
     "tags": ["Example"],
     "value": 30000,
     "institutionCode": 11002,
-    "localPurchasePercentage": 1.0,
-    "isSam": false,
-    "spendingPatternDatasetId": 87,
-    "spendingPatternCommodities": null
+    "localPurchasePercentage": 1,
+    "isSam": true,
+    "spendingPatternDatasetId": 96
 }
 ```
 
-###### Institutional Spending Pattern for Households
+#### Institutional Spending Pattern (Household)
 ```json
 {
     "impactEventType": "InstitutionalSpendingPattern",
-    "title": "ImpactApi - Example - InstitutionalSpendingPattern w/Household Code",
+    "title": "ImpactApi - Institutional Spending Pattern Example - Household",
     "tags": ["Example"],
-    "value": 147000.00,
+    "value": 13000000,
     "institutionCode": 10007,
-    "localPurchasePercentage": 1.0,
-    "isSam": false,
+    "localPurchasePercentage": 1,
+    "isSam": true,
     "spendingPatternDatasetId": 96,
-    "spendingPatternRegionUrid": 1819520,
-    "spendingPatternCommodities": null
+    "SpendingPatternRegionUrid": 1819520
 }
 ```
 
+#### Custom Spending Pattern
+```json
+{
+    "impactEventType": "CustomSpendingPattern",
+    "title": "ImpactApi - Custom Spending Pattern Example",
+    "tags": ["Testing"],
+    "value": 75000,
+    "specificationCode": 21059,
+    "spendingPatternDatasetId": 96
+}
+```
+
+### Create Event - Requests w/Commodities
+- In order to specify your own commodity information, simply add an additional property to any of the above Spending Pattern Events in order to modify the commodities used for the Event
+```json
+"SpendingPatternCommodities": [
+        {
+            "coefficient": 0.0006157221001664674,
+            "commodityCode": 3001,
+            "effect": "Indirect",
+            "isSamValue": true,
+            "localPurchasePercentage": 1,
+            "commodityDescription": "Oilseeds"
+        },
+        ...
+        {
+            "coefficient": 0.15,
+            "commodityCode": 3003,
+            "effect": "Indirect",
+            "isSamValue": false,
+            "localPurchasePercentage": 0.75,
+            "commodityDescription": "Vegetables and melons"
+        },
+		...
+        {
+            "coefficient": 0.00006742998924789797,
+            "commodityCode": 3526,
+            "effect": "Indirect",
+            "isSamValue": true,
+            "localPurchasePercentage": 1,
+            "commodityDescription": "US Postal delivery services"
+        }
+    ]
+```
+
+
 ##### Response
-- The fully-hydrated Event (with all properties) will be returned when the call succeeds
+- Regardless of the type of Event sent through this endpoint (and whether or not it had custom Commodities specified), the return response will be the fully-hydrated Event's json
 - An example from a Industry Output event:
 ```json
 {
@@ -1820,7 +1841,18 @@ A list of specifications data containing the following fields:
     "projectId": "3b7ad1e0-3d3c-11ef-aaf6-1266878a14f1",
     "impactEventType": "IndustryOutput",
     "title": "IndustryOutput_api",
-    "tags": ["Example"]
+    "tags": ["Example"],
+    "spendingPatternCommodities": [
+        {
+            "coefficient": 0.0006157221001664674,
+            "commodityCode": 3001,
+            "commodityDescription": "Oilseeds",
+            "isSamValue": true,
+            "isUserCoefficient": false,
+            "localPurchasePercentage": 1.0
+        },
+        ...
+	]
 }
 ```
 - Any value passed in the original Request will be exactly the same in the Response
