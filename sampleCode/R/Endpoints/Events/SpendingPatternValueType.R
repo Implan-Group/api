@@ -1,0 +1,1 @@
+SpendingPatternValueType <- factor(c("IntermediateExpenditure", "Output"))
