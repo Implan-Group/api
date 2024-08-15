@@ -8,8 +8,8 @@ class AuthenticationWorkflow(IWorkflow):
     def examples():
         # Example Implan Authentication
         auth = ImplanAuthentication(
-            username="implan0009@gmail.com",
-            password="implan@123"
+            username="",
+            password=""
         )
 
         # Retrieve the token
