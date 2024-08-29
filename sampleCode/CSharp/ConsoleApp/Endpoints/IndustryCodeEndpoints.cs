@@ -7,7 +7,7 @@ public sealed record class IndustryCode
     public string Description { get; set; }
 }
 
-public static class IndustryCodes
+public static class IndustryCodeEndpoints
 {
     public static IndustryCode[] GetIndustryCodes(int? aggregationSchemeId = null, int? industrySetId = null)
     {

@@ -7,7 +7,7 @@ public enum ImpactType
     Induced = 3        
 }
 
-public static class ImpactResults
+public static class ImpactResultEndpoints
 {
     /// <summary>
     /// These reports return csv-formatted data!

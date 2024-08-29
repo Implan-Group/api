@@ -1,4 +1,6 @@
-﻿namespace ConsoleApp.Workflows;
+﻿using ConsoleApp.Regions;
+
+namespace ConsoleApp.Workflows;
 
 public class RegionalWorkflow : IWorkflow
 {
@@ -18,20 +20,20 @@ public class RegionalWorkflow : IWorkflow
         int dataSetId = 96;             // 2022
             
         // A RegionType is often an optional filter that can be applied to region lookups
-        string[] regionTypes = Regions.GetRegionTypes();
+        string[] regionTypes = RegionEndpoints.GetRegionTypes();
         /* Common Region Types:
          * `country`, `state`, `msa`, `county`, `Congressional District`, `zipcode`
          */
         
         // You can start with the Top-Level Region for a given AggregationScheme + DataSet
         // This is often just the Country that contains all further sub-regions
-        Region topLevelRegion = Regions.GetTopLevelRegion(aggregationSchemeId, dataSetId);
+        Region topLevelRegion = RegionEndpoints.GetTopLevelRegion(aggregationSchemeId, dataSetId);
         
         // You can also dig into all the sub-regions (with optional RegionType filter)
-        Region[] childRegions = Regions.GetRegionChildren(aggregationSchemeId, dataSetId);
+        Region[] childRegions = RegionEndpoints.GetRegionChildren(aggregationSchemeId, dataSetId);
 
         // And also access your Combined + Customized Regions
-        Region[] userRegions = Regions.GetUserRegions(aggregationSchemeId, dataSetId);
+        Region[] userRegions = RegionEndpoints.GetUserRegions(aggregationSchemeId, dataSetId);
         
         
         /* Search Regions Example
@@ -40,7 +42,7 @@ public class RegionalWorkflow : IWorkflow
          */
         
         // Start by getting all Regions that have a RegionType of `State`
-        Region[] regions = Regions.GetRegionChildren(aggregationSchemeId, dataSetId, regionType: "State");
+        Region[] regions = RegionEndpoints.GetRegionChildren(aggregationSchemeId, dataSetId, regionType: "State");
         
         // Convert to a dictionary (with case-insensitive keys)
         Dictionary<string, Region> descriptionToRegionDict = new Dictionary<string, Region>(StringComparer.OrdinalIgnoreCase);

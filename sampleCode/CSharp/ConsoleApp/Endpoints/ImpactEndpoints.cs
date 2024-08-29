@@ -1,6 +1,6 @@
 ﻿namespace ConsoleApp.Endpoints;
 
-public static class Impacts
+public static class ImpactEndpoints
 {
     /// <summary>
     /// Runs the Impact for the Project with the given <paramref name="projectGuid"/>

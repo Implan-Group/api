@@ -1374,7 +1374,7 @@ This endpoint provides a CSV file containing environmental summary data as found
 * Bearer Token
 * AggregationSchemeId (In URL)
 * HashId or URID (required)
-* Environmental Release Year (in body)
+* Environment Release String (in body; required)
 * Industry Codes (in body; array)
 #### Response
 The API response will provide a CSV response with the following fields (per industry).
@@ -1390,7 +1390,7 @@ This endpoint provides a CSV file containing environmental detail data as found 
 * Bearer Token
 * AggregationSchemeId (In URL)
 * HashId or URID (required)
-* Environmental Release Year (in body; required)
+* Environment Release String (in body; required)
 * Industry Codes (in body; optional*)
 * Environment Category (in body; required)
 *NOTE: HashId or URID must be supplied, but both are not required.
@@ -1613,37 +1613,254 @@ A list of specifications data containing the following fields:
 #### Endpoint
 **GET {{api_domain}}api/v1/impact/project/{{projectGUID}}/eventtype/{{eventtype}}/specification**
 
+---
+# Spending Patterns
+- There are three types of Spending Patterns: **Industry**, **Institution**, and **Custom**
+- There are several endpoints that let you query for existing Spending Patterns as well as uploading new ones
 
-### Create Event (Post)
-#### Parameters
-* Project Id (In URL)
-* ImpactEventType (see Get Event Types above)
-* Title
-* industryCode
-* Output (Optional, unless event type is IndustryOutput)
-* Employment (Optional, unless event type is IndustryEmployment)
-* EmployeeCompensation (Optional, unless event type is IndustryEmployeeCompensation)
-* ProprietorIncome (Optional, unless event type is IndustryProprietorIncome)
-* Tags (Optional)
-#### Parameters for a Marginable Event
-These should only be used if you are adding an event that is marginable, such as a retail or wholesale industry.  
-* Percentage
-* DataSetId
-* MarginType (PurchaserPrice, ProducerPrice)
+## Spending Pattern Details and Commodities
+- This endpoint returns the details and commodities for a given Spending Pattern
+
+#### Request
+- `GET {{api_domain}}api/v1/impact/spending-patterns/{{aggregationSchemeId}}/{{spendingPatternType}}/{{specificationCode}}`
+	- `aggregationSchemeId` (number, required): Aggregation Scheme
+	- `spendingPatternType` (text, required): `Industry`, `Institution`, or `Custom`
+	- `specificationCode` (number, required): Specification Code
+- `GET {{api_domain}}api/v1/impact/spending-patterns/{{aggregationSchemeId}}/{{spendingPatternType}}/{{specificationCode}}?datasetId={{datasetId}}&regionHashId={{regionHashId}}`
+	- `datasetId` (number, optional): Data Set Id, defaults to the latest Data Year
+	- `regionHashId` (text, optional): Region Hash Id
+	- *Note*: For `Institutional Household Spending Patterns` the `RegionHashId` is *required* as it is the Region where the base Spending Pattern will be pulled from
+
 #### Response
-* Output
-* Employment
-* employeeCompensation
-* proprietorIncome
-* IndustryCode
-* Id - this is the event id, and will be used for associating an event with a group
-* projectId
-* impactEventType
-* title
-#### Endpoint
-**POST {{api_domain}}api/v1/impact/project/{{project id}}/event**
+- Returns the details about the Spending Pattern as well as the Commodities defined for it
+```json
+{
+    "id": null,
+    "eventId": null,
+    "isIntermediateExpenditure": true,
+    "isSamValue": true,
+    "payingCode": 3,
+    "title": "",
+    "spendingPatternType": 12,
+    "templateType": "Industry",
+    "spendingPatternCommodities": [
+        {
+            "coefficient": 0.0006737514200153713,
+            "commodityCode": 3001,
+            "effect": "Indirect",
+            "id": null,
+            "isSamValue": true,
+            "localPurchasePercentage": 1.0,
+            "commodityDescription": "Oilseeds",
+            "userSpendingPatternId": null,
+            "isNew": false
+        },
+        ...
+        {
+            "coefficient": 7.378499325444009E-05,
+            "commodityCode": 3526,
+            "effect": "Indirect",
+            "id": null,
+            "isSamValue": true,
+            "localPurchasePercentage": 1.0,
+            "commodityDescription": "US Postal delivery services",
+            "userSpendingPatternId": null,
+            "isNew": false
+        }
+    ]
+}
+```
+
+---
+# Create Event (Post)
+- Adds an Event to an existing Project
+
+### Endpoint
+- `POST {{api_domain}}api/v1/impact/project/{{project_id}}/event`
+
+##### Request
+- The existing Project's `guid` Id must be passed in the URL
+- A `json` body that defines the event must be included
+```json
+{
+    "impactEventType": "IndustryOutput",
+    "title" : "Custom_Event_Title",
+    "output" : 100000.01,
+    "employment" : 20.25,
+    "employeeCompensation" : 50000.23,
+    "proprietorIncome" : 3400.233,
+    "tags": ["Testing"]
+}
+```
+- `impactEventType` (text, required) - See `Get Event Types` above for a list of valid Event Types
+- `title` (text, required) - A unique-per-project title for this Event
+- `output` (number, optional except for `IndustryOutput` events) - The total output value for this Event
+- `employment` (number, optional except for `IndustryEmployment` events) - The total number of people employed
+- `employeeCompensation` (number, optional except for `IndustryEmployeeCompensation` events) - The total compensation paid to non-proprietor employees
+- `proprietorIncome` (number, optional except for `IndustryProprietorIncome` events) - The total compensation paid to proprietors
+- `tags` (array of text, optional): Additional tags to associate with this Event
+
+###### Additional Request Parameters
+- These should only be used if you are adding an Event that is marginable, such as a Retail or Wholesale Industry
+- Percentage
+- DataSetId
+- MarginType (`PurchaserPrice`, `ProducerPrice`)
+
+###### Custom Industry Impact Analysis Json
+```json
+{
+    "impactEventType": "CustomIndustryImpactAnalysis",
+    "title": "CustomIndustryImpactAnalysis_API_Example",
+    "SpendingPatternDatasetId": 96,
+    "SpecificationCode" : 21059,
+    "WageAndSalaryEmployment" : 10,
+    "ProprietorEmployment" : 2,
+    "TotalEmployment": 12,
+    "EmployeeCompensation": 40000,
+    "ProprietorIncome": 100000,
+    "TotalLaborIncome" : 140000,
+    "TaxOnProductionAndImports" : 2300,
+    "OtherPropertyIncome" : 3400,
+    "IntermediateInputs": 5600,    
+    "TotalOutput": null,
+    "LocalPurchasePercentage": 1,
+    "IsSam": false,
+    "SpendingPatternValueType": "IntermediateExpenditure",
+    "SpendingPatternCommodities": null,
+    "Tags": ["Testing"]
+}
+```
+
+### Create Event - Requests (no Commodities)
+- To use an existing Spending Pattern, simply submit an Event Create request without specifying the `SpendingPatternCommodities` (omit the property or set it to `null`)
+
+#### Industry Spending Pattern
+```json
+{
+    "ImpactEventType": "IndustrySpendingPattern",
+    "Title" : "ImpactApi - Industry Spending Pattern Example",
+    "Tags": ["Example"],
+    "Output": 147000,
+    "IndustryCode": 1,
+    "LocalPurchasePercentage": 1.0,
+    "IsSam": true,
+    "SpendingPatternDatasetId": 96,
+    "SpendingPatternValueType": "IntermediateExpenditure"
+}
+```
+
+#### Institutional Spending Pattern (non-Household)
+```json
+{
+    "impactEventType": "InstitutionalSpendingPattern",
+    "title": "ImpactApi - Institutional Spending Pattern Example - Gov",
+    "tags": ["Example"],
+    "value": 30000,
+    "institutionCode": 11002,
+    "localPurchasePercentage": 1,
+    "isSam": true,
+    "spendingPatternDatasetId": 96
+}
+```
+
+#### Institutional Spending Pattern (Household)
+```json
+{
+    "impactEventType": "InstitutionalSpendingPattern",
+    "title": "ImpactApi - Institutional Spending Pattern Example - Household",
+    "tags": ["Example"],
+    "value": 13000000,
+    "institutionCode": 10007,
+    "localPurchasePercentage": 1,
+    "isSam": true,
+    "spendingPatternDatasetId": 96,
+    "SpendingPatternRegionUrid": 1819520
+}
+```
+
+#### Custom Spending Pattern
+```json
+{
+    "impactEventType": "CustomSpendingPattern",
+    "title": "ImpactApi - Custom Spending Pattern Example",
+    "tags": ["Testing"],
+    "value": 75000,
+    "specificationCode": 21059,
+    "spendingPatternDatasetId": 96
+}
+```
+
+### Create Event - Requests w/Commodities
+- In order to specify your own commodity information, simply add an additional property to any of the above Spending Pattern Events in order to modify the commodities used for the Event
+```json
+"SpendingPatternCommodities": [
+        {
+            "coefficient": 0.0006157221001664674,
+            "commodityCode": 3001,
+            "effect": "Indirect",
+            "isSamValue": true,
+            "localPurchasePercentage": 1,
+            "commodityDescription": "Oilseeds"
+        },
+        ...
+        {
+            "coefficient": 0.15,
+            "commodityCode": 3003,
+            "effect": "Indirect",
+            "isSamValue": false,
+            "localPurchasePercentage": 0.75,
+            "commodityDescription": "Vegetables and melons"
+        },
+		...
+        {
+            "coefficient": 0.00006742998924789797,
+            "commodityCode": 3526,
+            "effect": "Indirect",
+            "isSamValue": true,
+            "localPurchasePercentage": 1,
+            "commodityDescription": "US Postal delivery services"
+        }
+    ]
+```
 
 
+##### Response
+- Regardless of the type of Event sent through this endpoint (and whether or not it had custom Commodities specified), the return response will be the fully-hydrated Event's json
+- An example from a Industry Output event:
+```json
+{
+    "output": 100000.01,
+    "employment": 20.25,
+    "employeeCompensation": 50000.23,
+    "proprietorIncome": 3400.233,
+    "industryCode": 0,
+    "marginType": "ProducerPrice",
+    "percentage": null,
+    "datasetId": null,
+    "id": "5339adf1-f1c9-4b59-982c-55945ec1ca72",
+    "projectId": "3b7ad1e0-3d3c-11ef-aaf6-1266878a14f1",
+    "impactEventType": "IndustryOutput",
+    "title": "IndustryOutput_api",
+    "tags": ["Example"],
+    "spendingPatternCommodities": [
+        {
+            "coefficient": 0.0006157221001664674,
+            "commodityCode": 3001,
+            "commodityDescription": "Oilseeds",
+            "isSamValue": true,
+            "isUserCoefficient": false,
+            "localPurchasePercentage": 1.0
+        },
+        ...
+	]
+}
+```
+- Any value passed in the original Request will be exactly the same in the Response
+- `projectId` (guid) - This is the `guid` for the Project
+- `id` (guid) - This is the `guid` for the Event
+
+
+---
 ### Get Event (Get)
 #### Parameters
 * projectId (in URL)
@@ -1661,42 +1878,34 @@ These should only be used if you are adding an event that is marginable, such as
 #### Endpoint
 **GET {{api_domain}}api/v1/impact/project/{{project id}}/event/{{event id}}**
 
+---
+## Update Events
+- You can also update existing Events (including changing them entirely from one type to another)
+- This endpoint supports all the same Impact Event Types as `Event Create` (above)
+	- A list of these supported types can be acquired through `Get Event Types` (below)
 
-### Update Event (Put)
-#### Parameters
-* Project Id (In URL)
-* Event Id (In URL)
-* ImpactEventType
-    * IndustryEmployment
-    * IndustryOutput
-    * IndustryEmployeeCompensation
-    * IndustryProprietorIncome 
-* Title
-* industryCode
-* Output (Optional, unless event type is IndustryOutput)
-* Employment (Optional, unless event type is IndustryEmployment)
-* EmployeeCompensation (Optional, unless event type is IndustryEmployeeCompensation)
-* ProprietorIncome (Optional, unless event type is IndustryProprietorIncome)
-* Tags (Optional)
-#### Parameters for a Marginable Event
-These should only be used if you are adding an event that is marginable, such as a retail or wholesale industry.  
-* Percentage
-* DataSetId
-* MarginType (PurchaserPrice, ProducerPrice)
-#### Response
-* Output
-* Employment
-* employeeCompensation
-* proprietorIncome
-* IndustryCode
-* Id - this is the event id, and will be used for associating an event with a group
-* projectId
-* impactEventType
-* title
-#### Endpoint
-**PUT {{api_domain}}api/v1/impact/project/{{project id}}/event/{{event id}}**
+---
+##### Request
+- `PUT {{api_domain}}api/v1/impact/project/{{projectGuid}}/event/{{eventGuid}}`
+	- Along with the `api_domain`, `projectGuid`, and `eventGuid`, a `json` body must be included that defines the changes to the event.
+	- This `json` body is exactly the same as for the `Event Create` endpoint (above)
+	  - Also supports editing Spending Patterns by sending through a list of commodities (as above)
+```json
+{
+    "impactEventType": "CustomSpendingPattern",
+    "title": "ImpactApi - Example - CustomSpendingPattern - Updated",
+    "value": 123000.78,
+    "specificationCode": 21059,
+    "spendingPatternDatasetId": 96,
+    "tags": ["Updated"]
+}
+```
+
+##### Response
+- As with the `Event Create` endpoint, the response from `Event Update` is the fully-hydrated `json` representation of the Event after it has been updated
 
 
+---
 ### Delete Event (Delete)
 Use this endpoint to delete an event.
 #### Parameters
@@ -1882,15 +2091,14 @@ This endpoint provides a list of possible dollar year deflators that can be appl
 - `GET {{api_domain}}api/v1/deflators/:aggregationSchemeId/:dataSetId/:deflatorType`
 
 
-
-
-
-## Results Totals (GET)
-To provide an asynchronous environment, IMPLAN has developed an endpoint that you can call to return the final results when the analysis run has been completed.  
+---
+## Result Totals
+- To provide an asynchronous environment, IMPLAN has developed an endpoint that you can call to return the final results when the analysis run has been completed.
 #### Parameters
 * Bearer Token
 * User Email Address
 * Analysis Run Id (Obtained from Impact Analysis Endpoint)
+* Dollar Year (Optional) - Overrides the Dollar Year only for Results
 #### Response
 The API response when the impact analysis is complete will provide Direct, Indirect, and Induced estimates for the following outputs:
 * Total Output
@@ -1909,214 +2117,76 @@ The API response when the impact analysis is complete will provide Direct, Indir
 * Total Sub-County Special District Taxes
 #### Endpoint
 **GET {{api_domain}}api/v1/impact/results/{{runId}}**
+**GET {{api_domain}}api/v1/impact/results/{{runId}}?dollarYear=2020**
 
 Call after Status API request returns “Complete”
 
 Will return.
 ```
-
-        [
-
-
-            {
-
-
-                "runId": 5923,
-
-
-                "regionName": "group 1",
-
-
-                "dataYear": "2019",
-
-
-                "impactType": "Direct",
-
-
-                "impactTypeId": 1,
-
-
-                "output": 24.0,
-
-
-                "employment": 4.0,
-
-
-                "wagesalaryemployment": 2.4822851604905343,
-
-
-                "proprietoremployment": 1.5177148395094657,
-
-
-                "laborIncome": 7.0,
-
-
-                "employeeCompensation": 2.0,
-
-
-                "proprietorIncome": 5.0,
-
-
-                "otherPropertyTypeIncome": 0.0,
-
-
-                "taxOnProductionAndImports": 8.0,
-
-
-                "subCountyGeneralTaxes": 1.101089247979291,
-
-
-                "subCountySpecialDistrictsTaxes": 0.028253130986610593,
-
-
-                "countyTaxes": 2.5595949962726197,
-
-
-                "stateTaxes": 3.8802588214347797,
-
-
-                "federalTaxes": 1.7467052842402941,
-
-
-                "totalTaxes": 9.315901480913599
-
-
-            },
-
-
-            {
-
-
-                "runId": 5923,
-
-
-                "regionName": "group 1",
-
-
-                "dataYear": "2019",
-
-
-                "impactType": "Indirect",
-
-
-                "impactTypeId": 2,
-
-
-                "output": 9.699506942871064,
-
-
-                "employment": 7.400741336145475E-05,
-
-
-                "wagesalaryemployment": 4.8929139183874765E-05,
-
-
-                "proprietoremployment": 2.5078274177579972E-05,
-
-
-                "laborIncome": 3.1328411658052837,
-
-
-                "employeeCompensation": 2.639137394626877,
-
-
-                "proprietorIncome": 0.49370377117840725,
-
-
-                "otherPropertyTypeIncome": 1.5189950934401746,
-
-
-                "taxOnProductionAndImports": 0.328375904808993,
-
-
-                "subCountyGeneralTaxes": 0.0459388732807516,
-
-
-                "subCountySpecialDistrictsTaxes": 0.0011637874191108516,
-
-
-                "countyTaxes": 0.10656839299602032,
-
-
-                "stateTaxes": 0.24216331544802466,
-
-
-                "federalTaxes": 0.6572300301071354,
-
-
-                "totalTaxes": 1.053064399251043
-
-
-            },
-
-
-            {
-
-
-                "runId": 5923,
-
-
-                "regionName": "group 1",
-
-
-                "dataYear": "2019",
-
-
-                "impactType": "Induced",
-
-
-                "impactTypeId": 3,
-
-
-                "output": 8.249318632893182,
-
-
-                "employment": 5.4272050051040594E-05,
-
-
-                "wagesalaryemployment": 4.1573718824725244E-05,
-
-
-                "proprietoremployment": 1.2698331226315353E-05,
-
-
-                "laborIncome": 2.535111474066722,
-
-
-                "employeeCompensation": 2.2261088294006215,
-
-
-                "proprietorIncome": 0.30900264466610067,
-
-
-                "otherPropertyTypeIncome": 1.8113055734548382,
-
-
-                "taxOnProductionAndImports": 0.39273146899403416,
-
-
-                "subCountyGeneralTaxes": 0.05462384320448541,
-
-
-                "subCountySpecialDistrictsTaxes": 0.0013901409115902555,
-
-
-                "countyTaxes": 0.12680935896957896,
-
-
-                "stateTaxes": 0.2560977675589298,
-
-
-                "federalTaxes": 0.5652103372346008,
-
-
-                "totalTaxes": 1.0041314478791852
-
-
-            }
-
-
-        ]
+[{
+	"runId": 5923,
+	"regionName": "group 1",
+	"dataYear": "2019",
+	"impactType": "Direct",
+	"impactTypeId": 1,
+	"output": 24.0,
+	"employment": 4.0,
+	"wagesalaryemployment": 2.4822851604905343,
+	"proprietoremployment": 1.5177148395094657,
+	"laborIncome": 7.0,
+	"employeeCompensation": 2.0,
+	"proprietorIncome": 5.0,
+	"otherPropertyTypeIncome": 0.0,
+	"taxOnProductionAndImports": 8.0,
+	"subCountyGeneralTaxes": 1.101089247979291,
+	"subCountySpecialDistrictsTaxes": 0.028253130986610593,
+	"countyTaxes": 2.5595949962726197,
+	"stateTaxes": 3.8802588214347797,
+	"federalTaxes": 1.7467052842402941,
+	"totalTaxes": 9.315901480913599
+}, {
+	"runId": 5923,
+	"regionName": "group 1",
+	"dataYear": "2019",
+	"impactType": "Indirect",
+	"impactTypeId": 2,
+	"output": 9.699506942871064,
+	"employment": 7.400741336145475E-05,
+	"wagesalaryemployment": 4.8929139183874765E-05,
+	"proprietoremployment": 2.5078274177579972E-05,
+	"laborIncome": 3.1328411658052837,
+	"employeeCompensation": 2.639137394626877,
+	"proprietorIncome": 0.49370377117840725,
+	"otherPropertyTypeIncome": 1.5189950934401746,
+	"taxOnProductionAndImports": 0.328375904808993,
+	"subCountyGeneralTaxes": 0.0459388732807516,
+	"subCountySpecialDistrictsTaxes": 0.0011637874191108516,
+	"countyTaxes": 0.10656839299602032,
+	"stateTaxes": 0.24216331544802466,
+	"federalTaxes": 0.6572300301071354,
+	"totalTaxes": 1.053064399251043
+}, {
+	"runId": 5923,
+	"regionName": "group 1",
+	"dataYear": "2019",
+	"impactType": "Induced",
+	"impactTypeId": 3,
+	"output": 8.249318632893182,
+	"employment": 5.4272050051040594E-05,
+	"wagesalaryemployment": 4.1573718824725244E-05,
+	"proprietoremployment": 1.2698331226315353E-05,
+	"laborIncome": 2.535111474066722,
+	"employeeCompensation": 2.2261088294006215,
+	"proprietorIncome": 0.30900264466610067,
+	"otherPropertyTypeIncome": 1.8113055734548382,
+	"taxOnProductionAndImports": 0.39273146899403416,
+	"subCountyGeneralTaxes": 0.05462384320448541,
+	"subCountySpecialDistrictsTaxes": 0.0013901409115902555,
+	"countyTaxes": 0.12680935896957896,
+	"stateTaxes": 0.2560977675589298,
+	"federalTaxes": 0.5652103372346008,
+	"totalTaxes": 1.0041314478791852
+}]
 ```
 
 ## Detail Economic Indicators Export (Get)
@@ -2332,34 +2402,13 @@ The API response when the analysis is complete will provide a zip file with a co
 **GET {{api_domain}}api/v1/impact/results/ImpactOccupationCoreCompetencies/{{runId}}**
 
 
-## Environment Categories By Impact (Get)
-This endpoint will provide environment category impact results by impact from an impact analysis.
-#### Parameters
-* Bearer Token
-* Analysis Run Id
-* Dollar Year (in body)
-* Environmental Release Year (in body)
-* Environment Name (in body; *optional)
-* Environment Categories (in body; *optional)
-* Industry Code (in body; *optional)
-* Regions (in body; *optional)
-* Impacts (in body; *optional)
-* Group Names (in body; *optional)
-* Event Names (in body; *optional)
-* Event Tags (in body; *optional)
-#### Response
-The API response when the analysis is complete will provide a CSV file with environment category impact data by impact type.
-#### Endpoint
-**GET {{api_domain}}api/v1/impact/results/EnvironmentCategoriesByImpact/{{runId}}**
-
-
-## Environment Industry Summary (Get)
+## Environment Impact Industry Summary (Get)
 This endpoint will provide environment category impact results by industry from an impact analysis.
 #### Parameters
 * Bearer Token
 * Analysis Run Id
 * Dollar Year (in body)
-* Environmental Release Year (in body)
+* Environment Release String (in body)
 * Environment Name (in body; *optional)
 * Environment Categories (in body; *optional)
 * Industry Code (in body; *optional)
@@ -2368,40 +2417,20 @@ This endpoint will provide environment category impact results by industry from 
 * Group Names (in body; *optional)
 * Event Names (in body; *optional)
 * Event Tags (in body; *optional)
+* NaicsAggregationSchemeId (in body; *optional; only works with impacts run using the default U.S. Data aggregation scheme)
 #### Response
 The API response when the analysis is complete will provide a CSV file with environment category impact data by industry.
 #### Endpoint
 **GET {{api_domain}}api/v1/impact/results/EnvironmentIndustrySummary/{{runId}}**
 
 
-## Environment Impact Details (Get)
-This endpoint will provide environment name impact results by impact type from an impact analysis.
-#### Parameters
-* Bearer Token
-* Analysis Run Id
-* Dollar Year (in body)
-* Environmental Release Year (in body)
-* Environment Name (in body; *optional)
-* Environment Categories (in body; *optional)
-* Industry Code (in body; *optional)
-* Regions (in body; *optional)
-* Impacts (in body; *optional)
-* Group Names (in body; *optional)
-* Event Names (in body; *optional)
-* Event Tags (in body; *optional)
-#### Response
-The API response when the analysis is complete will provide a CSV file with environment name impact data by impact type.
-#### Endpoint
-**GET {{api_domain}}api/v1/impact/results/EnvironmentImpactDetails/{{runId}}**
-
-
 ## Environment Impact Industry Details (Get)
-This endpoint will provide detailed industry and environment name environmental output impact results from an impact analysis.
+This endpoint will provide detailed environment name environmental output impact results from an impact analysis.
 #### Parameters
 * Bearer Token
 * Analysis Run Id
 * Dollar Year (in body)
-* Environmental Release Year (in body)
+* Environment Release String (in body)
 * Environment Name (in body; *optional)
 * Environment Categories (in body; *optional)
 * Industry Code (in body; *optional)
@@ -2410,8 +2439,9 @@ This endpoint will provide detailed industry and environment name environmental 
 * Group Names (in body; *optional)
 * Event Names (in body; *optional)
 * Event Tags (in body; *optional)
+* NaicsAggregationSchemeId (in body; *optional; only works with impacts run using the default U.S. Data aggregation scheme)
 #### Response
-The API response when the analysis is complete will provide a CSV file with detailed industry environment impact data. There is a 5000 row limit to the amount of data returned.
+The API response when the analysis is complete will provide a CSV file with detailed environment impact data. There is a 5000 row limit to the amount of data returned.
 #### Endpoint
 **GET {{api_domain}}api/v1/impact/results/EnvironmentImpactIndustryDetails/{{runId}}**
 

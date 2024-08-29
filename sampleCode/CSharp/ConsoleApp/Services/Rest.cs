@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Security.Authentication;
+using ConsoleApp.Regions;
 using RestSharp.Authenticators;
 using RestSharp.Serializers.Json;
 
@@ -25,11 +26,12 @@ public static class Rest
             // This is the base endpoint for all Implan ImpactAPI Requests
 #if DEBUG
             // TODO: Remove these testing URLs
-            BaseUrl = new Uri("https://api.implan.com/int/"), // Running against External INT
+            BaseUrl = new Uri("https://api.implan.com/int/"),       // External Int
+            //BaseUrl = new Uri("https://api.implan.com/beta/"),    // External Beta
 #elif LOCAL
-            BaseUrl = new Uri("https://localhost:5001/external/"),    // Running against Local INT
+            BaseUrl = new Uri("https://localhost:5001/external/"),  // Local Int
 #else
-            BaseUrl = new Uri("https://api.implan.com/"),
+            BaseUrl = new Uri("https://api.implan.com/"),           // External Production
 #endif
 
             AutomaticDecompression = DecompressionMethods.All,
@@ -62,7 +64,7 @@ public static class Rest
         // Validate that we can hit a small endpoint
         try
         {
-            Regions.GetRegionTypes();
+            RegionEndpoints.GetRegionTypes();
         }
         catch (Exception ex)
         {

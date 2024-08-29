@@ -202,80 +202,68 @@ Will Return datasets
 **NOTE**: Batch API currently only supports processing for 2018, 2019, and 2020 state models and impacts.  
 
 
-## Region Model Endpoint (Get)
-
-Since region model id’s and underlying data can change each year, Purchaser will need to provide a Data Set ID as an input.  The Endpoint response will include a list of Region Names, Types, and Model ID’s.   The response may be cached.
-
-The Regions that will be accessible by this API endpoint will include the regions purchased in their data subscription.
-
-
-
-1. Parameters
-    1. Bearer Token
-    2. Data Set Id 
-2. Response (List)
-    3. Model Id
-    4. Region Type Id
-        1. 2 = State
-        2. 3 = MSA
-        3. 4 = County
-    5. Region Name
-
-Take a dataset id from the dataset API request and use it for the model’s API request
-
-**GET https://{{api_domain}}/{{env}}/api/v1/models?datasetId=77   **   	
-
-Will return Models
-
+### Region Model Endpoint (Get)
+This endpoint will return a list of models available for Batch Impact analysis. A `datasetId` from the previously mentioned endpoint is required. The response may be cached.
+#### Parameters
+* Bearer Token
+* Data Set Id (in URL)
+* Region Type Filer (query parameter; *optional)
+  * State
+  * County 
+  * MSA
+  * CongressionalDistrict
+### Sample Response
+```
 [
-
-
-       {
-
-
-            "id": 21350,
-
-
-            "description": "Indiana",
-
-
-            "regionType": "State"
-
-
-        },
-
-
-        {
-
-
-            "id": 21349,
-
-
-            "description": "Michigan",
-
-
-            "regionType": "State"
-
-
-        },
-
-
-        {
-
-
-            "id": 20766,
-
-
-            "description": "Minnesota",
-
-
-            "regionType": "State"
-
-
-        }
-
-
+    {
+        "hashId": "5Oad92M9bZ",
+        "urid": 1646939,
+        "userModelId": null,
+        "description": "Vermont",
+        "modelId": 11597,
+        "modelBuildStatus": "Complete",
+        "employment": 410771.60344260157,
+        "output": 71119723120.10498,
+        "valueAdded": 38292831461.82147,
+        "aggregationSchemeId": 8,
+        "datasetId": 87,
+        "datasetDescription": "2021",
+        "fipsCode": "50",
+        "provinceCode": null,
+        "m49Code": null,
+        "regionType": "State",
+        "hasAccessibleChildren": false,
+        "regionTypeDescription": "State",
+        "geoId": "50",
+        "isMrioAllowed": true
+    },
+    ...
+    {
+        "hashId": "wlx62YXDxk",
+        "urid": 1646952,
+        "userModelId": null,
+        "description": "Arkansas",
+        "modelId": 11623,
+        "modelBuildStatus": "Complete",
+        "employment": 1639050.8514250224,
+        "output": 308251018253.70966,
+        "valueAdded": 150461125093.1109,
+        "aggregationSchemeId": 8,
+        "datasetId": 87,
+        "datasetDescription": "2021",
+        "fipsCode": "05",
+        "provinceCode": null,
+        "m49Code": null,
+        "regionType": "State",
+        "hasAccessibleChildren": false,
+        "regionTypeDescription": "State",
+        "geoId": "05",
+        "isMrioAllowed": true
+    }
 ]
+```
+**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/models/{{datasetId}}**\
+**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/models/{{datasetId}}?regionTypeFilter={{regionTypeFilter}}**
 
 
 ## Industry Codes Endpoint (Get)

@@ -1,4 +1,7 @@
-﻿namespace ConsoleApp.Workflows;
+﻿using ConsoleApp.Endpoints.Events;
+using ConsoleApp.Regions;
+
+namespace ConsoleApp.Workflows;
 
 public class CreateProjectWorkflow : IWorkflow
 {
@@ -16,7 +19,7 @@ public class CreateProjectWorkflow : IWorkflow
         /* The first step to create a Project is to find the Aggregation Scheme */
 
         // Get a list of all valid Aggregation Schemes
-        AggregationScheme[] aggregationSchemes = AggregationSchemes.GetAggregationSchemes();
+        AggregationScheme[] aggregationSchemes = AggregationSchemeEndpoints.GetAggregationSchemes();
 
         // Choose the one that you want to use
         AggregationScheme implan546AggScheme = aggregationSchemes.First(agg => agg.Description == "546 Unaggregated");
@@ -39,7 +42,7 @@ public class CreateProjectWorkflow : IWorkflow
         
         // This endpoint creates a Project and returns basic information about it, including a unique identifier `projectId` (guid) to be used in other API requests.
         // Note: Calling this endpoint returns a fully-hydrated Project, so we re-assign it here
-        project = Projects.Create(project);
+        project = ProjectEndpoints.Create(project);
         
       
         // With a Project created, you will next need to determine an industry code to use for your event.
@@ -47,12 +50,12 @@ public class CreateProjectWorkflow : IWorkflow
         // Events created later will require reference to one of the industry codes (`code`) returned here.
         
         // Industries are seperated into different Industry Sets
-        IndustrySet[] industrySets = IndustrySets.GetIndustrySets();
+        IndustrySet[] industrySets = IndustrySetEndpoints.GetIndustrySets();
         // Choose the one that describes your industry
         IndustrySet implan546IndustriesSet = industrySets.First(s => s.Description == "546 Industries");     // 8
         
         // You need to get an Industry Code for the Impact Event -- which can be further filtered by an Industry Set
-        IndustryCode[] industryCodes = IndustryCodes.GetIndustryCodes(aggregationSchemeId, 
+        IndustryCode[] industryCodes = IndustryCodeEndpoints.GetIndustryCodes(aggregationSchemeId, 
             industrySetId: implan546IndustriesSet.Id);
         // Choose the one that best fits
         IndustryCode industryCode = industryCodes.First(c => c.Description == "Oilseed farming");   // 1
@@ -61,7 +64,7 @@ public class CreateProjectWorkflow : IWorkflow
         /* There are many types of Industry Event, each requires a different Payload to be sent to the AddEvent endpoint */
         
         // This endpoint shows all valid Event Types for a given Project
-        string[] eventTypes = Events.GetEventsTypes(project.Id);
+        string[] eventTypes = EventEndpoints.GetEventsTypes(project.Id);
         // See the main Impact Readme or support for more details on different event types
         
         
@@ -92,8 +95,8 @@ public class CreateProjectWorkflow : IWorkflow
         };
 
         // Add the events to the Project we just created -- will return a new Event with information filled in
-        industryOutputEvent = Events.AddEvent(project.Id, industryOutputEvent);
-        industryImpactAnalysisEvent = Events.AddEvent(project.Id, industryImpactAnalysisEvent);
+        industryOutputEvent = EventEndpoints.AddEvent(project.Id, industryOutputEvent);
+        industryImpactAnalysisEvent = EventEndpoints.AddEvent(project.Id, industryImpactAnalysisEvent);
         
         
         /* Now that Event(s) have been added, it is time to find the Region(s) that are to be used in the Impact */
@@ -101,12 +104,12 @@ public class CreateProjectWorkflow : IWorkflow
         
         // Regions must be associated with a Data Set
         // Get a list of all valid Data Sets for the Aggregation Scheme
-        DataSet[] datasets = DataSets.GetDataSets(aggregationSchemeId);
+        DataSet[] datasets = DataSetEndpoints.GetDataSets(aggregationSchemeId);
         // Choose the one you would like to use -- must be compatible with your chosen HouseholdSetId!
         DataSet dataset = datasets.First(d => d.Description == "2022");
         
         // For this example, we're going to search through the Child Regions of the US for a particular state
-        Region[] stateRegions = Regions.GetRegionChildren(aggregationSchemeId, dataset.Id, regionType: "State");
+        Region[] stateRegions = RegionEndpoints.GetRegionChildren(aggregationSchemeId, dataset.Id, regionType: "State");
         Region oregonStateRegion = stateRegions.First(s => s.Description == "Oregon");
         // We need the HashId specifically
         string oregonStateHashId = oregonStateRegion.HashId;    // 15b869ZOxy
@@ -135,7 +138,7 @@ public class CreateProjectWorkflow : IWorkflow
         };
 
         // Note: Calling this endpoint returns a fully-hydrated Group, so we re-assign it here
-        group = Groups.AddGroupToProject(project.Id, group);
+        group = GroupEndpoints.AddGroupToProject(project.Id, group);
         
         
         // Now that the Project has been fully defined, see
