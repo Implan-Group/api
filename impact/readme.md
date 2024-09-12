@@ -1040,6 +1040,25 @@ The API response will provide a CSV response with following fields:
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/RegionMultipliersDetailed?hashId={{hashId}}&effectType={{effectType}}&industryCode={{industryCode}}**
 
 
+### Region Multipliers Summary (Get)
+This endpoint provides summary multipliers by a given type as found in the Regions > Multipliers > Summary Multipliers tables in the IMPLAN application.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId or URID (required)
+* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
+#### Response
+The API response will provide a CSV response with following fields:
+* Display Code
+* Display Description
+* Indirect Multiplier Sum
+* Type I Multiplier
+* Induced Multiplier
+* Type SAM Multiplier
+#### Endpoint
+**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-multipliers-summary?hashId={{hashId}}&effectType={{effectType}}**
+
+
 ### Region Multipliers Per Million Effects (Get)
 This endpoint provides per million of output effects by a given type and industry as found in the Regions > Multipliers > Per Million Effects tables in the IMPLAN application.
 #### Parameters
@@ -1187,6 +1206,22 @@ The API response will provide a CSV response with following fields:
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-industry-commodity-demand/{{IndustryCode}}?hashId={{hashId}}**
 
 
+### Region Industry Value Added (Get)
+This endpoint provides industry value added data for a given industry as found in the Regions > Social Accounts > Balance Sheets > Industry Balance Sheets > Value Added table in the IMPLAN application.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* IndustryCode (In URL)
+* HashId or URID (required)
+#### Response
+The API response will provide a CSV response with following fields:
+* Description
+* Value Added Coefficient
+* Value Added
+#### Endpoint
+**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-industry-value-added/{{IndustryCode}}?hashId={{hashId}}**
+
+
 ### Region Industry Institutional Production (Get)
 This endpoint provides commodity production data for a given commodity by industries and institutions as found in the Regions > Social Accounts > Balance Sheets > Commodity Balance Sheet > Industry-Institutional Production table in the IMPLAN application.
 #### Parameters
@@ -1264,6 +1299,28 @@ The API response will provide a CSV response with following fields:
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-institution-industry-demand?urid={{urid}}**
 
 
+### Region Industry Output/Outlay Summary (Get)
+This endpoint provides industry output/outlay data as found in the Regions > Industry Accounts > Reports > Industry Output/Outlay Summary table in the IMPLAN application.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId or URID (required)
+#### Response
+The API response will provide a CSV response with following fields:
+* Display Code
+* Display Description
+* Total Outlay
+* Intermediate Outlay
+* Institutional Outlay
+* Intermediate Imports
+* Value Added
+* Total Output
+* Intermediate Output
+* Final Demand
+#### Endpoint
+**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-industry-output-outlay-summary?urid={{urid}}**
+
+
 ### Region General Algebraic Modeling System Files (Get)
 This endpoint provides a zip file containing .dat files for use in GAMS systems.
 #### Parameters
@@ -1274,6 +1331,18 @@ This endpoint provides a zip file containing .dat files for use in GAMS systems.
 The API response will provide a zip file containing multiple .dat files.
 #### Endpoint
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/RegionGeneralAlgebraicModeling?hashId={{hashId}}**
+
+
+### Region General Algebraic Modeling System Single File (Get)
+This endpoint provides a single .gms file for use in GAMS systems.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId or URID (required)
+#### Response
+The API response will provide a .gms file.
+#### Endpoint
+**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-general-algebraic-modeling-single-file?hashId={{hashId}}**
 
 
 ### Region Industry Occupation Detail (Get)
@@ -1426,6 +1495,16 @@ A zipped CSV file.
 #### Endpoint
 **GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxCSam?urid={{urid}}**
 
+
+### Region Aggregate IxC SAM (GET)
+This endpoint provides a CSV file containing a region's aggregate IxC SAM.
+#### Parameters
+* AggregationSchemeId (In URL)
+* HashId or URID (required; query parameter)
+#### Response
+A CSV file.
+#### Endpoint
+**GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixc-sam?urid={{urid}}**
 
 # Impacts
 After the authentication token, and responses have been collected from the API endpoints above, you may then proceed with running an impact analysis. The starting point for this is to create a project.  

@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "dcb87d27-712e-4108-a93c-2ee49bfc0e8a",
+		"_postman_id": "16289b92-b469-4a51-9103-c621b2a2894b",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28583816"
+		"_exporter_id": "12725670"
 	},
 	"item": [
 		{
@@ -1323,6 +1323,43 @@
 							"response": []
 						},
 						{
+							"name": "Region Multipliers Summary",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-multipliers-summary?hashId=&effectType=Output",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-multipliers-summary"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": ""
+										},
+										{
+											"key": "effectType",
+											"value": "Output"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Region Multipliers Per Million Effects",
 							"request": {
 								"method": "GET",
@@ -1676,6 +1713,54 @@
 							"response": []
 						},
 						{
+							"name": "Region Industry Value Added",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-industry-value-added/:industryCode?hashId=",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-industry-value-added",
+										":industryCode"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": ""
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "industryCode",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Region Industry Institutional Production",
 							"request": {
 								"method": "GET",
@@ -1863,6 +1948,49 @@
 							"response": []
 						},
 						{
+							"name": "Region Industry Output/Outlay Summary",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-industry-output-outlay-summary?hashId=",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-industry-output-outlay-summary"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": ""
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Region General Algebraic Modeling System Files",
 							"event": [
 								{
@@ -1905,6 +2033,61 @@
 										{
 											"key": "hashId",
 											"value": "alDQwzY93a"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region General Algebraic Modeling System Single File",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-general-algebraic-modeling-single-file?hashId=",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-general-algebraic-modeling-single-file"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": ""
 										}
 									],
 									"variable": [
@@ -2385,6 +2568,49 @@
 										{
 											"key": "userModelId",
 											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Aggregate IxC SAM",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/study-area-data-aggregate-ixc-sam?hashId=",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"study-area-data-aggregate-ixc-sam"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": ""
+										},
+										{
+											"key": "userModelId",
+											"value": "",
 											"disabled": true
 										}
 									],
