@@ -562,31 +562,120 @@ This endpoint returns region types that can be used for region type filtering in
 **GET {{api_domain}}api/v1/region/RegionTypes**
 
 
-### Top Level Region (Get)
-This endpoint will return the top most region for an aggregation scheme and  dataset.  You may use the [URID](#urid) of this in Get Region Children by Urid.
-#### Parameters
-* Bearer Token
-* Aggregation Scheme ID (in URL)
-* Data Set ID (in URL)
-#### Endpoint
-**GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}**
 
-**Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
+---
+## Top Level Region
+- This endpoint will return the top most Region for an Aggregation Scheme and Dataset.
+- You may use optional parameter [URID](#urid) to get Region Children
+- For now, only US and Canada aggregation schemes are supported, INTL schemes will return an error message. Please use the Top Level Region Children endpoint with no filter to retrieve a list of all supported Countries
 
+#### Request
+- `GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{datasetId}}`
+	- `aggregationSchemeId` (number, required): Aggregation Scheme
+	- `datasetId` (number, required): Dataset Id
 
-### Top Level Region Children (Get)
-This endpoint will return all children regions for the top most region returned from Get Top Level Region, along with the same data points.
-#### Parameters
-* Bearer Token
-* Aggregation Scheme ID (in URL)
-* Data Set ID (in URL)
-* Optional Region Type Filter
-#### Endpoint
-**GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/children?regionTypeFilter={{regionType}}**
+#### Response
+- Returns the Regional information for the Top-Level region for a given Aggregation Scheme and Dataset
+- Example:
+```json
+{
+    "hashId": "BEbD05WXb2",
+    "urid": 1775072,
+    "userModelId": null,
+    "description": "United States (US Totals)",
+    "modelId": 13188,
+    "modelBuildStatus": "Complete",
+    "employment": 207667600.00000018,
+    "output": 45886905211009.836,
+    "valueAdded": 25744109000000.02,
+    "aggregationSchemeId": 8,
+    "datasetId": 92,
+    "datasetDescription": "2022 Archive",
+    "fipsCode": "00000",
+    "provinceCode": null,
+    "m49Code": "840",
+    "regionType": "Country",
+    "hasAccessibleChildren": false,
+    "regionTypeDescription": "Country",
+    "geoId": "840",
+    "isMrioAllowed": false
+}
+```
 
-**Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
+---
+## Top Level Region Children
+- This endpoint returns all Children Regions (children of the Top Level Region) for a given Aggregation Scheme and Dataset
+- An optional filter can limit the response region types
+- Use this endpoint for INTL Aggregation Schemes (with no Region Type Filter) to get a list of all supported Country Regions
 
+#### Request
+- `GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/children`
+	- `aggregationSchemeId` (number, required): Aggregation Scheme
+	- `datasetId` (number, required): Dataset Id
+- `GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/children?regionTypeFilter={{regionType}}`
+	- `aggregationSchemeId` (number, required): Aggregation Scheme
+	- `datasetId` (number, required): Dataset Id
+	- `regionType`: An optional filter to limit the Region Types returned
+	  - Valid options are `Country`, `State`, `MSA`, `County`, `CongressionalDistrict`, and `ZipCode`
 
+- `GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{datasetId}}/{{urid|hashid}}/children`
+	- `aggregationSchemeId` (number, required): Aggregation Scheme
+	- `datasetId` (number, required): Dataset Id
+	- `urid`: The URID for the top level region to get the Child Regions for
+
+#### Response
+- A list of all Children Regions matching the criteria will be returned
+```json
+[
+    {
+        "hashId": "LAVBMvDNb1",
+        "urid": 1819295,
+        "userModelId": null,
+        "description": "Kentucky",
+        "modelId": 15059,
+        "modelBuildStatus": "Complete",
+        "employment": 2608978.2972790226,
+        "output": 561195509364.5885,
+        "valueAdded": 264866590387.3677,
+        "aggregationSchemeId": 8,
+        "datasetId": 96,
+        "datasetDescription": "2022",
+        "fipsCode": "21",
+        "provinceCode": null,
+        "m49Code": null,
+        "regionType": "State",
+        "hasAccessibleChildren": true,
+        "regionTypeDescription": "State",
+        "geoId": "21",
+        "isMrioAllowed": true
+    },
+    ...
+    {
+        "hashId": "W9b1AO5Nb5",
+        "urid": 1819287,
+        "userModelId": null,
+        "description": "Delaware",
+        "modelId": 15051,
+        "modelBuildStatus": "Complete",
+        "employment": 625328.0472749957,
+        "output": 148446407436.51935,
+        "valueAdded": 90372082246.67789,
+        "aggregationSchemeId": 8,
+        "datasetId": 96,
+        "datasetDescription": "2022",
+        "fipsCode": "10",
+        "provinceCode": null,
+        "m49Code": null,
+        "regionType": "State",
+        "hasAccessibleChildren": true,
+        "regionTypeDescription": "State",
+        "geoId": "10",
+        "isMrioAllowed": true
+    }
+]
+```
+
+---
 ### User Custom and Combined Regions (Get)
 This endpoint will return all combined and custom regions that a user created by aggregation scheme and data set.
 #### Parameters
