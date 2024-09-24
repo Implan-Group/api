@@ -567,7 +567,7 @@ This endpoint returns region types that can be used for region type filtering in
 ## Top Level Region
 - This endpoint will return the top most Region for an Aggregation Scheme and Dataset.
 - You may use optional parameter [URID](#urid) to get Region Children
-- For now, only US and Canada aggregation schemes are supported, INTL schemes will return an error message. Please use the Top Level Region Children endpoint with no filter to retrieve a list of all supported Countries
+- For now, only United States and Canadian Industry Sets are supported, International Industry Sets will return an error message. Please use the Top Level Region Children endpoint with no filter to retrieve a list of all supported Countries
 
 #### Request
 - `GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{datasetId}}`
@@ -606,7 +606,7 @@ This endpoint returns region types that can be used for region type filtering in
 ## Top Level Region Children
 - This endpoint returns all Children Regions (children of the Top Level Region) for a given Aggregation Scheme and Dataset
 - An optional filter can limit the response region types
-- Use this endpoint for INTL Aggregation Schemes (with no Region Type Filter) to get a list of all supported Country Regions
+- Use this endpoint for International Industry Sets (with no Region Type Filter) to get a list of all supported Country Regions
 
 #### Request
 - `GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/children`
@@ -1067,15 +1067,18 @@ The API response will provide a CSV response with following fields:
 #### Endpoint
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataGeneralInformation?hashId={{hashId}}**
 
+---
+## Study Area - Industry Detail
+- This endpoint provides regional industry detail data equivalent to the Region Industries Detail table found in Regions > Study Area Data > Industry Detail in the IMPLAN application.
+- This endpoint works for United States, Canadian, and International Industry Sets so long as an appropriate Aggregation Scheme is used alongside the region's HashId
 
-### Study Area Industry Detail (Get)
-This endpoint provides regional industry detail data equivalent to the Region Industries Detail table found in Regions > Study Area Data > Industry Detail in the IMPLAN application.
-#### Parameters
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId or URID (required)
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail?hashId={{hashId}}`
+- `AggregationSchemeId` - The Aggregation scheme for the Region
+- `HashId` - The Region's HashId
+
 #### Response
-The API response will provide a CSV response with following fields for all industries:
+- The API response will provide a CSV response with following fields for all industries:
 * Industry Code
 * Description
 * Total Output
@@ -1085,10 +1088,9 @@ The API response will provide a CSV response with following fields for all indus
 * Proprietor Income
 * Other Property Income
 * Taxes on Production and Imports Net of Subsidies
-#### Endpoint
-**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail?hashId={{hashId}}**
 
 
+---
 ### Study Area Industry Summary (Get)
 This endpoint provides regional industry summary data equivalent to the Region Industries Summary table found in Regions > Study Area Data > Industry Summary in the IMPLAN application.
 #### Parameters
