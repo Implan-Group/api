@@ -1569,16 +1569,22 @@ The API response will provide a CSV response with the following fields (per envi
 #### Endpoint
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/EnvironmentDetail?hashId={{hashId}}**
 
+---
+## Region Detail IxI SAM
+- This endpoint provides a zipped CSV file containing a region's IxI SAM output, the same as `Region Details > Industry Accounts > IxI Social Accounting Matrix > Export Detail IxI SAM`
+- This endpoint works for United States, Canadian, and International Industry Sets so long as an appropriate Aggregation Scheme is used alongside the region's HashId
 
-### Region Detail IxI SAM (GET)
-This endpoint provides a zipped CSV file containing a region's IxI SAM.
-#### Parameters
-* AggregationSchemeId (In URL)
-* HashId or URID (required; query parameter)
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam??hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam??userModelId={{userModelId}}`
+- `aggregationSchemeId` - The Aggregation Scheme for the Region
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
+
 #### Response
-A zipped CSV file.
-#### Endpoint
-**GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam?urid={{urid}}**
+- A zipped CSV file
+
 
 ---
 ## Region Detail IxC SAM
