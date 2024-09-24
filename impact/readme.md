@@ -1575,18 +1575,23 @@ A zipped CSV file.
 #### Endpoint
 **GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam?urid={{urid}}**
 
+---
+## Region Detail IxC SAM
+- This endpoint provides a zipped CSV file containing a Region's IxC SAM output, the same as `Region Details > Social Accounts > IxC Social Accounting Matrix > Export Detail IxC SAM`
+- This endpoint works for United States, Canadian, and International Industry Sets so long as an appropriate Aggregation Scheme is used alongside the region's HashId
 
-### Region Detail IxC SAM (GET)
-This endpoint provides a zipped CSV file containing a region's IxC SAM.
-#### Parameters
-* AggregationSchemeId (In URL)
-* HashId or URID (required; query parameter)
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxCSam?hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxCSam?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxCSam?userModelId={{userModelId}}`
+- `aggregationSchemeId` - The Aggregation Scheme for the Region
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
+
 #### Response
-A zipped CSV file.
-#### Endpoint
-**GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxCSam?urid={{urid}}**
+- A zipped CSV file
 
-
+---
 ### Region Aggregate IxC SAM (GET)
 This endpoint provides a CSV file containing a region's aggregate IxC SAM.
 #### Parameters
