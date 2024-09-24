@@ -1368,15 +1368,21 @@ The API response will provide a CSV response with following fields:
 #### Endpoint
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-commodity-institutional-demand/{{CommodityCode}}?hashId={{hashId}}**
 
+---
+## Region Institution Industry Demand
+- This endpoint provides institution industry demand data as found in the `Regions > Industry Accounts > Reports > Institution Industry Demand` table in the IMPLAN application
+- This endpoint works for United States, Canadian, and International Industry Sets so long as an appropriate Aggregation Scheme is used alongside the region's HashId
 
-### Region Institution Industry Demand (Get)
-This endpoint provides institution industry demand data as found in the Regions > Industry Accounts > Reports > Institution Industry Demand table in the IMPLAN application.
-#### Parameters
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId or URID (required)
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-institution-industry-demand?hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-institution-industry-demand?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-institution-industry-demand?userModelId={{userModelId}}`
+- `aggregationSchemeId` - The Aggregation Scheme for the Region
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
+
 #### Response
-The API response will provide a CSV response with following fields:
+- The API response will provide a CSV response with following fields:
 * Code
 * Description
 * Household Demand
@@ -1386,10 +1392,9 @@ The API response will provide a CSV response with following fields:
 * Inventory
 * Domestic Exports
 * Foreign Exports
-#### Endpoint
-**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-institution-industry-demand?urid={{urid}}**
 
 
+---
 ### Region Industry Output/Outlay Summary (Get)
 This endpoint provides industry output/outlay data as found in the Regions > Industry Accounts > Reports > Industry Output/Outlay Summary table in the IMPLAN application.
 #### Parameters
