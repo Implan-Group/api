@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "16289b92-b469-4a51-9103-c621b2a2894b",
+		"_postman_id": "006db420-e9d8-4be9-9607-d2abb1e4d7f2",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12725670"
+		"_exporter_id": "28583816"
 	},
 	"item": [
 		{
@@ -2618,6 +2618,50 @@
 										{
 											"key": "aggregationSchemeId",
 											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Aggregate IxI SAM",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/study-area-data-aggregate-ixi-sam",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"study-area-data-aggregate-ixi-sam"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": ""
 										}
 									]
 								}
