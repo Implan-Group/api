@@ -1603,16 +1603,38 @@ The API response will provide a CSV response with the following fields (per envi
 - A zipped CSV file
 
 ---
-### Region Aggregate IxC SAM (GET)
-This endpoint provides a CSV file containing a region's aggregate IxC SAM.
-#### Parameters
-* AggregationSchemeId (In URL)
-* HashId or URID (required; query parameter)
-#### Response
-A CSV file.
-#### Endpoint
-**GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixc-sam?urid={{urid}}**
+## Region Aggregate IxI SAM
+- This endpoint provides a CSV file containing a Region's Aggregate IxI SAM output, the same as `Region Details > Industry Accounts > IxI Social Accounting Matrix > Aggregate IxI SAM`
 
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixi-sam?hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixi-sam?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixi-sam?userModelId={{userModelId}}`
+- `aggregationSchemeId` - The Aggregation Scheme for the Region
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
+
+#### Response
+- A CSV file with the following columns:
+	- PayingCode, PayingDescription, ReceivingCode, ReceivingDescription, Value
+
+---
+## Region Aggregate IxC SAM
+- This endpoint provides a CSV file containing a Region's Aggregate IxC SAM output, the same as `Region Details > Social Accounts > IxC Social Accounting Matrix > Aggregate IxC SAM`
+
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixc-sam?hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixc-sam?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixc-sam?userModelId={{userModelId}}`
+- `aggregationSchemeId` - The Aggregation Scheme for the Region
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
+
+#### Response
+- A CSV file with the following columns:
+	- PayingCode, PayingDescription, ReceivingCode, ReceivingDescription, Value
+
+---
 # Impacts
 After the authentication token, and responses have been collected from the API endpoints above, you may then proceed with running an impact analysis. The starting point for this is to create a project.  
 
