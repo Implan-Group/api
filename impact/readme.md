@@ -1023,18 +1023,27 @@ This endpoint initiates a new model build that incorporates user provided averag
 #### Endpoint
 **POST {{api_domain}}api/v1/region/build/CustomizeAverageRPC/{{aggregationSchemeId}}**
 
-
-## Regional Data Exports
+---
+# Regional Data Exports
 These endpoints export region specific data for a built model. Data is exported in either CSV or Zip format depending on the endpoint.
 
-### Region Overview Industries (Get)
-This endpoint provides regional industry overview data equivalent to the Industries table found in Regions > Regions Overview in the IMPLAN application.
-#### Parameters
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId or URID (required)
+---
+## Region Overview Industries
+- This endpoint provides regional industry overview data equivalent to the Industries table found in `Regions > Regions Overview` in the IMPLAN application
+- This endpoint is used for US and Canadian regions. While International regions will work, the returned data will include only Zeros under `Average Proprietor Income per Proprietor`
+    - Please use an alternate endpoint for International regions by including `intl` in the path between `export` and the `{aggregationSchemeId}:
+    - `{{api_domain}}api/v1/regions/export/intl/{{AggregationSchemeId}}/RegionOverviewIndustries`
+
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/RegionOverviewIndustries?hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/RegionOverviewIndustries?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/RegionOverviewIndustries?userModelId={{userModelId}}`
+- `AggregationSchemeId` - The Aggregation scheme for the Region
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
+
 #### Response
-The API response will provide a CSV response with following fields for all industries:
+- The API response will provide a CSV response with following fields for all industries:
 * Display Code
 * Display Description
 * Employment
@@ -1042,10 +1051,9 @@ The API response will provide a CSV response with following fields for all indus
 * Output
 * Average Employee Compensation per Wage and Salary Employee
 * Average Proprietor Income per Proprietor
-#### Endpoint
-**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/RegionOverviewIndustries?hashId={{hashId}}**
 
 
+---
 ### Study Area Data General Information (Get)
 This endpoint provides regional General Information such as population, land area, and industry count. This data is equivalent to that found on tables in Regions > Regions Overview and Study Area Data > Area Demographics. 
 #### Parameters
@@ -1069,13 +1077,18 @@ The API response will provide a CSV response with following fields:
 
 ---
 ## Study Area - Industry Detail
-- This endpoint provides regional industry detail data equivalent to the Region Industries Detail table found in Regions > Study Area Data > Industry Detail in the IMPLAN application.
-- This endpoint works for United States, Canadian, and International Industry Sets so long as an appropriate Aggregation Scheme is used alongside the region's HashId
+- This endpoint provides regional industry detail data equivalent to the Region Industries Detail table found in `Regions > Study Area Data > Industry Detail` in the IMPLAN application.
+- This endpoint is used for US and Canadian regions _only_
+- Please use an alternate endpoint for International regions by including `intl` in the path between `export` and the `{aggregationSchemeId}:
+    - `{{api_domain}}api/v1/regions/export/intl/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail`
 
 #### Request
 `GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail?hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail?userModelId={{userModelId}}`
 - `AggregationSchemeId` - The Aggregation scheme for the Region
-- `HashId` - The Region's HashId
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
 
 #### Response
 - The API response will provide a CSV response with following fields for all industries:
@@ -1088,7 +1101,7 @@ The API response will provide a CSV response with following fields:
 * Proprietor Income
 * Other Property Income
 * Taxes on Production and Imports Net of Subsidies
-
+- The final two columns will be named `Gross Operating Surplus` and `Other Taxes on Production Net of Subsidies` in the case of International, to more accurately reflect the data.
 
 ---
 ### Study Area Industry Summary (Get)
