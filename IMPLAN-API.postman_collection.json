@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "006db420-e9d8-4be9-9607-d2abb1e4d7f2",
+		"_postman_id": "f2f6025a-9e14-489f-b861-3f52cb473e43",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "28583816"
@@ -1183,6 +1183,40 @@
 							"response": []
 						},
 						{
+							"name": "Region Overview Industries - International",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/intl/:aggregationSchemeId/RegionOverviewIndustries?hashId=Yzaw1qvYVQ",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										"intl",
+										":aggregationSchemeId",
+										"RegionOverviewIndustries"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": "Yzaw1qvYVQ"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "13"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Study Area Data General Information",
 							"request": {
 								"method": "GET",
@@ -1242,6 +1276,40 @@
 										{
 											"key": "aggregationSchemeId",
 											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Study Area Data Industry Detail - International",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/intl/:aggregationSchemeId/StudyAreaDataIndustryDetail?hashId=alDQwzY93a",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										"intl",
+										":aggregationSchemeId",
+										"StudyAreaDataIndustryDetail"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": "alDQwzY93a"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "13"
 										}
 									]
 								}
