@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f2f6025a-9e14-489f-b861-3f52cb473e43",
+		"_postman_id": "6f3c56d7-a445-4547-866b-ae3349e06e1a",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "28583816"
@@ -5891,18 +5891,7 @@
 			"name": "Auth",
 			"request": {
 				"method": "POST",
-				"header": [
-					{
-						"key": "apiDomain",
-						"value": "int-app-api.implan.com",
-						"disabled": true
-					},
-					{
-						"key": "appDomain",
-						"value": "int-app.implan.com",
-						"disabled": true
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": "{  \"username\": \"\",   \"password\": \"\" }"
