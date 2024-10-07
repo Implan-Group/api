@@ -26,7 +26,7 @@ import logging
 class ImpactEndpoints:
     @staticmethod
     def run_impact(project_guid, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/impact/{project_guid}"
+        url = f"https://api.implan.com/api/v1/impact/{project_guid}"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         try:
             response = requests.post(url, headers=headers)
@@ -43,7 +43,7 @@ class ImpactEndpoints:
         
     @staticmethod        
     def get_impact_status(impact_run_id, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/impact/status/{impact_run_id}"
+        url = f"https://api.implan.com/api/v1/impact/status/{impact_run_id}"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         
         logging.debug(f"Request URL: {url}")
@@ -66,7 +66,7 @@ class ImpactEndpoints:
 
     @staticmethod
     def cancel_impact(impact_run_id, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/impact/cancel/{impact_run_id}"
+        url = f"https://api.implan.com/api/v1/impact/cancel/{impact_run_id}"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         try:
             response = requests.put(url, headers=headers)

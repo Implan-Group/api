@@ -9,7 +9,7 @@
 	- Please see the [authentication](https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication---retrieving-bearer-access-token) section in the Readme to review authentication steps
 - Variables required for Endpoint calls will appear inside of double-braces (`{{}}`) and they must be replaced with valid values before the Request is sent
 	- _e.g._ `{{api_domain}}` should be replaced with `https://api.implan.com/` for Public Production requests
-	- See the [Development Variables](https://github.com/Implan-Group/api/blob/main/impact/readme.md#development-variables) section of the Readme for more information
+	- See the [Production Variables](https://github.com/Implan-Group/api/blob/main/impact/readme.md#production-variables) section of the Readme for more information
 
 
 ---
@@ -174,7 +174,7 @@
       "eventNames": [{"EVENT_1_NAME", "EVENT_2_NAME"}],
       "eventTags": [{"EVENTTAG1", "EVENTTAG2"}]
   }
-  ```
+```
   - `dollarYear` (number): Required Dollar Year to use when calculating the report
   - `regions` (text array, optional): A list of names of the Regions to include in the report
   - `impacts` (text array, optional): Additional filters on the Impact Type

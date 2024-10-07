@@ -30,7 +30,7 @@ class Specification:
 class SpecificationEndpoints:
     @staticmethod
     def get_specifications(project_id, event_type, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/impact/project/{project_id}/eventtype/{event_type}/specification"
+        url = f"https://api.implan.com/api/v1/impact/project/{project_id}/eventtype/{event_type}/specification"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         
         response = requests.get(url, headers=headers)

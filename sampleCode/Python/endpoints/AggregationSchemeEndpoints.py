@@ -51,7 +51,7 @@ def get_response_data(url, headers, params=None):
 class AggregationSchemeEndpoints:
     @staticmethod
     def get_aggregation_schemes(bearer_token, industry_set_id=None):
-        url = "https://api.implan.com/beta/api/v1/aggregationSchemes"
+        url = "https://api.implan.com/api/v1/aggregationSchemes"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {bearer_token}"

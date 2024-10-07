@@ -26,7 +26,7 @@ from endpoints.Regions.Region import Region
 class RegionEndpoints:
     @staticmethod
     def get_region_types(bearer_token):
-        url = "https://api.implan.com/beta/api/v1/region/RegionTypes"
+        url = "https://api.implan.com/api/v1/region/RegionTypes"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.get(url, headers=headers)
        
@@ -40,7 +40,7 @@ class RegionEndpoints:
  
     @staticmethod
     def get_top_level_region(bearer_token, aggregation_scheme_id, dataset_id):
-        url = f"https://api.implan.com/beta/api/v1/region/{aggregation_scheme_id}/{dataset_id}"
+        url = f"https://api.implan.com/api/v1/region/{aggregation_scheme_id}/{dataset_id}"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.get(url, headers=headers)
        
@@ -55,9 +55,9 @@ class RegionEndpoints:
     @staticmethod
     def get_region_children(bearer_token, aggregation_scheme_id, dataset_id, hashIdOrUrid=None, regionType=None):
         if hashIdOrUrid:
-            url = f"https://api.implan.com/beta/api/v1/region/{aggregation_scheme_id}/{dataset_id}/{hashIdOrUrid}/children"
+            url = f"https://api.implan.com/api/v1/region/{aggregation_scheme_id}/{dataset_id}/{hashIdOrUrid}/children"
         else:
-            url = f"https://api.implan.com/beta/api/v1/region/{aggregation_scheme_id}/{dataset_id}/children"
+            url = f"https://api.implan.com/api/v1/region/{aggregation_scheme_id}/{dataset_id}/children"
        
         headers = {"Authorization": f"Bearer {bearer_token}"}
         params = {}
@@ -76,7 +76,7 @@ class RegionEndpoints:
  
     @staticmethod
     def get_user_regions(bearer_token, aggregation_scheme_id, dataset_id):
-        url = f"https://api.implan.com/beta/api/v1/region/{aggregation_scheme_id}/{dataset_id}/user"
+        url = f"https://api.implan.com/api/v1/region/{aggregation_scheme_id}/{dataset_id}/user"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.get(url, headers=headers)
        
@@ -89,7 +89,7 @@ class RegionEndpoints:
             response.raise_for_status()
  
     def combine_regions(aggregation_scheme_id, payload, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/region/build/combined/{aggregation_scheme_id}"
+        url = f"https://api.implan.com/api/v1/region/build/combined/{aggregation_scheme_id}"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.post(url, headers=headers, json=payload.to_dict())  # Ensure to_dict() is called
         if response.status_code == 200:

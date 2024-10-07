@@ -29,7 +29,7 @@ from endpoints.Events.IndustryImpactAnalysisEvent import IndustryImpactAnalysisE
 class EventEndpoints:
     @staticmethod
     def add_industry_output_event(project_id, event_data, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/impact/project/{project_id}/event"
+        url = f"https://api.implan.com/api/v1/impact/project/{project_id}/event"
         headers = {"Authorization": f"Bearer {bearer_token}", "Content-Type": "application/json"}
         try:
             payload = event_data.to_dict()
@@ -46,7 +46,7 @@ class EventEndpoints:
 
     @staticmethod
     def add_industry_impact_analysis_event(project_id, event_data, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/impact/project/{project_id}/event"
+        url = f"https://api.implan.com/api/v1/impact/project/{project_id}/event"
         headers = {"Authorization": f"Bearer {bearer_token}", "Content-Type": "application/json"}
         try:
             payload = event_data.to_dict()
@@ -61,7 +61,7 @@ class EventEndpoints:
             print(f"Other error occurred: {err}")
 
     def get_events_types(project_guid, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/impact/project/{project_guid}/eventtype"
+        url = f"https://api.implan.com/api/v1/impact/project/{project_guid}/eventtype"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.get(url, headers=headers)
         
@@ -74,7 +74,7 @@ class EventEndpoints:
 
     @staticmethod
     def get_event(project_guid, event_guid, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/impact/project/{project_guid}/event/{event_guid}"
+        url = f"https://api.implan.com/api/v1/impact/project/{project_guid}/event/{event_guid}"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.get(url, headers=headers)
         
@@ -87,7 +87,7 @@ class EventEndpoints:
 
     @staticmethod
     def get_events(project_guid, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/impact/project/{project_guid}/event"
+        url = f"https://api.implan.com/api/v1/impact/project/{project_guid}/event"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.get(url, headers=headers)
         
@@ -101,7 +101,7 @@ class EventEndpoints:
 
     @staticmethod
     def add_household_income_event(project_guid, household_income_event, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/impact/project/{project_guid}/event"
+        url = f"https://api.implan.com/api/v1/impact/project/{project_guid}/event"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.post(url, json=household_income_event.to_dict(), headers=headers)
         response.raise_for_status()

@@ -32,7 +32,7 @@ class ImpactResultEndpoints:
     class CsvReports:
         @staticmethod
         def get_detailed_economic_indicators(impact_run_id, bearer_token):
-            url = f"https://api.implan.com/beta/api/v1/impact/results/ExportDetailEconomicIndicators/{impact_run_id}"
+            url = f"https://api.implan.com/api/v1/impact/results/ExportDetailEconomicIndicators/{impact_run_id}"
             headers = {"Authorization": f"Bearer {bearer_token}"}
             try:
                 response = requests.get(url, headers=headers)
@@ -47,7 +47,7 @@ class ImpactResultEndpoints:
 
         @staticmethod
         def get_summary_economic_indicators(impact_run_id, bearer_token):
-            url = f"https://api.implan.com/beta/api/v1/impact/results/SummaryEconomicIndicators/{impact_run_id}"
+            url = f"https://api.implan.com/api/v1/impact/results/SummaryEconomicIndicators/{impact_run_id}"
             headers = {"Authorization": f"Bearer {bearer_token}"}
             try:
                 response = requests.get(url, headers=headers)
@@ -62,7 +62,7 @@ class ImpactResultEndpoints:
 
         @staticmethod
         def get_detailed_taxes(impact_run_id, bearer_token):
-            url = f"https://api.implan.com/beta/api/v1/impact/results/DetailedTaxes/{impact_run_id}"
+            url = f"https://api.implan.com/api/v1/impact/results/DetailedTaxes/{impact_run_id}"
             headers = {"Authorization": f"Bearer {bearer_token}"}
             try:
                 response = requests.get(url, headers=headers)
@@ -77,7 +77,7 @@ class ImpactResultEndpoints:
 
         @staticmethod
         def get_summary_taxes(impact_run_id, bearer_token):
-            url = f"https://api.implan.com/beta/api/v1/impact/results/SummaryTaxes/{impact_run_id}"
+            url = f"https://api.implan.com/api/v1/impact/results/SummaryTaxes/{impact_run_id}"
             headers = {"Authorization": f"Bearer {bearer_token}"}
             try:
                 response = requests.get(url, headers=headers)
@@ -111,7 +111,7 @@ class ImpactResultEndpoints:
 
     @staticmethod
     def get_estimated_growth_percentage(impact_run_id, filter, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/impact/results/EstimatedGrowthPercentage/{impact_run_id}"
+        url = f"https://api.implan.com/api/v1/impact/results/EstimatedGrowthPercentage/{impact_run_id}"
         headers = {"Authorization": f"Bearer {bearer_token}", "Content-Type": "application/json"}
         payload = filter.to_dict()
         logging.debug(f"Request URL: {url}")

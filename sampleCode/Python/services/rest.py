@@ -38,7 +38,7 @@ class BearerAuth(AuthBase):
         return r
 
 class RestClient:
-    BASE_URL = "https://api.implan.com/beta/"
+    BASE_URL = "https://api.implan.com/"
     
     def __init__(self, base_url=None):
         self.base_url = base_url or self.BASE_URL

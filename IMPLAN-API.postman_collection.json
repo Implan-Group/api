@@ -5556,12 +5556,12 @@
 				"header": [
 					{
 						"key": "apiDomain",
-						"value": "int-app-api.implan.com",
+						"value": "",
 						"disabled": true
 					},
 					{
 						"key": "appDomain",
-						"value": "int-app.implan.com",
+						"value": "",
 						"disabled": true
 					}
 				],

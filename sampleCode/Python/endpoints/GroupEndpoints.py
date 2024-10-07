@@ -69,7 +69,7 @@ class Group:
 class GroupEndpoints:
     @staticmethod
     def add_group_to_project(project_guid, group, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/impact/project/{project_guid}/group"
+        url = f"https://api.implan.com/api/v1/impact/project/{project_guid}/group"
         headers = {"Authorization": f"Bearer {bearer_token}", "Content-Type": "application/json"}
         payload = group.to_dict()
         

@@ -33,7 +33,7 @@ class DataSet:
 class DataSetEndpoints:
     @staticmethod
     def get_datasets(aggregation_scheme_id, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/datasets/{aggregation_scheme_id}"
+        url = f"https://api.implan.com/api/v1/datasets/{aggregation_scheme_id}"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         
         response = requests.get(url, headers=headers)

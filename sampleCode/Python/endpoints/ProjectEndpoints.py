@@ -61,7 +61,7 @@ class Project:
 class ProjectEndpoints:
     @staticmethod
     def create(project, bearer_token):
-        url = "https://api.implan.com/beta/api/v1/impact/project"
+        url = "https://api.implan.com/api/v1/impact/project"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.post(url, json=project.to_dict(), headers=headers)
         if response.status_code == 200:
@@ -75,7 +75,7 @@ class ProjectEndpoints:
 
     @staticmethod
     def get_project(project_id, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/impact/project/{project_id}"
+        url = f"https://api.implan.com/api/v1/impact/project/{project_id}"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.get(url, headers=headers)
         
@@ -95,7 +95,7 @@ class ProjectEndpoints:
 
     @staticmethod
     def get_projects(bearer_token):
-        url = "https://api.implan.com/beta/api/v1/impact/project"
+        url = "https://api.implan.com/api/v1/impact/project"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
@@ -108,7 +108,7 @@ class ProjectEndpoints:
 
     @staticmethod
     def get_shared_projects(bearer_token):
-        url = "https://api.implan.com/beta/api/v1/impact/project/shared"
+        url = "https://api.implan.com/api/v1/impact/project/shared"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.get(url, headers=headers)
         if response.status_code == 200:

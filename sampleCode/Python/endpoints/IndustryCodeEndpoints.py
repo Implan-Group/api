@@ -33,9 +33,9 @@ class IndustryCodeEndpoints:
     @staticmethod
     def get_industry_codes(aggregation_scheme_id=None, industry_set_id=None, bearer_token=None):
         if aggregation_scheme_id is None:
-            url = "https://api.implan.com/beta/api/v1/IndustryCodes"
+            url = "https://api.implan.com/api/v1/IndustryCodes"
         else:
-            url = f"https://api.implan.com/beta/api/v1/IndustryCodes/{aggregation_scheme_id}"
+            url = f"https://api.implan.com/api/v1/IndustryCodes/{aggregation_scheme_id}"
 
         headers = {"Authorization": f"Bearer {bearer_token}"}
         params = {}

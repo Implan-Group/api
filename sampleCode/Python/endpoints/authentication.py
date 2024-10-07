@@ -32,7 +32,7 @@ class ImplanAuthentication:
 class Authentication:
     @staticmethod
     def get_bearer_token(auth):
-        url = "https://api.implan.com/beta/auth"
+        url = "https://api.implan.com/auth"
         headers = {"Content-Type": "application/json"}
         data = {
             "username": auth.username,

@@ -36,7 +36,7 @@ class IndustrySet:
 class IndustrySets:
     @staticmethod
     def get_industry_set(industry_set_id, bearer_token):
-        url = f"https://api.implan.com/beta/api/v1/industry-sets/{industry_set_id}"
+        url = f"https://api.implan.com/api/v1/industry-sets/{industry_set_id}"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
@@ -48,7 +48,7 @@ class IndustrySets:
 
     @staticmethod
     def get_industry_sets(bearer_token):
-        url = "https://api.implan.com/beta/api/v1/industry-sets"
+        url = "https://api.implan.com/api/v1/industry-sets"
         headers = {"Authorization": f"Bearer {bearer_token}"}
         response = requests.get(url, headers=headers)
         if response.status_code == 200:

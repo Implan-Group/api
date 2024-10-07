@@ -32,7 +32,7 @@ setGeneric("Rest", function(object) standardGeneric("Rest"))
 
 # Define a method for the Rest function with the Rest class
 setMethod("Rest", signature(object = "Rest"), function(object){
-  BaseUrl <- "https://api.implan.com/beta/"
+  BaseUrl <- "https://api.implan.com/"
   return(BaseUrl)
 })
 
