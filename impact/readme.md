@@ -2501,35 +2501,41 @@ The API response when the analysis is complete will provide a CSV response with 
 #### Example with Filters
 GET {{api_domain}}api/v1/impact/results/SummaryEconomicIndicators/{{runId}}?year=2023&impacts=Indirect
 
+---
+## Summary Taxes Export
+- This endpoint will provide Summary Tax Results from an Impact Analysis, and works with US, Canadian, and International projects
 
-## Summary Taxes Export (Get)
-This endpoint will provide Summary Tax Results from an Impact Analysis
-#### Parameters
-* Bearer Token
-* Analysis Run Id 
-* Optional Filter Parameters
-  * Filter Types
-    * Year (dollar year)
-    * Regions
-    * Groups
-    * Events
-    * EventTags
+#### Request
+`GET {{api_domain}}api/v1/impact/results/SummaryTaxes/{{runId}}`
+- `RunId` is the last successful Run Id from running the Impacts for a Project
+- Optional filters can be included in the path with `?{{name}}={{value}}` and `&{{name}}={{value}}` as usual:
+    - `year` (number): The dollar year for the Report
+    - `regions` (list of strings): Filter for which Regions to include in the Report
+    - `impacts` (list of Impact Type) [`Direct`, `Indirect`, `Induced`]
+    - `groups` (list of string): Which Groups to include
+    - `events` (list of string): Which Events to include
+    - `eventTags` (list of string): A filter for events to only include ones that have any of the specified Tags
+
 #### Response
-The API response when the analysis is complete will provide a CSV response with following fields:
-* GroupName
-* EventName
-* ModelName
-* Impact
-* SubCountyGeneral
-* SubCountySpecialDistricts
-* County
-* State
-* Federal
-* Total
-#### Endpoint
-**GET {{api_domain}}api/v1/impact/results/SummaryTaxes/{{runId}}**
-#### Example with Filters
-**GET {{api_domain}}api/v1/impact/results/SummaryTaxes/{{runId}}?year=2023&impacts=Indirect**
+- The API response when the analysis is complete will provide a CSV File response
+- For US and Canadian projects, the CSV will include the following columns:
+    - GroupName
+    - EventName
+    - ModelName
+    - Impact
+    - SubCountyGeneral
+    - SubCountySpecialDistricts
+    - County
+    - State
+    - Federal
+    - Total
+- For International projects, the CSV will include these columns:
+    - GroupName
+    - EventName
+    - ModelName
+    - Impact
+    - Total
+
 
 
 ## Estimated Growth Percentage
