@@ -1129,7 +1129,24 @@ This endpoint provides detailed multipliers by a given type and industry as foun
 * Bearer Token
 * AggregationSchemeId (In URL)
 * HashId or URID (required)
-* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
+* EffectType 
+  * Options include
+    * Employment
+    * EmployeeCompensation
+    * ProprietorIncome
+    * OtherPropertyIncome
+    * TaxesOnProductionAndImports
+    * LaborIncome
+    * Output
+    * TotalValueAdded
+  * International industry set options include
+    * Employment
+    * EmployeeCompensation
+    * GrossOperatingSurplus
+    * OtherTaxesOnProductionNetOfSubsidies
+    * LaborIncome
+    * Output
+    * TotalValueAdded
 * IndustryCode
 #### Response
 The API response will provide a CSV response with following fields:
@@ -1150,7 +1167,24 @@ This endpoint provides summary multipliers by a given type as found in the Regio
 * Bearer Token
 * AggregationSchemeId (In URL)
 * HashId or URID (required)
-* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
+* EffectType
+    * Options include
+        * Employment
+        * EmployeeCompensation
+        * ProprietorIncome
+        * OtherPropertyIncome
+        * TaxesOnProductionAndImports
+        * LaborIncome
+        * Output
+        * TotalValueAdded
+    * International industry set options include
+        * Employment
+        * EmployeeCompensation
+        * GrossOperatingSurplus
+        * OtherTaxesOnProductionNetOfSubsidies
+        * LaborIncome
+        * Output
+        * TotalValueAdded
 #### Response
 The API response will provide a CSV response with following fields:
 * Display Code
@@ -1169,7 +1203,24 @@ This endpoint provides per million of output effects by a given type and industr
 * Bearer Token
 * AggregationSchemeId (In URL)
 * HashId or URID (required)
-* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
+* EffectType
+    * Options include
+        * Employment
+        * EmployeeCompensation
+        * ProprietorIncome
+        * OtherPropertyIncome
+        * TaxesOnProductionAndImports
+        * LaborIncome
+        * Output
+        * TotalValueAdded
+    * International industry set options include
+        * Employment
+        * EmployeeCompensation
+        * GrossOperatingSurplus
+        * OtherTaxesOnProductionNetOfSubsidies
+        * LaborIncome
+        * Output
+        * TotalValueAdded
 #### Response
 The API response will provide a CSV response with following fields:
 * Display Code
@@ -1818,6 +1869,9 @@ An array of event types (string) to use with Get Project Specification and Creat
 * IndustrySpendingPattern
 * InstitutionalSpendingPattern
 * IndustryImpactAnalysis
+* CustomIndustryImpactAnalysis
+* InternationalIndustryImpactAnalysis
+* CustomInternationalIndustryImpactAnalysis
 #### Endpoint
 **POST {{api_domain}}api/v1/impact/project/{{projectGUID}}/eventtype**
 
@@ -1918,7 +1972,7 @@ A list of specifications data containing the following fields:
 - `output` (number, optional except for `IndustryOutput` events) - The total output value for this Event
 - `employment` (number, optional except for `IndustryEmployment` events) - The total number of people employed
 - `employeeCompensation` (number, optional except for `IndustryEmployeeCompensation` events) - The total compensation paid to non-proprietor employees
-- `proprietorIncome` (number, optional except for `IndustryProprietorIncome` events) - The total compensation paid to proprietors
+- `proprietorIncome` (number, optional except for `IndustryProprietorIncome` events) - The total compensation paid to proprietors - Not applicable to International industry sets
 - `tags` (array of text, optional): Additional tags to associate with this Event
 
 ###### Additional Request Parameters
@@ -1949,6 +2003,29 @@ A list of specifications data containing the following fields:
     "SpendingPatternValueType": "IntermediateExpenditure",
     "SpendingPatternCommodities": null,
     "Tags": ["Testing"]
+}
+```
+
+###### Custom International Industry Impact Analysis Json
+```json
+{
+  "impactEventType": "CustomInternationalIndustryImpactAnalysis",
+  "title": "CustomInternationalIndustryImpactAnalysis_API_Example",
+  "SpendingPatternDatasetId": 95,
+  "SpecificationCode" : 21089,
+  "IntermediateInputs": 5000000,
+  "TotalEmployment": 24,
+  "EmployeeCompensation": 4000000,
+  "WageAndSalaryEmployment" : 24,
+  "TotalLaborIncome" : 4000000,
+  "GrossOperationSurplus" : 500000,
+  "OtherTaxOnProductionAndImports" : 500000,
+  "TotalOutput": 10000000,
+  "LocalPurchasePercentage": 1,
+  "IsSam": false,
+  "SpendingPatternValueType": "IntermediateExpenditure",
+  "Tags": ["Testing"],
+  "spendingPatternCommodities": null
 }
 ```
 
