@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "6f3c56d7-a445-4547-866b-ae3349e06e1a",
+		"_postman_id": "eacf352c-ef68-437b-af0f-0d3a2054c6d4",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28583816"
+		"_exporter_id": "12725670"
 	},
 	"item": [
 		{
@@ -3648,6 +3648,42 @@
 							"response": []
 						},
 						{
+							"name": "Create International Industry Impact Analysis Event",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"impactEventType\": \"InternationalIndustryImpactAnalysis\",\r\n    \"IndustryCode\" : 5,\r\n    \"IntermediateInputs\": 5000000,\r\n    \"TotalEmployment\": 24,\r\n    \"EmployeeCompensation\": 4000000,\r\n    \"WageAndSalaryEmployment\" : 24,\r\n    \"TotalLaborIncome\" : 4000000,\r\n    \"GrossOperationSurplus\" : 500000,\r\n    \"OtherTaxOnProductionAndImports\" : 500000,\r\n    \"TotalOutput\": 10000000,\r\n    \"title\": \"InternationalIndustryImpactAnalysis_api\",\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternDatasetId\": 95,\r\n    \"SpendingPatternRegionUrid\": 1861222,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"Tags\": [],\r\n    \"SpendingPatternCommodities\": []\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"project",
+										":projectGuid",
+										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Create Impact - Custom Industry Impact Analysis",
 							"request": {
 								"method": "POST",
@@ -3655,6 +3691,42 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n    \"impactEventType\": \"CustomIndustryImpactAnalysis\",\r\n    \"title\": \"CustomIndustryImpactAnalysis_API_Example\",\r\n    \"SpendingPatternDatasetId\": 96,\r\n    \"SpecificationCode\" : 21059,\r\n    \"WageAndSalaryEmployment\" : 10,\r\n    \"ProprietorEmployment\" : 2,\r\n    \"TotalEmployment\": 12,\r\n    \"EmployeeCompensation\": 40000,\r\n    \"ProprietorIncome\": 100000,\r\n    \"TotalLaborIncome\" : 140000,\r\n    \"TaxOnProductionAndImports\" : 2300,\r\n    \"OtherPropertyIncome\" : 3400,\r\n    \"IntermediateInputs\": 5600,    \r\n    \"TotalOutput\": null,\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"SpendingPatternCommodities\": null,\r\n    \"Tags\": [\"Testing\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"project",
+										":projectGuid",
+										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Impact - Custom International Industry Impact Analysis",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"impactEventType\": \"CustomInternationalIndustryImpactAnalysis\",\r\n    \"title\": \"CustomIndustryImpactAnalysis_API_Example\",\r\n    \"SpendingPatternDatasetId\": 95,\r\n    \"SpecificationCode\" : 21089,\r\n    \"IntermediateInputs\": 5000000,\r\n    \"TotalEmployment\": 24,\r\n    \"EmployeeCompensation\": 4000000,\r\n    \"WageAndSalaryEmployment\" : 24,\r\n    \"TotalLaborIncome\" : 4000000,\r\n    \"GrossOperationSurplus\" : 500000,\r\n    \"OtherTaxOnProductionAndImports\" : 500000,\r\n    \"TotalOutput\": 10000000,\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"Tags\": [\"Testing\"],\r\n    \"spendingPatternCommodities\": []\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
