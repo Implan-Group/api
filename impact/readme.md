@@ -111,7 +111,23 @@ The following variables can be used while developing against the IMPLAN API. Fol
   </tr>
 </table>
 
+---
+# Throttling Rates
 
+The IMPLAN API will currently support the following requests per timeframe, to ensure a smooth operation for all customers. When exceeding these rates, you will receiving a throttling error response.
+- Industry Codes
+  - Requests per minute = 10
+- Data Sets
+  - Requests per minute = 10
+- Region Models
+  - Requests per minute = 5
+- Instant
+  - Requests per second = 5
+- Batch
+  - Requests per minute = 6
+  - 2500 events per request supported.
+
+---
 # Authentication - Retrieving Bearer access token
 ## General Authentication Architecture
 It’s recommended that you implement a backend solution to communicate with the IMPLAN API.  You will need to include a bearer token when sending requests to the IMPLAN API.  This bearer token will be valid for 24 hours and it is expected that you will cache this token while it’s valid.
