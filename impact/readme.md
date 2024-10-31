@@ -73,7 +73,23 @@ We have created a Postman collection with reference calls per section in this do
   </tr>
 </table>
 
+---
+# Throttling Rates
 
+The IMPLAN API will currently support the following requests per timeframe, to ensure a smooth operation for all customers. When exceeding these rates, you will receiving a throttling error response.
+- Industry Codes
+  - Requests per minute = 10
+- Data Sets
+  - Requests per minute = 10
+- Region Models
+  - Requests per minute = 5
+- Instant
+  - Requests per second = 5
+- Batch
+  - Requests per minute = 6
+  - 2500 events per request supported.
+
+---
 # Authentication - Retrieving Bearer access token
 ## General Authentication Architecture
 It’s recommended that you implement a backend solution to communicate with the IMPLAN API.  You will need to include a bearer token when sending requests to the IMPLAN API.  This bearer token will be valid for 24 hours and it is expected that you will cache this token while it’s valid.
@@ -524,31 +540,120 @@ This endpoint returns region types that can be used for region type filtering in
 **GET {{api_domain}}api/v1/region/RegionTypes**
 
 
-### Top Level Region (Get)
-This endpoint will return the top most region for an aggregation scheme and  dataset.  You may use the [URID](#urid) of this in Get Region Children by Urid.
-#### Parameters
-* Bearer Token
-* Aggregation Scheme ID (in URL)
-* Data Set ID (in URL)
-#### Endpoint
-**GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}**
 
-**Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
+---
+## Top Level Region
+- This endpoint will return the top most Region for an Aggregation Scheme and Dataset.
+- You may use optional parameter [URID](#urid) to get Region Children
+- For now, only United States and Canadian Industry Sets are supported, International Industry Sets will return an error message. Please use the Top Level Region Children endpoint with no filter to retrieve a list of all supported Countries
 
+#### Request
+- `GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{datasetId}}`
+	- `aggregationSchemeId` (number, required): Aggregation Scheme
+	- `datasetId` (number, required): Dataset Id
 
-### Top Level Region Children (Get)
-This endpoint will return all children regions for the top most region returned from Get Top Level Region, along with the same data points.
-#### Parameters
-* Bearer Token
-* Aggregation Scheme ID (in URL)
-* Data Set ID (in URL)
-* Optional Region Type Filter
-#### Endpoint
-**GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/children?regionTypeFilter={{regionType}}**
+#### Response
+- Returns the Regional information for the Top-Level region for a given Aggregation Scheme and Dataset
+- Example:
+```json
+{
+    "hashId": "BEbD05WXb2",
+    "urid": 1775072,
+    "userModelId": null,
+    "description": "United States (US Totals)",
+    "modelId": 13188,
+    "modelBuildStatus": "Complete",
+    "employment": 207667600.00000018,
+    "output": 45886905211009.836,
+    "valueAdded": 25744109000000.02,
+    "aggregationSchemeId": 8,
+    "datasetId": 92,
+    "datasetDescription": "2022 Archive",
+    "fipsCode": "00000",
+    "provinceCode": null,
+    "m49Code": "840",
+    "regionType": "Country",
+    "hasAccessibleChildren": false,
+    "regionTypeDescription": "Country",
+    "geoId": "840",
+    "isMrioAllowed": false
+}
+```
 
-**Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
+---
+## Top Level Region Children
+- This endpoint returns all Children Regions (children of the Top Level Region) for a given Aggregation Scheme and Dataset
+- An optional filter can limit the response region types
+- Use this endpoint for International Industry Sets (with no Region Type Filter) to get a list of all supported Country Regions
 
+#### Request
+- `GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/children`
+	- `aggregationSchemeId` (number, required): Aggregation Scheme
+	- `datasetId` (number, required): Dataset Id
+- `GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/children?regionTypeFilter={{regionType}}`
+	- `aggregationSchemeId` (number, required): Aggregation Scheme
+	- `datasetId` (number, required): Dataset Id
+	- `regionType`: An optional filter to limit the Region Types returned
+	  - Valid options are `Country`, `State`, `MSA`, `County`, `CongressionalDistrict`, and `ZipCode`
 
+- `GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{datasetId}}/{{urid|hashid}}/children`
+	- `aggregationSchemeId` (number, required): Aggregation Scheme
+	- `datasetId` (number, required): Dataset Id
+	- `urid`: The URID for the top level region to get the Child Regions for
+
+#### Response
+- A list of all Children Regions matching the criteria will be returned
+```json
+[
+    {
+        "hashId": "LAVBMvDNb1",
+        "urid": 1819295,
+        "userModelId": null,
+        "description": "Kentucky",
+        "modelId": 15059,
+        "modelBuildStatus": "Complete",
+        "employment": 2608978.2972790226,
+        "output": 561195509364.5885,
+        "valueAdded": 264866590387.3677,
+        "aggregationSchemeId": 8,
+        "datasetId": 96,
+        "datasetDescription": "2022",
+        "fipsCode": "21",
+        "provinceCode": null,
+        "m49Code": null,
+        "regionType": "State",
+        "hasAccessibleChildren": true,
+        "regionTypeDescription": "State",
+        "geoId": "21",
+        "isMrioAllowed": true
+    },
+    ...
+    {
+        "hashId": "W9b1AO5Nb5",
+        "urid": 1819287,
+        "userModelId": null,
+        "description": "Delaware",
+        "modelId": 15051,
+        "modelBuildStatus": "Complete",
+        "employment": 625328.0472749957,
+        "output": 148446407436.51935,
+        "valueAdded": 90372082246.67789,
+        "aggregationSchemeId": 8,
+        "datasetId": 96,
+        "datasetDescription": "2022",
+        "fipsCode": "10",
+        "provinceCode": null,
+        "m49Code": null,
+        "regionType": "State",
+        "hasAccessibleChildren": true,
+        "regionTypeDescription": "State",
+        "geoId": "10",
+        "isMrioAllowed": true
+    }
+]
+```
+
+---
 ### User Custom and Combined Regions (Get)
 This endpoint will return all combined and custom regions that a user created by aggregation scheme and data set.
 #### Parameters
@@ -896,18 +1001,27 @@ This endpoint initiates a new model build that incorporates user provided averag
 #### Endpoint
 **POST {{api_domain}}api/v1/region/build/CustomizeAverageRPC/{{aggregationSchemeId}}**
 
-
-## Regional Data Exports
+---
+# Regional Data Exports
 These endpoints export region specific data for a built model. Data is exported in either CSV or Zip format depending on the endpoint.
 
-### Region Overview Industries (Get)
-This endpoint provides regional industry overview data equivalent to the Industries table found in Regions > Regions Overview in the IMPLAN application.
-#### Parameters
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId or URID (required)
+---
+## Region Overview Industries
+- This endpoint provides regional industry overview data equivalent to the Industries table found in `Regions > Regions Overview` in the IMPLAN application
+- This endpoint is used for US and Canadian regions. While International regions will work, the returned data will include only Zeros under `Average Proprietor Income per Proprietor`
+    - Please use an alternate endpoint for International regions by including `intl` in the path between `export` and the `{aggregationSchemeId}:
+    - `{{api_domain}}api/v1/regions/export/intl/{{AggregationSchemeId}}/RegionOverviewIndustries`
+
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/RegionOverviewIndustries?hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/RegionOverviewIndustries?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/RegionOverviewIndustries?userModelId={{userModelId}}`
+- `AggregationSchemeId` - The Aggregation scheme for the Region
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
+
 #### Response
-The API response will provide a CSV response with following fields for all industries:
+- The API response will provide a CSV response with following fields for all industries:
 * Display Code
 * Display Description
 * Employment
@@ -915,10 +1029,9 @@ The API response will provide a CSV response with following fields for all indus
 * Output
 * Average Employee Compensation per Wage and Salary Employee
 * Average Proprietor Income per Proprietor
-#### Endpoint
-**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/RegionOverviewIndustries?hashId={{hashId}}**
 
 
+---
 ### Study Area Data General Information (Get)
 This endpoint provides regional General Information such as population, land area, and industry count. This data is equivalent to that found on tables in Regions > Regions Overview and Study Area Data > Area Demographics. 
 #### Parameters
@@ -940,15 +1053,23 @@ The API response will provide a CSV response with following fields:
 #### Endpoint
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataGeneralInformation?hashId={{hashId}}**
 
+---
+## Study Area - Industry Detail
+- This endpoint provides regional industry detail data equivalent to the Region Industries Detail table found in `Regions > Study Area Data > Industry Detail` in the IMPLAN application.
+- This endpoint is used for US and Canadian regions _only_
+- Please use an alternate endpoint for International regions by including `intl` in the path between `export` and the `{aggregationSchemeId}:
+    - `{{api_domain}}api/v1/regions/export/intl/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail`
 
-### Study Area Industry Detail (Get)
-This endpoint provides regional industry detail data equivalent to the Region Industries Detail table found in Regions > Study Area Data > Industry Detail in the IMPLAN application.
-#### Parameters
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId or URID (required)
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail?hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail?userModelId={{userModelId}}`
+- `AggregationSchemeId` - The Aggregation scheme for the Region
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
+
 #### Response
-The API response will provide a CSV response with following fields for all industries:
+- The API response will provide a CSV response with following fields for all industries:
 * Industry Code
 * Description
 * Total Output
@@ -958,10 +1079,9 @@ The API response will provide a CSV response with following fields for all indus
 * Proprietor Income
 * Other Property Income
 * Taxes on Production and Imports Net of Subsidies
-#### Endpoint
-**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail?hashId={{hashId}}**
+- The final two columns will be named `Gross Operating Surplus` and `Other Taxes on Production Net of Subsidies` in the case of International, to more accurately reflect the data.
 
-
+---
 ### Study Area Industry Summary (Get)
 This endpoint provides regional industry summary data equivalent to the Region Industries Summary table found in Regions > Study Area Data > Industry Summary in the IMPLAN application.
 #### Parameters
@@ -987,7 +1107,24 @@ This endpoint provides detailed multipliers by a given type and industry as foun
 * Bearer Token
 * AggregationSchemeId (In URL)
 * HashId or URID (required)
-* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
+* EffectType 
+  * Options include
+    * Employment
+    * EmployeeCompensation
+    * ProprietorIncome
+    * OtherPropertyIncome
+    * TaxesOnProductionAndImports
+    * LaborIncome
+    * Output
+    * TotalValueAdded
+  * International industry set options include
+    * Employment
+    * EmployeeCompensation
+    * GrossOperatingSurplus
+    * OtherTaxesOnProductionNetOfSubsidies
+    * LaborIncome
+    * Output
+    * TotalValueAdded
 * IndustryCode
 #### Response
 The API response will provide a CSV response with following fields:
@@ -1002,13 +1139,66 @@ The API response will provide a CSV response with following fields:
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/RegionMultipliersDetailed?hashId={{hashId}}&effectType={{effectType}}&industryCode={{industryCode}}**
 
 
+### Region Multipliers Summary (Get)
+This endpoint provides summary multipliers by a given type as found in the Regions > Multipliers > Summary Multipliers tables in the IMPLAN application.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId or URID (required)
+* EffectType
+    * Options include
+        * Employment
+        * EmployeeCompensation
+        * ProprietorIncome
+        * OtherPropertyIncome
+        * TaxesOnProductionAndImports
+        * LaborIncome
+        * Output
+        * TotalValueAdded
+    * International industry set options include
+        * Employment
+        * EmployeeCompensation
+        * GrossOperatingSurplus
+        * OtherTaxesOnProductionNetOfSubsidies
+        * LaborIncome
+        * Output
+        * TotalValueAdded
+#### Response
+The API response will provide a CSV response with following fields:
+* Display Code
+* Display Description
+* Indirect Multiplier Sum
+* Type I Multiplier
+* Induced Multiplier
+* Type SAM Multiplier
+#### Endpoint
+**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-multipliers-summary?hashId={{hashId}}&effectType={{effectType}}**
+
+
 ### Region Multipliers Per Million Effects (Get)
 This endpoint provides per million of output effects by a given type and industry as found in the Regions > Multipliers > Per Million Effects tables in the IMPLAN application.
 #### Parameters
 * Bearer Token
 * AggregationSchemeId (In URL)
 * HashId or URID (required)
-* EffectType (Employment, EmployeeCompensation, ProprietorIncome, OtherPropertyIncome, TaxesOnProductionAndImports, LaborIncome, Output, or TotalValueAdded)
+* EffectType
+    * Options include
+        * Employment
+        * EmployeeCompensation
+        * ProprietorIncome
+        * OtherPropertyIncome
+        * TaxesOnProductionAndImports
+        * LaborIncome
+        * Output
+        * TotalValueAdded
+    * International industry set options include
+        * Employment
+        * EmployeeCompensation
+        * GrossOperatingSurplus
+        * OtherTaxesOnProductionNetOfSubsidies
+        * LaborIncome
+        * Output
+        * TotalValueAdded
 #### Response
 The API response will provide a CSV response with following fields:
 * Display Code
@@ -1149,6 +1339,22 @@ The API response will provide a CSV response with following fields:
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-industry-commodity-demand/{{IndustryCode}}?hashId={{hashId}}**
 
 
+### Region Industry Value Added (Get)
+This endpoint provides industry value added data for a given industry as found in the Regions > Social Accounts > Balance Sheets > Industry Balance Sheets > Value Added table in the IMPLAN application.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* IndustryCode (In URL)
+* HashId or URID (required)
+#### Response
+The API response will provide a CSV response with following fields:
+* Description
+* Value Added Coefficient
+* Value Added
+#### Endpoint
+**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-industry-value-added/{{IndustryCode}}?hashId={{hashId}}**
+
+
 ### Region Industry Institutional Production (Get)
 This endpoint provides commodity production data for a given commodity by industries and institutions as found in the Regions > Social Accounts > Balance Sheets > Commodity Balance Sheet > Industry-Institutional Production table in the IMPLAN application.
 #### Parameters
@@ -1204,15 +1410,21 @@ The API response will provide a CSV response with following fields:
 #### Endpoint
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-commodity-institutional-demand/{{CommodityCode}}?hashId={{hashId}}**
 
+---
+## Region Institution Industry Demand
+- This endpoint provides institution industry demand data as found in the `Regions > Industry Accounts > Reports > Institution Industry Demand` table in the IMPLAN application
+- This endpoint works for United States, Canadian, and International Industry Sets so long as an appropriate Aggregation Scheme is used alongside the region's HashId
 
-### Region Institution Industry Demand (Get)
-This endpoint provides institution industry demand data as found in the Regions > Industry Accounts > Reports > Institution Industry Demand table in the IMPLAN application.
-#### Parameters
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId or URID (required)
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-institution-industry-demand?hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-institution-industry-demand?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-institution-industry-demand?userModelId={{userModelId}}`
+- `aggregationSchemeId` - The Aggregation Scheme for the Region
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
+
 #### Response
-The API response will provide a CSV response with following fields:
+- The API response will provide a CSV response with following fields:
 * Code
 * Description
 * Household Demand
@@ -1222,8 +1434,29 @@ The API response will provide a CSV response with following fields:
 * Inventory
 * Domestic Exports
 * Foreign Exports
+
+
+---
+### Region Industry Output/Outlay Summary (Get)
+This endpoint provides industry output/outlay data as found in the Regions > Industry Accounts > Reports > Industry Output/Outlay Summary table in the IMPLAN application.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId or URID (required)
+#### Response
+The API response will provide a CSV response with following fields:
+* Display Code
+* Display Description
+* Total Outlay
+* Intermediate Outlay
+* Institutional Outlay
+* Intermediate Imports
+* Value Added
+* Total Output
+* Intermediate Output
+* Final Demand
 #### Endpoint
-**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-institution-industry-demand?urid={{urid}}**
+**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-industry-output-outlay-summary?urid={{urid}}**
 
 
 ### Region General Algebraic Modeling System Files (Get)
@@ -1236,6 +1469,18 @@ This endpoint provides a zip file containing .dat files for use in GAMS systems.
 The API response will provide a zip file containing multiple .dat files.
 #### Endpoint
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/RegionGeneralAlgebraicModeling?hashId={{hashId}}**
+
+
+### Region General Algebraic Modeling System Single File (Get)
+This endpoint provides a single .gms file for use in GAMS systems.
+#### Parameters
+* Bearer Token
+* AggregationSchemeId (In URL)
+* HashId or URID (required)
+#### Response
+The API response will provide a .gms file.
+#### Endpoint
+**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-general-algebraic-modeling-single-file?hashId={{hashId}}**
 
 
 ### Region Industry Occupation Detail (Get)
@@ -1366,29 +1611,72 @@ The API response will provide a CSV response with the following fields (per envi
 #### Endpoint
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/EnvironmentDetail?hashId={{hashId}}**
 
+---
+## Region Detail IxI SAM
+- This endpoint provides a zipped CSV file containing a region's IxI SAM output, the same as `Region Details > Industry Accounts > IxI Social Accounting Matrix > Export Detail IxI SAM`
+- This endpoint works for United States, Canadian, and International Industry Sets so long as an appropriate Aggregation Scheme is used alongside the region's HashId
 
-### Region Detail IxI SAM (GET)
-This endpoint provides a zipped CSV file containing a region's IxI SAM.
-#### Parameters
-* AggregationSchemeId (In URL)
-* HashId or URID (required; query parameter)
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam??hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam??userModelId={{userModelId}}`
+- `aggregationSchemeId` - The Aggregation Scheme for the Region
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
+
 #### Response
-A zipped CSV file.
-#### Endpoint
-**GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam?urid={{urid}}**
+- A zipped CSV file
 
 
-### Region Detail IxC SAM (GET)
-This endpoint provides a zipped CSV file containing a region's IxC SAM.
-#### Parameters
-* AggregationSchemeId (In URL)
-* HashId or URID (required; query parameter)
+---
+## Region Detail IxC SAM
+- This endpoint provides a zipped CSV file containing a Region's IxC SAM output, the same as `Region Details > Social Accounts > IxC Social Accounting Matrix > Export Detail IxC SAM`
+- This endpoint works for United States, Canadian, and International Industry Sets so long as an appropriate Aggregation Scheme is used alongside the region's HashId
+
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxCSam?hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxCSam?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxCSam?userModelId={{userModelId}}`
+- `aggregationSchemeId` - The Aggregation Scheme for the Region
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
+
 #### Response
-A zipped CSV file.
-#### Endpoint
-**GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxCSam?urid={{urid}}**
+- A zipped CSV file
 
+---
+## Region Aggregate IxI SAM
+- This endpoint provides a CSV file containing a Region's Aggregate IxI SAM output, the same as `Region Details > Industry Accounts > IxI Social Accounting Matrix > Aggregate IxI SAM`
 
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixi-sam?hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixi-sam?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixi-sam?userModelId={{userModelId}}`
+- `aggregationSchemeId` - The Aggregation Scheme for the Region
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
+
+#### Response
+- A CSV file with the following columns:
+	- PayingCode, PayingDescription, ReceivingCode, ReceivingDescription, Value
+
+---
+## Region Aggregate IxC SAM
+- This endpoint provides a CSV file containing a Region's Aggregate IxC SAM output, the same as `Region Details > Social Accounts > IxC Social Accounting Matrix > Aggregate IxC SAM`
+
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixc-sam?hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixc-sam?urid={{urid}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-aggregate-ixc-sam?userModelId={{userModelId}}`
+- `aggregationSchemeId` - The Aggregation Scheme for the Region
+- One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
+    - This is the ID for the Region
+
+#### Response
+- A CSV file with the following columns:
+	- PayingCode, PayingDescription, ReceivingCode, ReceivingDescription, Value
+
+---
 # Impacts
 After the authentication token, and responses have been collected from the API endpoints above, you may then proceed with running an impact analysis. The starting point for this is to create a project.  
 
@@ -1559,6 +1847,9 @@ An array of event types (string) to use with Get Project Specification and Creat
 * IndustrySpendingPattern
 * InstitutionalSpendingPattern
 * IndustryImpactAnalysis
+* CustomIndustryImpactAnalysis
+* InternationalIndustryImpactAnalysis
+* CustomInternationalIndustryImpactAnalysis
 #### Endpoint
 **POST {{api_domain}}api/v1/impact/project/{{projectGUID}}/eventtype**
 
@@ -1659,7 +1950,7 @@ A list of specifications data containing the following fields:
 - `output` (number, optional except for `IndustryOutput` events) - The total output value for this Event
 - `employment` (number, optional except for `IndustryEmployment` events) - The total number of people employed
 - `employeeCompensation` (number, optional except for `IndustryEmployeeCompensation` events) - The total compensation paid to non-proprietor employees
-- `proprietorIncome` (number, optional except for `IndustryProprietorIncome` events) - The total compensation paid to proprietors
+- `proprietorIncome` (number, optional except for `IndustryProprietorIncome` events) - The total compensation paid to proprietors - Not applicable to International industry sets
 - `tags` (array of text, optional): Additional tags to associate with this Event
 
 ###### Additional Request Parameters
@@ -1690,6 +1981,29 @@ A list of specifications data containing the following fields:
     "SpendingPatternValueType": "IntermediateExpenditure",
     "SpendingPatternCommodities": null,
     "Tags": ["Testing"]
+}
+```
+
+###### Custom International Industry Impact Analysis Json
+```json
+{
+  "impactEventType": "CustomInternationalIndustryImpactAnalysis",
+  "title": "CustomInternationalIndustryImpactAnalysis_API_Example",
+  "SpendingPatternDatasetId": 95,
+  "SpecificationCode" : 21089,
+  "IntermediateInputs": 5000000,
+  "TotalEmployment": 24,
+  "EmployeeCompensation": 4000000,
+  "WageAndSalaryEmployment" : 24,
+  "TotalLaborIncome" : 4000000,
+  "GrossOperationSurplus" : 500000,
+  "OtherTaxOnProductionAndImports" : 500000,
+  "TotalOutput": 10000000,
+  "LocalPurchasePercentage": 1,
+  "IsSam": false,
+  "SpendingPatternValueType": "IntermediateExpenditure",
+  "Tags": ["Testing"],
+  "spendingPatternCommodities": null
 }
 ```
 
@@ -2242,35 +2556,41 @@ The API response when the analysis is complete will provide a CSV response with 
 #### Example with Filters
 GET {{api_domain}}api/v1/impact/results/SummaryEconomicIndicators/{{runId}}?year=2023&impacts=Indirect
 
+---
+## Summary Taxes Export
+- This endpoint will provide Summary Tax Results from an Impact Analysis, and works with US, Canadian, and International projects
 
-## Summary Taxes Export (Get)
-This endpoint will provide Summary Tax Results from an Impact Analysis
-#### Parameters
-* Bearer Token
-* Analysis Run Id 
-* Optional Filter Parameters
-  * Filter Types
-    * Year (dollar year)
-    * Regions
-    * Groups
-    * Events
-    * EventTags
+#### Request
+`GET {{api_domain}}api/v1/impact/results/SummaryTaxes/{{runId}}`
+- `RunId` is the last successful Run Id from running the Impacts for a Project
+- Optional filters can be included in the path with `?{{name}}={{value}}` and `&{{name}}={{value}}` as usual:
+    - `year` (number): The dollar year for the Report
+    - `regions` (list of strings): Filter for which Regions to include in the Report
+    - `impacts` (list of Impact Type) [`Direct`, `Indirect`, `Induced`]
+    - `groups` (list of string): Which Groups to include
+    - `events` (list of string): Which Events to include
+    - `eventTags` (list of string): A filter for events to only include ones that have any of the specified Tags
+
 #### Response
-The API response when the analysis is complete will provide a CSV response with following fields:
-* GroupName
-* EventName
-* ModelName
-* Impact
-* SubCountyGeneral
-* SubCountySpecialDistricts
-* County
-* State
-* Federal
-* Total
-#### Endpoint
-**GET {{api_domain}}api/v1/impact/results/SummaryTaxes/{{runId}}**
-#### Example with Filters
-**GET {{api_domain}}api/v1/impact/results/SummaryTaxes/{{runId}}?year=2023&impacts=Indirect**
+- The API response when the analysis is complete will provide a CSV File response
+- For US and Canadian projects, the CSV will include the following columns:
+    - GroupName
+    - EventName
+    - ModelName
+    - Impact
+    - SubCountyGeneral
+    - SubCountySpecialDistricts
+    - County
+    - State
+    - Federal
+    - Total
+- For International projects, the CSV will include these columns:
+    - GroupName
+    - EventName
+    - ModelName
+    - Impact
+    - Total
+
 
 
 ## Estimated Growth Percentage

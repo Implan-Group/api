@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "dcb87d27-712e-4108-a93c-2ee49bfc0e8a",
+		"_postman_id": "eacf352c-ef68-437b-af0f-0d3a2054c6d4",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28583816"
+		"_exporter_id": "12725670"
 	},
 	"item": [
 		{
@@ -1183,6 +1183,40 @@
 							"response": []
 						},
 						{
+							"name": "Region Overview Industries - International",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/intl/:aggregationSchemeId/RegionOverviewIndustries?hashId=Yzaw1qvYVQ",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										"intl",
+										":aggregationSchemeId",
+										"RegionOverviewIndustries"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": "Yzaw1qvYVQ"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "13"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Study Area Data General Information",
 							"request": {
 								"method": "GET",
@@ -1242,6 +1276,40 @@
 										{
 											"key": "aggregationSchemeId",
 											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Study Area Data Industry Detail - International",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/intl/:aggregationSchemeId/StudyAreaDataIndustryDetail?hashId=alDQwzY93a",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										"intl",
+										":aggregationSchemeId",
+										"StudyAreaDataIndustryDetail"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": "alDQwzY93a"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "13"
 										}
 									]
 								}
@@ -1310,6 +1378,43 @@
 										{
 											"key": "industryCode",
 											"value": "15"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Multipliers Summary",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-multipliers-summary?hashId=&effectType=Output",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-multipliers-summary"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": ""
+										},
+										{
+											"key": "effectType",
+											"value": "Output"
 										}
 									],
 									"variable": [
@@ -1676,6 +1781,54 @@
 							"response": []
 						},
 						{
+							"name": "Region Industry Value Added",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-industry-value-added/:industryCode?hashId=",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-industry-value-added",
+										":industryCode"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": ""
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										},
+										{
+											"key": "industryCode",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Region Industry Institutional Production",
 							"request": {
 								"method": "GET",
@@ -1863,6 +2016,49 @@
 							"response": []
 						},
 						{
+							"name": "Region Industry Output/Outlay Summary",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-industry-output-outlay-summary?hashId=",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-industry-output-outlay-summary"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": ""
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Region General Algebraic Modeling System Files",
 							"event": [
 								{
@@ -1905,6 +2101,61 @@
 										{
 											"key": "hashId",
 											"value": "alDQwzY93a"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region General Algebraic Modeling System Single File",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-general-algebraic-modeling-single-file?hashId=",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-general-algebraic-modeling-single-file"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": ""
 										}
 									],
 									"variable": [
@@ -2392,6 +2643,93 @@
 										{
 											"key": "aggregationSchemeId",
 											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Aggregate IxC SAM",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/study-area-data-aggregate-ixc-sam?hashId=",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"study-area-data-aggregate-ixc-sam"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": ""
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Aggregate IxI SAM",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/study-area-data-aggregate-ixi-sam",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"study-area-data-aggregate-ixi-sam"
+									],
+									"query": [
+										{
+											"key": "urid",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "hashId",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "userModelId",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": ""
 										}
 									]
 								}
@@ -3310,6 +3648,42 @@
 							"response": []
 						},
 						{
+							"name": "Create International Industry Impact Analysis Event",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"impactEventType\": \"InternationalIndustryImpactAnalysis\",\r\n    \"IndustryCode\" : 5,\r\n    \"IntermediateInputs\": 5000000,\r\n    \"TotalEmployment\": 24,\r\n    \"EmployeeCompensation\": 4000000,\r\n    \"WageAndSalaryEmployment\" : 24,\r\n    \"TotalLaborIncome\" : 4000000,\r\n    \"GrossOperationSurplus\" : 500000,\r\n    \"OtherTaxOnProductionAndImports\" : 500000,\r\n    \"TotalOutput\": 10000000,\r\n    \"title\": \"InternationalIndustryImpactAnalysis_api\",\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternDatasetId\": 95,\r\n    \"SpendingPatternRegionUrid\": 1861222,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"Tags\": [],\r\n    \"SpendingPatternCommodities\": []\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"project",
+										":projectGuid",
+										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Create Impact - Custom Industry Impact Analysis",
 							"request": {
 								"method": "POST",
@@ -3317,6 +3691,42 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n    \"impactEventType\": \"CustomIndustryImpactAnalysis\",\r\n    \"title\": \"CustomIndustryImpactAnalysis_API_Example\",\r\n    \"SpendingPatternDatasetId\": 96,\r\n    \"SpecificationCode\" : 21059,\r\n    \"WageAndSalaryEmployment\" : 10,\r\n    \"ProprietorEmployment\" : 2,\r\n    \"TotalEmployment\": 12,\r\n    \"EmployeeCompensation\": 40000,\r\n    \"ProprietorIncome\": 100000,\r\n    \"TotalLaborIncome\" : 140000,\r\n    \"TaxOnProductionAndImports\" : 2300,\r\n    \"OtherPropertyIncome\" : 3400,\r\n    \"IntermediateInputs\": 5600,    \r\n    \"TotalOutput\": null,\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"SpendingPatternCommodities\": null,\r\n    \"Tags\": [\"Testing\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_domain}}api/v1/impact/project/:projectGuid/event",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"impact",
+										"project",
+										":projectGuid",
+										"event"
+									],
+									"variable": [
+										{
+											"key": "projectGuid",
+											"value": "{{project_guid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Impact - Custom International Industry Impact Analysis",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"impactEventType\": \"CustomInternationalIndustryImpactAnalysis\",\r\n    \"title\": \"CustomInternationalIndustryImpactAnalysis_API_Example\",\r\n    \"SpendingPatternDatasetId\": 95,\r\n    \"SpecificationCode\" : 21089,\r\n    \"IntermediateInputs\": 5000000,\r\n    \"TotalEmployment\": 24,\r\n    \"EmployeeCompensation\": 4000000,\r\n    \"WageAndSalaryEmployment\" : 24,\r\n    \"TotalLaborIncome\" : 4000000,\r\n    \"GrossOperationSurplus\" : 500000,\r\n    \"OtherTaxOnProductionAndImports\" : 500000,\r\n    \"TotalOutput\": 10000000,\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"Tags\": [\"Testing\"],\r\n    \"spendingPatternCommodities\": []\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
