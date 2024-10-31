@@ -36,44 +36,6 @@ We have created a Postman collection with reference calls per section in this do
 [https://github.com/Implan-Group/api/blob/main/IMPLAN-API.postman_collection.json](https://github.com/Implan-Group/api/blob/main/IMPLAN-API.postman_collection.json) 
 
 
-## Development Variables
-The following variables can be used while developing against the IMPLAN API. Following development, please transition to Production Variables below.
-
-<table>
-  <tr>
-   <td>Item
-   </td>
-   <td>Reference Value
-   </td>
-   <td>Development Value
-   </td>
-  </tr>
-  <tr>
-   <td>API Domain 
-   </td>
-   <td>{{api_domain}}
-   </td>
-   <td>https://api.implan.com/beta/
-   </td>
-  </tr>
-  <tr>
-   <td>User Email
-   </td>
-   <td>{{email}}
-   </td>
-   <td>Same as beta-app.implan.com
-   </td>
-  </tr>
-  <tr>
-   <td>User Password
-   </td>
-   <td>{{password}}
-   </td>
-   <td>Same as beta-app.implan.com
-   </td>
-  </tr>
-</table>
-
 ## Production Variables
 
 <table>

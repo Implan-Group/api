@@ -5963,7 +5963,18 @@
 			"name": "Auth",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "apiDomain",
+						"value": "",
+						"disabled": true
+					},
+					{
+						"key": "appDomain",
+						"value": "",
+						"disabled": true
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{  \"username\": \"\",   \"password\": \"\" }"

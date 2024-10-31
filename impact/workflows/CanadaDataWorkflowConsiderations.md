@@ -7,7 +7,7 @@ This document describes the basic IMPLAN workflow as it relates the IMPLAN's Imp
 Please note that all API endpoint requests presented in this document require a bearer token. Please see the [authentication](https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication---retrieving-bearer-access-token) section of the ReadMe to review authentication steps.
 
 ### Domain References
-See the [Development Variables](https://github.com/Implan-Group/api/blob/main/impact/readme.md#development-variables) section of the ReadMe for information regarding the `{{api_domain}}` variables used in this document.
+See the [Production Variables](https://github.com/Implan-Group/api/blob/main/impact/readme.md#production-variables) section of the ReadMe for information regarding the `{{api_domain}}` variables used in this document.
 
 ### Data Limitations
 Endpoints that combine IMPLAN's economic data with other data are limited to only those datasets to which those other data are available. For Canadian data, that means API endpoints reporting the following types of data are not available:
