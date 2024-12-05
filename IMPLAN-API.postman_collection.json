@@ -5987,6 +5987,13 @@
 							"path": [
 								"v1",
 								"industries"
+							],
+							"query": [
+								{
+									"key": "datasetId",
+									"value": "98",
+									"description": "Optional DatasetId. If not provided, the default list of industries is returned (528 Industry Scheme)"
+								}
 							]
 						}
 					},
