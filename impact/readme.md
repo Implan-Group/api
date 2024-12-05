@@ -1083,13 +1083,17 @@ The API response will provide a CSV response with following fields:
 
 ---
 ### Study Area Industry Summary (Get)
-This endpoint provides regional industry summary data equivalent to the Region Industries Summary table found in Regions > Study Area Data > Industry Summary in the IMPLAN application.
-#### Parameters
-* Bearer Token
-* AggregationSchemeId (In URL)
-* HashId or URID (required)
+- This endpoint provides regional industry summary data equivalent to the Region Industries Summary table found in Regions > Study Area Data > Industry Summary in the IMPLAN application.
+ 
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustrySummary?hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustrySummary?urid={{urid}}`
+- `AggregationSchemeId` - The Aggregation scheme for the Region
+- One of `hashId` or `urid` _must_ be specified alongside this request
+    - This is the ID for the Region
+
 #### Response
-The API response will provide a CSV response with following fields for all industries:
+- The API response will provide a CSV response with following fields for all industries:
 * Industry Code
 * Description
 * Total Employment
@@ -1097,10 +1101,33 @@ The API response will provide a CSV response with following fields for all indus
 * Total Intermediate Inputs
 * Total Value Added
 * Labor Income
-#### Endpoint
-**GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustrySummary?hashId={{hashId}}**
 
+---
+### Area Demographics (Get)
+This endpoint provides regional demographic data equivalent to the `Area Demographics` dashboard in `Regions > Study Area Data > Area Demographics `in the IMPLAN application.
+#### Request
+`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/study-area-data-area-demographics?hashId={{hashId}}`
+- `AggregationSchemeId` - The Aggregation scheme for the Region
+- `hashId` _must_ be specified alongside this request
+    - This is the ID for the Region
+#### Response
+- The API response will provide a zip file containing a csv file per demographic category. CSV files returned are dictated by the level of demographic data available for the dataset. Examples include:
+* Land Area and Population
+* Households
+* Age and Sex
+* Language Spoken at Home
+* Race and Ethnicity
+* Regional Employee Wage & Salary Income by Place of Residence
+* Resident Wage & Salary Income by Place of Work
+* Housing: Occupancy and Vacancy
+* Labor Force Participation Rate: By Race
+* Labor Force Participation Rate: By Age
+* Unemployment Rate: By Race
+* Unemployment Rate: By Age
+* Educational Attainment Ages 18-24
+* Educational Attainment Ages 25+
 
+---
 ### Region Multipliers Detailed (Get)
 This endpoint provides detailed multipliers by a given type and industry as found in the Regions > Multipliers > Detailed Multipliers tables in the IMPLAN application.
 #### Parameters

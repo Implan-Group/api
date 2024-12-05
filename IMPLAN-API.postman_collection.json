@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "eacf352c-ef68-437b-af0f-0d3a2054c6d4",
+		"_postman_id": "3e3bda1f-a6bb-451b-a46a-d09e1707c7fb",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "12725670"
@@ -1346,6 +1346,41 @@
 										}
 									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "Area Demographics",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/study-area-data-area-demographics?hashId=EgxY1DPnxv",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"study-area-data-area-demographics"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": "EgxY1DPnxv",
+											"description": "Required"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								},
+								"description": "Returns a zip file containing a csv file per demographic category. CSV files returned are dictated by the level of demographic data available for the dataset."
 							},
 							"response": []
 						},
