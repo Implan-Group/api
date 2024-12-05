@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "eacf352c-ef68-437b-af0f-0d3a2054c6d4",
+		"_postman_id": "6d11c4f9-1df2-4b13-b2a6-2fe31d0ef80d",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "12725670"
@@ -5945,13 +5945,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{api_domain}}api/v1/industries",
+							"raw": "{{api_domain}}api/v1/industries?datasetId=98",
 							"host": [
 								"{{api_domain}}api"
 							],
 							"path": [
 								"v1",
 								"industries"
+							],
+							"query": [
+								{
+									"key": "datasetId",
+									"value": "98",
+									"description": "Optional DatasetId. If not provided, the default list of industries is returned (528 Industry Scheme)"
+								}
 							]
 						}
 					},
