@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "ee2b8187-1840-47fe-b3c1-19275cb4bb4e",
+		"_postman_id": "65d3cad5-9086-4219-9496-739cab148ddf",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28583816"
+		"_exporter_id": "12725670"
 	},
 	"item": [
 		{
@@ -1451,6 +1451,110 @@
 							"response": []
 						},
 						{
+							"name": "Study Area Data Institution Commodity Demand - US",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/study-area-data-institution-commodity-demand?hashId=alDQwzY93a",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"study-area-data-institution-commodity-demand"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": "alDQwzY93a",
+											"description": "Required"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Study Area Data Institution Commodity Demand - Canada",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/study-area-data-institution-commodity-demand/can?hashId=5Oadj27mVZ",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"study-area-data-institution-commodity-demand",
+										"can"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": "5Oadj27mVZ",
+											"description": "Required"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "12"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Study Area Data Institution Commodity Demand - International",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/study-area-data-institution-commodity-demand/intl?hashId=7pb5YBrobM",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"study-area-data-institution-commodity-demand",
+										"intl"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": "7pb5YBrobM",
+											"description": "Required"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "13"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Area Demographics",
 							"request": {
 								"method": "GET",
@@ -1862,6 +1966,45 @@
 										{
 											"key": "aggregationSchemeId",
 											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Region Industry Commodity Production",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/region-industry-commodity-production/:industryCode?hashId=yDxXo1ZpVJ",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"region-industry-commodity-production",
+										":industryCode"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": "yDxXo1ZpVJ",
+											"description": "Required"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "14"
+										},
+										{
+											"key": "industryCode",
+											"value": "1"
 										}
 									]
 								}
@@ -5666,7 +5809,7 @@
 					"response": []
 				},
 				{
-					"name": "Summary Taxes Export",
+					"name": "Summary Taxes Export - US",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -5680,6 +5823,124 @@
 								"impact",
 								"results",
 								"SummaryTaxes",
+								":impactRunId"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2023"
+								},
+								{
+									"key": "regions",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "impacts",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "groups",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "events",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "eventTags",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Summary Taxes Export - Canada",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_domain}}api/v1/impact/results/SummaryTaxes/can/:impactRunId?year=2023",
+							"host": [
+								"{{api_domain}}api"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"results",
+								"SummaryTaxes",
+								"can",
+								":impactRunId"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2023"
+								},
+								{
+									"key": "regions",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "impacts",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "groups",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "events",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "eventTags",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "impactRunId",
+									"value": "{{impact_run_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Summary Taxes Export - International",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_domain}}api/v1/impact/results/SummaryTaxes/intl/:impactRunId?year=2023",
+							"host": [
+								"{{api_domain}}api"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"results",
+								"SummaryTaxes",
+								"intl",
 								":impactRunId"
 							],
 							"query": [
