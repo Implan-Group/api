@@ -1086,17 +1086,25 @@ The API response will provide a CSV response with following fields:
 ## Study Area - Industry Averages
 
 - These endpoint provide regional Industry Averages data equivalent to the Region Industry Averages table found in `Regions > Study Area Data > Industry Averages` in the IMPLAN application.
-- These endpoints may be used for US, Canadian, and International Models
 
 #### Request
 
-`GET {{api_domain}}api/v1/regions/export/industry-averages/{{modelId}}`
+- `GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/industry-averages?hashId={{hashId}}`
+  - This endpoint is used for US regions
 
-- This endpoint is used for US and Canadian Models
 
-`GET {{api_domain}}api/v1/regions/export/industry-averages/intl/{{modelId}}`
+- `GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/industry-averages/can?hashId={{hashId}}`
+  - This endpoint is used for Canadian regions
 
-- This endpoint is used for International Models
+- `GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/industry-averages/intl?hashId={{hashId}}`
+
+  - This endpoint is used for International regions
+
+    
+
+- `aggregationSchemeId` - The Aggregation Scheme for the Region
+
+- `hashId` - The Region's HashId
 
 #### Response
 

@@ -1283,12 +1283,12 @@
 							"response": []
 						},
 						{
-							"name": "Industry Averages - US/CAN",
+							"name": "Industry Averages - US",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{api_domain}}api/v1/regions/export/industry-averages/:modelId",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/industry-averages?hashId=9pbP1nM0VN",
 									"host": [
 										"{{api_domain}}api"
 									],
@@ -1296,13 +1296,53 @@
 										"v1",
 										"regions",
 										"export",
-										"industry-averages",
-										":modelId"
+										":aggregationSchemeId",
+										"industry-averages"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": "9pbP1nM0VN"
+										}
 									],
 									"variable": [
 										{
-											"key": "modelId",
-											"value": "17034"
+											"key": "aggregationSchemeId",
+											"value": "14"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Industry Averages - Canada",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/industry-averages/can?hashId=Z6azL2POVj",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										":aggregationSchemeId",
+										"industry-averages",
+										"can"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": "Z6azL2POVj"
+										}
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "12"
 										}
 									]
 								}
@@ -1315,7 +1355,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{api_domain}}api/v1/regions/export/industry-averages/intl/:modelId",
+									"raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/industry-averages/intl?hashId=Yzaw1qvYVQ",
 									"host": [
 										"{{api_domain}}api"
 									],
@@ -1323,14 +1363,20 @@
 										"v1",
 										"regions",
 										"export",
+										":aggregationSchemeId",
 										"industry-averages",
-										"intl",
-										":modelId"
+										"intl"
+									],
+									"query": [
+										{
+											"key": "hashId",
+											"value": "Yzaw1qvYVQ"
+										}
 									],
 									"variable": [
 										{
-											"key": "modelId",
-											"value": "15193"
+											"key": "aggregationSchemeId",
+											"value": "13"
 										}
 									]
 								}
@@ -6095,7 +6141,7 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"pm.request.headers.add({key: 'Authorization', value: 'Bearer {place token here and remove curly brackets}' })\""
+					"pm.request.headers.add({key: 'Authorization', value: 'Bearer {place token here and remove curly brackets}' })"
 				]
 			}
 		},
