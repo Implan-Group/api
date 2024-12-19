@@ -34,14 +34,14 @@ def main():
     logging.info(f"Bearer Token used: {bearer_token}")
 
     # Create Project Workflow
-    # project_id = CreateProjectWorkflow.examples(bearer_token)
-    # RunImpactAnalysisWorkflow.ProjectId = project_id
-    # RunImpactAnalysisWorkflow.examples(bearer_token)
+    project_id = CreateProjectWorkflow.examples(bearer_token)
+    RunImpactAnalysisWorkflow.ProjectId = project_id
+    RunImpactAnalysisWorkflow.examples(bearer_token)
 
     # Regional Workflow
-    # RegionalWorkflow.examples(bearer_token)
+    RegionalWorkflow.examples(bearer_token)
 
-    MultiEventToMultiGroupWorkflow.examples(bearer_token)
+    # MultiEventToMultiGroupWorkflow.examples(bearer_token)
 
     # Combined Region Workflow
     # CombinedRegionWorkflow.examples(bearer_token)

@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "3e3bda1f-a6bb-451b-a46a-d09e1707c7fb",
+		"_postman_id": "ee2b8187-1840-47fe-b3c1-19275cb4bb4e",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12725670"
+		"_exporter_id": "28583816"
 	},
 	"item": [
 		{
@@ -1276,6 +1276,61 @@
 										{
 											"key": "aggregationSchemeId",
 											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Industry Averages - US/CAN",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/industry-averages/:modelId",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										"industry-averages",
+										":modelId"
+									],
+									"variable": [
+										{
+											"key": "modelId",
+											"value": "17034"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Industry Averages - International",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_domain}}api/v1/regions/export/industry-averages/intl/:modelId",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"regions",
+										"export",
+										"industry-averages",
+										"intl",
+										":modelId"
+									],
+									"variable": [
+										{
+											"key": "modelId",
+											"value": "15193"
 										}
 									]
 								}
@@ -5980,7 +6035,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{api_domain}}api/v1/industries",
+							"raw": "{{api_domain}}api/v1/industries?datasetId=98",
 							"host": [
 								"{{api_domain}}api"
 							],
@@ -6040,7 +6095,7 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"pm.request.headers.add({key: 'Authorization', value: 'Bearer {place token here and remove curly brackets}' })"
+					"pm.request.headers.add({key: 'Authorization', value: 'Bearer {place token here and remove curly brackets}' })\""
 				]
 			}
 		},

@@ -1082,9 +1082,41 @@ The API response will provide a CSV response with following fields:
 - The final two columns will be named `Gross Operating Surplus` and `Other Taxes on Production Net of Subsidies` in the case of International, to more accurately reflect the data.
 
 ---
+
+## Study Area - Industry Averages
+
+- These endpoint provide regional Industry Averages data equivalent to the Region Industry Averages table found in `Regions > Study Area Data > Industry Averages` in the IMPLAN application.
+- These endpoints may be used for US, Canadian, and International Models
+
+#### Request
+
+`GET {{api_domain}}api/v1/regions/export/industry-averages/{{modelId}}`
+
+- This endpoint is used for US and Canadian Models
+
+`GET {{api_domain}}api/v1/regions/export/industry-averages/intl/{{modelId}}`
+
+- This endpoint is used for International Models
+
+#### Response
+
+- The API response will provide a CSV response with following fields for all industries:
+  - `Sort Field`
+  - `Display Code`
+  - `Description`
+  - `Industry Code`
+  - `Output per Worker`
+  - `Labor Income per Worker`
+  - `Employee Compensation per Employee`
+  - `Proprietor Income per Proprietor`
+    - This field does not exist for International Models
+  - `Taxes on Production and Imports per Worker`
+  - `Other Property Income per Worker`
+
+---
 ### Study Area Industry Summary (Get)
 - This endpoint provides regional industry summary data equivalent to the Region Industries Summary table found in Regions > Study Area Data > Industry Summary in the IMPLAN application.
- 
+
 #### Request
 `GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustrySummary?hashId={{hashId}}`
 `GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustrySummary?urid={{urid}}`
