@@ -1092,18 +1092,13 @@ The API response will provide a CSV response with following fields:
 - `GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/industry-averages?hashId={{hashId}}`
   - This endpoint is used for US regions
 
-
 - `GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/industry-averages/can?hashId={{hashId}}`
   - This endpoint is used for Canadian regions
 
 - `GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/industry-averages/intl?hashId={{hashId}}`
-
-  - This endpoint is used for International regions
-
-    
+  - This endpoint is used for International regions    
 
 - `aggregationSchemeId` - The Aggregation Scheme for the Region
-
 - `hashId` - The Region's HashId
 
 #### Response
@@ -1122,12 +1117,12 @@ The API response will provide a CSV response with following fields:
   - `Other Property Income per Worker`
 
 ---
-### Study Area Industry Summary (Get)
+## Study Area Industry Summary (Get)
 - This endpoint provides regional industry summary data equivalent to the Region Industries Summary table found in Regions > Study Area Data > Industry Summary in the IMPLAN application.
 
 #### Request
-`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustrySummary?hashId={{hashId}}`
-`GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustrySummary?urid={{urid}}`
+- `GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustrySummary?hashId={{hashId}}`
+- `GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/StudyAreaDataIndustrySummary?urid={{urid}}`
 - `AggregationSchemeId` - The Aggregation scheme for the Region
 - One of `hashId` or `urid` _must_ be specified alongside this request
     - This is the ID for the Region
@@ -1143,7 +1138,33 @@ The API response will provide a CSV response with following fields:
 * Labor Income
 
 ---
-### Area Demographics (Get)
+## Institution Commodity Demand (Get)
+This endpoint provides regional institution commodity demand data equivalent to the `Regions Institution Commodity Demand` dashboard in `Regions > Study Area Data > Institution Commodity Demand` in the IMPLAN application.
+#### Request
+- `GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-institution-commodity-demand?hashId={{hashId}}`
+    - This endpoint is used for US regions
+- `GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-institution-commodity-demand/can?hashId={{hashId}}`
+    - This endpoint is used for Canadian regions
+- `GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/study-area-data-institution-commodity-demand/intl?hashId={{hashId}}`
+    - This endpoint is used for International regions
+- `AggregationSchemeId` - The Aggregation scheme for the Region
+- `hashId` _must_ be specified alongside this request
+    - This is the ID for the Region
+#### Response
+- The API response will provide a csv response containing the following data:
+  - `Display Code`
+  - `Display Description`
+  - `Sum of Households`
+  - `Sum of Federal Government` (US Data Only)
+  - `Sum of State and Local Government` (US Data Only)
+  - `Government` (Canada and International Only)
+  - `Capital`
+  - `Inventory`
+  - `Domestic Exports`
+  - `Foreign Exports`
+
+---
+## Area Demographics (Get)
 This endpoint provides regional demographic data equivalent to the `Area Demographics` dashboard in `Regions > Study Area Data > Area Demographics `in the IMPLAN application.
 #### Request
 `GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/study-area-data-area-demographics?hashId={{hashId}}`
@@ -1384,6 +1405,26 @@ The API response will provide a CSV response with following fields (per commodit
 * Household Cateogry (one column per household category)
 #### Endpoint
 **GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/RegionHouseholdCommodityDemand?hashId={{hashId}}**
+
+
+---
+## Region Industry Commodity Production (Get)
+This endpoint provides commodity production data for a given industry as found in the `Regions > Social Accounts > Balance Sheets > Industry Balance Sheets > Commodity Production` table in the IMPLAN application.
+#### Request
+- `GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/region-industry-commodity-production/{{industryCode}}?hashId={{hashId}}`
+- `AggregationSchemeId` - The Aggregation scheme for the Region
+- `IndustryCode` - The industry specification code
+- `hashId` _must_ be specified alongside this request
+    - This is the ID for the Region
+#### Response
+- The API response will provide a csv response containing the following data:
+    - `Code`
+    - `Description`
+    - `Commodity Production`
+    - `Byproduct Coefficient`
+    - `Regional Market Share`
+
+---
 
 
 ### Region Industry Commodity Demand (Get)
@@ -2624,11 +2665,17 @@ The API response when the analysis is complete will provide a CSV response with 
 GET {{api_domain}}api/v1/impact/results/SummaryEconomicIndicators/{{runId}}?year=2023&impacts=Indirect
 
 ---
+
 ## Summary Taxes Export
-- This endpoint will provide Summary Tax Results from an Impact Analysis, and works with US, Canadian, and International projects
+- This endpoint will provide Summary Tax Results from an Impact Analysis, and works with US, Canadian, and International projects.
 
 #### Request
-`GET {{api_domain}}api/v1/impact/results/SummaryTaxes/{{runId}}`
+- `GET {{api_domain}}api/v1/impact/results/SummaryTaxes/{{runId}}`
+    - This endpoint is used for US regions
+- `GET {{api_domain}}api/v1/impact/results/SummaryTaxes/can/{{runId}}`
+    - This endpoint is used for Canadian regions
+- `GET {{api_domain}}api/v1/impact/results/SummaryTaxes/intl/{{runId}}`
+    - This endpoint is used for International regions
 - `RunId` is the last successful Run Id from running the Impacts for a Project
 - Optional filters can be included in the path with `?{{name}}={{value}}` and `&{{name}}={{value}}` as usual:
     - `year` (number): The dollar year for the Report
@@ -2640,7 +2687,7 @@ GET {{api_domain}}api/v1/impact/results/SummaryEconomicIndicators/{{runId}}?year
 
 #### Response
 - The API response when the analysis is complete will provide a CSV File response
-- For US and Canadian projects, the CSV will include the following columns:
+- For US projects, the CSV will include the following columns:
     - GroupName
     - EventName
     - ModelName
@@ -2651,13 +2698,26 @@ GET {{api_domain}}api/v1/impact/results/SummaryEconomicIndicators/{{runId}}?year
     - State
     - Federal
     - Total
+- For Canadian projects, the CSV will include the following columns:
+    - GroupName
+    - EventName
+    - ModelName
+    - Impact
+    - Federal
+    - ProvincialAndTerritorial
+    - Local
+    - Indigenous
+    - CanadaPensionPlan
+    - QuebecPensionPlan
+    - GeneralGovernmentsTotal 
+      - The General Governments Total is a summation of all the other listed sub tax category impacts, therefore the other tax values should never be added to the General Governments Total values. Results are not available in the sub tax categories for impacts run with Data Years 2020 and older.
 - For International projects, the CSV will include these columns:
     - GroupName
     - EventName
     - ModelName
     - Impact
     - Total
-
+---
 
 
 ## Estimated Growth Percentage
