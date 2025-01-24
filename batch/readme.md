@@ -346,7 +346,11 @@ The API method that will estimate economic impacts will be using the Industry Ou
     10. Taxes on Production and Imports
     11. Total Taxes
 
-**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/{{modelId}}/{{industryCode}}/{{outputEventValue}}**
+**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/{{modelId}}/{{industryCode}}/{{outputEventValue}}**  
+**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/{{industryCode}}/{{outputEventValue}}?urid={{urid}}**  
+**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/{{industryCode}}/{{outputEventValue}}?hashId={{hashId}}**  
+
+
 
 Will return results:
 
@@ -413,6 +417,18 @@ Will return results:
     "totalOfAllTaxes": 144976.63919041475
 
 }
+
+### NOTE: Due to variances in the underlying model structure, Canada and International models require the use of specific endpoints. Data returned will be in the same scheme as domestic U.S. data but with some changes to terminology.
+
+Canada:  
+**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/can/{{modelId}}/{{industryCode}}/{{outputEventValue}} FOR CANADA MODELS**  
+**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/can/{{industryCode}}/{{outputEventValue}}?urid={{urid}} FOR CANADA MODELS**  
+**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/can/{{industryCode}}/{{outputEventValue}}?hashId={{hashId}} FOR CANADA MODELS**  
+
+International:  
+**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/intl/{{modelId}}/{{industryCode}}/{{outputEventValue}} FOR INTERNATIONAL MODELS**  
+**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/intl/{{industryCode}}/{{outputEventValue}}?urid={{urid}} FOR INTERNATIONAL MODELS**  
+**GET https://{{api_domain}}/{{env}}/api/v1/impact/instant/intl/{{industryCode}}/{{outputEventValue}}?hashId={{hashId}} FOR INTERNATIONAL MODELS**  
 
 
 ## Batch Impact (Post)
