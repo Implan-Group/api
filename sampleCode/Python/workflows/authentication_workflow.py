@@ -33,7 +33,7 @@ class AuthenticationWorkflow(IWorkflow):
             username="",
             password=""
         )
-
+       
         # Retrieve the token
         bearer_token = Authentication.get_bearer_token(auth)
 
