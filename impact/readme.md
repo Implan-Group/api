@@ -873,8 +873,85 @@ This endpoint will allow a user to build a single combined region by providing t
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
+---
+
+# Regions - Build and Return
+<p>
+This endpoint allows a user to submit a list of Regional Identifiers.
+Any regions in the list that have not yet been built will be, and then the full list of hydrated [[Region Cards|RegionCards]] will be returned.
+</p>
+<p>
+Instead of using this endpoint, it is possible to pull down a full list of Regions and then submit only the ones that need to be built to the [[Build Regions|BuildRegions]] endpoint.
+</p>
+
+
+## ⬆️ Request(s)
+### `POST {api_domain}api/v1/region/build-and-return/{AggregationSchemeId}`
+- [[AggregationSchemeId|AggregationSchemes]] - Aggregation Scheme Id
+
+#### Request Body
+- Must include a list of the Regional Identifiers ([[HashIds|HashIds]] or [[Urids|Urids]]) for the Regions that need to be built and returned. 
+```json
+[
+    "p0aRdZl0VJ",
+    1905981
+]
+```
+
+
+## ⬇️ Response
+- The expected response is `json`
+
+### Example Response:
+```json
+[
+  {
+    "hashId": "wlx6e9WwVk",
+    "urid": 1905008,
+    "userModelId": null,
+    "modelId": 17026,
+    "description": "Marion County, OR",
+    "modelBuildStatus": "Complete",
+    "employment": 0.0,
+    "output": 0.0,
+    "valueAdded": 0.0,
+    "isCustomized": false,
+    "isCombined": false,
+    "regionType": "County",
+    "datasetId": 98,
+    "datasetDescription": "2023",
+    "parentRegionIds": [
+      {
+        "regionType": "Msa",
+        "hashId": "W1aQlLzoxj",
+        "urid": 1862706
+      },
+      {
+        "regionType": "State",
+        "hashId": "9pbP1nM0VN",
+        "urid": 1863644
+      }
+    ],
+    "isMrioAllowed": true,
+    "isCustomizable": true,
+    "isCombinable": true,
+    "hasAccess": true,
+    "hasAccessibleChildren": false,
+    "regionTypeDescription": "County",
+    "regionTypeSort": 3,
+    "geoId": "41047",
+    "congressionalSession": null
+  },
+  ...
+]
+```
+
+
+
+---
 
 ## Customizing Regions
+
 Regions can be customized using the endpoints provided below. For each type of customization, one endpoint will provide regional data that can be used for creating modifications and the other endpoint accepts the modification request.
 
 Note: a region must be built prior to making modifications.

@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "65d3cad5-9086-4219-9496-739cab148ddf",
+		"_postman_id": "e8dae3f0-923a-43bd-8776-1e395d9a769f",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12725670"
+		"_exporter_id": "28583816"
 	},
 	"item": [
 		{
@@ -1102,6 +1102,41 @@
 										{
 											"key": "aggregationSchemeId",
 											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Build and Return Regions",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    1905008,\r\n    1904551,\r\n    1904489,\r\n    1906963\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_domain}}api/v1/region/build-and-return/:aggregationSchemeId",
+									"host": [
+										"{{api_domain}}api"
+									],
+									"path": [
+										"v1",
+										"region",
+										"build-and-return",
+										":aggregationSchemeId"
+									],
+									"variable": [
+										{
+											"key": "aggregationSchemeId",
+											"value": "14"
 										}
 									]
 								}
