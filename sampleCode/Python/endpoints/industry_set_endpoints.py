@@ -21,7 +21,6 @@
 # SOFTWARE.
 
 import requests
-import logging
 
 class IndustrySet:
     def __init__(self, id_, description, default_aggregation_scheme_id=None, active_status=None, is_default=None, map_type_id=None, is_naics_compatible=False):
@@ -65,8 +64,3 @@ class IndustrySets:
             ) for item in data]
         else:
             response.raise_for_status()
-
-# Setup basic logging configuration
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-

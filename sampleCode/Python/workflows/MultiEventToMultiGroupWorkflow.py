@@ -1,39 +1,15 @@
-# MIT License
-
-# Copyright (c) 2023 IMPLAN
-
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
-#Have added creating project step in this file since create project workflow is not working
-from endpoints.Events import IndustryOutputEvent, HouseholdIncomeEvent
-from endpoints.Events.EventEndpoints import EventEndpoints
-from endpoints.Regions import RegionEndpoints,Region
-from endpoints.GroupEndpoints import Group, GroupEvent, GroupEndpoints
-from endpoints.IndustryCodeEndpoints import IndustryCodeEndpoints
-from endpoints.SpecificationEndpoints import SpecificationEndpoints
-from workflows.run_impact_analysis_workflow import RunImpactAnalysisWorkflow
-from workflows.iworkflow import IWorkflow
-from endpoints.ProjectEndpoints import Project, ProjectEndpoints
-from endpoints.AggregationSchemeEndpoints import AggregationSchemeEndpoints,AggregationScheme
-
 import datetime
-import uuid
+
+from endpoints.Events import IndustryOutputEvent, HouseholdIncomeEvent
+from endpoints.Events.event_endpoints import EventEndpoints
+from endpoints.group_endpoints import Group, GroupEvent, GroupEndpoints
+from endpoints.industry_code_endpoints import IndustryCodeEndpoints
+from endpoints.specification_endpoints import SpecificationEndpoints
+from workflows.RunImpactAnalysisWorkflow import RunImpactAnalysisWorkflow
+from workflows.iworkflow import IWorkflow
+from endpoints.project_endpoints import Project, ProjectEndpoints
+from endpoints.aggregation_scheme_endpoints import AggregationSchemeEndpoints
+from endpoints.Regions.region_endpoints import RegionEndpoints
 
 class MultiEventToMultiGroupWorkflow(IWorkflow):
     @staticmethod
@@ -126,7 +102,7 @@ class MultiEventToMultiGroupWorkflow(IWorkflow):
 
         # Now we need to create our Groups.
         # For this example, we're comparing the impacts of these Events on several different states
-        states = RegionEndpoints.RegionEndpoints.get_region_children(bearer_token, aggregation_scheme_id, dataset_id, region_type="State")
+        states = RegionEndpoints.get_region_children(bearer_token, aggregation_scheme_id, dataset_id, region_type="State")
         oregon = next(s for s in states if s.description == "Oregon")
         wisconsin = next(s for s in states if s.description == "Wisconsin")
         north_carolina = next(s for s in states if s.description == "North Carolina")
