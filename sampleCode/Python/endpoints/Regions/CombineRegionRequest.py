@@ -21,9 +21,9 @@
 # SOFTWARE.
 
 class CombineRegionRequest:
-    def __init__(self, description, hashIds, urids=None):
+    def __init__(self, description, hashids, urids=None):
         self.description = description
-        self.hash_ids = hashIds
+        self.hash_ids = hashids
         self.urids = urids if urids is not None else []
 
     def to_dict(self):

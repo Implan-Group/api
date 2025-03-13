@@ -53,16 +53,16 @@ class RegionEndpoints:
             response.raise_for_status()
  
     @staticmethod
-    def get_region_children(bearer_token, aggregation_scheme_id, dataset_id, hashIdOrUrid=None, regionType=None):
-        if hashIdOrUrid:
-            url = f"https://api.implan.com/api/v1/region/{aggregation_scheme_id}/{dataset_id}/{hashIdOrUrid}/children"
+    def get_region_children(bearer_token, aggregation_scheme_id, dataset_id, hashid_or_urid=None, region_type=None):
+        if hashid_or_urid:
+            url = f"https://api.implan.com/api/v1/region/{aggregation_scheme_id}/{dataset_id}/{hashid_or_urid}/children"
         else:
             url = f"https://api.implan.com/api/v1/region/{aggregation_scheme_id}/{dataset_id}/children"
        
         headers = {"Authorization": f"Bearer {bearer_token}"}
         params = {}
-        if regionType:
-            params["regionTypeFilter"] = regionType
+        if region_type:
+            params["regionTypeFilter"] = region_type
  
         response = requests.get(url, headers=headers, params=params)
        
@@ -87,7 +87,8 @@ class RegionEndpoints:
         else:
             print(f"Failed to get user regions: {response.status_code} - {response.text}")
             response.raise_for_status()
- 
+
+    @staticmethod
     def combine_regions(aggregation_scheme_id, payload, bearer_token):
         url = f"https://api.implan.com/api/v1/region/build/combined/{aggregation_scheme_id}"
         headers = {"Authorization": f"Bearer {bearer_token}"}

@@ -55,7 +55,7 @@ class CreateProjectWorkflow(IWorkflow):
 
         # Define the project with its required properties
         project = Project(
-            id=None,  # Initially None since it's a new project
+            id_=None,  # Initially None since it's a new project
             title=f"ProjectWorkflow - {datetime.datetime.now():%Y-%m-%dT%H:%M:%S}",
             aggregation_scheme_id=aggregation_scheme_id,
             household_set_id=household_set_id
@@ -89,7 +89,7 @@ class CreateProjectWorkflow(IWorkflow):
             title="Industry Output Event",
             industry_code=industry_code.code,
             output=100000,
-            id="00000000-0000-0000-0000-000000000000"
+            id_="00000000-0000-0000-0000-000000000000"
             # project_id="00000000-0000-0000-0000-000000000000"
         )
         # Set the project_id and impact_event_type attributes
@@ -112,7 +112,7 @@ class CreateProjectWorkflow(IWorkflow):
             is_sam=False,
             spending_pattern_dataset_id=87,
             spending_pattern_value_type="intermediateExpenditure",
-            id="00000000-0000-0000-0000-000000000000"
+            id_="00000000-0000-0000-0000-000000000000"
             # project_id="00000000-0000-0000-0000-000000000000"
         )
         # Set the project_id and impact_event_type attributes
@@ -140,7 +140,7 @@ class CreateProjectWorkflow(IWorkflow):
         dataset = next(d for d in datasets if d.description == "2022")
 
         # For this example, we're going to search through the Child Regions of the US for a particular state
-        state_regions = RegionEndpoints.get_region_children(bearer_token, aggregation_scheme_id, dataset.id, regionType="State")
+        state_regions = RegionEndpoints.get_region_children(bearer_token, aggregation_scheme_id, dataset.id, region_type="State")
         oregon_state_region = next(s for s in state_regions if s.description == "Oregon")
         oregon_state_hash_id = oregon_state_region.hash_id
 
@@ -150,20 +150,20 @@ class CreateProjectWorkflow(IWorkflow):
 
         logging.info(f"Industry Impact Analysis Event: {industry_impact_analysis_event.to_dict()}")
 
-        industry_output_eventID = industry_output_event.id
-        industry_impact_analysis_eventID = industry_impact_analysis_event.id
+        industry_output_event_id = industry_output_event.id
+        industry_impact_analysis_event_id = industry_impact_analysis_event.id
 
         # Define the group
         group = Group(
             title="Sample Group",
-            id="00000000-0000-0000-0000-000000000000", 
-            projectId=project.id,
-            hashId=oregon_state_hash_id,
-            datasetId=dataset.id,
-            dollarYear=2024,
-            groupEvents=[
-                GroupEvent(eventId = industry_output_eventID, scalingFactor=1.0),
-                GroupEvent(eventId = industry_impact_analysis_eventID, scalingFactor=1.0)
+            id_="00000000-0000-0000-0000-000000000000",
+            project_id=project.id,
+            hash_id=oregon_state_hash_id,
+            dataset_id=dataset.id,
+            dollar_year=2024,
+            group_events=[
+                GroupEvent(event_id= industry_output_event_id, scaling_factor=1.0),
+                GroupEvent(event_id= industry_impact_analysis_event_id, scaling_factor=1.0)
             ]
         )
 

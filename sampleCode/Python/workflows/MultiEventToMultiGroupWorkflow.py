@@ -56,9 +56,9 @@ class MultiEventToMultiGroupWorkflow(IWorkflow):
         dataset_id = 96              # 2022
         # You will also need the UUID Project Id for the project you're adding the Events/Groups to
         # See the CreateProjectWorkflow for examples on how to create the initial Project
-        #For the workflow , We have created  an empty project. You may also pass any pre-existing valid Projectid.
+        # For the workflow , We have created  an empty project. You may also pass any pre-existing valid Project Id
         project = Project(
-            id=None,  # Initially None since it's a new project
+            id_=None,  # Initially None since it's a new project
             title=f"ProjectWorkflow - {datetime.datetime.now():%Y-%m-%dT%H:%M:%S}",
             aggregation_scheme_id=aggregation_scheme_id,
             household_set_id=household_set_id
@@ -86,7 +86,7 @@ class MultiEventToMultiGroupWorkflow(IWorkflow):
             dataset_id=dataset_id,  # Fixed value as specified
             margin_type=None,  # Set to None as specified
             percentage=None,  # Set to None as specified
-            id="00000000-0000-0000-0000-000000000000",  # Placeholder ID as specified
+            id_="00000000-0000-0000-0000-000000000000",  # Placeholder ID as specified
             project_id="00000000-0000-0000-0000-000000000000",  # Placeholder project ID as specified
             tags=[]  # Empty tags list as specified
         )
@@ -101,7 +101,7 @@ class MultiEventToMultiGroupWorkflow(IWorkflow):
             title="Households 15-30k",
             household_income_code=10002,  # Households 15-30k (spec code from above)
             value=25000.00,
-            id="00000000-0000-0000-0000-000000000000",  # Placeholder ID, replace with actual if needed
+            id_="00000000-0000-0000-0000-000000000000",  # Placeholder ID, replace with actual if needed
             project_id="00000000-0000-0000-0000-000000000000",  # Placeholder Project ID
             tags=[]
         )
@@ -110,7 +110,7 @@ class MultiEventToMultiGroupWorkflow(IWorkflow):
             title="Households 50-70k",
             household_income_code=10005,  # Households 15-30k (spec code from above)
             value=125000.00,
-            id="00000000-0000-0000-0000-000000000000",  # Placeholder ID, replace with actual if needed
+            id_="00000000-0000-0000-0000-000000000000",  # Placeholder ID, replace with actual if needed
             project_id="00000000-0000-0000-0000-000000000000",  # Placeholder Project ID
             tags=[]
         )
@@ -126,7 +126,7 @@ class MultiEventToMultiGroupWorkflow(IWorkflow):
 
         # Now we need to create our Groups.
         # For this example, we're comparing the impacts of these Events on several different states
-        states = RegionEndpoints.RegionEndpoints.get_region_children(bearer_token, aggregation_scheme_id, dataset_id, regionType="State")
+        states = RegionEndpoints.RegionEndpoints.get_region_children(bearer_token, aggregation_scheme_id, dataset_id, region_type="State")
         oregon = next(s for s in states if s.description == "Oregon")
         wisconsin = next(s for s in states if s.description == "Wisconsin")
         north_carolina = next(s for s in states if s.description == "North Carolina")
@@ -137,15 +137,15 @@ class MultiEventToMultiGroupWorkflow(IWorkflow):
         for region in regions:
             # Create a Group for that Region
             state_group = Group(
-                projectId=project_uuid,
+                project_id=project_uuid,
                 title=f"{region.description} State",  # each Group has to have a different Title
-                datasetId=dataset_id,
-                dollarYear=2024,  # latest year
-                hashId=region.hash_id,  # associate this Region with this Group
+                dataset_id=dataset_id,
+                dollar_year=2024,  # latest year
+                hash_id=region.hash_id,  # associate this Region with this Group
             )
             # Add all of our Events to this Group   
             state_group.group_events = [
-            GroupEvent(eventId=e['id'] if isinstance(e, dict) else e.id) for e in events
+            GroupEvent(event_id=e['id'] if isinstance(e, dict) else e.id) for e in events
         ]
             # Save the Group to the Project
             state_group = GroupEndpoints.add_group_to_project(project_uuid, state_group, bearer_token)

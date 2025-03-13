@@ -20,11 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import json
 from enum import Enum
 from typing import Any, Type, TypeVar, Optional
 from pydantic import BaseModel
 from pydantic.json import pydantic_encoder
+from pydantic import json as pjson
 
 T = TypeVar('T')
 
@@ -44,7 +44,7 @@ class Json:
     @staticmethod
     def serialize(obj: Any) -> str:
         """Serialize the given object using the standard JSON serializer."""
-        return json.dumps(obj, default=pydantic_encoder, indent=4, separators=(',', ': '))
+        return pjson.dumps(obj, default=pydantic_encoder, indent=4, separators=(',', ': '))
 
     @staticmethod
     def deserialize(json_str: str, cls: Type[T]) -> Optional[T]:

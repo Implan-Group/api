@@ -24,8 +24,8 @@ import requests
 from datetime import datetime
 
 class Project:
-    def __init__(self, id, title, aggregation_scheme_id, household_set_id, is_mrio=False, folder_id=None, last_impact_run_id=None):
-        self.id = id
+    def __init__(self, id_, title, aggregation_scheme_id, household_set_id, is_mrio=False, folder_id=None, last_impact_run_id=None):
+        self.id = id_
         self.title = title
         self.aggregation_scheme_id = aggregation_scheme_id
         self.household_set_id = household_set_id
@@ -36,7 +36,7 @@ class Project:
     @classmethod
     def from_dict(cls, data):
         return cls(
-            id=data.get("id"),
+            id_=data.get("id"),
             title=data.get("title"),
             aggregation_scheme_id=data.get("aggregationSchemeId"),
             household_set_id=data.get("householdSetId"),

@@ -110,10 +110,10 @@ class ImpactResultEndpoints:
             }
 
     @staticmethod
-    def get_estimated_growth_percentage(impact_run_id, filter, bearer_token):
+    def get_estimated_growth_percentage(impact_run_id, filter_, bearer_token):
         url = f"https://api.implan.com/api/v1/impact/results/EstimatedGrowthPercentage/{impact_run_id}"
         headers = {"Authorization": f"Bearer {bearer_token}", "Content-Type": "application/json"}
-        payload = filter.to_dict()
+        payload = filter_.to_dict()
         logging.debug(f"Request URL: {url}")
         logging.debug(f"Request Headers: {headers}")
         logging.debug(f"Request Payload: {payload}")

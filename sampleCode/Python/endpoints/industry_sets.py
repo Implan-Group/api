@@ -24,14 +24,14 @@ import requests
 import logging
 
 class IndustrySet:
-    def __init__(self, id, description, defaultAggregationSchemeId=None, activeStatus=None, isDefault=None, mapTypeId=None, isNaicsCompatible=False):
-        self.id = id
+    def __init__(self, id_, description, default_aggregation_scheme_id=None, active_status=None, is_default=None, map_type_id=None, is_naics_compatible=False):
+        self.id = id_
         self.description = description
-        self.default_aggregation_scheme_id = defaultAggregationSchemeId
-        self.active_status = activeStatus
-        self.is_default = isDefault
-        self.map_type_id = mapTypeId
-        self.is_naics_compatible = isNaicsCompatible
+        self.default_aggregation_scheme_id = default_aggregation_scheme_id
+        self.active_status = active_status
+        self.is_default = is_default
+        self.map_type_id = map_type_id
+        self.is_naics_compatible = is_naics_compatible
 
 class IndustrySets:
     @staticmethod
@@ -55,13 +55,13 @@ class IndustrySets:
             data = response.json()
             print(data)  # Print the data to see the exact keys
             return [IndustrySet(
-                id=item.get('id'),
+                id_=item.get('id'),
                 description=item.get('description'),
-                defaultAggregationSchemeId=item.get('defaultAggregationSchemeId'),
-                activeStatus=item.get('activeStatus'),
-                isDefault=item.get('isDefault'),
-                mapTypeId=item.get('mapTypeId'),
-                isNaicsCompatible=item.get('isNaicsCompatible', False)
+                default_aggregation_scheme_id=item.get('defaultAggregationSchemeId'),
+                active_status=item.get('activeStatus'),
+                is_default=item.get('isDefault'),
+                map_type_id=item.get('mapTypeId'),
+                is_naics_compatible=item.get('isNaicsCompatible', False)
             ) for item in data]
         else:
             response.raise_for_status()

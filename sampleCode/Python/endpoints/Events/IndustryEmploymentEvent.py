@@ -24,14 +24,15 @@ import uuid
 from endpoints.Events.Event import Event 
 
 class IndustryEmploymentEvent(Event):
-    def __init__(self, title, employment, industry_code, output=None, employee_compensation=None, proprietor_income=None, dataset_id=None, id=None, project_id=None, tags=None):
-        super().__init__(title, id, project_id, tags)
+    def __init__(self, title, employment, industry_code, output=None, employee_compensation=None, proprietor_income=None, dataset_id=None, id_=None, project_id=None, tags=None):
+        super().__init__(title, id_, project_id, tags)
         self.output = output
         self.employment = employment
         self.employee_compensation = employee_compensation
         self.proprietor_income = proprietor_income
         self.industry_code = industry_code
         self.impact_event_type = "IndustryEmployment"
+        self.dataset_id = dataset_id
 
     @classmethod
     def from_dict(cls, data):
@@ -43,7 +44,7 @@ class IndustryEmploymentEvent(Event):
             employee_compensation=data.get('employeeCompensation'),
             proprietor_income=data.get('proprietorIncome'),
             dataset_id=data.get('datasetId'),
-            id=data.get('id', str(uuid.uuid4())),
+            id_=data.get('id', str(uuid.uuid4())),
             project_id=data.get('projectId', 'Default Project ID'),
             tags=data.get('tags', [])
         )

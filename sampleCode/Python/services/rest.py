@@ -27,6 +27,7 @@ import logging
 from datetime import datetime
 from time import time
 from functools import wraps
+from pydantic import json as pjson
 
 class BearerAuth(AuthBase):
     """Custom authentication class for bearer token."""
@@ -56,7 +57,8 @@ class RestClient:
         except Exception as ex:
             raise Exception("Invalid Bearer Token", ex)
 
-    def _handle_response(self, response):
+    @staticmethod
+    def _handle_response(response):
         if not response.ok:
             try:
                 error_data = response.json()
@@ -82,13 +84,15 @@ class RestClient:
     def post(self, url, data=None, json_data=None, **kwargs):
         return self.request("POST", url, data=data, json=json_data, **kwargs)
 
-    def get_response_content(self, response):
+    @staticmethod
+    def get_response_content(response):
         return response.text
 
-    def get_response_data(self, response, data_type=None):
+    @staticmethod
+    def get_response_data(response, data_type=None):
         try:
             return response.json()
-        except json.JSONDecodeError as e:
+        except pjson.JSONDecodeError as e:
             logging.error(f"JSON decode error: {e}")
             return None
 

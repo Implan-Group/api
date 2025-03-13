@@ -25,8 +25,8 @@ import requests
 import logging
 
 class AggregationScheme:
-    def __init__(self, id, description, industry_set_id, household_set_ids, map_code, status):
-        self.id = id
+    def __init__(self, id_, description, industry_set_id, household_set_ids, map_code, status):
+        self.id = id_
         self.description = description
         self.industry_set_id = industry_set_id
         self.household_set_ids = household_set_ids
@@ -34,6 +34,7 @@ class AggregationScheme:
         self.status = status
 
 def get_response_data(url, headers, params=None):
+    response = None
     try:
         logging.info(f"Request URL: {url}")
         logging.info(f"Request Headers: {headers}")
@@ -63,7 +64,7 @@ class AggregationSchemeEndpoints:
         response_data = get_response_data(url, headers, params=params)
         
         return [AggregationScheme(
-            id=item['id'],
+            id_=item['id'],
             description=item['description'],
             industry_set_id=item['industrySetId'],
             household_set_ids=item['householdSetIds'],

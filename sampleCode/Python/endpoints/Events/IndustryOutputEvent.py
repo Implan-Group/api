@@ -24,8 +24,8 @@ import uuid
 from endpoints.Events.Event import Event
 
 class IndustryOutputEvent(Event):
-    def __init__(self, title, industry_code, output, employment=None, employee_compensation=None, proprietor_income=None, dataset_id=None, margin_type=None, percentage=None, id=None, project_id=None, tags=None):
-        super().__init__(title, id, project_id, tags)
+    def __init__(self, title, industry_code, output, employment=None, employee_compensation=None, proprietor_income=None, dataset_id=None, margin_type=None, percentage=None, id_=None, project_id=None, tags=None):
+        super().__init__(title, id_, project_id, tags)
         self.industry_code = industry_code
         self.output = output
         self.employment = employment
@@ -48,7 +48,7 @@ class IndustryOutputEvent(Event):
             dataset_id=data.get('datasetId'),
             margin_type=data.get('marginType', 'Default Margin'),
             percentage=data.get('percentage'),
-            id=data.get('id', str(uuid.uuid4())),
+            id_=data.get('id', str(uuid.uuid4())),
             project_id=data.get('projectId', 'Default Project ID'),
             tags=data.get('tags', [])
         )

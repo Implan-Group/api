@@ -24,8 +24,8 @@ import uuid
 from endpoints.Events.Event import Event
 
 class IndustryImpactAnalysisEvent(Event):
-    def __init__(self, title, industry_code, intermediate_inputs=None, total_employment=None, employee_compensation=None, proprietor_income=None, wage_and_salary_employment=None, proprietor_employment=None, total_labor_income=None, other_property_income=None, tax_on_production_and_imports=None, local_purchase_percentage=1.0, total_output=None, is_sam=None, spending_pattern_dataset_id=None, spending_pattern_value_type=None, spending_pattern_commodities=None, id=None, project_id=None, tags=None):
-        super().__init__(title, id, project_id, tags)
+    def __init__(self, title, industry_code, intermediate_inputs=None, total_employment=None, employee_compensation=None, proprietor_income=None, wage_and_salary_employment=None, proprietor_employment=None, total_labor_income=None, other_property_income=None, tax_on_production_and_imports=None, local_purchase_percentage=1.0, total_output=None, is_sam=None, spending_pattern_dataset_id=None, spending_pattern_value_type=None, spending_pattern_commodities=None, id_=None, project_id=None, tags=None):
+        super().__init__(title, id_, project_id, tags)
         self.industry_code = industry_code
         self.intermediate_inputs = intermediate_inputs
         self.total_employment = total_employment
@@ -64,7 +64,7 @@ class IndustryImpactAnalysisEvent(Event):
             spending_pattern_dataset_id=data.get('spendingPatternDatasetId'),
             spending_pattern_value_type=data.get('spendingPatternValueType'),
             spending_pattern_commodities=data.get('spendingPatternCommodities', []),
-            id=data.get('id', str(uuid.uuid4())),
+            id_=data.get('id', str(uuid.uuid4())),
             project_id=data.get('projectId', None),  # Avoid using 'Default Project ID'
             tags=data.get('tags', [])
         )

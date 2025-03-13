@@ -25,9 +25,9 @@ import logging
 import uuid
 
 class GroupEvent:
-    def __init__(self, eventId=None, scalingFactor=1.0):
-        self.event_id = eventId
-        self.scaling_factor = scalingFactor
+    def __init__(self, event_id=None, scaling_factor=1.0):
+        self.event_id = event_id
+        self.scaling_factor = scaling_factor
 
     def to_dict(self):
         return {
@@ -37,18 +37,18 @@ class GroupEvent:
     
 
 class Group:
-    def __init__(self, title, projectId, hashId, datasetId, groupEvents=None, id=None, urid=None, userModelId=None, modelId=None, dollarYear=2024, scalingFactor=1.0):
+    def __init__(self, title, project_id, hash_id, dataset_id, group_events=None, id_=None, urid=None, user_model_id=None, model_id=None, dollar_year=2024, scaling_factor=1.0):
         self.title = title
-        self.id = id if id is not None else str(uuid.uuid4())  # Generate a new UUID if not provided
-        self.project_id = projectId
-        self.hash_id = hashId
+        self.id = id_ if id_ is not None else str(uuid.uuid4())  # Generate a new UUID if not provided
+        self.project_id = project_id
+        self.hash_id = hash_id
         self.urid = urid
-        self.user_model_id = userModelId
-        self.model_id = modelId
-        self.dollar_year = dollarYear
-        self.scaling_factor = scalingFactor
-        self.dataset_id = datasetId
-        self.group_events = groupEvents or []
+        self.user_model_id = user_model_id
+        self.model_id = model_id
+        self.dollar_year = dollar_year
+        self.scaling_factor = scaling_factor
+        self.dataset_id = dataset_id
+        self.group_events = group_events or []
 
     def to_dict(self):
         return {

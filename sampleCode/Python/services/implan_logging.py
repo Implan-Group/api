@@ -28,6 +28,7 @@ import datetime
 from pathlib import Path
 from typing import Optional, Dict, Any, Type
 from requests.models import Request, Response
+from pydantic import json as pjson
 
 class Logging:
     _log_file_path = None
@@ -72,9 +73,9 @@ class Logging:
                 continue
             log.append(f"-H {key} {value}")
 
-        if request.body:
+        if request.data:
             log.append(f"-Body: '{request.headers.get('Content-Type')}'")
-            body_content = json.dumps(request.body, indent=2)
+            body_content = pjson.dumps(request.data, indent=2)
             log.append(body_content)
 
         # Response
@@ -92,7 +93,7 @@ class Logging:
                     log.append('')
                 
                 if response_data:
-                    response_json = json.dumps(response_data, indent=2)
+                    response_json = pjson.dumps(response_data, indent=2)
                     log.append(response_json)
                 else:
                     log.append(response.content.decode('utf-8'))

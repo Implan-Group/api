@@ -43,7 +43,7 @@ class CombinedRegionWorkflow(IWorkflow):
         data_set_id = 96  # 96 = 2022 Data
 
         # For this example, we're going to search through the Child Regions of the US for a few particular counties.
-        regions = RegionEndpoints.get_region_children(bearer_token, aggregation_scheme_id, data_set_id, regionType="County")
+        regions = RegionEndpoints.get_region_children(bearer_token, aggregation_scheme_id, data_set_id, region_type="County")
         # Convert to a dictionary so that we can quickly search by Description
         description_to_region_dict = {region.description: region for region in regions}
 
@@ -55,7 +55,7 @@ class CombinedRegionWorkflow(IWorkflow):
         # Create the request payload
         combine_region_payload = CombineRegionRequest(
             description=f"Combined Region - {datetime.now():%Y%m%d_%H%M%S}",
-            hashIds=[hash_id1, hash_id2]
+            hashids=[hash_id1, hash_id2]
         )
 
         # Send the combine region request

@@ -25,10 +25,10 @@ import json
 import logging
 
 class DataSet:
-    def __init__(self, id, description, isDefault):
-        self.id = id
+    def __init__(self, id_, description, is_default):
+        self.id = id_
         self.description = description
-        self.is_default = isDefault
+        self.is_default = is_default
 
 class DataSetEndpoints:
     @staticmethod

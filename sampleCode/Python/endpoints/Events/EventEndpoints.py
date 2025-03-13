@@ -31,6 +31,7 @@ class EventEndpoints:
     def add_industry_output_event(project_id, event_data, bearer_token):
         url = f"https://api.implan.com/api/v1/impact/project/{project_id}/event"
         headers = {"Authorization": f"Bearer {bearer_token}", "Content-Type": "application/json"}
+        response = None
         try:
             payload = event_data.to_dict()
             print("Request Payload for IndustryOutputEvent:", json.dumps(payload, indent=4))
@@ -48,6 +49,7 @@ class EventEndpoints:
     def add_industry_impact_analysis_event(project_id, event_data, bearer_token):
         url = f"https://api.implan.com/api/v1/impact/project/{project_id}/event"
         headers = {"Authorization": f"Bearer {bearer_token}", "Content-Type": "application/json"}
+        response = None
         try:
             payload = event_data.to_dict()
             print("Request Payload for IndustryImpactAnalysisEvent:", json.dumps(payload, indent=4))
@@ -60,6 +62,7 @@ class EventEndpoints:
         except Exception as err:
             print(f"Other error occurred: {err}")
 
+    @staticmethod
     def get_events_types(project_guid, bearer_token):
         url = f"https://api.implan.com/api/v1/impact/project/{project_guid}/eventtype"
         headers = {"Authorization": f"Bearer {bearer_token}"}

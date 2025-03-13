@@ -22,9 +22,9 @@
 
 import uuid
 class Event:
-    def __init__(self, title, id=None, project_id=None, tags=None):
+    def __init__(self, title, id_=None, project_id=None, tags=None):
         self.title = title
-        self.id = id if id is not None else str(uuid.uuid4())
+        self.id = id_ if id_ is not None else str(uuid.uuid4())
         self.project_id = project_id
         self.tags = tags if tags is not None else []
         self._impact_event_type = "Empty"

@@ -53,7 +53,7 @@ class RegionalWorkflow(IWorkflow):
         print(f"User Regions: {user_regions}")
 
         # Search for regions by type and store them in a dictionary
-        regions = RegionEndpoints.get_region_children(bearer_token, aggregation_scheme_id, data_set_id, regionType="State")
+        regions = RegionEndpoints.get_region_children(bearer_token, aggregation_scheme_id, data_set_id, region_type="State")
         description_to_region_dict = {region.description: region for region in regions}
 
         # Look up a few states by their names
