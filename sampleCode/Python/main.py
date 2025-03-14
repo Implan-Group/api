@@ -9,7 +9,7 @@ from workflows.RunImpactAnalysisWorkflow import RunImpactAnalysisWorkflow
 
 def main():
     # Authenticate and get bearer token
-    bearer_token = AuthenticationWorkflow.examples()
+    bearer_token = AuthenticationWorkflow.get_bearer_token()
     logging.info(f"Bearer Token used: {bearer_token}")
 
     # Create Project Workflow

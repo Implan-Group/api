@@ -6,13 +6,12 @@ from endpoints.dataset_endpoints import DataSetEndpoints
 from endpoints.project_endpoints import Project, ProjectEndpoints
 from endpoints.industry_set_endpoints import IndustrySets
 from endpoints.industry_code_endpoints import IndustryCodeEndpoints
-from endpoints.Events.event_endpoints import EventEndpoints
-from endpoints.Events import IndustryOutputEvent, IndustryImpactAnalysisEvent
+from endpoints.events.event_endpoints import EventEndpoints
+from endpoints.events import IndustryOutputEvent, IndustryImpactAnalysisEvent
 from endpoints.group_endpoints import GroupEndpoints,Group,GroupEvent
-from endpoints.Regions.region_endpoints import RegionEndpoints
-from workflows.iworkflow import IWorkflow
+from endpoints.regions.region_endpoints import RegionEndpoints
 
-class CreateProjectWorkflow(IWorkflow):
+class CreateProjectWorkflow:
     @staticmethod
     def examples(bearer_token):
         # Get a list of all valid Aggregation Schemes
@@ -107,14 +106,14 @@ class CreateProjectWorkflow(IWorkflow):
         
 
         # Now that Event(s) have been added, it is time to find the Region(s) that are to be used in the Impact
-        # Regions must be associated with a Data Set
+        # regions must be associated with a Data Set
         datasets = DataSetEndpoints.get_datasets(aggregation_scheme_id, bearer_token)
         dataset = next(d for d in datasets if d.description == "2022")
 
-        # For this example, we're going to search through the Child Regions of the US for a particular state
+        # For this example, we're going to search through the Child regions of the US for a particular state
         state_regions = RegionEndpoints.get_region_children(bearer_token, aggregation_scheme_id, dataset.id, region_type="State")
         oregon_state_region = next(s for s in state_regions if s.description == "Oregon")
-        oregon_state_hash_id = oregon_state_region.hash_id
+        oregon_state_hashid = oregon_state_region.hashid
 
         # Print the event details for debugging
         logging.info(f"Industry Output Event: {industry_output_event.to_dict()}")
@@ -130,7 +129,7 @@ class CreateProjectWorkflow(IWorkflow):
             title="Sample Group",
             id_="00000000-0000-0000-0000-000000000000",
             project_id=project.id,
-            hash_id=oregon_state_hash_id,
+            hashid=oregon_state_hashid,
             dataset_id=dataset.id,
             dollar_year=2024,
             group_events=[

@@ -4,9 +4,8 @@ import logging
 from endpoints.project_endpoints import ProjectEndpoints
 from endpoints.impact_endpoints import ImpactEndpoints
 from endpoints.impact_result_endpoints import ImpactResultEndpoints
-from workflows.iworkflow import IWorkflow
 
-class RunImpactAnalysisWorkflow(IWorkflow):
+class RunImpactAnalysisWorkflow:
     ProjectId = ""
 
     @staticmethod

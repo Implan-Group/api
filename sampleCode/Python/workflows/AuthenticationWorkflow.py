@@ -1,12 +1,14 @@
 import logging
 
 from endpoints.Authentication import ImplanAuthentication, Authentication
-from workflows.iworkflow import IWorkflow
 
-class AuthenticationWorkflow(IWorkflow):
+# This Workflow example shows off how to send in your IMPLAN Username and Password and retrieve the Bearer Token that
+# needs to included with all other Requests to the ImpactApi
+
+class AuthenticationWorkflow:
     @staticmethod
-    def examples():
-        # Example Implan Authentication
+    def get_bearer_token():
+        # You need to fill in your own IMPLAN Username and Password below
         auth = ImplanAuthentication(
             username="",
             password=""
@@ -14,7 +16,6 @@ class AuthenticationWorkflow(IWorkflow):
        
         # Retrieve the token
         bearer_token = Authentication.get_bearer_token(auth)
-
         logging.info(f"Retrieved Bearer Token: {bearer_token}")
 
         # Extract the actual token if it has "Bearer" prefix

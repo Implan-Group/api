@@ -80,7 +80,7 @@ class ImpactResultEndpoints:
         def to_dict(self):
             return {
                 "DollarYear": self.dollar_year,
-                "Regions": self.regions,
+                "regions": self.regions,
                 "Impacts": [impact for impact in self.impacts],
                 "GroupNames": self.group_names,
                 "EventNames": self.event_names,

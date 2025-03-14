@@ -1,6 +1,6 @@
 import uuid
 
-from endpoints.Events.Event import Event
+from endpoints.events.Event import Event
 
 class IndustryEmployeeCompensationEvent(Event):
     def __init__(self, title, employee_compensation, industry_code, output=None, employment=None, proprietor_income=None, dataset_id=None, margin_type=None, percentage=None, id_=None, project_id=None, tags=None):

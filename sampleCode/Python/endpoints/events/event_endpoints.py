@@ -1,8 +1,8 @@
 import json
 import requests
 
-from endpoints.Events.IndustryOutputEvent import IndustryOutputEvent
-from endpoints.Events.IndustryImpactAnalysisEvent import IndustryImpactAnalysisEvent
+from endpoints.events.IndustryOutputEvent import IndustryOutputEvent
+from endpoints.events.IndustryImpactAnalysisEvent import IndustryImpactAnalysisEvent
 
 class EventEndpoints:
     @staticmethod

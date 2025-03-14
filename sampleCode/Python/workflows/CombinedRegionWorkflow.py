@@ -3,11 +3,10 @@ import time
 from datetime import datetime
 from endpoints.aggregation_scheme_endpoints import AggregationSchemeEndpoints
 from endpoints.dataset_endpoints import DataSetEndpoints
-from endpoints.Regions.region_endpoints import RegionEndpoints
-from workflows.iworkflow import IWorkflow
-from endpoints.Regions.CombineRegionRequest import CombineRegionRequest
+from endpoints.regions.region_endpoints import RegionEndpoints
+from endpoints.regions.CombineRegionRequest import CombineRegionRequest
 
-class CombinedRegionWorkflow(IWorkflow):
+class CombinedRegionWorkflow:
     @staticmethod
     def examples(bearer_token):
         # Get a list of all valid Aggregation Schemes
@@ -20,20 +19,20 @@ class CombinedRegionWorkflow(IWorkflow):
         # Choose the one you would like to use -- must be compatible with your chosen HouseholdSetId
         data_set_id = 96  # 96 = 2022 Data
 
-        # For this example, we're going to search through the Child Regions of the US for a few particular counties.
+        # For this example, we're going to search through the Child regions of the US for a few particular counties.
         regions = RegionEndpoints.get_region_children(bearer_token, aggregation_scheme_id, data_set_id, region_type="County")
         # Convert to a dictionary so that we can quickly search by Description
         description_to_region_dict = {region.description: region for region in regions}
 
         # Find the HashId for the first county we want to combine
-        hash_id1 = description_to_region_dict["Lane County, OR"].hash_id  # W1aQl9wzxj
+        hashid1 = description_to_region_dict["Lane County, OR"].hashid  # W1aQl9wzxj
         # Find the other HashId
-        hash_id2 = description_to_region_dict["Douglas County, OR"].hash_id  # Rgxp4eA3xK
+        hashid2 = description_to_region_dict["Douglas County, OR"].hashid  # Rgxp4eA3xK
 
         # Create the request payload
         combine_region_payload = CombineRegionRequest(
             description=f"Combined Region - {datetime.now():%Y%m%d_%H%M%S}",
-            hashids=[hash_id1, hash_id2]
+            hashids=[hashid1, hashid2]
         )
 
         # Send the combine region request
@@ -42,7 +41,7 @@ class CombinedRegionWorkflow(IWorkflow):
         # Polling loop to wait for that completion
         while True:
             user_regions = RegionEndpoints.get_user_regions(bearer_token, combined_region.aggregation_scheme_id, combined_region.dataset_id)
-            region = next((r for r in user_regions if r.hash_id == combined_region.hash_id), None)
+            region = next((r for r in user_regions if r.hashid == combined_region.hashid), None)
 
             if region and region.model_build_status.lower() == "complete":
                 break

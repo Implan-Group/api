@@ -1,6 +1,6 @@
 import uuid
 
-from endpoints.Events.Event import Event
+from endpoints.events.Event import Event
 
 class HouseholdIncomeEvent(Event):
     def __init__(self, title, household_income_code, value, id_=None, project_id=None, tags=None):

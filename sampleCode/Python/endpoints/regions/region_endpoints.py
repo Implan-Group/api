@@ -1,6 +1,6 @@
 import requests
 
-from endpoints.Regions.Region import Region
+from endpoints.regions.Region import Region
 
 class RegionEndpoints:
     @staticmethod

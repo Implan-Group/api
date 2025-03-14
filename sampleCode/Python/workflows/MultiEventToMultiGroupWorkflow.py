@@ -1,20 +1,19 @@
 import datetime
 
-from endpoints.Events import IndustryOutputEvent, HouseholdIncomeEvent
-from endpoints.Events.event_endpoints import EventEndpoints
+from endpoints.events import IndustryOutputEvent, HouseholdIncomeEvent
+from endpoints.events.event_endpoints import EventEndpoints
 from endpoints.group_endpoints import Group, GroupEvent, GroupEndpoints
 from endpoints.industry_code_endpoints import IndustryCodeEndpoints
 from endpoints.specification_endpoints import SpecificationEndpoints
 from workflows.RunImpactAnalysisWorkflow import RunImpactAnalysisWorkflow
-from workflows.iworkflow import IWorkflow
 from endpoints.project_endpoints import Project, ProjectEndpoints
 from endpoints.aggregation_scheme_endpoints import AggregationSchemeEndpoints
-from endpoints.Regions.region_endpoints import RegionEndpoints
+from endpoints.regions.region_endpoints import RegionEndpoints
 
-class MultiEventToMultiGroupWorkflow(IWorkflow):
+class MultiEventToMultiGroupWorkflow:
     @staticmethod
     def examples(bearer_token):
-        # For an analysis that contains multiple Events, each of which needs to be assigned to multiple Groups,
+        # For an analysis that contains multiple events, each of which needs to be assigned to multiple Groups,
         # a simple nested loop is the easiest solution.
         #
         # Our hypothetical example here is a Mixed-Use Housing Development
@@ -30,7 +29,7 @@ class MultiEventToMultiGroupWorkflow(IWorkflow):
         household_set_id = implan546_agg_scheme.household_set_ids[0]  # 1
         industry_set_id = 8          # 546 Industries
         dataset_id = 96              # 2022
-        # You will also need the UUID Project Id for the project you're adding the Events/Groups to
+        # You will also need the UUID Project Id for the project you're adding the events/Groups to
         # See the CreateProjectWorkflow for examples on how to create the initial Project
         # For the workflow , We have created  an empty project. You may also pass any pre-existing valid Project Id
         project = Project(
@@ -44,7 +43,7 @@ class MultiEventToMultiGroupWorkflow(IWorkflow):
         project = ProjectEndpoints.create(project, bearer_token)
         project_uuid = project.id
 
-        # Create the Events
+        # Create the events
 
         # We need the industry code for restaurants first
         industry_codes = IndustryCodeEndpoints.get_industry_codes(aggregation_scheme_id, industry_set_id, bearer_token)
@@ -69,7 +68,7 @@ class MultiEventToMultiGroupWorkflow(IWorkflow):
 
 
         # Now we need to create the housing events
-        # You need to lookup all the specification codes for Household Income Events
+        # You need to lookup all the specification codes for Household Income events
         household_income_specifications = SpecificationEndpoints.get_specifications(project_uuid, "HouseholdIncome", bearer_token)
 
         # Create the 15-30k Household Event
@@ -91,7 +90,7 @@ class MultiEventToMultiGroupWorkflow(IWorkflow):
             tags=[]
         )
 
-        # We have created all the Events.
+        # We have created all the events.
         # By calling the `add_event` endpoint, the fully-hydrated Event is returned (including its Id, which will be required)
         # We'll store them to a list for future processing
         restaurant_output = EventEndpoints.add_industry_output_event(project_uuid, restaurant_output, bearer_token)
@@ -101,7 +100,7 @@ class MultiEventToMultiGroupWorkflow(IWorkflow):
         events = [restaurant_output, first_household_income_event, second_household_income_event]
 
         # Now we need to create our Groups.
-        # For this example, we're comparing the impacts of these Events on several different states
+        # For this example, we're comparing the impacts of these events on several different states
         states = RegionEndpoints.get_region_children(bearer_token, aggregation_scheme_id, dataset_id, region_type="State")
         oregon = next(s for s in states if s.description == "Oregon")
         wisconsin = next(s for s in states if s.description == "Wisconsin")
@@ -117,15 +116,15 @@ class MultiEventToMultiGroupWorkflow(IWorkflow):
                 title=f"{region.description} State",  # each Group has to have a different Title
                 dataset_id=dataset_id,
                 dollar_year=2024,  # latest year
-                hash_id=region.hash_id,  # associate this Region with this Group
+                hashid=region.hashid,  # associate this Region with this Group
             )
-            # Add all of our Events to this Group   
+            # Add all of our events to this Group
             state_group.group_events = [
             GroupEvent(event_id=e['id'] if isinstance(e, dict) else e.id) for e in events
         ]
             # Save the Group to the Project
             state_group = GroupEndpoints.add_group_to_project(project_uuid, state_group, bearer_token)
 
-        # Now that the Events and Groups have been added, see below
+        # Now that the events and Groups have been added, see below
         RunImpactAnalysisWorkflow.ProjectId = project_uuid
         RunImpactAnalysisWorkflow.examples(bearer_token)

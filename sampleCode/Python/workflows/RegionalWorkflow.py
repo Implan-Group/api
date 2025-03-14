@@ -1,9 +1,8 @@
 import logging
 
-from endpoints.Regions.region_endpoints import RegionEndpoints
-from workflows.iworkflow import IWorkflow
+from endpoints.regions.region_endpoints import RegionEndpoints
 
-class RegionalWorkflow(IWorkflow):
+class RegionalWorkflow:
     @staticmethod
     def examples(bearer_token):
         # Define aggregation scheme and dataset IDs

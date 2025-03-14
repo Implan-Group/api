@@ -15,11 +15,11 @@ class GroupEvent:
     
 
 class Group:
-    def __init__(self, title, project_id, hash_id, dataset_id, group_events=None, id_=None, urid=None, user_model_id=None, model_id=None, dollar_year=2024, scaling_factor=1.0):
+    def __init__(self, title, project_id, hashid, dataset_id, group_events=None, id_=None, urid=None, user_model_id=None, model_id=None, dollar_year=2024, scaling_factor=1.0):
         self.title = title
         self.id = id_ if id_ is not None else str(uuid.uuid4())  # Generate a new UUID if not provided
         self.project_id = project_id
-        self.hash_id = hash_id
+        self.hashid = hashid
         self.urid = urid
         self.user_model_id = user_model_id
         self.model_id = model_id
@@ -33,7 +33,7 @@ class Group:
             "title": self.title,
             "id": self.id,
             "projectId": self.project_id,
-            "hashId": self.hash_id,
+            "hashId": self.hashid,
             "urid": self.urid,
             "userModelId": self.user_model_id,
             "modelId": self.model_id,
@@ -64,4 +64,3 @@ class GroupEndpoints:
             error_msg = f"Failed to add group: {response.status_code} - {response.text}"
             logging.error(error_msg)
             response.raise_for_status()
-        # Optional: You may handle different status codes differently here, before raising an error

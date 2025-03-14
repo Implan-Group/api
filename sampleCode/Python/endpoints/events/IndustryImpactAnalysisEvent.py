@@ -1,6 +1,6 @@
 import uuid
 
-from endpoints.Events.Event import Event
+from endpoints.events.Event import Event
 
 class IndustryImpactAnalysisEvent(Event):
     def __init__(self, title, industry_code, intermediate_inputs=None, total_employment=None, employee_compensation=None, proprietor_income=None, wage_and_salary_employment=None, proprietor_employment=None, total_labor_income=None, other_property_income=None, tax_on_production_and_imports=None, local_purchase_percentage=1.0, total_output=None, is_sam=None, spending_pattern_dataset_id=None, spending_pattern_value_type=None, spending_pattern_commodities=None, id_=None, project_id=None, tags=None):
