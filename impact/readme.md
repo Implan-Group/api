@@ -2067,6 +2067,55 @@ A list of specifications data containing the following fields:
 - DataSetId
 - MarginType (`PurchaserPrice`, `ProducerPrice`)
 
+##### Industry Impact Analysis json
+```json
+{
+    "impactEventType": "IndustryImpactAnalysis",
+    "IndustryCode" : 1,
+    "IntermediateInputs": 56,
+    "TotalEmployment": 3,
+    "EmployeeCompensation": 4,
+    "ProprietorIncome": 5,
+    "WageAndSalaryEmployment" : 1,
+    "ProprietorEmployment" : 2,
+    "TotalLaborIncome" : 9,
+    "OtherPropertyIncome" : 34,
+    "TaxOnProductionAndImports" : 23,
+    "TotalOutput": null,
+    "title": "IndustryImpactAnalysis_api",
+    "LocalPurchasePercentage": 1,
+    "IsSam": false,
+    "SpendingPatternDatasetId": 87,
+    "SpendingPatternValueType": "IntermediateExpenditure",
+    "SpendingPatternCommodities": null,
+    "Tags": [],
+    "IsLocalEmployeeCompensation": false
+}
+```
+##### International Industry Impact Analysis json
+```json
+{
+    "impactEventType": "InternationalIndustryImpactAnalysis",
+    "IndustryCode" : 5,
+    "IntermediateInputs": 5000000,
+    "TotalEmployment": 24,
+    "EmployeeCompensation": 4000000,
+    "WageAndSalaryEmployment" : 24,
+    "TotalLaborIncome" : 4000000,
+    "GrossOperationSurplus" : 500000,
+    "OtherTaxOnProductionAndImports" : 500000,
+    "TotalOutput": 10000000,
+    "title": "InternationalIndustryImpactAnalysis_api",
+    "LocalPurchasePercentage": 1,
+    "IsSam": false,
+    "SpendingPatternDatasetId": 95,
+    "SpendingPatternRegionUrid": 1861222,
+    "SpendingPatternValueType": "IntermediateExpenditure",
+    "Tags": [],
+    "SpendingPatternCommodities": [],
+    "IsLocalEmployeeCompensation": false
+}
+```
 ###### Custom Industry Impact Analysis Json
 ```json
 {
@@ -2089,6 +2138,7 @@ A list of specifications data containing the following fields:
     "SpendingPatternValueType": "IntermediateExpenditure",
     "SpendingPatternCommodities": null,
     "Tags": ["Testing"]
+    "isLocalEmployeeCompensation": false
 }
 ```
 
@@ -2111,7 +2161,8 @@ A list of specifications data containing the following fields:
   "IsSam": false,
   "SpendingPatternValueType": "IntermediateExpenditure",
   "Tags": ["Testing"],
-  "spendingPatternCommodities": null
+  "spendingPatternCommodities": null,
+  "isLocalEmployeeCompensation": false
 }
 ```
 
