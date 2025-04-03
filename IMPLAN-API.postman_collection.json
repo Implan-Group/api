@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e8dae3f0-923a-43bd-8776-1e395d9a769f",
+		"_postman_id": "77b3b921-8392-48a1-bb08-6cdf4ff4a835",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "28583816"
@@ -253,6 +253,43 @@
 					"response": []
 				},
 				{
+					"name": "Instant Impact International",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_domain}}api/v1/impact/instant/intl/:modelId/:industryCode/:outputEventValue",
+							"host": [
+								"{{api_domain}}api"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"instant",
+								"intl",
+								":modelId",
+								":industryCode",
+								":outputEventValue"
+							],
+							"variable": [
+								{
+									"key": "modelId",
+									"value": "15166"
+								},
+								{
+									"key": "industryCode",
+									"value": "1"
+								},
+								{
+									"key": "outputEventValue",
+									"value": "100000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Instant Impact HashId",
 					"request": {
 						"method": "GET",
@@ -311,6 +348,44 @@
 								{
 									"key": "hashId",
 									"value": "5Oadj27mVZ"
+								}
+							],
+							"variable": [
+								{
+									"key": "industryCode",
+									"value": "1"
+								},
+								{
+									"key": "outputEventValue",
+									"value": "100000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Instant Impact HashId International",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_domain}}api/v1/impact/instant/intl/:industryCode/:outputEventValue?hashId=7pb5YBrobM",
+							"host": [
+								"{{api_domain}}api"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"instant",
+								"intl",
+								":industryCode",
+								":outputEventValue"
+							],
+							"query": [
+								{
+									"key": "hashId",
+									"value": "7pb5YBrobM"
 								}
 							],
 							"variable": [
@@ -403,6 +478,44 @@
 					"response": []
 				},
 				{
+					"name": "Instant Impact Urid International",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_domain}}api/v1/impact/instant/intl/:industryCode/:outputEventValue?urid=1863811",
+							"host": [
+								"{{api_domain}}api"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"instant",
+								"intl",
+								":industryCode",
+								":outputEventValue"
+							],
+							"query": [
+								{
+									"key": "urid",
+									"value": "1863811"
+								}
+							],
+							"variable": [
+								{
+									"key": "industryCode",
+									"value": "1"
+								},
+								{
+									"key": "outputEventValue",
+									"value": "100000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Batch Impact",
 					"request": {
 						"method": "POST",
@@ -454,6 +567,35 @@
 								"impact",
 								"batch",
 								"can"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Batch Impact International",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\"modelId\":\"15166\", \"industrycode\" : 1, \"eventvalue\" : 10002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 2, \"eventvalue\" : 30002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 1, \"eventvalue\" : 10002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 2, \"eventvalue\" : 30002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 1, \"eventvalue\" : 10002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 2, \"eventvalue\" : 30002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 1, \"eventvalue\" : 10002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 2, \"eventvalue\" : 30002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 1, \"eventvalue\" : 10002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 2, \"eventvalue\" : 30002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 1, \"eventvalue\" : 10002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 2, \"eventvalue\" : 30002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 1, \"eventvalue\" : 10002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 2, \"eventvalue\" : 30002.90},\r\n    {\"modelId\":\"15166\", \"industrycode\" : 1, \"eventvalue\" : 10002.90}\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_domain}}api/v1/impact/batch/intl",
+							"host": [
+								"{{api_domain}}api"
+							],
+							"path": [
+								"v1",
+								"impact",
+								"batch",
+								"intl"
 							]
 						}
 					},
