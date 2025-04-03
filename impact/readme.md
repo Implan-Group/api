@@ -4,7 +4,7 @@ This document is intended to provide a developer guide for the API that IMPLAN h
 This document assumes a working knowledge of the IMPLAN Cloud and its workflow, which can be found on [support.implan.com](https://support.implan.com/hc/en-us).  
 
 ## Getting Started
-To help you get started running economic impact analysis, this section will provide a quick overview of the implan workflow after you’ve completed the [Authentication](#authentication---retrieving-bearer-access-token).
+To help you get started running economic impact analysis, this section will provide a quick overview of the implan workflow after you’ve completed the [Authentication](#authentication).
 
 ### Find a region and industry to study
 In order to run an economic impact analysis, you will first need to identify the [Data Year (Dataset)](#dataset-endpoint-get) on when the impact will take place, the [Industry](#industry-codes-endpoint-get) that will change, and the [Region](#region-model-endpoint-get) where the impact will take place.
@@ -90,25 +90,43 @@ The IMPLAN API will currently support the following requests per timeframe, to e
   - 2500 events per request supported.
 
 ---
-# Authentication - Retrieving Bearer access token
-## General Authentication Architecture
-It’s recommended that you implement a backend solution to communicate with the IMPLAN API.  You will need to include a bearer token when sending requests to the IMPLAN API.  This bearer token will be valid for 24 hours and it is expected that you will cache this token while it’s valid.
+# Authentication
 
-## Token Caching
-The “access_token” is good for 24 hours.  It is required that you cache this token and use the token to make additional requests to the IMPLAN API.  Requesting excessive tokens  (eg. Getting a new token for every request) is not necessary and is not supported, and may incur additional cost or temporary disabling of your account if you exceed 1000 tokens per month.  Requesting additional tokens is supported for use cases such as system reboots.  Excessive access_token requests are not supported.
+## Bearer Access Token
+- The ImpactAPI uses a [jwt](jwt.io) to store authentication information about your current user.
+- You are required to send a valid Bearer Token with all Api requests.
 
-## Examples
-Some code examples for obtaining the authentication token are provided in the [Appendix](#appendix).
+### Retrieving the Token (non-SSO, non-M2M)
+`POST {{api_domain}}api/auth`
+You must include a `json` body that includes your username and password:
 
-## Endpoint
-**POST {{api_domain}}api/auth**
+```json
+{  
+	"username": "{ImplanUsername}",
+    "password": "{ImplanPassword}" 
+}
+```
+- There are code examples in the [Appendix](#Appendix) for several languages on how to accomplish this.
 
-## Expected Response
+### Single Sign On (SSO) & Machine to Machine (M2M)
+- SSO and M2M customers _must_ use the following endpoint to retrieve their Bearer Token, substituting your `CLIENT_ID` and `CLIENT_SECRET` into the below:
+```curl
+curl --request POST \
+  --url https://login.implan.com/oauth/token \
+  --header 'content-type: application/json' \
+  --data '{"client_id":"CLIENT_ID","client_secret":"CLIENT_SECRET","audience":"https://services.implan.com","grant_type":"client_credentials"}'
+```
 
-The expected response will be in this format:
+### Response
+```txt
+Bearer {ENCODED_TEXT_HERE}
+```
 
-![alt_text](/images/auth_response.png "auth response")
+### Caching
+- A retrieved Bearer Token is valid for 24 hours. It is required that you cache this token for all requests during this period. 
+- Requesting excessive tokens (e.g. retrieving a new token for every single request) is not necessary, not supported, and may result in additional costs or temporary disabling of your account. Requesting additional tokens is supported for use cases such as system reboots. 
 
+---
 # Preliminary Requests to Running an Impact
 Responses from the following endpoints are needed to provide information to get regional data, or run an impact analysis and receive results.  Once these are collected, you may proceed to get regional data or run an impact and get results.  
 
@@ -873,8 +891,85 @@ This endpoint will allow a user to build a single combined region by providing t
 
 **Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
 
+---
+
+# Regions - Build and Return
+<p>
+This endpoint allows a user to submit a list of Regional Identifiers.
+Any regions in the list that have not yet been built will be, and then the full list of hydrated [[Region Cards|RegionCards]] will be returned.
+</p>
+<p>
+Instead of using this endpoint, it is possible to pull down a full list of Regions and then submit only the ones that need to be built to the [[Build Regions|BuildRegions]] endpoint.
+</p>
+
+
+## ⬆️ Request(s)
+### `POST {api_domain}api/v1/region/build-and-return/{AggregationSchemeId}`
+- [[AggregationSchemeId|AggregationSchemes]] - Aggregation Scheme Id
+
+#### Request Body
+- Must include a list of the Regional Identifiers ([[HashIds|HashIds]] or [[Urids|Urids]]) for the Regions that need to be built and returned. 
+```json
+[
+    "p0aRdZl0VJ",
+    1905981
+]
+```
+
+
+## ⬇️ Response
+- The expected response is `json`
+
+### Example Response:
+```json
+[
+  {
+    "hashId": "wlx6e9WwVk",
+    "urid": 1905008,
+    "userModelId": null,
+    "modelId": 17026,
+    "description": "Marion County, OR",
+    "modelBuildStatus": "Complete",
+    "employment": 0.0,
+    "output": 0.0,
+    "valueAdded": 0.0,
+    "isCustomized": false,
+    "isCombined": false,
+    "regionType": "County",
+    "datasetId": 98,
+    "datasetDescription": "2023",
+    "parentRegionIds": [
+      {
+        "regionType": "Msa",
+        "hashId": "W1aQlLzoxj",
+        "urid": 1862706
+      },
+      {
+        "regionType": "State",
+        "hashId": "9pbP1nM0VN",
+        "urid": 1863644
+      }
+    ],
+    "isMrioAllowed": true,
+    "isCustomizable": true,
+    "isCombinable": true,
+    "hasAccess": true,
+    "hasAccessibleChildren": false,
+    "regionTypeDescription": "County",
+    "regionTypeSort": 3,
+    "geoId": "41047",
+    "congressionalSession": null
+  },
+  ...
+]
+```
+
+
+
+---
 
 ## Customizing Regions
+
 Regions can be customized using the endpoints provided below. For each type of customization, one endpoint will provide regional data that can be used for creating modifications and the other endpoint accepts the modification request.
 
 Note: a region must be built prior to making modifications.
@@ -3035,9 +3130,12 @@ An array of objects, each containing the following properties:
 
 
 # Appendix
-## Code Examples to retrieve tokens
 
-### C# example
+## Code Examples
+
+### Authentication - Getting the Bearer Token - for non-SSO, non-M2M customers:
+
+#### C# example
 ```
 var options = new RestClientOptions("{{api_domain}}")
 {
@@ -3054,7 +3152,7 @@ RestResponse response = await client.ExecuteAsync(request);
 Console.WriteLine(response.Content);
 ```
 
-### Java Example
+#### Java Example
 ```
 Unirest.setTimeouts(0, 0);
 HttpResponse<String> response = Unirest.post("{{api_domain}}{{env}}/auth")
@@ -3063,7 +3161,7 @@ HttpResponse<String> response = Unirest.post("{{api_domain}}{{env}}/auth")
   .asString();
 ```
 
-### Node Example
+#### Node Example
 ```
 var request = require('request');
 var options = {
@@ -3081,7 +3179,7 @@ request(options, function (error, response) {
 });
 ```
 
-###  Python Example
+####  Python Example
 ```
 import http.client
 
@@ -3096,7 +3194,7 @@ data = res.read()
 print(data.decode("utf-8"))
 ```
 
-### R Example
+#### R Example
 ```
 library(RCurl)
 headers = c(
