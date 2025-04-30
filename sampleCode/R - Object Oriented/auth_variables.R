@@ -29,7 +29,7 @@ if (!exists("auth_env")){
   path <- "C:\\git\\api\\sampleCode\\R"
   
   auth_env <- new.env()
-  auth_env$baseurl <- "https://api.implan.com/beta/"
+  auth_env$baseurl <- "https://api.implan.com/"
   auth_env$lastset <- Sys.time()
   auth_env$token <- NA
   auth_env$validated_token <- NA
