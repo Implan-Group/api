@@ -9,7 +9,7 @@ group_dollar_year <- 2021 #dollar year for groups
 folder_name <- "r_demo_folder_11" #folder name to save to on Implan
 
 base_url_implan <- "https://api.implan.com" #base url for API calls
-implan_env_path <- "/api" #environment #Beta:/beta/api Prod:/api 
+implan_env_path <- "/api" #environment #Prod:/api 
 
 
 
