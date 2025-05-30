@@ -2,8 +2,8 @@ import requests
 import logging
 
 class IndustryCode:
-    def __init__(self, id_, code, description):
-        self.id = id_
+    def __init__(self, id, code, description):
+        self.id = id
         self.code = code
         self.description = description
 

@@ -2,10 +2,10 @@ import requests
 import logging
 
 class DataSet:
-    def __init__(self, id_, description, is_default):
-        self.id = id_
+    def __init__(self, id, description, isDefault):
+        self.id = id
         self.description = description
-        self.is_default = is_default
+        self.isDefault = isDefault
 
 class DataSetEndpoints:
     @staticmethod

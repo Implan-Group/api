@@ -18,7 +18,7 @@ def main():
     RunImpactAnalysisWorkflow.examples(bearer_token)
 
     # Regional Workflow
-    RegionalWorkflow.examples(bearer_token)
+    # RegionalWorkflow.examples(bearer_token)
 
     # MultiEventToMultiGroupWorkflow.examples(bearer_token)
 
@@ -26,7 +26,7 @@ def main():
     # CombinedRegionWorkflow.examples(bearer_token)
 
     # Run Impact Analysis Workflow
-    # RunImpactAnalysisWorkflow.examples(bearer_token)
+    RunImpactAnalysisWorkflow.examples(bearer_token)
 
     logging.info("finished")
 
