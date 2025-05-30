@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "77b3b921-8392-48a1-bb08-6cdf4ff4a835",
+		"_postman_id": "b110c065-e418-4c70-a73e-308a844b2cdc",
 		"name": "IMPLAN-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "28583816"
@@ -4074,7 +4074,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"impactEventType\": \"IndustryImpactAnalysis\",\r\n    \"IndustryCode\" : 1,\r\n    \"IntermediateInputs\": 56,\r\n    \"TotalEmployment\": 3,\r\n    \"EmployeeCompensation\": 4,\r\n    \"ProprietorIncome\": 5,\r\n    \"WageAndSalaryEmployment\" : 1,\r\n    \"ProprietorEmployment\" : 2,\r\n    \"TotalLaborIncome\" : 9,\r\n    \"OtherPropertyIncome\" : 34,\r\n    \"TaxOnProductionAndImports\" : 23,\r\n    \"TotalOutput\": null,\r\n    \"title\": \"IndustryImpactAnalysis_api\",\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternDatasetId\": 87,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"SpendingPatternCommodities\": null,\r\n    \"Tags\": []\r\n}",
+									"raw": "{\r\n    \"impactEventType\": \"IndustryImpactAnalysis\",\r\n    \"IndustryCode\" : 1,\r\n    \"IntermediateInputs\": 56,\r\n    \"TotalEmployment\": 3,\r\n    \"EmployeeCompensation\": 4,\r\n    \"ProprietorIncome\": 5,\r\n    \"WageAndSalaryEmployment\" : 1,\r\n    \"ProprietorEmployment\" : 2,\r\n    \"TotalLaborIncome\" : 9,\r\n    \"OtherPropertyIncome\" : 34,\r\n    \"TaxOnProductionAndImports\" : 23,\r\n    \"TotalOutput\": null,\r\n    \"title\": \"IndustryImpactAnalysis_api\",\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternDatasetId\": 87,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"SpendingPatternCommodities\": null,\r\n    \"Tags\": [],\r\n    \"IsLocalEmployeeCompensation\": false\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4110,7 +4110,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"impactEventType\": \"InternationalIndustryImpactAnalysis\",\r\n    \"IndustryCode\" : 5,\r\n    \"IntermediateInputs\": 5000000,\r\n    \"TotalEmployment\": 24,\r\n    \"EmployeeCompensation\": 4000000,\r\n    \"WageAndSalaryEmployment\" : 24,\r\n    \"TotalLaborIncome\" : 4000000,\r\n    \"GrossOperationSurplus\" : 500000,\r\n    \"OtherTaxOnProductionAndImports\" : 500000,\r\n    \"TotalOutput\": 10000000,\r\n    \"title\": \"InternationalIndustryImpactAnalysis_api\",\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternDatasetId\": 95,\r\n    \"SpendingPatternRegionUrid\": 1861222,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"Tags\": [],\r\n    \"SpendingPatternCommodities\": []\r\n}",
+									"raw": "{\r\n    \"impactEventType\": \"InternationalIndustryImpactAnalysis\",\r\n    \"IndustryCode\" : 5,\r\n    \"IntermediateInputs\": 5000000,\r\n    \"TotalEmployment\": 24,\r\n    \"EmployeeCompensation\": 4000000,\r\n    \"WageAndSalaryEmployment\" : 24,\r\n    \"TotalLaborIncome\" : 4000000,\r\n    \"GrossOperationSurplus\" : 500000,\r\n    \"OtherTaxOnProductionAndImports\" : 500000,\r\n    \"TotalOutput\": 10000000,\r\n    \"title\": \"InternationalIndustryImpactAnalysis_api\",\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternDatasetId\": 95,\r\n    \"SpendingPatternRegionUrid\": 1861222,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"Tags\": [],\r\n    \"SpendingPatternCommodities\": [],\r\n    \"IsLocalEmployeeCompensation\": false\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4146,7 +4146,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"impactEventType\": \"CustomIndustryImpactAnalysis\",\r\n    \"title\": \"CustomIndustryImpactAnalysis_API_Example\",\r\n    \"SpendingPatternDatasetId\": 96,\r\n    \"SpecificationCode\" : 21059,\r\n    \"WageAndSalaryEmployment\" : 10,\r\n    \"ProprietorEmployment\" : 2,\r\n    \"TotalEmployment\": 12,\r\n    \"EmployeeCompensation\": 40000,\r\n    \"ProprietorIncome\": 100000,\r\n    \"TotalLaborIncome\" : 140000,\r\n    \"TaxOnProductionAndImports\" : 2300,\r\n    \"OtherPropertyIncome\" : 3400,\r\n    \"IntermediateInputs\": 5600,    \r\n    \"TotalOutput\": null,\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"SpendingPatternCommodities\": null,\r\n    \"Tags\": [\"Testing\"]\r\n}",
+									"raw": "{\r\n    \"impactEventType\": \"CustomIndustryImpactAnalysis\",\r\n    \"title\": \"CustomIndustryImpactAnalysis_API_Example\",\r\n    \"SpendingPatternDatasetId\": 96,\r\n    \"SpecificationCode\" : 21059,\r\n    \"WageAndSalaryEmployment\" : 10,\r\n    \"ProprietorEmployment\" : 2,\r\n    \"TotalEmployment\": 12,\r\n    \"EmployeeCompensation\": 40000,\r\n    \"ProprietorIncome\": 100000,\r\n    \"TotalLaborIncome\" : 140000,\r\n    \"TaxOnProductionAndImports\" : 2300,\r\n    \"OtherPropertyIncome\" : 3400,\r\n    \"IntermediateInputs\": 5600,    \r\n    \"TotalOutput\": null,\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"SpendingPatternCommodities\": null,\r\n    \"Tags\": [\"Testing\"],\r\n    \"IsLocalEmployeeCompensation\": false\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -4182,7 +4182,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"impactEventType\": \"CustomInternationalIndustryImpactAnalysis\",\r\n    \"title\": \"CustomInternationalIndustryImpactAnalysis_API_Example\",\r\n    \"SpendingPatternDatasetId\": 95,\r\n    \"SpecificationCode\" : 21089,\r\n    \"IntermediateInputs\": 5000000,\r\n    \"TotalEmployment\": 24,\r\n    \"EmployeeCompensation\": 4000000,\r\n    \"WageAndSalaryEmployment\" : 24,\r\n    \"TotalLaborIncome\" : 4000000,\r\n    \"GrossOperationSurplus\" : 500000,\r\n    \"OtherTaxOnProductionAndImports\" : 500000,\r\n    \"TotalOutput\": 10000000,\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"Tags\": [\"Testing\"],\r\n    \"spendingPatternCommodities\": []\r\n}",
+									"raw": "{\r\n    \"impactEventType\": \"CustomInternationalIndustryImpactAnalysis\",\r\n    \"title\": \"CustomInternationalIndustryImpactAnalysis_API_Example\",\r\n    \"SpendingPatternDatasetId\": 95,\r\n    \"SpecificationCode\" : 21089,\r\n    \"IntermediateInputs\": 5000000,\r\n    \"TotalEmployment\": 24,\r\n    \"EmployeeCompensation\": 4000000,\r\n    \"WageAndSalaryEmployment\" : 24,\r\n    \"TotalLaborIncome\" : 4000000,\r\n    \"GrossOperationSurplus\" : 500000,\r\n    \"OtherTaxOnProductionAndImports\" : 500000,\r\n    \"TotalOutput\": 10000000,\r\n    \"LocalPurchasePercentage\": 1,\r\n    \"IsSam\": false,\r\n    \"SpendingPatternValueType\": \"IntermediateExpenditure\",\r\n    \"Tags\": [\"Testing\"],\r\n    \"spendingPatternCommodities\": [],\r\n    \"IsLocalEmployeeCompensation\": false\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
