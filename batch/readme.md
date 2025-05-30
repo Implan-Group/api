@@ -24,7 +24,7 @@ The following variables can be used while developing against the IMPLAN API. Fol
    </td>
    <td>{{api_domain}}
    </td>
-   <td>api.implan.com/beta
+   <td>api.implan.com/
    </td>
   </tr>
   <tr>
@@ -32,7 +32,7 @@ The following variables can be used while developing against the IMPLAN API. Fol
    </td>
    <td>{{env}}
    </td>
-   <td>beta
+   <td>
    </td>
   </tr>
   <tr>
@@ -40,7 +40,7 @@ The following variables can be used while developing against the IMPLAN API. Fol
    </td>
    <td>{{email}}
    </td>
-   <td>Same as beta-app.implan.com
+   <td>
    </td>
   </tr>
   <tr>
@@ -48,7 +48,7 @@ The following variables can be used while developing against the IMPLAN API. Fol
    </td>
    <td>{{password}}
    </td>
-   <td>Same as beta-app.implan.com
+   <td>
    </td>
   </tr>
 </table>
@@ -132,7 +132,7 @@ IMPLAN has provided a [Postman](https://www.postman.com/) collection to help pro
 
 
 
-* IMPLAN [Batch API V1 Beta.postman_collection.json](/Implan%20API.postman_collection.json)
+* IMPLAN [Batch API V1 postman_collection.json](/Implan%20API.postman_collection.json)
 * [Postman Instructions for Importing a Collection](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman)
 
 Once downloaded, you may enter your application credentials into the “auth” request body to obtain a bearer token.  Copy the results of the “auth” response into the Collection’s Pre-request script:
