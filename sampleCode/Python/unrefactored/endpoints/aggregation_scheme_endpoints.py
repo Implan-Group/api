@@ -1,14 +1,7 @@
 import requests
 import logging
 
-class AggregationScheme:
-    def __init__(self, id_, description, industry_set_id, household_set_ids, map_code, status):
-        self.id = id_
-        self.description = description
-        self.industry_set_id = industry_set_id
-        self.household_set_ids = household_set_ids
-        self.map_code = map_code
-        self.status = status
+
 
 def get_response_data(url, headers, params=None):
     response = None

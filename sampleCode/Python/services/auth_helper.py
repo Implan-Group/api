@@ -2,7 +2,7 @@
 import os.path
 import requests
 
-class ImplanAuth:
+class AuthHelper:
     """
     This class contains the information needed to authorize to Implan's Impact API
     """
@@ -16,10 +16,9 @@ class ImplanAuth:
         self.username = username
         self.password = password
         self.base_url = "https://api.implan.com"
-        self.token = None
         self.token_path = "bearer.jwt"
 
-    def validate_token(self) -> bool:
+    def validate_token(self, token: str) -> bool:
         """
         This method validates whether our stored JWT Bearer Token is valid
         """
@@ -28,7 +27,7 @@ class ImplanAuth:
         try:
             # Hit a small endpoint
             url = f"{self.base_url}/api/v1/region/RegionTypes"
-            headers = {"Authorization": self.token}
+            headers = {"Authorization": token}
             response = requests.get(url, headers=headers)
             # We do not care about the response's content, only its Status
             response.raise_for_status()
@@ -55,12 +54,7 @@ class ImplanAuth:
             with open(self.token_path, "r", encoding="utf-8") as file:
                 token = file.read()
             # Verify the token is still valid by hitting one of the smallest endpoints
-            url = f"{self.base_url}/api/v1/region/RegionTypes"
-            headers = {"Authorization": token}
-            response = requests.get(url, headers=headers)
-            if response.status_code == 200:
-                # This token is still valid
-                logging.info("Authenticated to Implan Impact API")
+            if self.validate_token(token):
                 return token
             logging.info(f"Stored token is invalid, retrieving a new one...")
 

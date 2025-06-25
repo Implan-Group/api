@@ -1,10 +1,11 @@
 import os
 import sys
-
 import datetime
 import logging
 import json
 
+from datetime import timedelta
+from requests import PreparedRequest
 from requests.models import Request, Response
 
 
@@ -26,9 +27,9 @@ class LoggingHelper:
 
 
     def log_request_response(self,
-                             request: Request,
+                             request: PreparedRequest,
                              response: Response,
-                             elapsed_time: float):
+                             elapsed_time: timedelta):
         message: list[str] = []
 
         # Header
@@ -45,9 +46,9 @@ class LoggingHelper:
                     continue
                 message.append(f"  {key}: {value}")
         # If we sent a payload with the request, log it
-        if request.data:
+        if request.body:
             message.append(f"{request.headers.get("Content-Type")} Body:")
-            message.append(json.dumps(request.data, indent=2))
+            message.append(json.dumps(request.body, indent=2))
 
         # Response Information
         message.append(f"Response {response.status_code} {response.reason} in {elapsed_time:.1f}ms")
