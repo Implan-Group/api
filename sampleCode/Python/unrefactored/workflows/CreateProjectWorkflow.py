@@ -1,15 +1,15 @@
 import logging
 import datetime
 
-from endpoints.aggregation_scheme_endpoints import AggregationSchemeEndpoints
-from endpoints.dataset_endpoints import DataSetEndpoints
-from endpoints.project_endpoints import Project, ProjectEndpoints
-from endpoints.industry_set_endpoints import IndustrySets
-from endpoints.industry_code_endpoints import IndustryCodeEndpoints
-from endpoints.events.event_endpoints import EventEndpoints
-from endpoints.events import IndustryOutputEvent, IndustryImpactAnalysisEvent
-from endpoints.group_endpoints import GroupEndpoints,Group,GroupEvent
-from endpoints.regions.region_endpoints import RegionEndpoints
+from unrefactored.endpoints.aggregation_scheme_endpoints import AggregationSchemeEndpoints
+from unrefactored.endpoints.dataset_endpoints import DataSetEndpoints
+from unrefactored.endpoints.project_endpoints import Project, ProjectEndpoints
+from unrefactored.endpoints.industry_set_endpoints import IndustrySets
+from unrefactored.endpoints.industry_code_endpoints import IndustryCodeEndpoints
+from unrefactored.endpoints.events.event_endpoints import EventEndpoints
+from models import IndustryImpactAnalysisEvent, IndustryOutputEvent
+from unrefactored.endpoints.group_endpoints import GroupEndpoints,Group,GroupEvent
+from unrefactored.endpoints.regions.region_endpoints import RegionEndpoints
 
 class CreateProjectWorkflow:
     @staticmethod

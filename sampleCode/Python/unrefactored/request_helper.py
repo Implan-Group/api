@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from requests import Session, Request, PreparedRequest, Response
 from requests.auth import AuthBase
 
-from implan_logging import Logging
+from implan_logging import LoggingHelper
 
 
 class BearerTokenAuth(AuthBase):
@@ -82,8 +82,8 @@ class RestHelper:
         end: datetime = datetime.now()
         elapsed: timedelta = end - start
 
-        Logging.log_request_response(self.session, request, response, elapsed_time=elapsed.total_seconds(),
-                                     response_data=None, response_data_type=None)
+        LoggingHelper.log_request_response(self.session, request, response, elapsed_time=elapsed.total_seconds(),
+                                           response_data=None, response_data_type=None)
 
         return response
 

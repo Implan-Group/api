@@ -1,9 +1,9 @@
 import time
 import logging
 
-from endpoints.project_endpoints import ProjectEndpoints
-from endpoints.impact_endpoints import ImpactEndpoints
-from endpoints.impact_result_endpoints import ImpactResultEndpoints
+from unrefactored.endpoints.project_endpoints import ProjectEndpoints
+from unrefactored.endpoints.impact_endpoints import ImpactEndpoints
+from unrefactored.endpoints.impact_result_endpoints import ImpactResultEndpoints
 
 class RunImpactAnalysisWorkflow:
     ProjectId = ""

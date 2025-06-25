@@ -1,14 +1,14 @@
 import datetime
 
-from endpoints.events import IndustryOutputEvent, HouseholdIncomeEvent
-from endpoints.events.event_endpoints import EventEndpoints
-from endpoints.group_endpoints import Group, GroupEvent, GroupEndpoints
-from endpoints.industry_code_endpoints import IndustryCodeEndpoints
-from endpoints.specification_endpoints import SpecificationEndpoints
-from workflows.RunImpactAnalysisWorkflow import RunImpactAnalysisWorkflow
-from endpoints.project_endpoints import Project, ProjectEndpoints
-from endpoints.aggregation_scheme_endpoints import AggregationSchemeEndpoints
-from endpoints.regions.region_endpoints import RegionEndpoints
+from models import HouseholdIncomeEvent, IndustryOutputEvent
+from unrefactored.endpoints.events.event_endpoints import EventEndpoints
+from unrefactored.endpoints.group_endpoints import Group, GroupEvent, GroupEndpoints
+from unrefactored.endpoints.industry_code_endpoints import IndustryCodeEndpoints
+from unrefactored.endpoints.specification_endpoints import SpecificationEndpoints
+from unrefactored.workflows.RunImpactAnalysisWorkflow import RunImpactAnalysisWorkflow
+from unrefactored.endpoints.project_endpoints import Project, ProjectEndpoints
+from unrefactored.endpoints.aggregation_scheme_endpoints import AggregationSchemeEndpoints
+from unrefactored.endpoints.regions.region_endpoints import RegionEndpoints
 
 class MultiEventToMultiGroupWorkflow:
     @staticmethod

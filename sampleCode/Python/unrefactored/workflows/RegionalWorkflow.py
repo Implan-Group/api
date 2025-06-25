@@ -1,6 +1,6 @@
 import logging
 
-from endpoints.regions.region_endpoints import RegionEndpoints
+from unrefactored.endpoints.regions.region_endpoints import RegionEndpoints
 
 class RegionalWorkflow:
     @staticmethod

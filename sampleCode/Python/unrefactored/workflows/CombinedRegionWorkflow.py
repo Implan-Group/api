@@ -1,9 +1,9 @@
 import time
 
 from datetime import datetime
-from endpoints.aggregation_scheme_endpoints import AggregationSchemeEndpoints
-from endpoints.dataset_endpoints import DataSetEndpoints
-from endpoints.regions.region_endpoints import RegionEndpoints
+from unrefactored.endpoints.aggregation_scheme_endpoints import AggregationSchemeEndpoints
+from unrefactored.endpoints.dataset_endpoints import DataSetEndpoints
+from unrefactored.endpoints.regions.region_endpoints import RegionEndpoints
 from endpoints.regions.CombineRegionRequest import CombineRegionRequest
 
 class CombinedRegionWorkflow:
