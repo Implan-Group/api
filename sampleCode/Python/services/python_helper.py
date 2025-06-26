@@ -8,3 +8,4 @@ def pretty_timedelta(elapsed: timedelta) -> str:
         return str(elapsed)
     return f"-({-elapsed!s})"
 
+

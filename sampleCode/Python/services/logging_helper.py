@@ -17,7 +17,7 @@ class LoggingHelper:
 
     def __init__(self):
         # Configure logging to show all messages INFO severity or higher with a specific format
-        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
         # Ensure that the Console can display all UTF8 characters
         sys.stdout.reconfigure(encoding='utf-8')
         # We're going to be logging to local files in a logs directory

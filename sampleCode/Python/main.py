@@ -1,10 +1,12 @@
 import logging
+import os
 
 from endpoints.api_endpoints import EndpointsHelper
 from services.auth_helper import AuthHelper
 from services.rest_helper import RestHelper
 from services.logging_helper import LoggingHelper
 from workflow_examples.simple_project_example import SimpleProjectExample
+from dotenv import load_dotenv
 
 # from unrefactored.workflows.CreateProjectWorkflow import CreateProjectWorkflow
 # from unrefactored.workflows.RegionalWorkflow import RegionalWorkflow
@@ -16,12 +18,8 @@ from workflow_examples.simple_project_example import SimpleProjectExample
 # Setup console + file logging
 logging_helper = LoggingHelper()
 
-# Required Information:
-
-# Implan Username and Password
-username: str = ""
-password: str = ""
-
+# Load information from the secret `.env` file (see `readme.md` for more information)
+load_dotenv()
 
 ################################################################################
 
@@ -37,6 +35,8 @@ def main():
     logging.info("Authenticating to Implan Impact API...")
 
     # Send in our required username and password
+    username = os.getenv("IMPLAN_USERNAME")
+    password = os.getenv("IMPLAN_PASSWORD")
     auth = AuthHelper(username, password)
     # Retrieve the bearer token
     token = auth.get_bearer_token()

@@ -1,22 +1,26 @@
 ﻿import http
 from email.headerregistry import ContentTypeHeader
+from http import HTTPMethod
 
 import requests
 import logging
 
-from typing import Any
+from typing import Any, TypeVar, Type
 from datetime import datetime, timedelta
 from requests import Session, Request, PreparedRequest, Response
+
+from services.json_helper import JsonHelper
 from services.logging_helper import LoggingHelper
+
 
 
 class RestHelper:
     def __init__(self, token: str, logging_helper: LoggingHelper, base_url: str | None = None):
         self.token = token
         self.logging_helper = logging_helper
-        self.timeout_sec: int = 30
+        self.timeout_sec: float = 30.0
 
-    def get_session(self) -> requests.Session:
+    def _get_session(self) -> requests.Session:
         """
         Gets an authorized HTTP Session
         """
@@ -26,86 +30,68 @@ class RestHelper:
         session.headers["Authorization"] = self.token
         return session
 
-    def send_http_request(self,
-                          http_method: http.HTTPMethod,
-                          url: str,
-                          params: dict[str, Any] | None = None,
-                          data: Any | None = None,
-                          json_data: str | None = None) -> Any:
-        """
-        Send an HTTP Request to an api endpoint
-        :param http_method:
-        :param url:
-        :param params:
-        :param data:
-        :param json_data:
-        :return:
-        """
-
-        # Get the starting time (so we know how long this entire process takes)
+    def _send(self,
+              http_method: HTTPMethod,
+              url: str,
+              headers: dict[str, Any] | None = None,
+              query_params: dict[str, Any] | None = None,
+              body: str | Any | None = None,
+              ) -> Response:
+        # Time this process for logging and debugging
         start: datetime = datetime.now()
 
-        # Start a new HTTP Session
-        with self.get_session() as session:
+        # Start a new HTTP session
+        with self._get_session() as session:
+            # Create the request
+            request: Request = Request(http_method, url, headers=headers, params=query_params)
+            # Prepare it with our session
+            prepped: PreparedRequest = session.prepare_request(request)
 
-            # Try to create the request
-            try:
-                request: Request = Request(method=http_method, url=url, params=params, data=data, json=json_data)
-            except Exception as ex:
-                logging.error(f"Could not create a {http_method} Request to {url}: {ex}")
-                raise
+            # If body is a string, treat it as raw json
+            if body is str:
+                prepped.headers["Content-Type"] = "application/json"
+                prepped.body = body
 
-            # Use the session to Prepare it
-            try:
-                prepared_request: PreparedRequest = session.prepare_request(request)
-            except Exception as ex:
-                logging.error(f"Could not prepare Request `{request}`: {ex}")
-                raise
+            # If body is Any, jsonify it
+            if body is Any:
+                prepped.headers["Content-Type"] = "application/json"
+                prepped.body = JsonHelper.serialize(body)
 
             # Send the Request
-            try:
-                response: Response = session.send(prepared_request, timeout=self.timeout_sec)
-            except Exception as ex:
-                logging.error(f"Could not send Request `{request}`: {ex}")
-                raise
+            response: Response = session.send(prepped, timeout=self.timeout_sec)
 
-            # If it is not a 200 OK, log and raise an error
-            if response.status_code != http.HTTPStatus.OK:
-                logging.warning(f"Response `{response}` was not a 200 OK")
-                response.raise_for_status()
-
-            # Get the ending + total time taken
+            # End timing
             end: datetime = datetime.now()
-            elapsed_time: timedelta = end - start
+            total: timedelta = end - start
 
             # Log this
-            self.logging_helper.log_request_response(prepared_request, response, elapsed_time)
+            self.logging_helper.log_request_response(prepped, response, total)
 
-            # Return the response body
-            response_content_type = response.headers.get("Content-Type")
+            # raise an error for non-200 status codes
+            response.raise_for_status()
 
-            # if "json" in response_content_type:
-            #     return response.json()
-            #
-            # if "text" in response_content_type:
-            #     return response.text
+            # return the response
+            return response
 
-            return response.content
+    # Used for generic typing for response deserialization
+    AnyResponseType = TypeVar('AnyResponseType', None, str, Any)
 
-    def send_get_request(self,
-                         url: str,
-                         data: Any | None = None,
-                         json_data: str | None = None) -> Any:
-        return self.send_http_request(http.HTTPMethod.GET, url, data, json_data)
 
-    def send_post_request(self,
-                          url: str,
-                          data: Any | None = None,
-                          json_data: str | None = None) -> Any:
-        return self.send_http_request(http.HTTPMethod.POST, url, data, json_data)
+    def get(self,
+            url: str,
+            return_type: AnyResponseType,
+            headers: dict[str, Any] | None = None,
+            query_params: dict[str, Any] | None = None,
+            body: str | Any | None = None,
+            ) -> AnyResponseType:
 
-    def send_put_request(self,
-                         url: str,
-                         data: Any | None = None,
-                         json_data: str | None = None) -> Any:
-        return self.send_http_request(http.HTTPMethod.PUT, url, data, json_data)
+        response = self._send(HTTPMethod.GET, url, headers, query_params, body)
+        if return_type is str:
+            response.encoding="utf-8"
+            return response.text
+        if return_type is Any:
+            response.encoding = "utf-8"
+            json_text = response.text
+            JsonHelper.deserialize(json_text, return_type)
+
+

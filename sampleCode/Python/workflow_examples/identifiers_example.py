@@ -1,6 +1,7 @@
 ﻿from endpoints.api_endpoints import EndpointsHelper
 from models.aggregation_scheme import AggregationScheme
 from models.dataset_models import Dataset
+from models.industryset_models import IndustrySet
 from services.logging_helper import LoggingHelper
 from services.rest_helper import RestHelper
 
@@ -24,4 +25,6 @@ class IdentifiersExample:
         # These require an Aggregation Scheme Id
         datasets: list[Dataset] = endpoints.datasets.get_datasets(14)
 
+        # Industry Sets
+        industry_sets: list[IndustrySet] = endpoints.industry_sets.get_all()
 

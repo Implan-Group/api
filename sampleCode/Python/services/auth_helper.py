@@ -1,5 +1,6 @@
 ﻿import logging
 import os.path
+
 import requests
 
 class AuthHelper:
@@ -16,7 +17,7 @@ class AuthHelper:
         self.username = username
         self.password = password
         self.base_url = "https://api.implan.com"
-        self.token_path = "bearer.jwt"
+        self.token_path = "implan_auth.jwt"
 
 
     def validate_token(self, token: str) -> bool:
@@ -38,7 +39,7 @@ class AuthHelper:
             return False
 
 
-    def get_bearer_token(self) -> str | None:
+    def get_bearer_token(self) -> str:
         """
         Gets a valid JWT Bearer Token that must be used for all Endpoint Requests
         :return: A string containing "Bearer {token}"
@@ -49,28 +50,33 @@ class AuthHelper:
         # The JWT Bearer Token we're going to return
         token: str
 
-        # First, verify if we have a stored token
+        # Check if we have a stored token
         if os.path.exists(self.token_path):
-            # If the path exists, load the contents as our token
+            # If the path exists, load the contents of that file as our token
             with open(self.token_path, "r", encoding="utf-8") as file:
                 token = file.read()
-            # Verify the token is still valid by hitting one of the smallest endpoints
+            # Verify if this token is still valid
             if self.validate_token(token):
+                logging.debug("Auth: Stored Token is valid")
                 return token
-            logging.info(f"Stored token is invalid, retrieving a new one...")
+            logging.debug("Auth: Stored Token is invalid")
 
         # We must retrieve a new token
 
         # The Implan API auth endpoint
         url = f"{self.base_url}/auth"
-        # Body contains the username + password
+        # Body contains the specified username and password
         body = {
             "username": self.username,
             "password": self.password
         }
 
         # Send the request
-        response = requests.post(url, json=body)
+        try:
+            response = requests.post(url, json=body)
+        except Exception as ex:
+            print(ex)
+
         # If we got a 200 OK, this is a valid token
         if response.status_code == 200:
             # Save this token for re-use
@@ -79,9 +85,16 @@ class AuthHelper:
             with open(self.token_path, "w", encoding="utf-8") as file:
                 file.write(token)
             # Then return it
-            logging.info("Authenticated to Implan Impact API")
+            logging.debug("Auth: Retrieved and Stored new Token")
             return token
 
-        # Something is wrong
-        logging.error(f"Could not Authenticate to the Implan Impact API: Service unavailable or username or password are incorrect")
-        return None
+        # A 500 is service unavailable
+        if response.status_code == 500:
+            logging.warn("Auth: Implan Impact API Auth service is temporarily unavailable")
+            raise Exception("Auth Service Unavailable")
+
+        # Something else went wrong, log this and raise an error
+        logging.error("Auth: Invalid username and/or password")
+        response.raise_for_status()
+
+        assert False, "unreachable"

@@ -1,5 +1,6 @@
 ﻿import datetime
 import logging
+from uuid import UUID
 
 from endpoints.api_endpoints import EndpointsHelper
 from models.project_models import Project
@@ -22,6 +23,7 @@ class SimpleProjectExample:
         # Required:
         aggregation_scheme_id: int = 14
         household_set_id: int = 1
+        industry_set_id: int = None
 
         endpoints = EndpointsHelper(self.rest_helper, self.logging_helper)
 
@@ -39,6 +41,13 @@ class SimpleProjectExample:
         if not project.id:
             raise Exception("Project Creation Failed: Project Id is None")
         logging.info(f"Created Project #{project.id} '{project.title}'")
+
+        # Capture the ProjectId, it is used for future calls
+        project_id: UUID = project.id
+
+        # Now that a project has been created, it can be filled with groups and events
+
+
 
 
 
