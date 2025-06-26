@@ -246,3 +246,6 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Cached JWT Bearer Token(s)
+*.jwt
