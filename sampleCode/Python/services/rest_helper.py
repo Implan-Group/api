@@ -11,13 +11,10 @@ from services.logging_helper import LoggingHelper
 
 
 class RestHelper:
-    BASE_URL = "https://api.implan.com/"
-
     def __init__(self, token: str, logging_helper: LoggingHelper, base_url: str | None = None):
         self.token = token
         self.logging_helper = logging_helper
-        self.base_url: str = base_url or self.BASE_URL
-
+        self.timeout_sec: int = 30
 
     def get_session(self) -> requests.Session:
         """
@@ -45,8 +42,6 @@ class RestHelper:
         :return:
         """
 
-        # The relative url was passed in, we need the absolute url
-        url = self.base_url + url
         # Get the starting time (so we know how long this entire process takes)
         start: datetime = datetime.now()
 
@@ -89,13 +84,13 @@ class RestHelper:
             # Return the response body
             response_content_type = response.headers.get("Content-Type")
 
-            if response_content_type == "json":
-                return response.json()
+            # if "json" in response_content_type:
+            #     return response.json()
+            #
+            # if "text" in response_content_type:
+            #     return response.text
 
-            if response_content_type == "text":
-                return response.text
-
-            return response
+            return response.content
 
     def send_get_request(self,
                          url: str,

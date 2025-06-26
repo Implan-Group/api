@@ -5,8 +5,12 @@ import logging
 import json
 
 from datetime import timedelta
+from xml.etree.ElementTree import indent
+
 from requests import PreparedRequest
 from requests.models import Request, Response
+
+from services.python_helper import pretty_timedelta
 
 
 class LoggingHelper:
@@ -51,20 +55,24 @@ class LoggingHelper:
             message.append(json.dumps(request.body, indent=2))
 
         # Response Information
-        message.append(f"Response {response.status_code} {response.reason} in {elapsed_time:.1f}ms")
+        message.append(f"Response {response.status_code} {response.reason} in {pretty_timedelta(elapsed_time)}")
 
         # Failed?
         if not response.ok:
             message.append(f"Failed: {response.text}")
         # Success!
         else:
-            message.append(f"{response.headers.get("Content-Type")} Body:")
-            message.append(json.dumps(response.content, indent=2))
+            response_content_type = response.headers.get("Content-Type")
+            message.append(f"{response_content_type} Body:")
+            if "json" in response_content_type:
+                message.append(json.dumps(response.json(), indent=2))
+            else:
+                message.append(response.text)
 
         # Turn the messages into a log
         msg = "\r\n".join(message)
-        # Write this log message to the console
-        logging.info(msg)
+        # Write this log message to the logger
+        logging.debug(msg)
         # Append in the log file
         with open(self.log_path, "a", encoding="utf-8") as file:
             file.write(msg + "\r\n")  # With an extra newline for readability

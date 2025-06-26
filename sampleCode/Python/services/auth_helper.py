@@ -18,6 +18,7 @@ class AuthHelper:
         self.base_url = "https://api.implan.com"
         self.token_path = "bearer.jwt"
 
+
     def validate_token(self, token: str) -> bool:
         """
         This method validates whether our stored JWT Bearer Token is valid

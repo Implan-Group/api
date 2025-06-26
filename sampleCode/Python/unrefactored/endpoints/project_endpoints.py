@@ -1,41 +1,8 @@
 import requests
 
-class Project:
-    def __init__(self, id_, title, aggregation_scheme_id, household_set_id, is_mrio=False, folder_id=None, last_impact_run_id=None):
-        self.id = id_
-        self.title = title
-        self.aggregation_scheme_id = aggregation_scheme_id
-        self.household_set_id = household_set_id
-        self.is_mrio = is_mrio
-        self.folder_id = folder_id
-        self.last_impact_run_id = last_impact_run_id
 
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            id_=data.get("id"),
-            title=data.get("title"),
-            aggregation_scheme_id=data.get("aggregationSchemeId"),
-            household_set_id=data.get("householdSetId"),
-            is_mrio=data.get("isMrio", False),
-            folder_id=data.get("folderId"),
-            last_impact_run_id=data.get("lastImpactRunId"),
-        )
 
-    def to_dict(self):
-        data = {
-            "Title": self.title,
-            "AggregationSchemeId": self.aggregation_scheme_id,
-            "HouseholdSetId": self.household_set_id,
-            "IsMrio": self.is_mrio,
-        }
-        if self.folder_id is not None:
-            data["FolderId"] = self.folder_id
-        if self.last_impact_run_id is not None:
-            data["LastImpactRunId"] = self.last_impact_run_id
-        return data
-
-class ProjectEndpoints:
+class ProjectEndpointsOld:
     @staticmethod
     def create(project, bearer_token):
         url = "https://api.implan.com/api/v1/impact/project"
