@@ -1,10 +1,11 @@
 import logging
 import os
 
-from endpoints.api_endpoints import EndpointsHelper
+from endpoints.endpoints_root import EndpointsHelper
 from services.auth_helper import AuthHelper
 from services.rest_helper import RestHelper
 from services.logging_helper import LoggingHelper
+from workflow_examples.identifiers_example import IdentifiersExample
 from workflow_examples.simple_project_example import SimpleProjectExample
 from dotenv import load_dotenv
 
@@ -47,7 +48,11 @@ def main():
     # Here is where you can freely modify the rest of this method for your particular workflow!
 
     workflow = SimpleProjectExample(rest_helper, logging_helper)
-    workflow.complete_workflow()
+    workflow.execute_example()
+
+    #workflow = IdentifiersExample(rest_helper, logging_helper)
+    #workflow.execute_example()
+
     print('break')
 
 

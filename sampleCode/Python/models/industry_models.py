@@ -14,3 +14,13 @@
         self.is_default = is_default
         self.map_type_id = map_type_id
         self.is_naics_compatible = is_naics_compatible
+
+
+class IndustryCode:
+    def __init__(self,
+                 id: int,
+                 code: int,
+                 description: str):
+        self.id = id
+        self.code = code
+        self.description = description

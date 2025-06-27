@@ -2,8 +2,13 @@
 import logging
 from uuid import UUID
 
-from endpoints.api_endpoints import EndpointsHelper
+from openpyxl.styles.builtins import title
+
+from endpoints.endpoints_root import EndpointsHelper
+from models.enums import SpendingPatternValueType
+from models.event_models import IndustryOutputEvent, IndustryImpactAnalysisEvent
 from models.project_models import Project
+from services import python_helper
 from services.logging_helper import LoggingHelper
 from services.rest_helper import RestHelper
 
@@ -19,14 +24,12 @@ class SimpleProjectExample:
         self.rest_helper: RestHelper = rest_helper
         self.logging_helper: LoggingHelper = logging_helper
 
-    def complete_workflow(self):
+    def execute_example(self):
         # Required:
-        aggregation_scheme_id: int = 14
-        household_set_id: int = 1
-        industry_set_id: int = None
+        aggregation_scheme_id: int = 14     # 528 Unaggregated
+        household_set_id: int = 1           #
 
         endpoints = EndpointsHelper(self.rest_helper, self.logging_helper)
-
 
         # Define the Project with required fields
         project_definition = Project(
@@ -37,7 +40,7 @@ class SimpleProjectExample:
         )
 
         # Create the project
-        project: Project = endpoints.projects.create(project_definition)
+        project: Project = endpoints.project_endpoints.create(project_definition)
         if not project.id:
             raise Exception("Project Creation Failed: Project Id is None")
         logging.info(f"Created Project #{project.id} '{project.title}'")
@@ -46,6 +49,51 @@ class SimpleProjectExample:
         project_id: UUID = project.id
 
         # Now that a project has been created, it can be filled with groups and events
+
+        # Events
+        # We'll need an Industry Set Code and an Industry Code in order to specify events
+        # See `IdentifiersExample` for ways to retrieve those ids
+        industry_set_id = 12    # 528 Industries
+        industry_code = 3       # Vegetable and fruit farming
+
+        # Since we have a valid Project Id, we can query for all Event Types that are valid for this Project
+        event_types = endpoints.event_endpoints.get_event_types(project_id)
+
+        # For this example, we're going to create a simple Industry Output Event
+        industry_output_event = IndustryOutputEvent(
+            id = python_helper.uuid_empty(),
+            project_id=project_id,
+            title="Example Industry Output Event",
+            industry_code=industry_code,
+            output=100_000
+        )
+
+        # Add this Event to the Project
+        # We re-assign here as the returned Event is fully hydrated
+        industry_output_event = endpoints.event_endpoints.add_event(project_id, industry_output_event)
+
+        print(industry_output_event)
+
+        # And a much more complicated Industry Impact Analysis Event
+        industry_impact_analysis_event = IndustryImpactAnalysisEvent(
+            id = python_helper.uuid_empty(),
+            project_id=project_id,
+            title="Example Industry Impact Analysis Event",
+            industry_code=industry_code,
+            intermediate_inputs=500_000,
+            total_employment=5,
+            employee_compensation=250_000,
+            proprietor_income=50_000,
+            wage_and_salary_employment=4,
+            proprietor_employment=1,
+            total_labor_income=300_000,
+            other_property_income=100_000,
+            tax_on_production_and_imports=100_000,
+            local_purchase_percentage=1.0,
+            is_sam=False,
+            spending_pattern_dataset_id=87,
+            spending_pattern_value_type=SpendingPatternValueType.INTERMEDIATE_EXPENDITURE
+        )
 
 
 

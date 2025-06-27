@@ -1,4 +1,6 @@
 ﻿from datetime import timedelta
+from uuid import UUID
+
 
 def pretty_timedelta(elapsed: timedelta) -> str:
     """
@@ -8,4 +10,5 @@ def pretty_timedelta(elapsed: timedelta) -> str:
         return str(elapsed)
     return f"-({-elapsed!s})"
 
-
+def uuid_empty() -> UUID:
+    return UUID(int=0)

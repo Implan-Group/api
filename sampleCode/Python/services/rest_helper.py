@@ -13,7 +13,6 @@ from services.json_helper import JsonHelper
 from services.logging_helper import LoggingHelper
 
 
-
 class RestHelper:
     def __init__(self, token: str, logging_helper: LoggingHelper, base_url: str | None = None):
         self.token = token
@@ -75,23 +74,97 @@ class RestHelper:
 
     # Used for generic typing for response deserialization
     AnyResponseType = TypeVar('AnyResponseType', None, str, Any)
-
+    T = TypeVar('T')
 
     def get(self,
             url: str,
-            return_type: AnyResponseType,
+            return_type: Type[T],
             headers: dict[str, Any] | None = None,
             query_params: dict[str, Any] | None = None,
             body: str | Any | None = None,
             ) -> AnyResponseType:
 
         response = self._send(HTTPMethod.GET, url, headers, query_params, body)
+
         if return_type is str:
-            response.encoding="utf-8"
+            response.encoding = "utf-8"
             return response.text
+
         if return_type is Any:
             response.encoding = "utf-8"
             json_text = response.text
-            JsonHelper.deserialize(json_text, return_type)
+            instance = JsonHelper.deserialize(json_text, return_type)
+            return instance
 
+        # Just return the bytes
+        return response.content
 
+    def send_http_request(self,
+                          http_method: http.HTTPMethod,
+                          url: str,
+                          params: dict[str, Any] | None = None,
+                          data: Any | None = None,
+                          json_str: str | None = None) -> Any:
+        """
+        Send an HTTP Request to an api endpoint
+        :param http_method:
+        :param url:
+        :param params:
+        :param data:
+        :param json_str:
+        :return:
+        """
+
+        # Get the starting time (so we know how long this entire process takes)
+        start: datetime = datetime.now()
+
+        # Start a new HTTP Session
+        with self._get_session() as session:
+
+            # Try to create the request
+            try:
+                request: Request = Request(method=http_method, url=url, params=params, data=data, json=json_str)
+            except Exception as ex:
+                logging.error(f"Could not create a {http_method} Request to {url}: {ex}")
+                raise
+
+            # Ensure we've set the right content-type
+            if data is not None or json_str is not None:
+                request.headers["Content-Type"] = "application/json"
+
+            # Use the session to Prepare it
+            try:
+                prepared_request: PreparedRequest = session.prepare_request(request)
+            except Exception as ex:
+                logging.error(f"Could not prepare Request `{request}`: {ex}")
+                raise
+
+            # Send the Request
+            try:
+                response: Response = session.send(prepared_request, timeout=self.timeout_sec)
+            except Exception as ex:
+                logging.error(f"Could not send Request `{request}`: {ex}")
+                raise
+
+            # If it is not a 200 OK, log and raise an error
+            if response.status_code != http.HTTPStatus.OK:
+                logging.warning(f"Response `{response}` was not a 200 OK")
+                response.raise_for_status()
+
+            # Get the ending + total time taken
+            end: datetime = datetime.now()
+            elapsed_time: timedelta = end - start
+
+            # Log this
+            self.logging_helper.log_request_response(prepared_request, response, elapsed_time)
+
+            # Return the response body
+            response_content_type = response.headers.get("Content-Type")
+
+            # if "json" in response_content_type:
+            #     return response.json()
+            #
+            # if "text" in response_content_type:
+            #     return response.text
+
+            return response.content

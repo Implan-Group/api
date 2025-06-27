@@ -1,31 +1,36 @@
 ﻿from enum import Enum
 
 
-class EventType(Enum):
+class EventType(str, Enum):
     """
     All the possible Event Types
+    Not all event types are available for all projects
     """
     UNKNOWN = 0
-    INDUSTRY_OUTPUT = 1
-    INDUSTRY_EMPLOYMENT = 2
-    INDUSTRY_EMPLOYEE_COMPENSATION = 3
-    INDUSTRY_PROPRIETOR_INCOME = 4
-    COMMODITY_OUTPUT = 5
-    LABOR_INCOME = 6
-    HOUSEHOLD_INCOME = 7
-    INDUSTRY_SPENDING_PATTERN_2018 = 8
-    INDUSTRY_CONTRIBUTION_ANALYSIS = 20
-    INSTITUTIONAL_SPENDING_PATTERN_2018 = 30
-    INDUSTRY_SPENDING_PATTERN_2019 = 9
-    INDUSTRY_IMPACT_ANALYSIS = 10
-    INSTITUTIONAL_SPENDING_PATTERN_2019 = 40
-    INSTITUTIONAL_SPENDING_PATTERN = 11
-    INDUSTRY_SPENDING_PATTERN = 12
-    CUSTOM_SPENDING_PATTERN = 13
-    HOUSEHOLD_SPENDING_PATTERN = 14
-    INTERNATIONAL_INDUSTRY_IMPACT_ANALYSIS = 15
-    CUSTOM_INDUSTRY_IMPACT_ANALYSIS = 16
-    CUSTOM_INTERNATIONAL_INDUSTRY_IMPACT_ANALYSIS = 17
+    INDUSTRY_OUTPUT = 'IndustryOutput'
+    INDUSTRY_EMPLOYMENT = 'IndustryEmployment'
+    INDUSTRY_EMPLOYEE_COMPENSATION = 'IndustryEmployeeCompensation'
+    INDUSTRY_PROPRIETOR_INCOME = 'IndustryProprietorIncome'
+    COMMODITY_OUTPUT = 'CommodityOutput'
+    LABOR_INCOME = 'LaborIncome'
+    HOUSEHOLD_INCOME = 'HouseholdIncome'
+    INDUSTRY_SPENDING_PATTERN_2018 = 'IndustrySpendingPattern2018'
+    INDUSTRY_CONTRIBUTION_ANALYSIS = 'IndustryContributionAnalysis'
+    INSTITUTIONAL_SPENDING_PATTERN_2018 = 'InstitutionalSpendingPattern2018'
+    INDUSTRY_SPENDING_PATTERN_2019 = 'IndustrySpendingPattern2019'
+    INDUSTRY_IMPACT_ANALYSIS = 'IndustryImpactAnalysis'
+    INSTITUTIONAL_SPENDING_PATTERN_2019 = 'InstitutionalSpendingPattern2019'
+    INSTITUTIONAL_SPENDING_PATTERN = 'InstitutionalSpendingPattern'
+    INDUSTRY_SPENDING_PATTERN = 'IndustrySpendingPattern'
+    CUSTOM_SPENDING_PATTERN = 'CustomSpendingPattern'
+    HOUSEHOLD_SPENDING_PATTERN = 'HouseholdSpendingPattern'
+    INTERNATIONAL_INDUSTRY_IMPACT_ANALYSIS = 'InternationalIndustryImpactAnalysis'
+    CUSTOM_INDUSTRY_IMPACT_ANALYSIS = 'CustomIndustryImpactAnalysis'
+    CUSTOM_INTERNATIONAL_INDUSTRY_IMPACT_ANALYSIS = 'CustomInternationalIndustryImpactAnalysis'
+
+    def __str__(self) -> str:
+        return str.__str__(self)
+
 
 
 class SpendingPatternValueType(Enum):

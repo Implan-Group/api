@@ -1,9 +1,10 @@
 import uuid
 from enum import Enum
 
-from endpoints.events.MarginType import MarginType
-from models.commodities import SpendingPatternCommodity
-from models.enums import EventType, SpendingPatternValueType
+
+from models.commodity_models import SpendingPatternCommodity
+from models.enums import EventType, SpendingPatternValueType, MarginType
+from uuid import UUID
 
 
 class Event:
@@ -13,8 +14,8 @@ class Event:
     """
 
     def __init__(self,
-                 id: int,
-                 project_id: int,
+                 id: UUID,
+                 project_id: UUID,
                  impact_event_type: EventType,
                  title: str | None,
                  tags: list[str] | None = None):
@@ -31,8 +32,8 @@ class HouseholdIncomeEvent(Event):
     """
 
     def __init__(self,
-                 id: int,
-                 project_id: int,
+                 id: UUID,
+                 project_id: UUID,
                  title: str | None,
                  household_income_code: int,
                  value: float | None,
@@ -48,8 +49,8 @@ class IndustryEmployeeCompensationEvent(Event):
     """
 
     def __init__(self,
-                 id: int,
-                 project_id: int,
+                 id: UUID,
+                 project_id: UUID,
                  title: str | None,
                  output: float | None,
                  employment: float | None,
@@ -71,8 +72,8 @@ class IndustryEmploymentEvent(Event):
     """
 
     def __init__(self,
-                 id: int,
-                 project_id: int,
+                 id: UUID,
+                 project_id: UUID,
                  title: str | None,
                  output: float | None,
                  employment: float | None,
@@ -94,25 +95,25 @@ class IndustryImpactAnalysisEvent(Event):
     """
 
     def __init__(self,
-                 id: int,
-                 project_id: int,
-                 title: str | None,
+                 id: UUID,
+                 project_id: UUID,
+                 title: str,
                  industry_code: int,
-                 intermediate_inputs: float | None,
-                 total_employment: float | None,
-                 employee_compensation: float | None,
-                 proprietor_income: float | None,
-                 wage_and_salary_employment: float | None,
-                 proprietor_employment: float | None,
-                 total_labor_income: float | None,
-                 other_property_income: float | None,
-                 tax_on_production_and_imports: float | None,
-                 total_output: float | None,
                  is_sam: bool,
                  spending_pattern_dataset_id: int | None,
                  spending_pattern_value_type: SpendingPatternValueType,
-                 is_fte_employment: bool,
-                 is_wage_and_salary: bool,
+                 is_fte_employment: bool = False,
+                 is_wage_and_salary: bool = False,
+                 intermediate_inputs: float | None = None,
+                 total_employment: float | None = None,
+                 employee_compensation: float | None = None,
+                 proprietor_income: float | None = None,
+                 wage_and_salary_employment: float | None = None,
+                 proprietor_employment: float | None = None,
+                 total_labor_income: float | None = None,
+                 other_property_income: float | None = None,
+                 tax_on_production_and_imports: float | None = None,
+                 total_output: float | None = None,
                  spending_pattern_commodities: list[SpendingPatternCommodity] | None = None,
                  is_local_employee_compensation: bool = False,
                  local_purchase_percentage: float | None = 1.0,
@@ -145,17 +146,17 @@ class IndustryOutputEvent(Event):
     """
 
     def __init__(self,
-                 id: int,
-                 project_id: int,
-                 title: str | None,
-                 output: float | None,
-                 employment: float | None,
-                 employee_compensation: float | None,
-                 proprietor_income: float | None,
+                 id: UUID,
+                 project_id: UUID,
+                 title: str,
                  industry_code: int,
-                 margin_type: MarginType | None,
-                 percentage: float | None,
-                 dataset_id: int | None,
+                 output: float | None = None,
+                 employment: float | None = None,
+                 employee_compensation: float | None = None,
+                 proprietor_income: float | None = None,
+                 margin_type: MarginType | None = None,
+                 percentage: float | None = None,
+                 dataset_id: int | None = None,
                  tags: list[str] | None = None):
         super().__init__(id, project_id, EventType.INDUSTRY_OUTPUT, title, tags)
         self.output = output
@@ -174,8 +175,8 @@ class IndustryProprietorIncomeEvent(Event):
     """
 
     def __init__(self,
-                 id: int,
-                 project_id: int,
+                 id: UUID,
+                 project_id: UUID,
                  title: str | None,
                  output: float | None,
                  employment: float | None,
