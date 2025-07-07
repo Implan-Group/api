@@ -305,40 +305,25 @@ This change is reflected in the 2023 IMPLAN Industry Scheme's data.
 **GET https://{{api_domain}}/{{env}}/api/v1/IndustryCodes**
 
 Will return Industries
-
+```json
 [
-
     {
-    
         "id": 4638,
-    
         "code": 1,
-    
         "description": "Oilseed farming"
-    
     },
-    
     {
-    
         "id": 4639,
-    
         "code": 2,
-    
         "description": "Grain farming"
-    
     },
-    
     {
-    
         "id": 4640,
-    
         "code": 3,
-    
         "description": "Vegetable and melon farming"
-    
     }
-
 ]
+```
 
 
 # Running an Impact and getting Results
