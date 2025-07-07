@@ -174,35 +174,55 @@ IMPLAN models vary based on annual data sets.  In order to provide the correct l
 **GET https://{{api_domain}}/{{env}}/api/v1/datasets**
 
 Will Return datasets
-
+```json
 [   
-
 	{
-
-        "id": 59,
-
-        "description": "2018",
-
-        "isDefault": false
-
-    },
-
-    {
-
-        "id": 77,
-
-        "description": "2019",
-
-        "isDefault": true
-
-    }
-
+		"id": 59,
+		"description": "2018",
+	    "isDefault": false
+	},
+	{
+	    "id": 77,
+	    "description": "2019",
+	    "isDefault": true
+	}
 ]
+```
 
-**NOTE**: Batch API currently only supports processing for 2018, 2019, and 2020 state models and impacts.  
+#### **NOTE**: Batch API currently only supports processing for the following datasets:
+- Scheme: US 528 Industries
+  - 2023
+- Scheme: US 546 Industries
+  - 2022
+  - 2021
+  - 2020
+  - 2019
+  - 2018
+- Scheme: Canada 235 Industries
+  - 2020
+  - 2019
+  - 2018
+  - 2017
+- Scheme: International 46 Industries
+  - 2020
+  - 2019
+  - 2018 
+
+#### **NOTE**: Valid Region Types by Scheme:
+- Scheme: US 528 Industries and US 546 Industries
+  - Country
+  - State
+  - County
+  - MSA
+  - Congressional District
+- Scheme: Canada 235 Industries
+  - Country
+  - Province
+- Scheme: International 46 Industries
+  - Country
 
 
-### Region Model Endpoint (Get)
+## Region Model Endpoint (Get)
 This endpoint will return a list of models available for Batch Impact analysis. A `datasetId` from the previously mentioned endpoint is required. The response may be cached.
 #### Parameters
 * Bearer Token
@@ -289,33 +309,33 @@ Will return Industries
 [
 
     {
-
+    
         "id": 4638,
-
+    
         "code": 1,
-
+    
         "description": "Oilseed farming"
-
+    
     },
-
+    
     {
-
+    
         "id": 4639,
-
+    
         "code": 2,
-
+    
         "description": "Grain farming"
-
+    
     },
-
+    
     {
-
+    
         "id": 4640,
-
+    
         "code": 3,
-
+    
         "description": "Vegetable and melon farming"
-
+    
     }
 
 ]
@@ -357,63 +377,63 @@ Will return results:
 {
 
     "requestModelId": 21350,
-
+    
     "requestIndustryCode": 1,
-
+    
     "directOutput": 1000000.0,
-
+    
     "indirectOutput": 441450.9285317437,
-
+    
     "inducedOutput": 319847.0603026519,
-
+    
     "totalOutput": 1761297.9888343955,
-
+    
     "directEmployeeCompensation": 2472.900136053837,
-
+    
     "indirectEmployeeCompensation": 82254.23939162493,
-
+    
     "inducedEmployeeCompensation": 88549.70207157897,
-
+    
     "totalEmployeeCompensation": 173276.84159925772,
-
+    
     "directProprietorIncome": 226931.1493427253,
-
+    
     "indirectProprietorIncome": 75340.41642662129,
-
+    
     "inducedProprietorIncome": 16336.698484485116,
-
+    
     "totalProprietorIncome": 318608.26425383164,
-
+    
     "directOtherPropertyIncome": 231299.71079943964,
-
+    
     "indirectOtherPropertyIncome": 50187.716015487764,
-
+    
     "inducedOtherPropertyIncome": 62506.37506839628,
-
+    
     "totalOtherPropertyIncome": 343993.80188332364,
-
+    
     "directTaxesOnProductionAndImports": 14094.89315942286,
-
+    
     "indirectTaxesOnProductionAndImports": 14599.263637118289,
-
+    
     "inducedTaxesOnProductionAndImports": 15784.781427157634,
-
+    
     "totalTaxesOnProductionAndImports": 44478.93822369878,
-
+    
     "directEmployment": 2.4027237817133655,
-
+    
     "indirectEmployment": 2.6857916158570942,
-
+    
     "inducedEmployment": 2.1816787685694536,
-
+    
     "totalEmployment": 7.2701941661399125,
-
+    
     "totalDirectTaxes": 59536.24791805996,
-
+    
     "totalIndirectTaxes": 45952.24774663439,
-
+    
     "totalInducedTaxes": 39488.143525720414,
-
+    
     "totalOfAllTaxes": 144976.63919041475
 
 }
@@ -458,9 +478,9 @@ Also include this in the body of the request:
 [
 
     {"modelId":"26899", "industrycode" : 1, "eventvalue" : 10002.90},
-
+    
     {"modelId":"26899", "industrycode" : 2, "eventvalue" : 30002.90},
-
+    
     {"modelId":"26899", "industrycode" : 1, "eventvalue" : 10002.90}
 
 ]
