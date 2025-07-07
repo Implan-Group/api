@@ -79,13 +79,33 @@ class JsonHelper:
         return instance
 
     @staticmethod
-    def deserialize_list(json_str: str, cls: Type[T]) -> list[T]:
+    def deserialize_list(content_bytes: bytes, cls: Type[T]) -> list[T]:
         """
         Deserialize a json string into a list of class instances
-        :param json_str: The json string
+        :param content_bytes: Content bytes returned from a Request - that contain Json
         :param cls: The Type of the class instance to return
         :returns: list[T]
         """
+
+        instances: list[T] = []
+
+        # Convert the content into json
+        js = json.loads(content_bytes)
+
+        # Special handling for Enums
+        if issubclass(cls, Enum):
+            # Convert each Str into its matching Enum
+            value: str
+            for value in js:
+                try:
+                    e:T = cls(value)
+                    instances.append(e)
+                except Exception as ex:
+                    print(ex)
+                    raise ex
+            # Finished
+            return instances
+
 
         smart_hook = JsonHelper.smart_enum_decoder(EventType, strict_keys=False)
 
@@ -98,6 +118,9 @@ class JsonHelper:
         # Use **kwargs to map the dict into a list of our classes
         instances = [cls(**value) for value in fixed_json_dict]
         return instances
+
+
+
 
     E = TypeVar('E')
 
@@ -117,9 +140,12 @@ class JsonHelper:
             ValueError: If any string value is not a valid enum member
         """
         result = []
+        value: str
         for value in string_list:
+            # Try to find the enum with this name
             try:
-                result.append(enum_class(value))
+                e = enum_class(value)
+                result.append(e)
             except ValueError:
                 raise ValueError(f"'{value}' is not a valid {enum_class.__name__} value")
 

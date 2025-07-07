@@ -1,5 +1,8 @@
-﻿from http import HTTPMethod
+﻿import json
+from http import HTTPMethod
 from uuid import UUID
+
+import humps
 
 from endpoints.api_endpoints import ApiEndpoint
 from endpoints.endpoints_root import EndpointsHelper
@@ -17,9 +20,28 @@ class EventEndpoints(ApiEndpoint):
         url = f"{self.base_url}/api/v1/impact/project/{project_guid}/eventtype"
 
         # GET that url's content -- a json IndustrySet
-        content: str = self.rest_helper.send_http_request(HTTPMethod.GET, url)
+        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
 
-        # Deserialize the content
+        # event_types: list[EventType] = JsonHelper.deserialize_list(content, EventType)
+        # print(event_types)
+        #
+        #
+        # j = json.loads(content)
+        # print(j)
+        #
+        # enums = JsonHelper.strings_to_enum(j, EventType)
+        # print(enums)
+        #
+        # # Deserialize the content
+        # for item in j:
+        #     et = EventType(item)
+        #     print(et)
+        #
+        #     d: str = humps.decamelize(item)
+        #     e = d.upper()
+        #     et = EventType[e].name
+        #     print(et)
+
         event_types: list[EventType] = JsonHelper.deserialize_list(content, EventType)
 
         return event_types
