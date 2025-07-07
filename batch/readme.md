@@ -290,8 +290,8 @@ This endpoint will return a list of models available for Batch Impact analysis. 
 
 The Industries supported by this API will be the current standard IMPLAN 546 Industry scheme. This response may be cached.  A list of those industries can be found here: [https://support.implan.com/hc/en-us/articles/360034896614-546-Industries-Conversions-Bridges-Construction-2018-Data](https://support.implan.com/hc/en-us/articles/360034896614-546-Industries-Conversions-Bridges-Construction-2018-Data)
 
-In 2023, the BEA will redefine the North American Industry Classifications System (NAICS) codes. This change will result in a change to the IMPLAN industry scheme for the 2023 IMPLAN data release. The API will then be updated to include these new industry designations when that data is added to the system.
-
+In 2023, the BEA redefined the North American Industry Classifications System (NAICS) codes. 
+This change is reflected in the 2023 IMPLAN Industry Scheme's data.
 
 
 1. Parameters
