@@ -46,12 +46,15 @@ class JsonHelper:
         # Convert the class to a dict, where the keys are the field names and the values are the field values
         value_dict: dict = vars(value)
 
-        # Use Humps to transform the 'lower_snake_case' field names to 'camelCase'
-        fixed_value_dict: dict = humps.camelize(value_dict)
+        # Remove all pairs where the value is None
+        clean_dict: dict = {k: v for k, v in value_dict.items() if v is not None}
+
+        # Use Humps to transform the 'lower_snake_case' field names to 'PascalCase'
+        renamed_dict: dict = humps.pascalize(clean_dict)
 
         # Transform the dict into a compact json string
         # We need a custom encoding to handle UUIDs
-        json_str: str = json.dumps(fixed_value_dict,
+        json_str: str = json.dumps(renamed_dict,
                                    indent=None,
                                    separators=(',', ':'),
                                    cls=ExtendedJsonEncoder)
@@ -60,16 +63,16 @@ class JsonHelper:
 
 
     @staticmethod
-    def deserialize(json_str: str, cls: Type[T]) -> T:
+    def deserialize(content_bytes: bytes, cls: Type[T]) -> T:
         """
-        Deserialize a json string into a class instance
-        :param json_str: The json string
+        Deserialize json bytes into an Instance
+        :param content_bytes: The json bytes
         :param cls: The Type of the class instance to return
         :returns: The new class instance
         """
 
         # Convert the json string into a json dict
-        json_dict: dict = json.loads(json_str)
+        json_dict: dict = json.loads(content_bytes)
 
         # Use Humps to translate the 'camelCase' json keys to 'lower_snake_case' field names
         fixed_json_dict: dict = humps.decamelize(json_dict)
@@ -81,8 +84,8 @@ class JsonHelper:
     @staticmethod
     def deserialize_list(content_bytes: bytes, cls: Type[T]) -> list[T]:
         """
-        Deserialize a json string into a list of class instances
-        :param content_bytes: Content bytes returned from a Request - that contain Json
+        Deserialize json bytes into a list of Instances
+        :param content_bytes: The json bytes
         :param cls: The Type of the class instance to return
         :returns: list[T]
         """
@@ -107,16 +110,16 @@ class JsonHelper:
             return instances
 
 
-        smart_hook = JsonHelper.smart_enum_decoder(EventType, strict_keys=False)
+        # Non-Enum is likely a complex value
 
-        # Convert the json string into a json dict
-        json_dict: dict = json.loads(json_str, object_hook=smart_hook)
+        #smart_hook = JsonHelper.smart_enum_decoder(EventType, strict_keys=False)
+
 
         # Use Humps to translate the 'camelCase' json keys to 'lower_snake_case' field names
-        fixed_json_dict: dict = humps.decamelize(json_dict)
+        renamed_json: dict = humps.decamelize(js)
 
-        # Use **kwargs to map the dict into a list of our classes
-        instances = [cls(**value) for value in fixed_json_dict]
+        # Use **kwargs to transform the json dict into cls instances
+        instances = [cls(**k) for k in renamed_json]
         return instances
 
 

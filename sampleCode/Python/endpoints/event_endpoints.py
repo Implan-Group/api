@@ -19,29 +19,10 @@ class EventEndpoints(ApiEndpoint):
         # The endpoint's url
         url = f"{self.base_url}/api/v1/impact/project/{project_guid}/eventtype"
 
-        # GET that url's content -- a json IndustrySet
+        # GET that url's content
         content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
 
-        # event_types: list[EventType] = JsonHelper.deserialize_list(content, EventType)
-        # print(event_types)
-        #
-        #
-        # j = json.loads(content)
-        # print(j)
-        #
-        # enums = JsonHelper.strings_to_enum(j, EventType)
-        # print(enums)
-        #
-        # # Deserialize the content
-        # for item in j:
-        #     et = EventType(item)
-        #     print(et)
-        #
-        #     d: str = humps.decamelize(item)
-        #     e = d.upper()
-        #     et = EventType[e].name
-        #     print(et)
-
+        # Transform the json bytes into a list of EventType
         event_types: list[EventType] = JsonHelper.deserialize_list(content, EventType)
 
         return event_types
@@ -55,10 +36,10 @@ class EventEndpoints(ApiEndpoint):
         # Jsonify our Event as a payload
         event_json = JsonHelper.serialize(event)
 
-        # POST the request
-        content = self.rest_helper.send_http_request(HTTPMethod.POST, url, json_str=event_json)
+        # POST the request and get the return content
+        content: bytes = self.rest_helper.send_http_request(HTTPMethod.POST, url, json_str = event_json)
 
-        # Expecting a hydrated event in return
+        # Transform the json bytes into an Event
         added_event: Event = JsonHelper.deserialize(content, Event)
 
         return added_event
