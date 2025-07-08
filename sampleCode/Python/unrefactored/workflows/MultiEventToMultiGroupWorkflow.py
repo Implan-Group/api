@@ -2,7 +2,7 @@ import datetime
 
 from models import HouseholdIncomeEvent, IndustryOutputEvent
 from unrefactored.endpoints.events.event_endpoints import EventEndpoints
-from unrefactored.endpoints.group_endpoints import Group, GroupEvent, GroupEndpoints
+from endpoints.group_endpoints import Group, GroupEvent, GroupEndpoints
 from unrefactored.endpoints.industry_code_endpoints import IndustryCodeEndpoints
 from unrefactored.endpoints.specification_endpoints import SpecificationEndpoints
 from unrefactored.workflows.RunImpactAnalysisWorkflow import RunImpactAnalysisWorkflow

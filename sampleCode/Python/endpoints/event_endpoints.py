@@ -1,5 +1,6 @@
 ﻿import json
 from http import HTTPMethod
+from typing import TypeVar, Type
 from uuid import UUID
 
 import humps
@@ -27,20 +28,22 @@ class EventEndpoints(ApiEndpoint):
 
         return event_types
 
-    def add_event(self,
-                  project_id: UUID,
-                  event: Event):
-        # The endpoint's url
-        url = f"{self.base_url}/api/v1/impact/project/{project_id}/event"
+    def add_event[E:Event](self,
+                           project_id: UUID,
+                           event: E
+                           ) -> E:
 
-        # Jsonify our Event as a payload
-        event_json = JsonHelper.serialize(event)
+        # Hydrate the Endpoint URL
+        url: str = f"{self.base_url}/api/v1/impact/project/{project_id}/event"
 
-        # POST the request and get the return content
-        content: bytes = self.rest_helper.send_http_request(HTTPMethod.POST, url, json_str = event_json)
+        # Convert our Event to json
+        event_json: str = JsonHelper.serialize(event)
 
-        # Transform the json bytes into an Event
-        added_event: Event = JsonHelper.deserialize(content, Event)
+        # POST the request
+        content: bytes = self.rest_helper.send_http_request(HTTPMethod.POST, url, data=event_json)
+
+        # Transform the response back into our Event Type
+        added_event: E = JsonHelper.deserialize(content, type(event))
 
         return added_event
 

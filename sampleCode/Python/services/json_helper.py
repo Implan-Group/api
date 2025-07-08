@@ -1,28 +1,29 @@
 ﻿import json
-from enum import Enum
-
 import humps
 
+from datetime import datetime, date
+from enum import Enum
 from typing import Any, Type, TypeVar
 from uuid import UUID
 
-from models.enums import EventType
 
-# Used for generic typing in deserialize
-T = TypeVar('T')
-
-
-class ExtendedJsonEncoder(json.JSONEncoder):
-    """
-    A custom JSONEncoder that handles special values
-    """
-
-    def default(self, obj):
-        # If we have a UUID
-        if isinstance(obj, UUID):
-            # Just transform it into a string
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj:Any) -> Any:
+        if isinstance(obj, Enum):
+            return obj.value
+        elif isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        elif isinstance(obj, UUID):
             return str(obj)
-        # Use the default transformation
+        # elif isinstance(obj, (list, tuple)):
+        #     return [self.default(item) if not isinstance(item, (str, int, float, bool, type(None))) else item for item in obj]
+        # elif isinstance(obj, dict):
+        #     return {k: self.default(v) if not isinstance(v, (str, int, float, bool, type(None))) else v for k, v in obj.items()}
+        elif hasattr(obj, '__dict__'):
+            # For custom objects, apply the same transformation logic
+            obj_dict = vars(obj)
+            clean_dict = {k: v for k, v in obj_dict.items() if v is not None}
+            return humps.pascalize(clean_dict)
         return super().default(obj)
 
 
@@ -57,13 +58,12 @@ class JsonHelper:
         json_str: str = json.dumps(renamed_dict,
                                    indent=None,
                                    separators=(',', ':'),
-                                   cls=ExtendedJsonEncoder)
+                                   cls=CustomJSONEncoder)
 
         return json_str
 
-
     @staticmethod
-    def deserialize(content_bytes: bytes, cls: Type[T]) -> T:
+    def deserialize[T](content_bytes: bytes, cls: type[T]) -> T:
         """
         Deserialize json bytes into an Instance
         :param content_bytes: The json bytes
@@ -82,7 +82,7 @@ class JsonHelper:
         return instance
 
     @staticmethod
-    def deserialize_list(content_bytes: bytes, cls: Type[T]) -> list[T]:
+    def deserialize_list[T](content_bytes: bytes, cls: type[T]) -> list[T]:
         """
         Deserialize json bytes into a list of Instances
         :param content_bytes: The json bytes
@@ -101,7 +101,7 @@ class JsonHelper:
             value: str
             for value in js:
                 try:
-                    e:T = cls(value)
+                    e: T = cls(value)
                     instances.append(e)
                 except Exception as ex:
                     print(ex)
@@ -109,11 +109,9 @@ class JsonHelper:
             # Finished
             return instances
 
-
         # Non-Enum is likely a complex value
 
-        #smart_hook = JsonHelper.smart_enum_decoder(EventType, strict_keys=False)
-
+        # smart_hook = JsonHelper.smart_enum_decoder(EventType, strict_keys=False)
 
         # Use Humps to translate the 'camelCase' json keys to 'lower_snake_case' field names
         renamed_json: dict = humps.decamelize(js)
@@ -121,102 +119,3 @@ class JsonHelper:
         # Use **kwargs to transform the json dict into cls instances
         instances = [cls(**k) for k in renamed_json]
         return instances
-
-
-
-
-    E = TypeVar('E')
-
-    @staticmethod
-    def strings_to_enum(string_list: list[str], enum_class: Type[E]) -> list[E]:
-        """
-        Convert a list of strings to a list of enum values.
-
-        Args:
-            string_list:     List of string values to convert
-            enum_class: The enum class to convert to
-
-        Returns:
-            List of enum values
-
-        Raises:
-            ValueError: If any string value is not a valid enum member
-        """
-        result = []
-        value: str
-        for value in string_list:
-            # Try to find the enum with this name
-            try:
-                e = enum_class(value)
-                result.append(e)
-            except ValueError:
-                raise ValueError(f"'{value}' is not a valid {enum_class.__name__} value")
-
-        return result
-
-    @staticmethod
-    def smart_enum_decoder(*enum_classes: type[Enum], strict_keys: bool = False):
-        """
-        Advanced JSON decoder with multiple discovery strategies.
-
-        Args:
-            *enum_classes: Enum classes to use for conversion
-            strict_keys: If True, only convert keys that match enum class names
-
-        Returns:
-            A function that can be used as object_hook in json.loads()
-        """
-        # Build mapping of enum class names to classes
-        name_mapping = {}
-        for enum_class in enum_classes:
-            # Try multiple name variations
-            class_name = enum_class.__name__.lower()
-            name_mapping[class_name] = enum_class
-
-            # Pluralized version
-            plural_name = class_name + 's' if not class_name.endswith('s') else class_name
-            name_mapping[plural_name] = enum_class
-
-            # Without 'enum' suffix
-            if class_name.endswith('enum'):
-                base_name = class_name[:-4]
-                name_mapping[base_name] = enum_class
-                name_mapping[base_name + 's'] = enum_class
-
-        def object_hook(obj: dict[str, Any]) -> dict[str, Any]:
-            for key, value in obj.items():
-                if isinstance(value, list) and all(isinstance(v, str) for v in value):
-                    converted = False
-
-                    if strict_keys:
-                        # Only try conversion if key matches enum name
-                        enum_class = name_mapping.get(key.lower())
-                        if enum_class:
-                            try:
-                                obj[key] = JsonHelper.strings_to_enum(value, enum_class)
-                                converted = True
-                            except ValueError:
-                                pass
-                    else:
-                        # First try key-based matching
-                        enum_class = name_mapping.get(key.lower())
-                        if enum_class:
-                            try:
-                                obj[key] = JsonHelper.strings_to_enum(value, enum_class)
-                                converted = True
-                            except ValueError:
-                                pass
-
-                        # If key-based matching failed, try all enums
-                        if not converted:
-                            for enum_class in enum_classes:
-                                try:
-                                    obj[key] = JsonHelper.strings_to_enum(value, enum_class)
-                                    converted = True
-                                    break
-                                except ValueError:
-                                    continue
-
-            return obj
-
-        return object_hook

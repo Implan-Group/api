@@ -1,5 +1,8 @@
 ﻿from enum import Enum
 
+# All Enums must be defined as subclassing `str` so that the JsonHelper can properly translate them to and from the string representatinos
+# used by the Impact API
+
 
 class EventType(str, Enum):
     """
@@ -33,13 +36,24 @@ class EventType(str, Enum):
 
 
 
-class SpendingPatternValueType(Enum):
+class SpendingPatternValueType(str, Enum):
     """
     The different Spending Pattern Value Types
     """
-    INTERMEDIATE_EXPENDITURE = 0
-    OUTPUT = 1
+    INTERMEDIATE_EXPENDITURE = 'IntermediateExpenditure'
+    OUTPUT = 'Output'
 
-class MarginType(Enum):
-    PRODUCER_PRICE = 0
-    PURCHASER_PRICE = 1
+
+class MarginType(str, Enum):
+    PRODUCER_PRICE = 'ProducerPrice'
+    PURCHASER_PRICE = 'PurchaserPrice'
+
+
+class RegionType(str, Enum):
+    UNKNOWN = 'Unknown'
+    COUNTRY = 'Country'
+    STATE = 'State'
+    MSA = 'Msa'
+    COUNTY = 'County'
+    CONGRESSIONAL_DISTRICT = 'CongressionalDistrict'
+    ZIPCODE = 'Zipcode'

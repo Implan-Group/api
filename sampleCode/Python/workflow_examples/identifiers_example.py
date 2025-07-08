@@ -32,6 +32,9 @@ class IdentifiersExample:
         # Datasets
         # These require an Aggregation Scheme Id
         datasets: list[Dataset] = endpoints.dataset_endpoints.get_datasets(14)
+        # Examples:
+        # '98 - 2023 default'
+
 
         # Industry Sets
         industry_sets: list[IndustrySet] = endpoints.industry_endpoints.get_industry_sets()

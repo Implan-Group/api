@@ -16,9 +16,13 @@ class EndpointsHelper:
         from endpoints.event_endpoints import EventEndpoints
         from endpoints.industry_endpoints import IndustryEndpoints
         from endpoints.project_endpoints import ProjectEndpoints
+        from endpoints.group_endpoints import GroupEndpoints
+        from endpoints.regional_endpoints import RegionalEndpoints
 
         self.aggregation_endpoints: AggregationSchemeEndpoints = AggregationSchemeEndpoints(self)
         self.dataset_endpoints: DatasetEndpoints = DatasetEndpoints(self)
         self.project_endpoints: ProjectEndpoints = ProjectEndpoints(self)
         self.industry_endpoints: IndustryEndpoints = IndustryEndpoints(self)
         self.event_endpoints: EventEndpoints = EventEndpoints(self)
+        self.regional_endpoints: RegionalEndpoints = RegionalEndpoints(self)
+        self.group_endpoints: GroupEndpoints = GroupEndpoints(self)

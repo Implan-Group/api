@@ -1,0 +1,105 @@
+﻿from http import HTTPMethod
+from endpoints.api_endpoints import ApiEndpoint
+from endpoints.endpoints_root import EndpointsHelper
+from models.enums import RegionType
+from models.region import Region
+from models.request_models import CombineRegionRequest
+from services.json_helper import JsonHelper
+
+class RegionalEndpoints(ApiEndpoint):
+    def __init__(self, endpoints: EndpointsHelper):
+        super().__init__(endpoints.rest_helper, endpoints.logging_helper, endpoints.base_url)
+
+
+    def get_region_types(self) -> list[RegionType]:
+
+        # Hydrate the full url
+        url: str = f"{self.base_url}/api/v1/region/RegionTypes"
+
+        # No extra information needed for headers/body
+
+        # Send a GET Request and get the Response
+        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
+
+        # Convert into a list of RegionTypes
+        region_types: list[RegionType] = JsonHelper.deserialize_list(content, RegionType)
+
+        return region_types
+
+
+    def get_top_level_region(self, aggregation_scheme_id: int, dataset_id: int) -> Region:
+
+        # Hydrate the full url
+        url: str = f"{self.base_url}/api/v1/region/{aggregation_scheme_id}/{dataset_id}"
+
+        # No extra information needed for headers/body
+
+        # Send a GET Request and get the Response
+        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
+
+        # Convert into a single Region
+        region: Region = JsonHelper.deserialize(content, Region)
+
+        return region
+
+
+    def get_region_children(self,
+                            aggregation_scheme_id: int,
+                            dataset_id: int,
+                            urid: int | None = None,
+                            hash_id: str | None = None,
+                            region_type: RegionType | None = None) -> list[Region]:
+
+        # Hydrate the full url
+        url: str
+        if hash_id is not None:
+            url = f"{self.base_url}/api/v1/region/{aggregation_scheme_id}/{dataset_id}/{hash_id}/children"
+        elif urid is not None:
+            url = f"{self.base_url}/api/v1/region/{aggregation_scheme_id}/{dataset_id}/{urid}/children"
+        else:
+            url = f"{self.base_url}/api/v1/region/{aggregation_scheme_id}/{dataset_id}/children"
+
+        # If we have a region_type, we need to add it as a query param
+        params = {}
+        if region_type:
+            params["regionTypeFilter"] = region_type
+
+        # Send a GET Request and get the Response
+        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url, params=params)
+
+        # Convert into Regions
+        regions: list[Region] = JsonHelper.deserialize_list(content, Region)
+
+        return regions
+
+
+    def get_user_regions(self, aggregation_scheme_id: int, dataset_id: int) -> list[Region]:
+        # Hydrate the full url
+        url: str = f"{self.base_url}/api/v1/region/{aggregation_scheme_id}/{dataset_id}/user"
+
+        # No extra information needed for headers/body
+
+        # Send a GET Request and get the Response
+        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
+
+        # Convert into Regions
+        regions: list[Region] = JsonHelper.deserialize_list(content, Region)
+
+        return regions
+
+
+    def combine_regions(self,
+                        aggregation_scheme_id: int,
+                        payload: CombineRegionRequest) -> Region:
+        # Hydrate the full url
+        url: str = f"{self.base_url}/api/v1/region/build/combined/{aggregation_scheme_id}"
+
+        # No extra information needed for headers/body
+
+        # Send a GET Request and get the Response
+        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
+
+        # Convert into Region
+        region: Region = JsonHelper.deserialize(content, Region)
+
+        return region

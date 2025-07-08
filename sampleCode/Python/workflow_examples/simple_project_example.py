@@ -2,14 +2,16 @@
 import logging
 from uuid import UUID
 
-from openpyxl.styles.builtins import title
-
 from endpoints.endpoints_root import EndpointsHelper
-from models.enums import SpendingPatternValueType
+from models.dataset_models import Dataset
+from models.enums import SpendingPatternValueType, RegionType
 from models.event_models import IndustryOutputEvent, IndustryImpactAnalysisEvent
+from models.group_models import Group, GroupEvent
 from models.project_models import Project
+from models.region import Region
 from services import python_helper
 from services.logging_helper import LoggingHelper
+from services.python_helper import uuid_empty
 from services.rest_helper import RestHelper
 
 
@@ -28,12 +30,13 @@ class SimpleProjectExample:
         # Required:
         aggregation_scheme_id: int = 14     # 528 Unaggregated
         household_set_id: int = 1           #
+        dataset_id: int = 98                # 2023 Default
 
         endpoints = EndpointsHelper(self.rest_helper, self.logging_helper)
 
         # Define the Project with required fields
         project_definition = Project(
-            id=None, # The Id will be created by the API
+            id=uuid_empty(), # The Id will be created by the API
             title=f"ProjectWorkflow - {datetime.datetime.now():%Y-%m-%dT%H:%M:%S}",
             aggregation_scheme_id=aggregation_scheme_id,
             household_set_id=household_set_id
@@ -72,11 +75,16 @@ class SimpleProjectExample:
         # We re-assign here as the returned Event is fully hydrated
         industry_output_event = endpoints.event_endpoints.add_event(project_id, industry_output_event)
 
+        # Validate
+        if industry_output_event.id == uuid_empty():
+            logging.error(f"Event returned with invalid Id: {industry_output_event.id}")
+            raise "Invalid Event Response"
+
         print(industry_output_event)
 
         # And a much more complicated Industry Impact Analysis Event
         industry_impact_analysis_event = IndustryImpactAnalysisEvent(
-            id = python_helper.uuid_empty(),
+            id = uuid_empty(),
             project_id=project_id,
             title="Example Industry Impact Analysis Event",
             industry_code=industry_code,
@@ -95,7 +103,57 @@ class SimpleProjectExample:
             spending_pattern_value_type=SpendingPatternValueType.INTERMEDIATE_EXPENDITURE
         )
 
+        industry_impact_analysis_event = endpoints.event_endpoints.add_event(project_id, industry_impact_analysis_event)
+
+        # Validate
+        if industry_impact_analysis_event.id == uuid_empty():
+            logging.error(f"Event returned with invalid Id: {industry_impact_analysis_event.id}")
+            raise "Invalid Event Response"
 
 
+
+        # Now that we've added Events to this Project, we can add some Groups
+        # As Groups are associated with Regions, see the RegionalWorkflow Examples for more information
+
+        # Get a list of all the states in the US
+        states: list[Region] = endpoints.regional_endpoints.get_region_children(aggregation_scheme_id, dataset_id, region_type=RegionType.STATE)
+        # Filter the list to only Oregon
+        oregon_state: Region = next(s for s in states if s.description == "Oregon")
+        # We'll use its HashId for our Group
+        oregon_state_hashid: str = oregon_state.hash_id
+
+
+        # Define the Group's Events (one per Region/Event pairing)
+        industry_output_event_group: GroupEvent = GroupEvent(
+            event_id=industry_output_event.id
+        )
+        industry_impact_analysis_event_group: GroupEvent = GroupEvent(
+            event_id=industry_impact_analysis_event.id
+        )
+
+        # Define the Group
+        group = Group(
+            id = uuid_empty(),
+            title="Example Group",
+            project_id=project_id,
+            hash_id=oregon_state_hashid,
+            dataset_id=dataset_id,
+            dollar_year=2024,
+            group_events=[
+                industry_output_event_group,
+                industry_impact_analysis_event_group,
+            ]
+        )
+
+        # Add the Group to the Project
+        # We re-assign back to Group as the return class is fully hydrated
+        group = endpoints.group_endpoints.add_group_to_project(project_id, group)
+
+        print(group)
+
+
+        # Now this Project has a Group with Two Events and is ready for processing
+        # See the `Running Impact Analysis` workflows for examples on how to do so
+        return
 
 

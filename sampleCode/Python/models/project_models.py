@@ -3,7 +3,7 @@
 
 class Project:
     def __init__(self,
-                 id: uuid.UUID | None,
+                 id: uuid.UUID,
                  title: str,
                  aggregation_scheme_id: int,
                  household_set_id: int,
