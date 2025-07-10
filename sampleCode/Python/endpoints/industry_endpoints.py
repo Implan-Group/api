@@ -15,7 +15,7 @@ class IndustryEndpoints(ApiEndpoint):
         url: str = f"{self.base_url}/api/v1/industry-sets"
 
         # GET that url's content -- a json array of IndustrySets
-        content: str = self.rest_helper.send_http_request(HTTPMethod.GET, url)
+        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
 
         # Deserialize the content
         industry_sets: list[IndustrySet] = JsonHelper.deserialize_list(content, IndustrySet)
@@ -27,7 +27,7 @@ class IndustryEndpoints(ApiEndpoint):
         url: str = f"{self.base_url}/api/v1/industry-sets/{industry_set_id}"
 
         # GET that url's content -- a json IndustrySet
-        content: str = self.rest_helper.send_http_request(HTTPMethod.GET, url)
+        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
 
         # Deserialize the content
         industry_set: IndustrySet = JsonHelper.deserialize(content, IndustrySet)
@@ -51,7 +51,7 @@ class IndustryEndpoints(ApiEndpoint):
             query_params["industrySetId"] = industry_set_id
 
         # Send a GET request expecting json content
-        content: str = self.rest_helper.send_http_request(HTTPMethod.GET, url, params=query_params)
+        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url, params=query_params)
         # Deserialize to the list of Industry Codes
         industry_codes: list[IndustryCode] = JsonHelper.deserialize_list(content, IndustryCode)
 

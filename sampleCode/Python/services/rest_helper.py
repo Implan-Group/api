@@ -159,12 +159,7 @@ class RestHelper:
             self.logging_helper.log_request_response(prepared_request, response, elapsed_time)
 
             # Return the response body
-            response_content_type = response.headers.get("Content-Type")
-
-            # if "json" in response_content_type:
-            #     return response.json()
-            #
-            # if "text" in response_content_type:
-            #     return response.text
+            # We know that the API endpoints all work in UTF8
+            response.encoding = "utf-8"
 
             return response.content

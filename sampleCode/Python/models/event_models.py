@@ -6,6 +6,8 @@ from models.commodity_models import SpendingPatternCommodity
 from models.enums import EventType, SpendingPatternValueType, MarginType
 from uuid import UUID
 
+from services.python_helper import uuid_empty
+
 
 class Event:
     """
@@ -14,15 +16,15 @@ class Event:
     """
 
     def __init__(self,
-                 id: UUID,
-                 project_id: UUID,
                  impact_event_type: EventType,
                  title: str | None,
+                 id: UUID | None = None,
+                 project_id: UUID | None = None,
                  tags: list[str] | None = None):
-        self.id = id
-        self.project_id = project_id
         self.impact_event_type = impact_event_type
         self.title = title
+        self.id = id if id is not None else uuid_empty()
+        self.project_id = project_id if project_id is not None else uuid_empty()
         self.tags = tags if tags is not None else []
 
 
@@ -32,18 +34,18 @@ class HouseholdIncomeEvent(Event):
     """
 
     def __init__(self,
-                 id: UUID,
-                 project_id: UUID,
                  title: str | None,
                  household_income_code: int,
                  value: float | None,
+                 id: UUID | None = None,
+                 project_id: UUID | None = None,
                  tags: list[str] | None = None,
                  impact_event_type: EventType | None = None):
         # Verify that any passed in impact_event_type is the one we're expecting
         if impact_event_type is not None and impact_event_type != EventType.HOUSEHOLD_INCOME.value:
             raise f"Attempting to map Impact Event Type {impact_event_type} to a Household Income Event"
 
-        super().__init__(id, project_id, EventType.HOUSEHOLD_INCOME, title, tags)
+        super().__init__(EventType.HOUSEHOLD_INCOME, title, id, project_id, tags)
         self.household_income_code = household_income_code
         self.value = value
 
@@ -54,21 +56,21 @@ class IndustryEmployeeCompensationEvent(Event):
     """
 
     def __init__(self,
-                 id: UUID,
-                 project_id: UUID,
                  title: str | None,
                  output: float | None,
                  employment: float | None,
                  employee_compensation: float | None,
                  proprietor_income: float | None,
                  industry_code: int,
+                 id: UUID | None = None,
+                 project_id: UUID | None = None,
                  tags: list[str] | None = None,
                  impact_event_type: EventType | None = None):
         # Verify that any passed in impact_event_type is the one we're expecting
         if impact_event_type is not None and impact_event_type != EventType.INDUSTRY_EMPLOYEE_COMPENSATION.value:
             raise f"Attempting to map Impact Event Type {impact_event_type} to an Industry Employee Compensation Event"
 
-        super().__init__(id, project_id, EventType.INDUSTRY_EMPLOYEE_COMPENSATION, title, tags)
+        super().__init__(EventType.INDUSTRY_EMPLOYEE_COMPENSATION, title, id, project_id, tags)
         self.output = output
         self.employment = employment
         self.employee_compensation = employee_compensation
@@ -82,21 +84,21 @@ class IndustryEmploymentEvent(Event):
     """
 
     def __init__(self,
-                 id: UUID,
-                 project_id: UUID,
                  title: str | None,
                  output: float | None,
                  employment: float | None,
                  employee_compensation: float | None,
                  proprietor_income: float | None,
                  industry_code: int,
+                 id: UUID | None = None,
+                 project_id: UUID | None = None,
                  tags: list[str] | None = None,
                  impact_event_type: EventType | None = None):
         # Verify that any passed in impact_event_type is the one we're expecting
         if impact_event_type is not None and impact_event_type != EventType.INDUSTRY_EMPLOYMENT.value:
             raise f"Attempting to map Impact Event Type {impact_event_type} to an Industry Employment Event"
 
-        super().__init__(id, project_id, EventType.INDUSTRY_EMPLOYMENT, title, tags)
+        super().__init__(EventType.INDUSTRY_EMPLOYMENT, title, id, project_id,  tags)
         self.output = output
         self.employment = employment
         self.employee_compensation = employee_compensation
@@ -110,8 +112,6 @@ class IndustryImpactAnalysisEvent(Event):
     """
 
     def __init__(self,
-                 id: UUID,
-                 project_id: UUID,
                  title: str,
                  industry_code: int,
                  is_sam: bool,
@@ -132,13 +132,15 @@ class IndustryImpactAnalysisEvent(Event):
                  spending_pattern_commodities: list[SpendingPatternCommodity] | None = None,
                  is_local_employee_compensation: bool = False,
                  local_purchase_percentage: float | None = 1.0,
+                 id: UUID | None = None,
+                 project_id: UUID | None = None,
                  tags: list[str] | None = None,
                  impact_event_type: EventType | None = None):
         # Verify that any passed in impact_event_type is the one we're expecting
         if impact_event_type is not None and impact_event_type != EventType.INDUSTRY_IMPACT_ANALYSIS.value:
             raise f"Attempting to map Impact Event Type {impact_event_type} to an Industry Impact Analysis Event"
 
-        super().__init__(id, project_id, EventType.INDUSTRY_IMPACT_ANALYSIS, title, tags)
+        super().__init__(EventType.INDUSTRY_IMPACT_ANALYSIS, title, id, project_id, tags)
         self.industry_code = industry_code
         self.intermediate_inputs = intermediate_inputs
         self.total_employment = total_employment
@@ -166,8 +168,6 @@ class IndustryOutputEvent(Event):
     """
 
     def __init__(self,
-                 id: UUID,
-                 project_id: UUID,
                  title: str,
                  industry_code: int,
                  output: float | None = None,
@@ -177,13 +177,15 @@ class IndustryOutputEvent(Event):
                  margin_type: MarginType | None = None,
                  percentage: float | None = None,
                  dataset_id: int | None = None,
+                 id: UUID | None = None,
+                 project_id: UUID | None = None,
                  tags: list[str] | None = None,
                  impact_event_type: EventType | None = None):
         # Verify that any passed in impact_event_type is the one we're expecting
         if impact_event_type is not None and impact_event_type != EventType.INDUSTRY_OUTPUT.value:
             raise f"Attempting to map Impact Event Type {impact_event_type} to an Industry Output Event"
 
-        super().__init__(id, project_id, EventType.INDUSTRY_OUTPUT, title, tags)
+        super().__init__(EventType.INDUSTRY_OUTPUT, title, id, project_id, tags)
         self.output = output
         self.employment = employment
         self.employee_compensation = employee_compensation
@@ -200,21 +202,21 @@ class IndustryProprietorIncomeEvent(Event):
     """
 
     def __init__(self,
-                 id: UUID,
-                 project_id: UUID,
                  title: str | None,
                  output: float | None,
                  employment: float | None,
                  employee_compensation: float | None,
                  proprietor_income: float | None,
                  industry_code: int,
+                 id: UUID | None = None,
+                 project_id: UUID | None = None,
                  tags: list[str] | None = None,
                  impact_event_type: EventType | None = None):
         # Verify that any passed in impact_event_type is the one we're expecting
         if impact_event_type is not None and impact_event_type != EventType.INDUSTRY_PROPRIETOR_INCOME.value:
             raise f"Attempting to map Impact Event Type {impact_event_type} to an Industry Proprietor Income Event"
 
-        super().__init__(id, project_id, EventType.INDUSTRY_PROPRIETOR_INCOME, title, tags)
+        super().__init__(EventType.INDUSTRY_PROPRIETOR_INCOME, title, id, project_id, tags)
         self.output = output
         self.employment = employment
         self.employee_compensation = employee_compensation

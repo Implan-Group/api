@@ -6,6 +6,7 @@ from services.auth_helper import AuthHelper
 from services.rest_helper import RestHelper
 from services.logging_helper import LoggingHelper
 from workflow_examples.identifiers_example import IdentifiersExample
+from workflow_examples.regional_examples import RegionalWorkflowExamples
 from workflow_examples.simple_project_example import SimpleProjectExample
 from dotenv import load_dotenv
 
@@ -47,11 +48,26 @@ def main():
 
     # Here is where you can freely modify the rest of this method for your particular workflow!
 
-    workflow = SimpleProjectExample(rest_helper, logging_helper)
-    workflow.execute_example()
+    # # Simple Project Example
+    # # Creates a new Project, adds Events, then adds Groups
+    # workflow = SimpleProjectExample(rest_helper, logging_helper)
+    # workflow.execute_example()
+    #
+    # # Identifiers Example
+    # # All the ways that various IDs can be looked up
+    # workflow = IdentifiersExample(rest_helper, logging_helper)
+    # workflow.execute_example()
 
-    #workflow = IdentifiersExample(rest_helper, logging_helper)
-    #workflow.execute_example()
+    # Regional Workflow Examples
+    workflow = RegionalWorkflowExamples(rest_helper, logging_helper)
+
+    # Search through Regions to find several to combine, combine them, and wait for the new Combined Region to be available
+    #workflow.combine_regions()
+
+    # Different ways to explore regional relationships
+    workflow.explore_implan_regions()
+    #workflow.explore_user_regions()
+
 
     print('break')
 

@@ -94,12 +94,17 @@ class RegionalEndpoints(ApiEndpoint):
         # Hydrate the full url
         url: str = f"{self.base_url}/api/v1/region/build/combined/{aggregation_scheme_id}"
 
-        # No extra information needed for headers/body
+        # Add the CombineRegionRequest as a json payload
+        payload_json: str = JsonHelper.serialize(payload)
 
-        # Send a GET Request and get the Response
-        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
+        # POST the request and get the response
+        content: bytes = self.rest_helper.send_http_request(HTTPMethod.POST, url, data=payload_json)
 
-        # Convert into Region
-        region: Region = JsonHelper.deserialize(content, Region)
+        # The response is a list that contains a single region
+        regions: list[Region] = JsonHelper.deserialize_list(content, Region)
 
+        if len(regions) != 1:
+            raise "Invalid number of regions returned"
+
+        region: Region = regions[0]
         return region

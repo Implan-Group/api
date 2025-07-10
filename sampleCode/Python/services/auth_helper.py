@@ -1,7 +1,10 @@
 ﻿import logging
 import os.path
+from urllib.request import Request
 
 import requests
+from requests.auth import AuthBase
+
 
 class AuthHelper:
     """
@@ -98,3 +101,15 @@ class AuthHelper:
         response.raise_for_status()
 
         assert False, "unreachable"
+
+class JWTAuth(AuthBase):
+    """
+    A custom AuthBase provider for the requests library that passed along a JWT Bearer Token
+    """
+
+    def __init__(self, token: str):
+        self.token = token
+
+    def __call__(self, request: Request) -> Request:
+        request.headers["Authorization"] = f"Bearer {self.token}"
+        return request

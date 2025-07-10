@@ -64,7 +64,6 @@ class SimpleProjectExample:
 
         # For this example, we're going to create a simple Industry Output Event
         industry_output_event = IndustryOutputEvent(
-            id = python_helper.uuid_empty(),
             project_id=project_id,
             title="Example Industry Output Event",
             industry_code=industry_code,
