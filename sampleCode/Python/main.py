@@ -5,6 +5,7 @@ from endpoints.endpoints_root import EndpointsHelper
 from services.auth_helper import AuthHelper
 from services.rest_helper import RestHelper
 from services.logging_helper import LoggingHelper
+from workflow_examples.complex_project_example import ComplexProjectExample
 from workflow_examples.identifiers_example import IdentifiersExample
 from workflow_examples.regional_examples import RegionalWorkflowExamples
 from workflow_examples.simple_project_example import SimpleProjectExample
@@ -58,15 +59,21 @@ def main():
     # workflow = IdentifiersExample(rest_helper, logging_helper)
     # workflow.execute_example()
 
+
     # Regional Workflow Examples
-    workflow = RegionalWorkflowExamples(rest_helper, logging_helper)
+    #workflow = RegionalWorkflowExamples(rest_helper, logging_helper)
 
     # Search through Regions to find several to combine, combine them, and wait for the new Combined Region to be available
     #workflow.combine_regions()
 
     # Different ways to explore regional relationships
-    workflow.explore_implan_regions()
+    #workflow.explore_implan_regions()
     #workflow.explore_user_regions()
+
+
+    # Complex Project Workflow Example
+    workflow = ComplexProjectExample(rest_helper, logging_helper)
+    workflow.execute_example()
 
 
     print('break')

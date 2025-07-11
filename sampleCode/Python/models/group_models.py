@@ -1,5 +1,7 @@
 ﻿from uuid import UUID
 
+from services.python_helper import uuid_empty
+
 
 class GroupEvent:
     def __init__(self,
@@ -11,19 +13,19 @@ class GroupEvent:
 
 class Group:
     def __init__(self,
-                 id: UUID,
-                 project_id: UUID,
                  title: str,
                  dollar_year: int | None,
                  dataset_id: int | None,
                  group_events: list[GroupEvent],
+                 id: UUID | None = None,
+                 project_id: UUID | None = None,
                  hash_id: str | None = None,
                  urid: int | None = None,
                  user_model_id: int | None = None,
                  model_id: int | None = None,
                  scaling_factor: float = 1.0):
-        self.id = id
-        self.project_id = project_id
+        self.id = id if id is not None else uuid_empty()
+        self.project_id = project_id if project_id is not None else uuid_empty()
         self.hash_id = hash_id
         self.urid = urid
         self.user_model_id = user_model_id

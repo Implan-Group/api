@@ -1,5 +1,6 @@
 ﻿import json
 from datetime import timedelta
+from types import MappingProxyType
 from typing import Any
 from uuid import UUID
 
@@ -25,6 +26,12 @@ def inspect(thing):
     # recursively call inspect on every value
     if type(thing) == dict:
         return {k:inspect(v) for k,v in thing.items()}
+
+    if isinstance(thing, MappingProxyType):
+        return None
+
+    if isinstance(thing, UUID):
+        return str(thing)
 
     try:
         # Assume thing is some weird object

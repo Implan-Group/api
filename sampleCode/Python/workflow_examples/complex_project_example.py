@@ -3,7 +3,7 @@
 from endpoints.endpoints_root import EndpointsHelper
 from models.enums import RegionType
 from models.event_models import IndustryOutputEvent, HouseholdIncomeEvent, Event
-from models.group_models import Group
+from models.group_models import Group, GroupEvent
 from models.project_models import Project
 from models.region import Region
 from services.logging_helper import LoggingHelper
@@ -34,7 +34,6 @@ class ComplexProjectExample:
         # Please see IdentifierExamples for more details on how to find them
         aggregation_scheme_id: int = 14   # 528 Unaggregated US
         household_set_id: int = 1
-        industry_set_id: int = 12         # 528 Industries
         dataset_id: int = 98              # 2023
 
 
@@ -54,12 +53,13 @@ class ComplexProjectExample:
         # Restaurant Output Event
         restaurant_output_event = IndustryOutputEvent(
             title="Restaurants",
-            industry_code=509,  # `509 - Full-Service Restaurants`
+            industry_code=509,  # `491 - Full-Service Restaurants`
             output=1_000_000.0,
             dataset_id=dataset_id,
             project_id=project.id,
         )
         restaurant_output_event = self.endpoints.event_endpoints.add_event(project.id, restaurant_output_event)
+        print_pretty(restaurant_output_event)
 
         # 15-30k Household Income Event
         lo_household_income_event = HouseholdIncomeEvent(
@@ -69,6 +69,7 @@ class ComplexProjectExample:
             project_id=project.id,
         )
         lo_household_income_event = self.endpoints.event_endpoints.add_event(project.id, lo_household_income_event)
+        print_pretty(lo_household_income_event)
 
         # 50-70k Household Income Event
         hi_household_income_event = HouseholdIncomeEvent(
@@ -78,6 +79,7 @@ class ComplexProjectExample:
             project_id=project.id,
         )
         hi_household_income_event = self.endpoints.event_endpoints.add_event(project.id, hi_household_income_event)
+        print_pretty(hi_household_income_event)
 
 
         # Create and add all the Groups
@@ -92,11 +94,28 @@ class ComplexProjectExample:
         # For each state, we want to add all three events
         # The best way to accomplish this is by storing the Events and Regions in a list so we can iterate over them
         events: list[Event] = [restaurant_output_event, lo_household_income_event, hi_household_income_event]
+        print_pretty(events)
         regions: list[Region] = [oregon, wisconsin, north_carolina]
+        print_pretty(regions)
+        # We'll need to link the events to the groups using a GroupEvent, which we can prepare now
+        group_events: list[GroupEvent] = [GroupEvent(event_id=e.id) for e in events]
+        print_pretty(group_events)
+
+
 
         for region in regions:
             # Create the Group for this Region
             group = Group(
                 project_id=project.id,
                 title=f"{region.description} State",    # Each Group must have a different description
+                dataset_id=dataset_id,
+                dollar_year=2024,
+                hash_id=region.hash_id,                 # Associate this Region with this Group
+                group_events=group_events,              # Add all three events
             )
+            print_pretty(group)
+            # Save this Group to the Project
+            self.endpoints.group_endpoints.add_group_to_project(project.id, group)
+
+        # Now the Project exists with three Events, three Groups, and each Group will have all three Events associated
+        # You can proceed to process that Project how you please (see other workflows for Running an Impact and Viewing the Output)
