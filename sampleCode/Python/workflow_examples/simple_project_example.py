@@ -3,15 +3,13 @@ import logging
 from uuid import UUID
 
 from endpoints.endpoints_root import EndpointsHelper
-from models.dataset_models import Dataset
 from models.enums import SpendingPatternValueType, RegionType
 from models.event_models import IndustryOutputEvent, IndustryImpactAnalysisEvent
 from models.group_models import Group, GroupEvent
 from models.project_models import Project
 from models.region import Region
-from services import python_helper
 from services.logging_helper import LoggingHelper
-from services.python_helper import uuid_empty
+from utilities.python_helper import uuid_empty
 from services.rest_helper import RestHelper
 
 

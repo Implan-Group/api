@@ -7,7 +7,7 @@ from models.group_models import Group, GroupEvent
 from models.project_models import Project
 from models.region import Region
 from services.logging_helper import LoggingHelper
-from services.python_helper import uuid_empty, print_pretty
+from utilities.python_helper import uuid_empty, print_pretty
 from services.rest_helper import RestHelper
 
 

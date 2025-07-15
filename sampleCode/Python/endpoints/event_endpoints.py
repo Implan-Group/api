@@ -1,15 +1,11 @@
-﻿import json
-from http import HTTPMethod
-from typing import TypeVar, Type
+﻿from http import HTTPMethod
 from uuid import UUID
-
-import humps
 
 from endpoints.api_endpoints import ApiEndpoint
 from endpoints.endpoints_root import EndpointsHelper
 from models.enums import EventType
 from models.event_models import Event
-from services.json_helper import JsonHelper
+from utilities.json_helper import JsonHelper
 
 
 class EventEndpoints(ApiEndpoint):

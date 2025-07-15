@@ -1,6 +1,6 @@
 ﻿from uuid import UUID
 
-from services.python_helper import uuid_empty
+from utilities.python_helper import uuid_empty
 
 
 class GroupEvent:

@@ -8,22 +8,24 @@ from uuid import UUID
 
 
 class CustomJSONEncoder(json.JSONEncoder):
+    """
+    A customized JSONEncoder that can handle additional types
+    """
     def default(self, obj:Any) -> Any:
+        # Enums we convert into their underlying value
+        # This accounts for the way we use Enums to access the Api
         if isinstance(obj, Enum):
             return obj.value
+        # Dates/Times need conversion
         elif isinstance(obj, (datetime, date)):
             return obj.isoformat()
+        # UUID (guid) needs converted directly into a string
         elif isinstance(obj, UUID):
             return str(obj)
-        # elif isinstance(obj, (list, tuple)):
-        #     return [self.default(item) if not isinstance(item, (str, int, float, bool, type(None))) else item for item in obj]
-        # elif isinstance(obj, dict):
-        #     return {k: self.default(v) if not isinstance(v, (str, int, float, bool, type(None))) else v for k, v in obj.items()}
+        # Anything that looks like a dictionary needs sub-processing
         elif hasattr(obj, '__dict__'):
             # For custom objects, apply the same transformation logic
-            obj_dict = vars(obj)
-            clean_dict = {k: v for k, v in obj_dict.items() if v is not None}
-            return humps.pascalize(clean_dict)
+            return JsonHelper._convert_to_dict(obj)
         return super().default(obj)
 
 
@@ -37,6 +39,21 @@ class JsonHelper:
     """
 
     @staticmethod
+    def _convert_to_dict(value: Any) -> dict:
+        """
+        Converts a value into a dict, excluding None values, with Pascalized Names
+        """
+
+        # Convert into a dict using vars (keys will be field names, values will be field values)
+        value_dict: dict = vars(value)
+        # Remove all pairs where the value is None
+        clean_dict: dict = {key: value for key, value in value_dict.items() if value is not None}
+        # Use the humps library to convert from `lower_snake_case` field names into `PascalCase`
+        renamed_dict: dict = humps.pascalize(clean_dict)
+        # Now this dict corresponds to the API
+        return renamed_dict
+
+    @staticmethod
     def serialize(value: Any) -> str:
         """
         Serializes `value` into a json string representation
@@ -44,18 +61,12 @@ class JsonHelper:
         :returns: A json string
         """
 
-        # Convert the class to a dict, where the keys are the field names and the values are the field values
-        value_dict: dict = vars(value)
-
-        # Remove all pairs where the value is None
-        clean_dict: dict = {k: v for k, v in value_dict.items() if v is not None}
-
-        # Use Humps to transform the 'lower_snake_case' field names to 'PascalCase'
-        renamed_dict: dict = humps.pascalize(clean_dict)
+        # Convert to dict
+        value_dict: dict = JsonHelper._convert_to_dict(value)
 
         # Transform the dict into a compact json string
-        # We need a custom encoding to handle UUIDs
-        json_str: str = json.dumps(renamed_dict,
+        # We need to use a custom encoder
+        json_str: str = json.dumps(value_dict,
                                    indent=None,
                                    separators=(',', ':'),
                                    cls=CustomJSONEncoder)

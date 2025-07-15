@@ -4,7 +4,7 @@ from endpoints.endpoints_root import EndpointsHelper
 from models.enums import RegionType
 from models.region import Region
 from models.request_models import CombineRegionRequest
-from services.json_helper import JsonHelper
+from utilities.json_helper import JsonHelper
 
 class RegionalEndpoints(ApiEndpoint):
     def __init__(self, endpoints: EndpointsHelper):

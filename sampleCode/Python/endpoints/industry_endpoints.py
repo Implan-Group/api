@@ -3,7 +3,7 @@
 from endpoints.api_endpoints import ApiEndpoint
 from endpoints.endpoints_root import EndpointsHelper
 from models.industry_models import IndustrySet, IndustryCode
-from services.json_helper import JsonHelper
+from utilities.json_helper import JsonHelper
 
 
 class IndustryEndpoints(ApiEndpoint):

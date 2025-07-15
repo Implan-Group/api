@@ -5,12 +5,9 @@ import logging
 import json
 
 from datetime import timedelta
-from xml.etree.ElementTree import indent
-
 from requests import PreparedRequest
-from requests.models import Request, Response
-
-from services.python_helper import pretty_timedelta
+from requests.models import Response
+from utilities.python_helper import pretty_timedelta
 
 
 class LoggingHelper:

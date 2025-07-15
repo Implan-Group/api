@@ -4,6 +4,17 @@ from types import MappingProxyType
 from typing import Any
 from uuid import UUID
 
+"""
+This prelude contains some useful methods for accessing the API and debugging
+"""
+
+
+def uuid_empty() -> UUID:
+    """
+    Returns an all-zero UUID
+    """
+    return UUID(int=0)
+
 
 def pretty_timedelta(elapsed: timedelta) -> str:
     """
@@ -13,8 +24,7 @@ def pretty_timedelta(elapsed: timedelta) -> str:
         return str(elapsed)
     return f"-({-elapsed!s})"
 
-def uuid_empty() -> UUID:
-    return UUID(int=0)
+
 
 def inspect(thing):
     # if thing is a list, tuple or set

@@ -4,7 +4,7 @@ from uuid import UUID
 from endpoints.api_endpoints import ApiEndpoint
 from endpoints.endpoints_root import EndpointsHelper
 from models.project_models import Project
-from services.json_helper import JsonHelper
+from utilities.json_helper import JsonHelper
 
 
 class ProjectEndpoints(ApiEndpoint):

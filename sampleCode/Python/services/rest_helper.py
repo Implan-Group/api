@@ -1,16 +1,16 @@
 ﻿import http
-from email.headerregistry import ContentTypeHeader
-from http import HTTPMethod
+from http import HTTPMethod, HTTPStatus
 
 import requests
 import logging
 
-from typing import Any, TypeVar, Type
+from typing import Any
 from datetime import datetime, timedelta
-from requests import Session, Request, PreparedRequest, Response
+from requests import Request, PreparedRequest, Response
 
-from services.json_helper import JsonHelper
+from services.auth_helper import AuthHelper
 from services.logging_helper import LoggingHelper
+from utilities.prelude import JsonHelper
 
 
 class RestHelper:
@@ -18,6 +18,10 @@ class RestHelper:
         self.token = token
         self.logging_helper = logging_helper
         self.timeout_sec: float = 30.0
+        self.auth: AuthHelper = AuthHelper()
+
+    def _refresh_token(self):
+        self.token = self.auth.get_fresh_token()
 
     def _get_session(self) -> requests.Session:
         """
@@ -34,29 +38,46 @@ class RestHelper:
               url: str,
               headers: dict[str, Any] | None = None,
               query_params: dict[str, Any] | None = None,
-              body: str | Any | None = None,
+              json_body: str | None = None,
+              data_body: Any | None = None,
               ) -> Response:
         # Time this process for logging and debugging
         start: datetime = datetime.now()
 
         # Start a new HTTP session
         with self._get_session() as session:
+
             # Create the request
-            request: Request = Request(http_method, url, headers=headers, params=query_params)
-            # Prepare it with our session
-            prepped: PreparedRequest = session.prepare_request(request)
+            request: Request
+            try:
+                request = Request(http_method, url,
+                                  headers=headers,
+                                  params=query_params,
+                                  json=json_body,
+                                  data=data_body,
+                                  )
+            except Exception as ex:
+                logging.error(f"Unable to create a {http_method} Request to {url}: {ex}")
+                raise
 
-            # If body is a string, treat it as raw json
-            if isinstance(body, str):
-                prepped.headers["Content-Type"] = "application/json"
-                prepped.body = body
-            elif body is not None:
-                # Otherwise, turn it into json
-                prepped.headers["Content-Type"] = "application/json"
-                prepped.body = JsonHelper.serialize(body)
+            # Use the Session to prepare it
+            prepped: PreparedRequest
+            try:
+                prepped= session.prepare_request(request)
+            except Exception as ex:
+                logging.error(f"Unable to prepare '{request}': {ex}")
+                raise
 
-            # Send the Request
-            response: Response = session.send(prepped, timeout=self.timeout_sec)
+            # Send the Request (with timeout)
+            response: Response
+            try:
+                response = session.send(prepped, timeout=self.timeout_sec)
+            except requests.Timeout as timeout_ex:
+                logging.warn(f"Timed out attempting to send to {url}: {timeout_ex}")
+                raise
+            except Exception as ex:
+                logging.error(f"Unable to send '{prepped}': {ex}")
+                raise
 
             # End timing
             end: datetime = datetime.now()
@@ -64,6 +85,12 @@ class RestHelper:
 
             # Log this
             self.logging_helper.log_request_response(prepped, response, total)
+
+            # It is possible that the auth token has expired
+            if response.status_code == HTTPStatus.UNAUTHORIZED.value:
+                # In this case, we'll get a new bearer token
+                self._refresh_token()
+                # And then
 
             # raise an error for non-200 status codes
             if response.status_code != 200:
@@ -74,20 +101,20 @@ class RestHelper:
             return response
 
     def get(self,
-              url: str,
-              headers: dict[str, Any] | None = None,
-              query_params: dict[str, Any] | None = None,
-              body: str | Any | None = None,
-              ) -> bytes:
+            url: str,
+            headers: dict[str, Any] | None = None,
+            query_params: dict[str, Any] | None = None,
+            body: str | Any | None = None,
+            ) -> bytes:
         response: Response = self._send(HTTPMethod.GET, url, headers, query_params, body)
         return response.content
 
     def post(self,
-              url: str,
-              headers: dict[str, Any] | None = None,
-              query_params: dict[str, Any] | None = None,
-              body: str | Any | None = None,
-              ) -> bytes:
+             url: str,
+             headers: dict[str, Any] | None = None,
+             query_params: dict[str, Any] | None = None,
+             body: str | Any | None = None,
+             ) -> bytes:
         response: Response = self._send(HTTPMethod.POST, url, headers, query_params, body)
         return response.content
 
@@ -101,20 +128,20 @@ class RestHelper:
         return response.content
 
     def delete(self,
-            url: str,
-            headers: dict[str, Any] | None = None,
-            query_params: dict[str, Any] | None = None,
-            body: str | Any | None = None,
-            ) -> bytes:
-        response: Response = self._send(HTTPMethod.DELETE, url, headers, query_params, body)
-        return response.content
-
-    def patch(self,
                url: str,
                headers: dict[str, Any] | None = None,
                query_params: dict[str, Any] | None = None,
                body: str | Any | None = None,
                ) -> bytes:
+        response: Response = self._send(HTTPMethod.DELETE, url, headers, query_params, body)
+        return response.content
+
+    def patch(self,
+              url: str,
+              headers: dict[str, Any] | None = None,
+              query_params: dict[str, Any] | None = None,
+              body: str | Any | None = None,
+              ) -> bytes:
         response: Response = self._send(HTTPMethod.PATCH, url, headers, query_params, body)
         return response.content
 
