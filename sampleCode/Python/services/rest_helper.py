@@ -47,12 +47,11 @@ class RestHelper:
             prepped: PreparedRequest = session.prepare_request(request)
 
             # If body is a string, treat it as raw json
-            if body is str:
+            if isinstance(body, str):
                 prepped.headers["Content-Type"] = "application/json"
                 prepped.body = body
-
-            # If body is Any, jsonify it
-            if body is Any:
+            elif body is not None:
+                # Otherwise, turn it into json
                 prepped.headers["Content-Type"] = "application/json"
                 prepped.body = JsonHelper.serialize(body)
 
@@ -67,36 +66,56 @@ class RestHelper:
             self.logging_helper.log_request_response(prepped, response, total)
 
             # raise an error for non-200 status codes
-            response.raise_for_status()
+            if response.status_code != 200:
+                logging.error(f"Response Failed - {response.status_code} - {response}")
+                response.raise_for_status()
 
             # return the response
             return response
 
-    # Used for generic typing for response deserialization
-    AnyResponseType = TypeVar('AnyResponseType', None, str, Any)
-    T = TypeVar('T')
-
     def get(self,
+              url: str,
+              headers: dict[str, Any] | None = None,
+              query_params: dict[str, Any] | None = None,
+              body: str | Any | None = None,
+              ) -> bytes:
+        response: Response = self._send(HTTPMethod.GET, url, headers, query_params, body)
+        return response.content
+
+    def post(self,
+              url: str,
+              headers: dict[str, Any] | None = None,
+              query_params: dict[str, Any] | None = None,
+              body: str | Any | None = None,
+              ) -> bytes:
+        response: Response = self._send(HTTPMethod.POST, url, headers, query_params, body)
+        return response.content
+
+    def put(self,
             url: str,
-            return_type: Type[T],
             headers: dict[str, Any] | None = None,
             query_params: dict[str, Any] | None = None,
             body: str | Any | None = None,
-            ) -> AnyResponseType:
+            ) -> bytes:
+        response: Response = self._send(HTTPMethod.PUT, url, headers, query_params, body)
+        return response.content
 
-        response = self._send(HTTPMethod.GET, url, headers, query_params, body)
+    def delete(self,
+            url: str,
+            headers: dict[str, Any] | None = None,
+            query_params: dict[str, Any] | None = None,
+            body: str | Any | None = None,
+            ) -> bytes:
+        response: Response = self._send(HTTPMethod.DELETE, url, headers, query_params, body)
+        return response.content
 
-        if return_type is str:
-            response.encoding = "utf-8"
-            return response.text
-
-        if return_type is Any:
-            response.encoding = "utf-8"
-            json_text = response.text
-            instance = JsonHelper.deserialize(json_text, return_type)
-            return instance
-
-        # Just return the bytes
+    def patch(self,
+               url: str,
+               headers: dict[str, Any] | None = None,
+               query_params: dict[str, Any] | None = None,
+               body: str | Any | None = None,
+               ) -> bytes:
+        response: Response = self._send(HTTPMethod.PATCH, url, headers, query_params, body)
         return response.content
 
     def send_http_request(self,

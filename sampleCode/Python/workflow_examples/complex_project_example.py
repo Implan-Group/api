@@ -44,7 +44,7 @@ class ComplexProjectExample:
             aggregation_scheme_id=aggregation_scheme_id,
             household_set_id=household_set_id,
         )
-        project = self.endpoints.project_endpoints.create(project)
+        project = self.endpoints.project_endpoints.create_project(project)
         print_pretty(project)
 
 

@@ -43,7 +43,7 @@ class SimpleProjectExample:
         )
 
         # Create the project
-        project: Project = endpoints.project_endpoints.create(project_definition)
+        project: Project = endpoints.project_endpoints.create_project(project_definition)
         if not project.id:
             raise Exception("Project Creation Failed: Project Id is None")
         logging.info(f"Created Project #{project.id} '{project.title}'")

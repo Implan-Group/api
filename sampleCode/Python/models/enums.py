@@ -57,3 +57,9 @@ class RegionType(str, Enum):
     COUNTY = 'County'
     CONGRESSIONAL_DISTRICT = 'CongressionalDistrict'
     ZIPCODE = 'Zipcode'
+
+
+class ImpactType(str, Enum):
+    DIRECT = 'Direct'
+    INDIRECT = 'Indirect'
+    INDUCED = 'Induced'

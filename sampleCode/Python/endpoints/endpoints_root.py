@@ -18,6 +18,8 @@ class EndpointsHelper:
         from endpoints.project_endpoints import ProjectEndpoints
         from endpoints.group_endpoints import GroupEndpoints
         from endpoints.regional_endpoints import RegionalEndpoints
+        from endpoints.impact_endpoints import ImpactEndpoints
+        from endpoints.report_endpoints import ReportEndpoints
 
         self.aggregation_endpoints: AggregationSchemeEndpoints = AggregationSchemeEndpoints(self)
         self.dataset_endpoints: DatasetEndpoints = DatasetEndpoints(self)
@@ -26,3 +28,5 @@ class EndpointsHelper:
         self.event_endpoints: EventEndpoints = EventEndpoints(self)
         self.regional_endpoints: RegionalEndpoints = RegionalEndpoints(self)
         self.group_endpoints: GroupEndpoints = GroupEndpoints(self)
+        self.impact_endpoints: ImpactEndpoints = ImpactEndpoints(self)
+        self.report_endpoints: ReportEndpoints = ReportEndpoints(self)
