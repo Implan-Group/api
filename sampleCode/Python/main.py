@@ -1,22 +1,14 @@
-import logging
-import os
-
-from endpoints.endpoints_root import EndpointsHelper
-from services.auth_helper import AuthHelper
+from endpoints.endpoints_helper import EndpointsHelper
 from services.rest_helper import RestHelper
 from services.logging_helper import LoggingHelper
 from workflow_examples.complex_project_example import ComplexProjectExample
-from workflow_examples.identifiers_example import IdentifiersExample
+from workflow_examples.identifiers_workflow_example import IdentifiersWorkflowExample
 from workflow_examples.impact_analysis_workflow_examples import ImpactAnalysisWorkflowExamples
 from workflow_examples.regional_examples import RegionalWorkflowExamples
-from workflow_examples.simple_project_example import SimpleProjectExample
 from dotenv import load_dotenv
 
-# from unrefactored.workflows.CreateProjectWorkflow import CreateProjectWorkflow
-# from unrefactored.workflows.RegionalWorkflow import RegionalWorkflow
-# # from workflows.CombinedRegionWorkflow import CombinedRegionWorkflow
-# # from workflows.MultiEventToMultiGroupWorkflow import MultiEventToMultiGroupWorkflow
-# from unrefactored.workflows.RunImpactAnalysisWorkflow import RunImpactAnalysisWorkflow
+from workflow_examples.simple_project_workflow_example import SimpleProjectWorkflowExample
+
 
 ################################################################################
 # Setup console + file logging
@@ -28,86 +20,47 @@ load_dotenv()
 ################################################################################
 
 
-
-
 def main():
     """
 
     """
 
-    # First, we must authenticate to the Implan Impact API
-    logging.info("Authenticating to Implan Impact API...")
+    # Set up our REST Request Helper
+    # This also manages our IMPLAN Impact API Authentication and Authorization
+    rest_helper = RestHelper(logging_helper)
+    # Set up the EndpointsHelper, which groups Impact API endpoints together by how they are used
+    endpoints_helper = EndpointsHelper(rest_helper, logging_helper)
 
-    # Send in our required username and password
-    username = os.getenv("IMPLAN_USERNAME")
-    password = os.getenv("IMPLAN_PASSWORD")
-    auth = AuthHelper(username, password)
-    # Retrieve the bearer token
-    token = auth.get_bearer_token()
+    # Any of the workflows in the `workflow_examples` folder can be accessed at this point, as they
+    # only require a valid `EndpointsHelper` instance
 
-    # Now we can create our rest helper
-    rest_helper = RestHelper(token, logging_helper)
-
-    # Here is where you can freely modify the rest of this method for your particular workflow!
-
-    # # Simple Project Example
-    # # Creates a new Project, adds Events, then adds Groups
-    # workflow = SimpleProjectExample(rest_helper, logging_helper)
-    # workflow.execute_example()
-    #
-    # # Identifiers Example
-    # # All the ways that various IDs can be looked up
-    # workflow = IdentifiersExample(rest_helper, logging_helper)
-    # workflow.execute_example()
+    # Just uncomment a particular section and this script will automatically execute the workflow
 
 
-    # Regional Workflow Examples
-    #workflow = RegionalWorkflowExamples(rest_helper, logging_helper)
+    # --- Identifiers + Data Workflow Examples ---
+    #workflow = IdentifiersWorkflowExample(endpoints_helper)
+    #workflow.execute_example()
 
-    # Search through Regions to find several to combine, combine them, and wait for the new Combined Region to be available
+    # --- Regional Workflow Examples ---
+    #workflow = RegionalWorkflowExamples(endpoints_helper)
     #workflow.combine_regions()
-
-    # Different ways to explore regional relationships
     #workflow.explore_implan_regions()
     #workflow.explore_user_regions()
 
+    # --- A Simple Project Creation Workflow Example ---
+    workflow = SimpleProjectWorkflowExample(endpoints_helper)
+    workflow.execute_example()
 
-    # Complex Project Workflow Example
-    #workflow = ComplexProjectExample(rest_helper, logging_helper)
-    #workflow.execute_example()
+    # --- A more complex Project Creation Workflow Example ---
+    workflow = ComplexProjectExample(endpoints_helper)
+    workflow.execute_example()
 
-    # Impact Analysis Workflow Examples
-    workflows = ImpactAnalysisWorkflowExamples(rest_helper, logging_helper)
+    # -- Impact Analysis Workflow Examples ---
+    workflows = ImpactAnalysisWorkflowExamples(endpoints_helper)
     workflows.execute_example()
 
-    print('break')
+    print('Finished')
 
-
-
-
-
-
-    # Create a new Project, add a Regional Group, an Event, and then run the Impact
-
-
-
-    # # Create Project Workflow
-    # project_id = CreateProjectWorkflow.examples(bearer_token)
-    # RunImpactAnalysisWorkflow.ProjectId = project_id
-    # RunImpactAnalysisWorkflow.examples(bearer_token)
-    #
-    # # Regional Workflow
-    # RegionalWorkflow.examples(bearer_token)
-    #
-    # # MultiEventToMultiGroupWorkflow.examples(bearer_token)
-    #
-    # # Combined Region Workflow
-    # # CombinedRegionWorkflow.examples(bearer_token)
-    #
-    # # Run Impact Analysis Workflow
-    # # RunImpactAnalysisWorkflow.examples(bearer_token)
-    #
-    # logging.info("finished")
 
 # If we execute this file as a script, this will redirect to calling `main()`
 if __name__ == "__main__":

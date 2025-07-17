@@ -1,21 +1,19 @@
-﻿from http import HTTPMethod
-
-from endpoints.api_endpoints import ApiEndpoint
-from endpoints.endpoints_root import EndpointsHelper
+﻿from endpoints.endpoint import ApiEndpoint
+from endpoints.endpoints_helper import EndpointsHelper
 from models.industry_models import IndustrySet, IndustryCode
 from utilities.json_helper import JsonHelper
 
 
 class IndustryEndpoints(ApiEndpoint):
     def __init__(self, endpoints: EndpointsHelper):
-        super().__init__(endpoints.rest_helper, endpoints.logging_helper, endpoints.base_url)
+        super().__init__(endpoints)
 
     def get_industry_sets(self) -> list[IndustrySet]:
         # The endpoint's url
         url: str = f"{self.base_url}/api/v1/industry-sets"
 
         # GET that url's content -- a json array of IndustrySets
-        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
+        content: bytes = self.rest_helper.get(url)
 
         # Deserialize the content
         industry_sets: list[IndustrySet] = JsonHelper.deserialize_list(content, IndustrySet)
@@ -27,7 +25,7 @@ class IndustryEndpoints(ApiEndpoint):
         url: str = f"{self.base_url}/api/v1/industry-sets/{industry_set_id}"
 
         # GET that url's content -- a json IndustrySet
-        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
+        content: bytes = self.rest_helper.get(url)
 
         # Deserialize the content
         industry_set: IndustrySet = JsonHelper.deserialize(content, IndustrySet)
@@ -51,7 +49,7 @@ class IndustryEndpoints(ApiEndpoint):
             query_params["industrySetId"] = industry_set_id
 
         # Send a GET request expecting json content
-        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url, params=query_params)
+        content: bytes = self.rest_helper.get(url, query_params=query_params)
         # Deserialize to the list of Industry Codes
         industry_codes: list[IndustryCode] = JsonHelper.deserialize_list(content, IndustryCode)
 

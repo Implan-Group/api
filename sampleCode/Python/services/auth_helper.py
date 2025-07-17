@@ -1,7 +1,7 @@
 ﻿import logging
 import os.path
-
 import requests
+
 from requests import Response
 
 

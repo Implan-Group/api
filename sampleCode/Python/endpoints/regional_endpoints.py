@@ -1,14 +1,14 @@
-﻿from http import HTTPMethod
-from endpoints.api_endpoints import ApiEndpoint
-from endpoints.endpoints_root import EndpointsHelper
+﻿from endpoints.endpoint import ApiEndpoint
+from endpoints.endpoints_helper import EndpointsHelper
 from models.enums import RegionType
 from models.region import Region
 from models.request_models import CombineRegionRequest
 from utilities.json_helper import JsonHelper
 
+
 class RegionalEndpoints(ApiEndpoint):
     def __init__(self, endpoints: EndpointsHelper):
-        super().__init__(endpoints.rest_helper, endpoints.logging_helper, endpoints.base_url)
+        super().__init__(endpoints)
 
 
     def get_region_types(self) -> list[RegionType]:
@@ -19,7 +19,7 @@ class RegionalEndpoints(ApiEndpoint):
         # No extra information needed for headers/body
 
         # Send a GET Request and get the Response
-        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
+        content: bytes = self.rest_helper.get(url)
 
         # Convert into a list of RegionTypes
         region_types: list[RegionType] = JsonHelper.deserialize_list(content, RegionType)
@@ -35,7 +35,7 @@ class RegionalEndpoints(ApiEndpoint):
         # No extra information needed for headers/body
 
         # Send a GET Request and get the Response
-        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
+        content: bytes = self.rest_helper.get(url)
 
         # Convert into a single Region
         region: Region = JsonHelper.deserialize(content, Region)
@@ -60,12 +60,12 @@ class RegionalEndpoints(ApiEndpoint):
             url = f"{self.base_url}/api/v1/region/{aggregation_scheme_id}/{dataset_id}/children"
 
         # If we have a region_type, we need to add it as a query param
-        params = {}
+        query_params = {}
         if region_type:
-            params["regionTypeFilter"] = region_type
+            query_params["regionTypeFilter"] = region_type
 
         # Send a GET Request and get the Response
-        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url, params=params)
+        content: bytes = self.rest_helper.get(url, query_params=query_params)
 
         # Convert into Regions
         regions: list[Region] = JsonHelper.deserialize_list(content, Region)
@@ -80,7 +80,7 @@ class RegionalEndpoints(ApiEndpoint):
         # No extra information needed for headers/body
 
         # Send a GET Request and get the Response
-        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
+        content: bytes = self.rest_helper.get(url)
 
         # Convert into Regions
         regions: list[Region] = JsonHelper.deserialize_list(content, Region)
@@ -95,10 +95,10 @@ class RegionalEndpoints(ApiEndpoint):
         url: str = f"{self.base_url}/api/v1/region/build/combined/{aggregation_scheme_id}"
 
         # Add the CombineRegionRequest as a json payload
-        payload_json: str = JsonHelper.serialize(payload)
+        payload: str = JsonHelper.serialize(payload)
 
         # POST the request and get the response
-        content: bytes = self.rest_helper.send_http_request(HTTPMethod.POST, url, data=payload_json)
+        content: bytes = self.rest_helper.post(url, body=payload)
 
         # The response is a list that contains a single region
         regions: list[Region] = JsonHelper.deserialize_list(content, Region)

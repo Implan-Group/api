@@ -7,7 +7,7 @@ import json
 from datetime import timedelta
 from requests import PreparedRequest
 from requests.models import Response
-from utilities.python_helper import pretty_timedelta
+from utilities.python_helper import print_timedelta
 
 
 class LoggingHelper:
@@ -48,11 +48,15 @@ class LoggingHelper:
                 message.append(f"  {key}: {value}")
         # If we sent a payload with the request, log it
         if request.body:
-            message.append(f"{request.headers.get("Content-Type")} Body:")
-            message.append(json.dumps(request.body, indent=2))
+            body_content_type = request.headers.get('Content-Type')
+            message.append(f"{body_content_type} body:")
+            if body_content_type == 'application/json':
+                message.append(str(request.body))
+            else:
+                message.append(json.dumps(request.body, indent=2))
 
         # Response Information
-        message.append(f"Response {response.status_code} {response.reason} in {pretty_timedelta(elapsed_time)}")
+        message.append(f"Response {response.status_code} {response.reason} in {print_timedelta(elapsed_time)}")
 
         # Failed?
         if not response.ok:

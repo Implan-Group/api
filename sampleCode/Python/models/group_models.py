@@ -1,5 +1,4 @@
 ﻿from uuid import UUID
-
 from utilities.python_helper import uuid_empty
 
 

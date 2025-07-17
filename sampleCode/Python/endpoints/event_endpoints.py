@@ -1,8 +1,8 @@
 ﻿from http import HTTPMethod
 from uuid import UUID
 
-from endpoints.api_endpoints import ApiEndpoint
-from endpoints.endpoints_root import EndpointsHelper
+from endpoints.endpoint import ApiEndpoint
+from endpoints.endpoints_helper import EndpointsHelper
 from models.enums import EventType
 from models.event_models import Event
 from utilities.json_helper import JsonHelper
@@ -10,25 +10,12 @@ from utilities.json_helper import JsonHelper
 
 class EventEndpoints(ApiEndpoint):
     def __init__(self, endpoints: EndpointsHelper):
-        super().__init__(endpoints.rest_helper, endpoints.logging_helper, endpoints.base_url)
-
-    def get_event_types(self, project_guid: UUID) -> list[EventType]:
-        # The endpoint's url
-        url = f"{self.base_url}/api/v1/impact/project/{project_guid}/eventtype"
-
-        # GET that url's content
-        content: bytes = self.rest_helper.send_http_request(HTTPMethod.GET, url)
-
-        # Transform the json bytes into a list of EventType
-        event_types: list[EventType] = JsonHelper.deserialize_list(content, EventType)
-
-        return event_types
+        super().__init__(endpoints)
 
     def add_event[E:Event](self,
                            project_id: UUID,
                            event: E
                            ) -> E:
-
         # Hydrate the Endpoint URL
         url: str = f"{self.base_url}/api/v1/impact/project/{project_id}/event"
 
@@ -36,50 +23,37 @@ class EventEndpoints(ApiEndpoint):
         event_json: str = JsonHelper.serialize(event)
 
         # POST the request
-        content: bytes = self.rest_helper.send_http_request(HTTPMethod.POST, url, data=event_json)
+        content: bytes = self.rest_helper.post(url, body=event_json)
 
         # Transform the response back into our Event Type
         added_event: E = JsonHelper.deserialize(content, type(event))
 
         return added_event
 
-    #
-    #
-    # @staticmethod
-    # def add_industry_output_event(project_id, event_data, bearer_token):
-    #     url = f"https://api.implan.com/api/v1/impact/project/{project_id}/event"
-    #     headers = {"Authorization": f"Bearer {bearer_token}", "Content-Type": "application/json"}
-    #     response = None
-    #     try:
-    #         payload = event_data.to_dict()
-    #         print("Request Payload for IndustryOutputEvent:", json.dumps(payload, indent=4))
-    #         response = requests.post(url, headers=headers, json=payload)
-    #         response.raise_for_status()
-    #         return IndustryOutputEvent.from_dict(response.json())
-    #     except requests.exceptions.HTTPError as http_err:
-    #         print(f"HTTP error occurred: {http_err}")
-    #         print(f"Response status code: {response.status_code}")
-    #         print(f"Response content: {response.content.decode('utf-8')}")
-    #     except Exception as err:
-    #         print(f"Other error occurred: {err}")
-    #
-    # @staticmethod
-    # def add_industry_impact_analysis_event(project_id, event_data, bearer_token):
-    #     url = f"https://api.implan.com/api/v1/impact/project/{project_id}/event"
-    #     headers = {"Authorization": f"Bearer {bearer_token}", "Content-Type": "application/json"}
-    #     response = None
-    #     try:
-    #         payload = event_data.to_dict()
-    #         print("Request Payload for IndustryImpactAnalysisEvent:", json.dumps(payload, indent=4))
-    #         response = requests.post(url, headers=headers, json=payload)
-    #         response.raise_for_status()
-    #         return IndustryImpactAnalysisEvent.from_dict(response.json())
-    #     except requests.exceptions.HTTPError as http_err:
-    #         print(f"HTTP error occurred: {http_err}")
-    #         print(f"Response content: {response.content}")
-    #     except Exception as err:
-    #         print(f"Other error occurred: {err}")
-    #
+    def get_event_types(self, project_id: UUID) -> list[EventType]:
+        # The endpoint's url
+        url = f"{self.base_url}/api/v1/impact/project/{project_id}/eventtype"
+
+        # GET that url's content
+        content: bytes = self.rest_helper.get(url)
+
+        # Transform the json bytes into a list of EventType
+        event_types: list[EventType] = JsonHelper.deserialize_list(content, EventType)
+
+        return event_types
+
+    def get_event[E](self, project_id: UUID, event_id: UUID, cls: type[E] | None = None) -> E:
+        url: str = f"{self.base_url}/api/v1/impact/project/{project_id}/event/{event_id}"
+        content: bytes = self.rest_helper.get(url)
+
+        if cls is None:
+            event: Event = JsonHelper.deserialize(content, Event)
+            return event
+        else:
+            event: E = JsonHelper.deserialize(content, cls)
+            return event
+
+
     #
     #
     # @staticmethod

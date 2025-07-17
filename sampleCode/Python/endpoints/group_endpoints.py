@@ -1,16 +1,14 @@
-from http import HTTPMethod
-
 import uuid
 
-from endpoints.api_endpoints import ApiEndpoint
-from endpoints.endpoints_root import EndpointsHelper
+from endpoints.endpoint import ApiEndpoint
+from endpoints.endpoints_helper import EndpointsHelper
 from models.group_models import Group
 from utilities.json_helper import JsonHelper
 
 
 class GroupEndpoints(ApiEndpoint):
     def __init__(self, endpoints: EndpointsHelper):
-        super().__init__(endpoints.rest_helper, endpoints.logging_helper, endpoints.base_url)
+        super().__init__(endpoints)
 
     def add_group_to_project(self,
                              project_guid: uuid.UUID,
@@ -22,7 +20,7 @@ class GroupEndpoints(ApiEndpoint):
         payload: str = JsonHelper.serialize(group)
         
         # Send our POST request
-        content: bytes = self.rest_helper.send_http_request(HTTPMethod.POST, url, data=payload)
+        content: bytes = self.rest_helper.post(url, body=payload)
 
         # The response will be the fully hydrated Group
         group: Group = JsonHelper.deserialize(content, Group)

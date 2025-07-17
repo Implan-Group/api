@@ -1,12 +1,12 @@
 ﻿import uuid
 
-from endpoints.api_endpoints import ApiEndpoint
-from endpoints.endpoints_root import EndpointsHelper
+from endpoints.endpoint import ApiEndpoint
+from endpoints.endpoints_helper import EndpointsHelper
 
 
 class ImpactEndpoints(ApiEndpoint):
     def __init__(self, endpoints: EndpointsHelper):
-        super().__init__(endpoints.rest_helper, endpoints.logging_helper, endpoints.base_url)
+        super().__init__(endpoints)
 
 
     def run_impact(self, project_id: uuid.UUID) -> int:

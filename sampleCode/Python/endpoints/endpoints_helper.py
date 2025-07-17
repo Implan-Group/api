@@ -1,16 +1,6 @@
 ﻿from services.logging_helper import LoggingHelper
 from services.rest_helper import RestHelper
 
-class ApiEndpoint:
-    def __init__(self,
-                 rest_helper: RestHelper,
-                 logging_helper: LoggingHelper,
-                 base_url: str | None = None):
-        self.rest_helper: RestHelper = rest_helper
-        self.logging_helper: LoggingHelper = logging_helper
-        self.base_url: str = base_url or "https://api.implan.com"
-        self.endpoints: EndpointsHelper = EndpointsHelper(rest_helper, logging_helper, base_url)
-
 
 class EndpointsHelper:
     def __init__(self,
@@ -21,7 +11,7 @@ class EndpointsHelper:
         self.logging_helper: LoggingHelper = logging_helper
         self.base_url = base_url or "https://api.implan.com"
 
-        # We must import in this order to prevent circular references
+        # We must import in this way and in this order to prevent circular references
 
         from endpoints.data_endpoints import DataEndpoints
         self.data_endpoints = DataEndpoints(self)

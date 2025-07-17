@@ -1,15 +1,14 @@
-﻿from http import HTTPMethod
-from uuid import UUID
+﻿from uuid import UUID
 
-from endpoints.api_endpoints import ApiEndpoint
-from endpoints.endpoints_root import EndpointsHelper
+from endpoints.endpoint import ApiEndpoint
+from endpoints.endpoints_helper import EndpointsHelper
 from models.project_models import Project
 from utilities.json_helper import JsonHelper
 
 
 class ProjectEndpoints(ApiEndpoint):
     def __init__(self, endpoints: EndpointsHelper):
-        super().__init__(endpoints.rest_helper, endpoints.logging_helper, endpoints.base_url)
+        super().__init__(endpoints)
 
     def create_project(self, project: Project) -> Project:
 
@@ -20,7 +19,7 @@ class ProjectEndpoints(ApiEndpoint):
         project_json = JsonHelper.serialize(project)
 
         # Send the request
-        content = self.rest_helper.send_http_request(HTTPMethod.POST, url, data=project_json)
+        content = self.rest_helper.post(url, body=project_json)
 
         # Deserialize
         output = JsonHelper.deserialize(content, Project)

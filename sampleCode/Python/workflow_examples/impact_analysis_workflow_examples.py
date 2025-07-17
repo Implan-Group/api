@@ -2,20 +2,18 @@
 import time
 from uuid import UUID
 
-from endpoints.endpoints_root import EndpointsHelper
+from endpoints.endpoints_helper import EndpointsHelper
 from models.project_models import Project
 from models.report_models import ImpactResultsExportRequest
 from services.logging_helper import LoggingHelper
 from services.rest_helper import RestHelper
+from workflow_examples.workflow_example import WorkflowExample
 
 
-class ImpactAnalysisWorkflowExamples:
+class ImpactAnalysisWorkflowExamples(WorkflowExample):
 
-    def __init__(self, rest_helper: RestHelper, logging_helper: LoggingHelper):
-        self.rest_helper = rest_helper
-        self.logging_helper = logging_helper
-        self.endpoints = EndpointsHelper(rest_helper, logging_helper)
-
+    def __init__(self, endpoints_helper: EndpointsHelper):
+        super().__init__(endpoints_helper)
 
     def execute_example(self):
         # A Project Id is required in order to reference the project
@@ -54,11 +52,9 @@ class ImpactAnalysisWorkflowExamples:
         export_request = ImpactResultsExportRequest(dollar_year=2024)
         estimated_growth_percentage_csv = self.endpoints.report_endpoints.estimated_growth_percentage(impact_run_id, export_request)
 
-
         # If you want to save the report as a csv file (to be opened by another application):
         file_path: str = f"Project #{project.id} - Detailed Economic Indicators.csv"
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(detailed_economic_indicators_csv)
-
 
         return None

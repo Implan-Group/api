@@ -1,12 +1,12 @@
-﻿from endpoints.api_endpoints import ApiEndpoint
-from endpoints.endpoints_root import EndpointsHelper
+﻿from endpoints.endpoint import ApiEndpoint
+from endpoints.endpoints_helper import EndpointsHelper
 from models.report_models import ImpactResultsExportRequest
 from utilities.json_helper import JsonHelper
 
 
 class ReportEndpoints(ApiEndpoint):
     def __init__(self, endpoints: EndpointsHelper):
-        super().__init__(endpoints.rest_helper, endpoints.logging_helper, endpoints.base_url)
+        super().__init__(endpoints)
 
 
     def detailed_economic_indicators(self, impact_run_id: int) -> str:

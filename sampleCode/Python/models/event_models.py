@@ -1,7 +1,6 @@
 from models.commodity_models import SpendingPatternCommodity
 from models.enums import EventType, SpendingPatternValueType, MarginType
 from uuid import UUID
-
 from utilities.python_helper import uuid_empty
 
 
@@ -16,7 +15,8 @@ class Event:
                  title: str | None,
                  id: UUID | None = None,
                  project_id: UUID | None = None,
-                 tags: list[str] | None = None):
+                 tags: list[str] | None = None,
+                 **kwargs):
         self.impact_event_type = impact_event_type
         self.title = title
         self.id = id if id is not None else uuid_empty()
