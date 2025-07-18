@@ -8,7 +8,7 @@ from models.event_models import IndustryOutputEvent, IndustryImpactAnalysisEvent
 from models.group_models import Group, GroupEvent
 from models.project_models import Project
 from models.region import Region
-from utilities.python_helper import uuid_empty
+from utilities.prelude import uuid_empty
 from workflow_examples.workflow_example import WorkflowExample
 
 
@@ -37,7 +37,6 @@ class SimpleProjectWorkflowExample(WorkflowExample):
 
         # Define the Project with all required fields
         project_definition = Project(
-            id = uuid_empty(),
             title=f"Example Project - {datetime.datetime.now():%Y-%m-%dT%H:%M:%S}",
             aggregation_scheme_id=aggregation_scheme_id,
             household_set_id=household_set_id,

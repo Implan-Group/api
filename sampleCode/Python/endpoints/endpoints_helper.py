@@ -1,8 +1,12 @@
-﻿from services.logging_helper import LoggingHelper
-from services.rest_helper import RestHelper
+﻿from utilities.logging_helper import LoggingHelper
+from utilities.rest_helper import RestHelper
 
 
 class EndpointsHelper:
+    """
+    A utility class that gathers together all the ApiEndpoint implementations so accessing them is more fluent.
+    """
+
     def __init__(self,
                  rest_helper: RestHelper,
                  logging_helper: LoggingHelper,

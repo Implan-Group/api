@@ -3,7 +3,7 @@ from models.aggregation_scheme import AggregationScheme
 from models.dataset_models import Dataset
 from models.enums import EventType
 from models.industry_models import IndustrySet, IndustryCode
-from utilities.python_helper import uuid_empty
+from utilities.prelude import uuid_empty
 from workflow_examples.workflow_example import WorkflowExample
 
 

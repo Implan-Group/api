@@ -5,8 +5,8 @@ from http import HTTPMethod, HTTPStatus
 from typing import Any
 from datetime import datetime, timedelta
 from requests import Request, PreparedRequest, Response
-from services.auth_helper import AuthHelper
-from services.logging_helper import LoggingHelper
+from utilities.auth_helper import AuthHelper
+from utilities.logging_helper import LoggingHelper
 
 
 class RestHelper:

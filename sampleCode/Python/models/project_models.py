@@ -1,6 +1,5 @@
 ﻿import uuid
-
-from utilities.python_helper import uuid_empty
+from utilities.prelude import uuid_empty
 
 
 class Project:
