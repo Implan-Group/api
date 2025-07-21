@@ -1,8 +1,11 @@
-from models.commodity_models import SpendingPatternCommodity
 from models.enums import EventType, SpendingPatternValueType, MarginType
 from uuid import UUID
-
+from models.spending_pattern_commodity import SpendingPatternCommodity
 from utilities.prelude import uuid_empty
+
+
+# This file contains the Models for _some_ of the different Event Types that can be used
+# All Events should use `Event` as a baseclass for common fields and to work with the `event_endpoints`
 
 
 class Event:
@@ -17,7 +20,7 @@ class Event:
                  id: UUID | None = None,
                  project_id: UUID | None = None,
                  tags: list[str] | None = None,
-                 **kwargs):
+                 **kwargs): # kwargs lets us use Event as the only type for a response rather than always having to specify the exact type
         self.impact_event_type = impact_event_type
         self.title = title
         self.id = id if id is not None else uuid_empty()
@@ -95,7 +98,7 @@ class IndustryEmploymentEvent(Event):
         if impact_event_type is not None and impact_event_type != EventType.INDUSTRY_EMPLOYMENT.value:
             raise f"Attempting to map Impact Event Type {impact_event_type} to an Industry Employment Event"
 
-        super().__init__(EventType.INDUSTRY_EMPLOYMENT, title, id, project_id,  tags)
+        super().__init__(EventType.INDUSTRY_EMPLOYMENT, title, id, project_id, tags)
         self.output = output
         self.employment = employment
         self.employee_compensation = employee_compensation

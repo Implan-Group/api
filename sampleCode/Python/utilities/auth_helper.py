@@ -13,7 +13,7 @@ class AuthHelper:
 
     def __init__(self):
         """
-
+        Upon init, we gather connection information from environment variables, with some sane defaults
         """
         self.username: str = os.getenv("IMPLAN_USERNAME")
         self.password: str = os.getenv("IMPLAN_PASSWORD")
@@ -38,14 +38,14 @@ class AuthHelper:
             # We do not care about the response's content, only that it was OK
             response.raise_for_status()
             return True
-        except:
-            # Any error of any kind indicates failure
+        except Exception as ex:
+            # Any error of any kind indicates failure, but do not log anything that could be sensitive
             logging.debug(f"API Auth Token is Invalid")
             return False
 
     def get_fresh_token(self) -> str:
         """
-        Gets a fresh Auth token
+        Gets a fresh (uncached) auth token
         """
         # The Implan API auth endpoint
         url = f"{self.base_url}/auth"

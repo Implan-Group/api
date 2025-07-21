@@ -1,14 +1,17 @@
 ﻿from enum import Enum
 
-# All Enums must be defined as subclassing `str` so that the JsonHelper can properly translate them to and from the string representatinos
-# used by the Impact API
+
+# This file contains a collection of Enums that are used by the Impact API
+# All Python Enum implementations should subclass `str` so that the `JsonHelper` utility can property translate them to and from
+# their API string representations.
 
 
 class EventType(str, Enum):
     """
     All the possible Event Types
-    Not all event types are available for all projects
+    Note: Not all Event Types are available for all Projects, see `event_endpoints` and any of the Project Workflows
     """
+
     UNKNOWN = 0
     INDUSTRY_OUTPUT = 'IndustryOutput'
     INDUSTRY_EMPLOYMENT = 'IndustryEmployment'
@@ -31,25 +34,27 @@ class EventType(str, Enum):
     CUSTOM_INDUSTRY_IMPACT_ANALYSIS = 'CustomIndustryImpactAnalysis'
     CUSTOM_INTERNATIONAL_INDUSTRY_IMPACT_ANALYSIS = 'CustomInternationalIndustryImpactAnalysis'
 
-    def __str__(self) -> str:
-        return str.__str__(self)
-
-
 
 class SpendingPatternValueType(str, Enum):
     """
-    The different Spending Pattern Value Types
+    The options for a Spending Pattern's Value Type
     """
     INTERMEDIATE_EXPENDITURE = 'IntermediateExpenditure'
     OUTPUT = 'Output'
 
 
 class MarginType(str, Enum):
+    """
+    The options for a Margin Price
+    """
     PRODUCER_PRICE = 'ProducerPrice'
     PURCHASER_PRICE = 'PurchaserPrice'
 
 
 class RegionType(str, Enum):
+    """
+    All the different types of Regions that can be used (see `regional_endpoints` and `regional_workflow_examples`)
+    """
     UNKNOWN = 'Unknown'
     COUNTRY = 'Country'
     STATE = 'State'
@@ -60,6 +65,9 @@ class RegionType(str, Enum):
 
 
 class ImpactType(str, Enum):
+    """
+    The options for an Impact's Type
+    """
     DIRECT = 'Direct'
     INDIRECT = 'Indirect'
     INDUCED = 'Induced'

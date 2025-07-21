@@ -3,6 +3,10 @@ from utilities.prelude import uuid_empty
 
 
 class GroupEvent:
+    """
+    The Model for linking together a Group and an Event
+    """
+
     def __init__(self,
                  event_id: UUID,
                  scaling_factor: float = 1.0):
@@ -11,6 +15,10 @@ class GroupEvent:
 
 
 class Group:
+    """
+    The Model for a Group
+    """
+
     def __init__(self,
                  title: str,
                  dollar_year: int | None,

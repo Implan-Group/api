@@ -1,6 +1,6 @@
 ﻿class Dataset:
     """
-    Information about a Dataset
+    The Model for a Dataset
     """
     def __init__(self,
                  id: int,

@@ -7,10 +7,15 @@ import json
 from datetime import timedelta
 from requests import PreparedRequest
 from requests.models import Response
-from utilities.python_helper import print_timedelta
+
+from utilities.prelude import print_timedelta
 
 
 class LoggingHelper:
+    """
+    A utility library to assist with application Logging
+    """
+
 
     def __init__(self):
         # Configure logging to show all messages INFO severity or higher with a specific format
@@ -30,7 +35,12 @@ class LoggingHelper:
     def log_request_response(self,
                              request: PreparedRequest,
                              response: Response,
-                             elapsed_time: timedelta):
+                             elapsed_time: timedelta) -> None:
+        """
+        Logs a Request / Response cycle with additional information (for troubleshooting + debugging)
+        """
+
+
         message: list[str] = []
 
         # Header

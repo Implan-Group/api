@@ -8,19 +8,19 @@ from dotenv import load_dotenv
 from workflow_examples.simple_project_workflow_example import SimpleProjectWorkflowExample
 
 
-################################################################################
+
 # Setup console + file logging
 logging_helper = LoggingHelper()
 
 # Load information from the secret `.env` file (see `readme.md` for more information)
 load_dotenv()
 
-################################################################################
 
 
 def main():
     """
-
+    The main entry point into the example scripts.
+    This method sets up all required information needed to access the Impact API and demonstrates several common workflows
     """
 
     # Set up our REST Request Helper
@@ -46,18 +46,18 @@ def main():
     #workflow.explore_user_regions()
 
     # --- A Simple Project Creation Workflow Example ---
-    workflow = SimpleProjectWorkflowExample(endpoints_helper)
-    workflow.execute_example()
+    #workflow = SimpleProjectWorkflowExample(endpoints_helper)
+    #workflow.execute_example()
 
     # --- A more complex Project Creation Workflow Example ---
-    workflow = ComplexProjectExample(endpoints_helper)
-    workflow.execute_example()
+    #workflow = ComplexProjectExample(endpoints_helper)
+    #workflow.execute_example()
 
     # -- Impact Analysis Workflow Examples ---
-    workflows = ImpactAnalysisWorkflowExamples(endpoints_helper)
-    workflows.execute_example()
+    #workflows = ImpactAnalysisWorkflowExamples(endpoints_helper)
+    #workflows.execute_example()
 
-    print('Finished')
+    print('Workflow Example(s) Have Completed')
 
 
 # If we execute this file as a script, this will redirect to calling `main()`

@@ -1,7 +1,8 @@
 ﻿class SpendingPatternCommodity:
     """
-    A Spending Pattern Commodity
+    The Model for a Spending Pattern Commodity
     """
+
     def __init__(self,
                  coefficient: float | None,
                  commodity_code: int,

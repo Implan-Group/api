@@ -10,7 +10,6 @@ from workflow_examples.workflow_example import WorkflowExample
 
 class ComplexProjectExample(WorkflowExample):
 
-
     def __init__(self, endpoints_helper: EndpointsHelper):
         super().__init__(endpoints_helper)
 
@@ -27,10 +26,9 @@ class ComplexProjectExample(WorkflowExample):
 
         # These identifiers were chosen specifically for this Project
         # Please see IdentifierExamples for more details on how to find them
-        aggregation_scheme_id: int = 14   # 528 Unaggregated US
+        aggregation_scheme_id: int = 14  # 528 Unaggregated US
         household_set_id: int = 1
-        dataset_id: int = 98              # 2023
-
+        dataset_id: int = 98  # 2023
 
         # Set up the initial Project
         project = Project(
@@ -40,7 +38,6 @@ class ComplexProjectExample(WorkflowExample):
         )
         project = self.endpoints.project_endpoints.create_project(project)
         print(project)
-
 
         # Create and Add all the Events
 
@@ -58,7 +55,7 @@ class ComplexProjectExample(WorkflowExample):
         # 15-30k Household Income Event
         lo_household_income_event = HouseholdIncomeEvent(
             title="Households 15-30k",
-            household_income_code=10002,    # Households 15-30k, see Specifications
+            household_income_code=10002,  # Households 15-30k, see Specifications
             value=25_000.0,
             project_id=project.id,
         )
@@ -68,13 +65,12 @@ class ComplexProjectExample(WorkflowExample):
         # 50-70k Household Income Event
         hi_household_income_event = HouseholdIncomeEvent(
             title="Households 50-75k",
-            household_income_code=10005,    # Households 50-75k,
+            household_income_code=10005,  # Households 50-75k,
             value=125_000.0,
             project_id=project.id,
         )
         hi_household_income_event = self.endpoints.event_endpoints.add_event(project.id, hi_household_income_event)
         print(hi_household_income_event)
-
 
         # Create and add all the Groups
 
@@ -95,17 +91,15 @@ class ComplexProjectExample(WorkflowExample):
         group_events: list[GroupEvent] = [GroupEvent(event_id=e.id) for e in events]
         print(group_events)
 
-
-
         for region in regions:
             # Create the Group for this Region
             group = Group(
                 project_id=project.id,
-                title=f"{region.description} State",    # Each Group must have a different description
+                title=f"{region.description} State",  # Each Group must have a different description
                 dataset_id=dataset_id,
                 dollar_year=2024,
-                hash_id=region.hash_id,                 # Associate this Region with this Group
-                group_events=group_events,              # Add all three events
+                hash_id=region.hash_id,  # Associate this Region with this Group
+                group_events=group_events,  # Add all three events
             )
             print(group)
             # Save this Group to the Project

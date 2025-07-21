@@ -1,8 +1,8 @@
 ﻿class AggregationScheme:
     """
-    An Aggregation Scheme Model
-
+    The Model for an Aggregation Scheme
     """
+
     def __init__(self,
                  id: int,
                  description: str,

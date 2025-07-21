@@ -3,7 +3,7 @@ import humps
 
 from datetime import datetime, date
 from enum import Enum
-from typing import Any, Type, TypeVar
+from typing import Any
 from uuid import UUID
 
 
@@ -119,10 +119,6 @@ class JsonHelper:
                     raise ex
             # Finished
             return instances
-
-        # Non-Enum is likely a complex value
-
-        # smart_hook = JsonHelper.smart_enum_decoder(EventType, strict_keys=False)
 
         # Use Humps to translate the 'camelCase' json keys to 'lower_snake_case' field names
         renamed_json: dict = humps.decamelize(js)

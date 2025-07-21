@@ -2,7 +2,7 @@
 
 class Region:
     """
-    This Model holds data about a particular IMPLAN Region
+    This Model holds information about a particular IMPLAN Region
     """
 
     def __init__(self,

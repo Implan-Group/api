@@ -1,10 +1,10 @@
-﻿import uuid
+﻿from uuid import UUID
 from utilities.prelude import uuid_empty
 
 
 class Project:
     """
-    The model definition for adding and updating Projects
+    The Model for a Project
     """
 
     def __init__(self,
@@ -12,11 +12,10 @@ class Project:
                  aggregation_scheme_id: int,
                  household_set_id: int,
                  is_mrio: bool = False,
-                 id: uuid.UUID | None = None,
+                 id: UUID | None = None,
                  folder_id: int | None = None,
                  last_impact_run_id: int | None = None
                  ):
-        # If the Id is unspecified, default to empty
         self.id = id if id is not None else uuid_empty()
         self.title = title
         self.aggregation_scheme_id = aggregation_scheme_id

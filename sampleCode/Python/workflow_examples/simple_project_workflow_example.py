@@ -70,11 +70,6 @@ class SimpleProjectWorkflowExample(WorkflowExample):
             logging.error(f"Event returned with invalid Id: {industry_output_event.id}")
             raise "Invalid Event Response"
 
-        temp = self.endpoints.event_endpoints.get_event(project_id, industry_output_event.id)
-        print(temp)
-        temp2 = self.endpoints.event_endpoints.get_event(project_id, industry_output_event.id, IndustryOutputEvent)
-        print(temp2)
-
         # And a more complicated Industry Impact Analysis Event
         industry_impact_analysis_event = IndustryImpactAnalysisEvent(
             project_id=project_id,

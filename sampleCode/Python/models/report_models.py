@@ -2,7 +2,7 @@
 
 class ImpactResultsExportRequest:
     """
-
+`   The Model for an Impact Results Export Request
     """
 
     def __init__(self,

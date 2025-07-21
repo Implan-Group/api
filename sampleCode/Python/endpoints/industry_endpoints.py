@@ -53,21 +53,21 @@ class IndustryEndpoints(ApiEndpoint):
         :param aggregation_scheme_id: An optional Aggregation Scheme Id used for filtering
         """
 
-        # The endpoint's url
+        # Resolve the endpoint's full URL
         url: str = f"{self.base_url}/api/v1/IndustryCodes"
 
-        # If we have an optional Aggregation Scheme Id, we add that to the url path
+        # An optional Aggregation Scheme Id is passed as part of the path
         if aggregation_scheme_id is not None:
             url = f"{url}/{aggregation_scheme_id}"
 
-        # The Industry Set Id is passed as an additional query param
+        # An optional Industry Set Id is passed as part of the query params
         query_params = {}
         if industry_set_id is not None:
             query_params["industrySetId"] = industry_set_id
 
-        # Send a GET request expecting json content
+        # Send the request and get the returned content
         content: bytes = self.rest_helper.get(url, query_params=query_params)
-        # Deserialize to the list of Industry Codes
-        industry_codes: list[IndustryCode] = JsonHelper.deserialize_list(content, IndustryCode)
 
+        # Translate the content into a list of Industry Codes
+        industry_codes: list[IndustryCode] = JsonHelper.deserialize_list(content, IndustryCode)
         return industry_codes

@@ -1,4 +1,8 @@
 ﻿class IndustrySet:
+    """
+    The Model for an Industry Set
+    """
+
     def __init__(self,
                  id: int,
                  description: str,
@@ -17,6 +21,10 @@
 
 
 class IndustryCode:
+    """
+    The Model for an Industry Code
+    """
+
     def __init__(self,
                  id: int,
                  code: int,
