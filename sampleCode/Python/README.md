@@ -1,7 +1,7 @@
 # IMPLAN Impact API - Python Workflow Examples
 
 ## Introduction
-This is a collection of example workflow scripts written for modern Python3.  
+This is a collection of example workflow scripts written for modern Python - `3.13.5`.  
 
 ## ⚡ Installation and Execution
 
@@ -33,6 +33,7 @@ IMPLAN_PASSWORD="{YOUR PASSWORD HERE"
 
 ### 🗔 IDEs
 - [PyCharm](https://www.jetbrains.com/pycharm/) - from JetBrains, **free**, used to develop these scripts
+  - [Installation](https://www.jetbrains.com/help/pycharm/installation-guide.html)
   - [Quick Start Guide](https://www.jetbrains.com/help/pycharm/quick-start-guide.html)
   - [Getting Started](https://www.jetbrains.com/help/pycharm/getting-started.html)
 - [Visual Studio Code](https://code.visualstudio.com/) - from Microsoft, **free**
