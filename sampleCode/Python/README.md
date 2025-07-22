@@ -9,10 +9,12 @@ This is a collection of example workflow scripts written for modern Python - `3.
   - `IMPLAN_USERNAME` = Your IMPLAN username
   - `IMPLAN_PASSWORD` = Your IMPLAN password
 - You may also create an `.env` file in the same directory as `main.py` that specifies them:
-```env
-IMPLAN_USERNAME="{YOUR USER NAME HERE}"
-IMPLAN_PASSWORD="{YOUR PASSWORD HERE"
-```
+  ```env
+  # IMPLAN Impact API Auth Variables
+  IMPLAN_USERNAME="{YOUR USER NAME HERE}"
+  IMPLAN_PASSWORD="{YOUR PASSWORD HERE}"
+  ```
+  - **Note:** You must include the first comment line for the `.env` file to be read properly.
 - You may need to install several Python packages in order to run these scripts.
   - [Installing Packages](https://packaging.python.org/en/latest/tutorials/installing-packages/)
 - Execution starts in `main.py`; examine that file for more details on what examples are available.
