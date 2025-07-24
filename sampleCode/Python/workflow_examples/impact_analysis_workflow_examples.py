@@ -32,13 +32,17 @@ class ImpactAnalysisWorkflowExamples(WorkflowExample):
 
         # As the Analysis may take some time to complete, we can use a polling loop to wait
         while True:
+            # Wait a bit for the analysis to process
+            time.sleep(30)
+
             # Get the status of the Analysis
-            analysis_status = self.endpoints.impact_endpoints.get_impact_status(impact_run_id)
+            analysis_status: str = self.endpoints.impact_endpoints.get_impact_status(impact_run_id)
+
             # If Complete, exit this loop
             if analysis_status and analysis_status.lower() == "complete":
                 break
-            # Otherwise, wait a bit and check again
-            time.sleep(30)
+            # Otherwise, go back to the while to wait again
+
 
         # These are some of the example reports that can be obtained from a successful Analysis:
 
@@ -48,7 +52,7 @@ class ImpactAnalysisWorkflowExamples(WorkflowExample):
         summary_taxes_csv: str = self.endpoints.report_endpoints.summary_taxes(impact_run_id)
 
         export_request = ImpactResultsExportRequest(dollar_year=2024)
-        estimated_growth_percentage_csv = self.endpoints.report_endpoints.estimated_growth_percentage(impact_run_id, export_request)
+        estimated_growth_percentage_csv: str = self.endpoints.report_endpoints.estimated_growth_percentage(impact_run_id, export_request)
 
         # If you want to save the report as a csv file (to be opened by another application):
         file_path: str = f"Project #{project.id} - Detailed Economic Indicators.csv"
