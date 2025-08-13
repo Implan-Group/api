@@ -3,12 +3,13 @@ import os
 import sys
 import time
 import pathvalidate
+from dotenv import load_dotenv
 
 from Models.combine_region_request import CombineRegionRequest
+from auth_helper import AuthHelper
 from excel_helper import ExcelHelper
 from Models.region_types import RegionType
 from impact_endpoints import Endpoints
-from implan_auth import ImplanAuth
 from Models.region import Region
 
 """
@@ -18,10 +19,6 @@ Please look at `readme.md` for instructions on executing this Python Script
 ##############################################################################################
 # !!! YOU MUST FILL OUT THE INFORMATION IN THIS SECTION FOR THIS SCRIPT TO EXECUTE PROPERLY !!!
 # These are the variables that are required from the user in order for this script to execute:
-
-# Implan Username + Password for authentication
-username = ""
-password = ""
 
 # The Aggregation Scheme Id for the output reports:
 # Aggregation Scheme  8 (546)
@@ -40,6 +37,9 @@ combined_regions_builder_file_path = "Combined Region Builder - Example.xlsx"
 # You can use `os.getcwd()` to use the Current Working Directory, which is the same folder as the `main.py` file
 output_dir = os.getcwd()
 ##############################################################################################
+
+# Load information from the secret `.env` file (see `readme.md` for more information)
+load_dotenv()
 
 # Configure logging to show all messages Debug severity or higher with a specific format
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -62,7 +62,7 @@ def main():
     # https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication
 
     logging.info(f"Authenticating...")
-    auth = ImplanAuth(username, password)
+    auth = AuthHelper()
     token = auth.get_bearer_token()
     if token is None:
         logging.error("Could not authenticate to the Implan Impact API, exiting.")
