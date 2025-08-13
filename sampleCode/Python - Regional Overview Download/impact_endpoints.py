@@ -269,3 +269,33 @@ class Endpoints:
 
             # Otherwise, wait a bit and check again
             time.sleep(delay_time_seconds)
+
+    def get_single_file_gams(self,
+                             aggregation_scheme_id: int,
+                             hashid: str):
+
+        url:str  = f"{self.base_url}/api/v1/regions/export/{aggregation_scheme_id}/region-general-algebraic-modeling-single-file"
+
+        headers = {"Authorization": self.bearer_token}
+
+        query_params:dict = {
+            "hashId": hashid
+        }
+
+        try:
+            # Send the request
+            response = requests.get(url, headers=headers, params=query_params)
+
+            # If it isn't a 200 OK, throw
+            response.raise_for_status()
+
+            # The Response is a GAMS single file
+            content: bytes = response.content
+
+            gams: str = content.decode("utf-8")
+
+            return gams
+
+        except RequestException as ex:
+            logging.error(f"Request Failed: {ex}")
+            return None
