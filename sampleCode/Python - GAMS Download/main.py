@@ -3,11 +3,9 @@ import os
 import sys
 import time
 import pathvalidate
-from dotenv import load_dotenv
 
-from Models.combine_region_request import CombineRegionRequest
+from dotenv import load_dotenv
 from auth_helper import AuthHelper
-from excel_helper import ExcelHelper
 from Models.region_types import RegionType
 from impact_endpoints import Endpoints
 from Models.region import Region
@@ -29,10 +27,6 @@ aggregation_scheme_id = 14
 # Dataset #98 (2023)
 dataset_id = 98
 
-# The Combined Region Builder xlsx file that contains the custom Regions
-# If you do not wish to do any custom regions you may leave this blank
-combined_regions_builder_file_path = "Combined Region Builder - Example.xlsx"
-
 # Specify the output directory for the CSV Report Downloads
 # You can use `os.getcwd()` to use the Current Working Directory, which is the same folder as the `main.py` file
 output_dir = os.getcwd()
@@ -44,10 +38,10 @@ load_dotenv()
 # Configure logging to show all messages Debug severity or higher with a specific format
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# We have a subfolder for the output directory to keep the paths much cleaner
+# We have a subfolder for the output reports to keep the paths much cleaner
 output_dir = os.path.join(output_dir, f"GAMS_Agg{aggregation_scheme_id}")
 
-# This code creates the csv output directory if it does not already exist
+# This code creates the output directory if it does not already exist
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
 

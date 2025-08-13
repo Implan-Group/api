@@ -1,18 +1,23 @@
-﻿# Region Industry Overview Report Exporter
+﻿# Regional GAMS File Exporter
+
+## Auth
+
+You must create a `.env` file in the root of this project (in the same folder as `main.py`) that contains your IMPLAN credentials.
+e.g.:
+```env
+# Development Settings
+IMPLAN_USERNAME="{USERNAME}"
+IMPLAN_PASSWORD="{PASSWORD}"
+```
+Where you should replace `{USERNAME}` and `{PASSWORD}` with your IMPLAN username and password.
+
 
 ## Usage
 - There is a header section in `main.py` that must have some variables defined before execution:
-  - Implan `username` and `password` for authentication
   - `Aggregation Scheme Id` and `Dataset Id` for filtering to the correct data
-  - An optional path to a `xlsx` file based upon the `Combined Region Builder Template`
   - An override to where the output report `.csv` files will be stored (defaults to the same directory as `main.py`)
 - One those have been filled out, simply execute `main.py` as a script
-  - It will automatically combine and build any regions defined in the `Combined Region Builder` file
-  - Then it will process all those regions -- plus all MSA's in the United States -- by exporting their Industry Overview Details to individual `.csv` files
 
-
-## Examples
-- See `Combined Region Builder - Example.xlsx` for a sample version of a filled out Template
 
 ## Links
 ### IMPLAN
@@ -30,8 +35,6 @@
 - [pathvalidate](https://pypi.org/project/pathvalidate/)
 - [requests](https://pypi.org/project/requests/)
 - [openpyxl](https://openpyxl.readthedocs.io/en/stable/)
-- 
-- 
 
 - [Python Type Hints Cheat Sheet](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html)
 - [OpenPyxl - Reading + Writing Excel with Python](https://openpyxl.readthedocs.io/en/stable/)
