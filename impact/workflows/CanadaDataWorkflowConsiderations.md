@@ -95,12 +95,13 @@ Use the desired Aggregation Scheme Id with this endpoint to pull a list of avail
 
 ### Region Selection Endpoints
 With Aggregation Scheme Id and Dataset Id determined, use the following region endpoints to peruse base region data and pull URID and Hash Ids for your region(s) of interest.
-* [Top Level Region (GET)](https://github.com/Implan-Group/api/blob/main/impact/readme.md#top-level-region-get)
+* [Top Level Region (GET)](https://github.com/Implan-Group/api/blob/main/impact/readme.md#top-level-region)
   * For Canadian data, the endpoint described here will return data for Canada.
-* [Top Level Region Children (GET)](https://github.com/Implan-Group/api/blob/main/impact/readme.md#top-level-region-children-get)
+* [Top Level Region Children (GET)](https://github.com/Implan-Group/api/blob/main/impact/readme.md#top-level-region-children)
   * For Canadian data, the endpoint described here return a list of data for Canadian Provinces.
+  * If using the `regionType` parameter option to filter the list of returned regions, use `State` to filter on Canadian Provinces and `County` to filter on Candian Economic Regions.
 * [User Custom and Combined Regions (GET)](https://github.com/Implan-Group/api/blob/main/impact/readme.md#user-custom-and-combined-regions-get)
-  * The endpoint described here will return a list of combined and/or customized models for the provided Aggregation Scheme Id and Dataset Id. 
+  * The endpoint described here will return a list of combined and/or customized models for the provided Aggregation Scheme Id and Dataset Id.
 
 ### Region Building and Customizing Endpoints
 For analyses requiring the combination of Provinces or customization of underlying economic data, see
