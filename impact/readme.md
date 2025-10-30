@@ -613,6 +613,8 @@ This endpoint returns region types that can be used for region type filtering in
 	- `datasetId` (number, required): Dataset Id
 	- `regionType`: An optional filter to limit the Region Types returned
 	  - Valid options are `Country`, `State`, `MSA`, `County`, `CongressionalDistrict`, and `ZipCode`
+        - For Canadian Industry Sets, only `Country`, `State`, and `County` are supported.
+        - Use `State` to filter on Canadian Provinces and `County` to filter on Candian Economic Regions.
 
 - `GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{datasetId}}/{{urid|hashid}}/children`
 	- `aggregationSchemeId` (number, required): Aggregation Scheme
