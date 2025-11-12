@@ -139,33 +139,27 @@ IMPLAN models vary based on annual data sets.  In order to provide the correct l
 * Data Set Description (Text)
 * Default Data Set (Boolean - only 1 record in the list should be true)
 Will Return datasets
-```
+```json
 [   
-
 	{
-
         "id": 59,
-
         "description": "2018",
-
         "isDefault": false
-
     },
-
     {
-
         "id": 77,
-
         "description": "2019",
-
         "isDefault": true
-
     }
-
 ]
 ```
-#### Endpoint
-**GET {{api_domain}}api/v1/datasets**
+#### Endpoints
+- **GET {{api_domain}}api/v1/datasets**
+
+- **GET {{api_domain}}api/v1/datasets/{{aggregationSchemeId}}**
+  - You can optionally add an Aggregation Scheme Id to filter the returned Datasets
+
+---
 
 
 ## Region Model Endpoint (Get)
@@ -285,8 +279,7 @@ In 2022, the BEA will redefine the North American Industry Classifications Syste
         "activeStatus": null,
         "isDefault": null,
         "mapTypeId": 1,
-        "isNaicsCompatible": false,
-        "sort": null
+        "isNaicsCompatible": false
     },
     ...
     {
@@ -296,8 +289,7 @@ In 2022, the BEA will redefine the North American Industry Classifications Syste
         "activeStatus": true,
         "isDefault": null,
         "mapTypeId": 3,
-        "isNaicsCompatible": false,
-        "sort": 4
+        "isNaicsCompatible": false
     }
 ]
 ```
@@ -348,8 +340,8 @@ This endpoint will return a list of aggregation schemes available for use.
 ]
 ```
 #### Endpoints
-`GET {{api_domain}}api/v1/aggregationschemes`
-`GET {{api_domain}}api/v1/aggregationschemes?industrySetId={{industrySetId}}`
+`GET {{api_domain}}api/v1/aggregationSchemes`
+`GET {{api_domain}}api/v1/aggregationSchemes?industrySetId={{industrySetId}}`
 
 
 ## Industry Margins Endpoint (Get)
@@ -766,7 +758,8 @@ Not all economic models are built for regions by default, or sometimes you may w
 We have endpoints that will start the economic model build process right away, but if you need to build more than 5 regions at a time, we recommend you leverage our batch region endpoints.
 
 ### Built Models (GET)
-This endpoint returns a list of currently built models accessible to the user.
+This endpoint returns a list of currently built IMPLAN models accessible to the user. (note: this does not include Custom nor Combined Regions)
+
 #### Parameters
 * Aggregation Scheme Id (In URL)
 * Dataset Id (InURL)
@@ -2547,7 +2540,7 @@ Status Code 200 if group was successfully deleted
 #### Response
 * Run Id 
 #### Endpoint
-**PUT {{api_domain}}api/v1/impact/{{project id}}**
+**POST {{api_domain}}api/v1/impact/{{project id}}**
 
 
 ## Cancel Impact Run (Put)
