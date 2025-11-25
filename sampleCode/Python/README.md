@@ -2,6 +2,7 @@
 
 ## Introduction
 This is a collection of example workflow scripts written for modern Python - `3.13.5`.  
+It is fully intended for the code in this project to be copied + pasted, modified, and reused for your purposes; this code is release under [The MIT License](https://opensource.org/license/mit). 
 
 ## ⚡ Installation and Execution
 
@@ -17,8 +18,8 @@ This is a collection of example workflow scripts written for modern Python - `3.
   - **Note:** You might need to include the first comment line for the `.env` file to be read properly.
 - You may need to install several Python packages in order to run these scripts.
   - [Installing Packages](https://packaging.python.org/en/latest/tutorials/installing-packages/)
+
 - Execution starts in `main.py`; examine that file for more details on what examples are available.
-- It is fully intended for the code in this project to be copied + pasted, modified, and reused for your purposes; this code is release under [The MIT License](https://opensource.org/license/mit). 
 
 
 ## 📂 Folders
