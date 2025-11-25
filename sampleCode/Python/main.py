@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from endpoints.endpoints_helper import EndpointsHelper
+from models.project_models import Project
 from utilities.rest_helper import RestHelper
 from utilities.logging_helper import LoggingHelper
 from workflow_examples.complex_project_example import ComplexProjectExample
@@ -17,7 +18,6 @@ logging_helper = LoggingHelper()
 load_dotenv()
 
 
-
 def main():
     """
     The main entry point into the example scripts.
@@ -30,33 +30,35 @@ def main():
     # Set up the EndpointsHelper, which groups Impact API endpoints together by how they are used
     endpoints_helper = EndpointsHelper(rest_helper, logging_helper)
 
-    # Any of the workflows in the `workflow_examples` folder can be accessed at this point, as they
-    # only require a valid `EndpointsHelper` instance
+    # Any of the workflows in the `workflow_examples` folder can be accessed at this point,
+    # as they only require a valid `EndpointsHelper` instance.
 
-    # Just uncomment a particular section and this script will automatically execute the workflow
-
+    # To view examples of these workflows in action, uncomment all the lines in a particular section below,
+    # and this script will automatically execute the workflow.
 
     # --- Identifiers + Data Workflow Examples ---
     #workflow = IdentifiersWorkflowExample(endpoints_helper)
     #workflow.execute_example()
 
-    # --- Regional Workflow Examples ---
+    # ----- Regional Workflow Examples -----
     #workflow = RegionalWorkflowExamples(endpoints_helper)
-    #workflow.combine_regions()
-    #workflow.explore_implan_regions()
-    #workflow.explore_user_regions()
+    #workflow.combine_regions()          # search through all regions and find several to Combine
+    #workflow.explore_implan_regions()   # explore all of Implan's Regional data
+    #workflow.explore_user_regions()     # explore all of Your Regional data
+
+    project: Project | None = None
 
     # --- A Simple Project Creation Workflow Example ---
-    #workflow = SimpleProjectWorkflowExample(endpoints_helper)
-    #workflow.execute_example()
+    simple_project_workflow_example = SimpleProjectWorkflowExample(endpoints_helper)
+    project = simple_project_workflow_example.execute_example()
 
     # --- A more complex Project Creation Workflow Example ---
-    #workflow = ComplexProjectExample(endpoints_helper)
-    #workflow.execute_example()
+    #complex_project_workflow_example = ComplexProjectExample(endpoints_helper)
+    #project = complex_project_workflow_example.execute_example()
 
     # -- Impact Analysis Workflow Examples ---
-    #workflows = ImpactAnalysisWorkflowExamples(endpoints_helper)
-    #workflows.execute_example()
+    impact_workflow_example = ImpactAnalysisWorkflowExamples(endpoints_helper)
+    impact_workflow_example.execute_example(project.id) # you can also just pass a UUID or str value directly
 
     print('Workflow Example(s) Have Completed')
 

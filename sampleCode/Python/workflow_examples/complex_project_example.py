@@ -5,6 +5,7 @@ from models.event_models import IndustryOutputEvent, HouseholdIncomeEvent, Event
 from models.group_models import Group, GroupEvent
 from models.project_models import Project
 from models.region import Region
+from utilities.prelude import pretty_print
 from workflow_examples.workflow_example import WorkflowExample
 
 
@@ -13,7 +14,7 @@ class ComplexProjectExample(WorkflowExample):
     def __init__(self, endpoints_helper: EndpointsHelper):
         super().__init__(endpoints_helper)
 
-    def execute_example(self):
+    def execute_example(self) -> Project | None:
         """
         This Project contains multiple Events, each assigned to multiple Groups
 
@@ -37,7 +38,8 @@ class ComplexProjectExample(WorkflowExample):
             household_set_id=household_set_id,
         )
         project = self.endpoints.project_endpoints.create_project(project)
-        print(project)
+        print(f"Created new Project \"{project.title}\":\n")
+        pretty_print(project)
 
         # Create and Add all the Events
 
@@ -50,7 +52,8 @@ class ComplexProjectExample(WorkflowExample):
             project_id=project.id,
         )
         restaurant_output_event = self.endpoints.event_endpoints.add_event(project.id, restaurant_output_event)
-        print(restaurant_output_event)
+        print("Added new Industry Output Event:\n")
+        pretty_print(restaurant_output_event)
 
         # 15-30k Household Income Event
         lo_household_income_event = HouseholdIncomeEvent(
@@ -60,7 +63,8 @@ class ComplexProjectExample(WorkflowExample):
             project_id=project.id,
         )
         lo_household_income_event = self.endpoints.event_endpoints.add_event(project.id, lo_household_income_event)
-        print(lo_household_income_event)
+        print("Added new Household Income Event:\n")
+        pretty_print(lo_household_income_event)
 
         # 50-70k Household Income Event
         hi_household_income_event = HouseholdIncomeEvent(
@@ -70,7 +74,8 @@ class ComplexProjectExample(WorkflowExample):
             project_id=project.id,
         )
         hi_household_income_event = self.endpoints.event_endpoints.add_event(project.id, hi_household_income_event)
-        print(hi_household_income_event)
+        print("Added new Household Income Event:\n")
+        pretty_print(hi_household_income_event)
 
         # Create and add all the Groups
 
@@ -84,12 +89,10 @@ class ComplexProjectExample(WorkflowExample):
         # For each state, we want to add all three events
         # The best way to accomplish this is by storing the Events and Regions in a list so we can iterate over them
         events: list[Event] = [restaurant_output_event, lo_household_income_event, hi_household_income_event]
-        print(events)
         regions: list[Region] = [oregon, wisconsin, north_carolina]
-        print(regions)
         # We'll need to link the events to the groups using a GroupEvent, which we can prepare now
         group_events: list[GroupEvent] = [GroupEvent(event_id=e.id) for e in events]
-        print(group_events)
+        print(f"Grouping {len(events)} events and {len(regions)} regions...\n")
 
         for region in regions:
             # Create the Group for this Region
@@ -101,9 +104,14 @@ class ComplexProjectExample(WorkflowExample):
                 hash_id=region.hash_id,  # Associate this Region with this Group
                 group_events=group_events,  # Add all three events
             )
-            print(group)
             # Save this Group to the Project
-            self.endpoints.group_endpoints.add_group_to_project(project.id, group)
+            group = self.endpoints.group_endpoints.add_group_to_project(project.id, group)
+            print(f"Region '{region.description}' Grouping has been added:\n")
+            pretty_print(group)
 
         # Now the Project exists with three Events, three Groups, and each Group will have all three Events associated
         # You can proceed to process that Project how you please (see other workflows for Running an Impact and Viewing the Output)
+
+        return project
+
+        #fin

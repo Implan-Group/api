@@ -14,7 +14,7 @@ This is a collection of example workflow scripts written for modern Python - `3.
   IMPLAN_USERNAME="{YOUR USER NAME HERE}"
   IMPLAN_PASSWORD="{YOUR PASSWORD HERE}"
   ```
-  - **Note:** You must include the first comment line for the `.env` file to be read properly.
+  - **Note:** You might need to include the first comment line for the `.env` file to be read properly.
 - You may need to install several Python packages in order to run these scripts.
   - [Installing Packages](https://packaging.python.org/en/latest/tutorials/installing-packages/)
 - Execution starts in `main.py`; examine that file for more details on what examples are available.
@@ -26,9 +26,15 @@ This is a collection of example workflow scripts written for modern Python - `3.
 - The `models` folder contains Python class definitions for various Models used by the endpoints, such a Projects, Groups, and Events.
 - The `utilites` folder contains several classes that assist with Authorization/Authentication, json serialization, logging, and sending and receiving REST requests.
 - The `workflow_examples` folder contains several example scripts that perform various common workflows.
-- While running the scripts, a `logs` folder will automatically be created and all logs will also be written to that folder.
+- While running the scripts, several folders may be created:
+  - `logs` - Will contain logging information from this script's operation, useful for debugging.
+  - `reports` - Exported Reports will be stored in this directory by default.
 
 ## 🔗 Links
+
+### IMPLAN
+- [Impact API Wiki](https://github.com/Implan-Group/api/wiki)
+- [Impact API github](https://github.com/Implan-Group/api/)
 
 ### 🐍 [Python](https://www.python.org/)
 - [Beginner's Guide](https://wiki.python.org/moin/BeginnersGuide/Download)
@@ -51,4 +57,8 @@ This is a collection of example workflow scripts written for modern Python - `3.
 - [sys](https://docs.python.org/3/library/sys.html) - system console access to set encoding to properly display logs
 - [datetime](https://docs.python.org/3/library/datetime.html) - date and time support
 - [json](https://docs.python.org/3/library/json.html) - JSON support
-- [humps](https://humps.readthedocs.io/en/latest/) - Case conversion
+- [humps](https://humps.readthedocs.io/en/latest/) - String case conversion
+- [pathvalidate](https://pypi.org/project/pathvalidate/) - OS Path validation and sanitization
+---
+
+Written without the use of any 'AI' tools.
