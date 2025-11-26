@@ -39,11 +39,11 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # We have a subfolder for the output reports to keep the paths much cleaner
-output_dir = os.path.join(output_dir, f"GAMS_Agg{aggregation_scheme_id}")
+output_dir = os.path.join(output_dir, "reports", f"GAMS_Agg{aggregation_scheme_id}")
 
 # This code creates the output directory if it does not already exist
 if not os.path.exists(output_dir):
-    os.mkdir(output_dir)
+    os.makedirs(output_dir)
 
 
 def main():
