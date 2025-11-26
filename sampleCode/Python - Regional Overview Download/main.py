@@ -45,11 +45,11 @@ output_dir = os.getcwd()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # We have a subfolder for the output directory to keep the paths much cleaner
-output_dir = os.path.join(output_dir, f"IndustryOverviews_agg{aggregation_scheme_id}_ds{dataset_id}")
+output_dir = os.path.join(output_dir, "reports", f"IndustryOverviews_agg{aggregation_scheme_id}_ds{dataset_id}")
 
 # This code creates the csv output directory if it does not already exist
 if not os.path.exists(output_dir):
-    os.mkdir(output_dir)
+    os.makedirs(output_dir)
 
 
 def main():
