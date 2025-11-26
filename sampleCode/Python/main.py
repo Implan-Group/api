@@ -41,7 +41,7 @@ def main():
     #workflow.execute_example()
 
     # ----- Regional Workflow Examples -----
-    #workflow = RegionalWorkflowExamples(endpoints_helper)
+    workflow = RegionalWorkflowExamples(endpoints_helper)
     #workflow.combine_regions()          # search through all regions and find several to Combine
     #workflow.explore_implan_regions()   # explore all of Implan's Regional data
     #workflow.explore_user_regions()     # explore all of Your Regional data
@@ -49,16 +49,16 @@ def main():
     project: Project | None = None
 
     # --- A Simple Project Creation Workflow Example ---
-    simple_project_workflow_example = SimpleProjectWorkflowExample(endpoints_helper)
-    project = simple_project_workflow_example.execute_example()
+    #simple_project_workflow_example = SimpleProjectWorkflowExample(endpoints_helper)
+    #project = simple_project_workflow_example.execute_example()
 
     # --- A more complex Project Creation Workflow Example ---
     #complex_project_workflow_example = ComplexProjectExample(endpoints_helper)
     #project = complex_project_workflow_example.execute_example()
 
     # -- Impact Analysis Workflow Examples ---
-    impact_workflow_example = ImpactAnalysisWorkflowExamples(endpoints_helper)
-    impact_workflow_example.execute_example(project.id) # you can also just pass a UUID or str value directly
+    #impact_workflow_example = ImpactAnalysisWorkflowExamples(endpoints_helper)
+    #impact_workflow_example.execute_example(project.id) # you can also just pass a UUID or str value directly
 
     print('Workflow Example(s) Have Completed')
 
