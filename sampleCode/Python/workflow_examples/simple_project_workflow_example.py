@@ -138,3 +138,5 @@ class SimpleProjectWorkflowExample(WorkflowExample):
         # Now this Project has a Group with Two Events and is ready for processing
         # See the `impact_analysis_workflow_examples` for how to accomplish that
         return project
+
+        #fin

@@ -39,6 +39,8 @@ class Region:
                  hasAccess: bool = False,
                  regionTypeSort: int = 0,
                  congressionalSession: int | None = None,
+                 modelYearDescription: str | None = None,
+                 sgcFullerCode: str | None = None,
                  ):
         self.hashId = hashId
         self.urid = urid
@@ -69,3 +71,5 @@ class Region:
         self.hasAccess = hasAccess
         self.regionTypeSort = regionTypeSort
         self.congressionalSession = congressionalSession
+        self.modelYearDescription = modelYearDescription
+        self.sgcFullerCode = sgcFullerCode

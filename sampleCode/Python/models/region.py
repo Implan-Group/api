@@ -35,6 +35,7 @@ class Region:
                  has_access: bool = False,
                  region_type_sort: int = 0,
                  congressional_session: int | None = None,
+                 sgc_fuller_code: str | None = None,
                  ):
         self.hash_id = hash_id
         self.urid = urid
@@ -65,3 +66,4 @@ class Region:
         self.has_access = has_access
         self.region_type_sort = region_type_sort
         self.congressional_session = congressional_session
+        self.sgc_fuller_code = sgc_fuller_code

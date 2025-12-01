@@ -31,8 +31,13 @@ _ReSharper.*
 # Output Logs
 logs/
 
+# Cached JWT Bearer Token(s)
+*.jwt
 
-# Python-Related
+# Output Reports
+reports/
+
+### Python-Related ###
 # from https://github.com/github/gitignore/blob/main/Python.gitignore
 # --------
 
@@ -191,9 +196,10 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+### End Python-Related ###
 
 
-# R-Related
+### R-Related ###
 # from https://github.com/github/gitignore/blob/main/R.gitignore
 # --------
 
@@ -247,5 +253,4 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-# Cached JWT Bearer Token(s)
-*.jwt
+### END R-Related ###

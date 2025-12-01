@@ -4,6 +4,7 @@ from endpoints.endpoints_helper import EndpointsHelper
 from models.enums import RegionType
 from models.region import Region
 from models.request_models import CombineRegionRequest
+from utilities.prelude import pretty_print
 from workflow_examples.workflow_example import WorkflowExample
 
 
@@ -48,6 +49,8 @@ class RegionalWorkflowExamples(WorkflowExample):
         )
 
         # Send the request to have the regions combined
+        print(f"Combining {len(region_hash_ids)} Regions together...\n")
+
         combined_region: Region = self.endpoints.regional_endpoints.combine_regions(aggregation_scheme_id, payload)
 
         # We have to wait for the combined region to fully build before it can be used
@@ -59,6 +62,7 @@ class RegionalWorkflowExamples(WorkflowExample):
             region = next((r for r in user_regions if r.hash_id == combined_region.hash_id), None)
             # If the region does not exist or has a non-complete status, we must wait a bit longer
             if region is None or region.model_build_status != "Complete":
+                print("Region Build is incomplete, waiting another 30 seconds...\n")
                 # Wait 30 seconds and try again
                 time.sleep(30.0)
             else:
@@ -70,6 +74,7 @@ class RegionalWorkflowExamples(WorkflowExample):
         hash_id: str = region.hash_id
         urid: int = region.urid
 
+        print(f"Regions have been combined! New Region has a HashId of \"{hash_id}\"")
         return region
 
     def explore_implan_regions(self):
@@ -82,23 +87,43 @@ class RegionalWorkflowExamples(WorkflowExample):
         us_aggregation_scheme_id: int = 14  # 528 Unaggregated US
         us_dataset_id: int = 98  # 2023
         us_region: Region = self.endpoints.regional_endpoints.get_top_level_region(us_aggregation_scheme_id, us_dataset_id)
-        print(us_region)
+        print("United States Region:\n")
+        pretty_print(us_region)
+        print("-------------\n")
 
         # Using the US's HashId lets us explore sub-regions,
         # Like all 50 States + DC
         us_states: list[Region] = self.endpoints.regional_endpoints.get_region_children(us_aggregation_scheme_id, us_dataset_id, hash_id=us_region.hash_id, region_type=RegionType.STATE)
+        print(f"{len(us_states)} US States:\n")
+        #pretty_print(us_states)
+        print("-------------\n")
+
         # Or every single Zip Code
         us_zips: list[Region] = self.endpoints.regional_endpoints.get_region_children(us_aggregation_scheme_id, us_dataset_id, hash_id=us_region.hash_id, region_type=RegionType.ZIPCODE)
+        print(f"{len(us_zips)} US Zipcodes:\n")
+        #pretty_print(us_zips)
+        print("-------------\n")
 
         # ----- Canada -----
         # If we use a Canadian aggregation scheme, the returned region will be Canada
         can_aggregation_scheme_id: int = 12  # 235 Unaggregated Canada
         can_dataset_id: int = 100  # 2021 CAN
         can_region: Region = self.endpoints.regional_endpoints.get_top_level_region(can_aggregation_scheme_id, can_dataset_id)
-        print(can_region)
-        # We can access its Territories, but no other sub-regional information
-        can_territories: list[Region] = self.endpoints.regional_endpoints.get_region_children(can_aggregation_scheme_id, can_dataset_id, hash_id=can_region.hash_id, region_type=RegionType.STATE)
-        print(can_territories)
+        print("Canada Region:\n")
+        pretty_print(can_region)
+        print("-------------\n")
+
+        # We can access its Provinces
+        can_provinces: list[Region] = self.endpoints.regional_endpoints.get_region_children(can_aggregation_scheme_id, can_dataset_id, hash_id=can_region.hash_id, region_type=RegionType.STATE)
+        print(f"{len(can_provinces)} Canadian Provinces:\n")
+        #pretty_print(can_provinces)
+        print("-------------\n")
+
+        # Or the newer Economic Regions
+        can_economic_regions: list[Region] = self.endpoints.regional_endpoints.get_region_children(can_aggregation_scheme_id, can_dataset_id, hash_id=can_region.hash_id, region_type=RegionType.COUNTY)
+        print(f"{len(can_economic_regions)} Canadian Economic Regions:\n")
+        #pretty_print(sub_prov_territories)
+        print("-------------\n")
 
         # ----- International -----
         # To access international regions, you must use an International Aggregation Scheme Id and Dataset
@@ -107,7 +132,12 @@ class RegionalWorkflowExamples(WorkflowExample):
         intl_aggregation_scheme_id: int = 13  # 46 Unaggregated International
         intl_dataset_id: int = 95  # 2020 International
         intl_countries: list[Region] = self.endpoints.regional_endpoints.get_region_children(intl_aggregation_scheme_id, intl_dataset_id, region_type=RegionType.COUNTRY)
-        print(intl_countries)
+        print(f"{len(intl_countries)} International Countries:\n")
+        #pretty_print(intl_countries)
+        print("-------------\n")
+
+        # fin
+
 
     def explore_user_regions(self):
         """
@@ -120,4 +150,8 @@ class RegionalWorkflowExamples(WorkflowExample):
         us_dataset_id: int = 98  # 2023
 
         user_regions: list[Region] = self.endpoints.regional_endpoints.get_user_regions(us_aggregation_scheme_id, us_dataset_id)
-        print(user_regions)
+        print(f"{len(user_regions)} user-defined Custom and Combined Regions:\n")
+        #pretty_print(user_regions)
+        print("-------------\n")
+
+        # fin
