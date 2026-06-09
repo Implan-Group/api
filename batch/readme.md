@@ -192,6 +192,7 @@ Will Return datasets
 #### **NOTE**: Batch API currently only supports processing for the following datasets:
 - Scheme: US 528 Industries
   - 2023
+  - 2024
 - Scheme: US 546 Industries
   - 2022
   - 2021
@@ -199,10 +200,11 @@ Will Return datasets
   - 2019
   - 2018
 - Scheme: Canada 235 Industries
-  - 2020
-  - 2019
-  - 2018
-  - 2017
+	- 2021
+	- 2020
+	- 2019
+	- 2018
+	- 2017
 - Scheme: International 46 Industries
   - 2020
   - 2019
