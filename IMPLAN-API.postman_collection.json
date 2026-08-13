@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "8df8c8c0-4128-4c92-a675-439a6f3ec6e6",
+    "_postman_id": "678c5741-caeb-4def-ba23-c4956b41f5cb",
     "name": "IMPLAN-API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "12725670"
@@ -2747,291 +2747,6 @@
               "response": []
             },
             {
-              "name": "Region Industry Occupation Detail",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n  \"occupationDataYear\": 2019,\r\n  \"occupationAggregationLevel\": 3,\r\n  \"industryCode\": 1,\r\n  \"occupationCodeFilter\": [\"11-1000\", \"37-2000\", \"51-1000\"]\r\n}\r\n",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionIndustryOccupationDetail?hashId=alDQwzY93a",
-                  "host": [
-                    "{{api_domain}}api"
-                  ],
-                  "path": [
-                    "v1",
-                    "regions",
-                    "export",
-                    ":aggregationSchemeId",
-                    "RegionIndustryOccupationDetail"
-                  ],
-                  "query": [
-                    {
-                      "key": "hashId",
-                      "value": "alDQwzY93a"
-                    }
-                  ],
-                  "variable": [
-                    {
-                      "key": "aggregationSchemeId",
-                      "value": "8"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Region Industry Occupation Averages",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n  \"occupationDataYear\": 2019,\r\n  \"occupationAggregationLevel\": 3,\r\n  \"industryCode\": 1,\r\n  \"occupationCodeFilter\": [\"11-1000\", \"37-2000\", \"51-1000\"]\r\n}\r\n",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionIndustryOccupationAverages?hashId=alDQwzY93a",
-                  "host": [
-                    "{{api_domain}}api"
-                  ],
-                  "path": [
-                    "v1",
-                    "regions",
-                    "export",
-                    ":aggregationSchemeId",
-                    "RegionIndustryOccupationAverages"
-                  ],
-                  "query": [
-                    {
-                      "key": "hashId",
-                      "value": "alDQwzY93a"
-                    }
-                  ],
-                  "variable": [
-                    {
-                      "key": "aggregationSchemeId",
-                      "value": "8"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Region Core Competencies Region Summary",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2019\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesRegionSummary?hashId=alDQwzY93a",
-                  "host": [
-                    "{{api_domain}}api"
-                  ],
-                  "path": [
-                    "v1",
-                    "regions",
-                    "export",
-                    ":aggregationSchemeId",
-                    "RegionCoreCompetenciesRegionSummary"
-                  ],
-                  "query": [
-                    {
-                      "key": "hashId",
-                      "value": "alDQwzY93a"
-                    }
-                  ],
-                  "variable": [
-                    {
-                      "key": "aggregationSchemeId",
-                      "value": "8"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Region Core Competencies IndustrySummary",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2019,\r\n  \"industryCode\": 1\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesIndustrySummary?hashId=alDQwzY93a",
-                  "host": [
-                    "{{api_domain}}api"
-                  ],
-                  "path": [
-                    "v1",
-                    "regions",
-                    "export",
-                    ":aggregationSchemeId",
-                    "RegionCoreCompetenciesIndustrySummary"
-                  ],
-                  "query": [
-                    {
-                      "key": "hashId",
-                      "value": "alDQwzY93a"
-                    }
-                  ],
-                  "variable": [
-                    {
-                      "key": "aggregationSchemeId",
-                      "value": "8"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Region Core Competencies Occupation Summary",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2019,\r\n  \"occupationCode\": \"11-1000\"\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesOccupationSummary?hashId=alDQwzY93a",
-                  "host": [
-                    "{{api_domain}}api"
-                  ],
-                  "path": [
-                    "v1",
-                    "regions",
-                    "export",
-                    ":aggregationSchemeId",
-                    "RegionCoreCompetenciesOccupationSummary"
-                  ],
-                  "query": [
-                    {
-                      "key": "hashId",
-                      "value": "alDQwzY93a"
-                    }
-                  ],
-                  "variable": [
-                    {
-                      "key": "aggregationSchemeId",
-                      "value": "8"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
               "name": "Environment Region Summary",
               "protocolProfileBehavior": {
                 "disableBodyPruning": true
@@ -3308,6 +3023,818 @@
                     {
                       "key": "aggregationSchemeId",
                       "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Occupation Averages - US",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationDataYear\": 2023,\r\n  \"occupationAggregationLevel\": 3\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionOccupationAverages?hashId=k4bKJzKyaO",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionOccupationAverages"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "k4bKJzKyaO"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "14"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Occupation Averages - Canada",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationDataYear\": 2021,\r\n  \"occupationAggregationLevel\": 3\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionOccupationAveragesCanada?hashId=LAVBqEoXb1",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionOccupationAveragesCanada"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "LAVBqEoXb1"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "17"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Occupation Summary - US",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationDataYear\": 2023,\r\n  \"occupationAggregationLevel\": 3\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionOccupationSummary?hashId=k4bKJzKyaO",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionOccupationSummary"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "k4bKJzKyaO"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "14"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Occupation Summary - Canada",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationDataYear\": 2021,\r\n  \"occupationAggregationLevel\": 3\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionOccupationSummaryCanada?hashId=LAVBqEoXb1",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionOccupationSummaryCanada"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "LAVBqEoXb1"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "17"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Industry Occupation Detail - US",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationDataYear\": 2023,\r\n  \"occupationAggregationLevel\": 3,\r\n  \"industryCode\": 1,\r\n  \"occupationCodeFilter\": []\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionIndustryOccupationDetail?hashId=k4bKJzKyaO",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionIndustryOccupationDetail"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "k4bKJzKyaO"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "14"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Industry Occupation Detail - Canada",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationDataYear\": 2021,\r\n  \"occupationAggregationLevel\": 3,\r\n  \"industryCode\": 1,\r\n  \"occupationCodeFilter\": []\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionIndustryOccupationDetailCanada?hashId=LAVBqEoXb1",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionIndustryOccupationDetailCanada"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "LAVBqEoXb1"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "17"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Industry Occupation Averages - US",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationDataYear\": 2023,\r\n  \"occupationAggregationLevel\": 3,\r\n  \"industryCode\": 1,\r\n  \"occupationCodeFilter\": []\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionIndustryOccupationAverages?hashId=k4bKJzKyaO",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionIndustryOccupationAverages"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "k4bKJzKyaO"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "14"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Industry Occupation Averages - Canada",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationDataYear\": 2021,\r\n  \"occupationAggregationLevel\": 3,\r\n  \"industryCode\": 1,\r\n  \"occupationCodeFilter\": []\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionIndustryOccupationAveragesCanada?hashId=LAVBqEoXb1",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionIndustryOccupationAveragesCanada"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "LAVBqEoXb1"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "17"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Core Competencies Region Summary - US",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2023\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesRegionSummary?hashId=k4bKJzKyaO",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionCoreCompetenciesRegionSummary"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "k4bKJzKyaO"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "14"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Core Competencies Region Summary - Canada",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2021\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesRegionSummaryCanada?hashId=LAVBqEoXb1",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionCoreCompetenciesRegionSummaryCanada"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "LAVBqEoXb1"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "17"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Core Competencies Industry Summary - US",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2023,\r\n  \"industryCode\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesIndustrySummary?hashId=k4bKJzKyaO",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionCoreCompetenciesIndustrySummary"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "k4bKJzKyaO"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "14"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Core Competencies Industry Summary - Canada",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2021,\r\n  \"industryCode\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesIndustrySummaryCanada?hashId=LAVBqEoXb1",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionCoreCompetenciesIndustrySummaryCanada"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "LAVBqEoXb1"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "17"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Core Competencies Occupation Summary - US",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2023,\r\n  \"occupationCode\": \"11-1000\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesOccupationSummary?hashId=k4bKJzKyaO",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionCoreCompetenciesOccupationSummary"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "k4bKJzKyaO"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "14"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Core Competencies Occupation Summary - Canada",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2021,\r\n  \"occupationCode\": \"100\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/RegionCoreCompetenciesOccupationSummaryCanada?hashId=LAVBqEoXb1",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "RegionCoreCompetenciesOccupationSummaryCanada"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "LAVBqEoXb1"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "17"
                     }
                   ]
                 }
@@ -6323,7 +6850,7 @@
           "response": []
         },
         {
-          "name": "Impact Occupation",
+          "name": "Impact Occupation - US",
           "event": [
             {
               "listen": "test",
@@ -6332,7 +6859,8 @@
                   ""
                 ],
                 "type": "text/javascript",
-                "packages": {}
+                "packages": {},
+                "requests": {}
               }
             }
           ],
@@ -6344,7 +6872,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2019,\r\n  \"dollarYear\": 2023,\r\n  \"industryCode\": 308,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
+              "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2023,\r\n  \"dollarYear\": 2026,\r\n  \"industryCode\": 1,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -6374,7 +6902,7 @@
           "response": []
         },
         {
-          "name": "Impact Occupation Averages",
+          "name": "Impact Occupation - Canada",
           "event": [
             {
               "listen": "test",
@@ -6383,7 +6911,8 @@
                   ""
                 ],
                 "type": "text/javascript",
-                "packages": {}
+                "packages": {},
+                "requests": {}
               }
             }
           ],
@@ -6395,7 +6924,59 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2019,\r\n  \"dollarYear\": 2023,\r\n  \"industryCode\": 308,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
+              "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2021,\r\n  \"dollarYear\": 2026,\r\n  \"industryCode\": 1,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_domain}}api/v1/impact/results/ImpactOccupationCanada/:impactRunId",
+              "host": [
+                "{{api_domain}}api"
+              ],
+              "path": [
+                "v1",
+                "impact",
+                "results",
+                "ImpactOccupationCanada",
+                ":impactRunId"
+              ],
+              "variable": [
+                {
+                  "key": "impactRunId",
+                  "value": "{{impact_run_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Impact Occupation Averages - US",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2023,\r\n  \"dollarYear\": 2026,\r\n  \"industryCode\": 1,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -6425,7 +7006,7 @@
           "response": []
         },
         {
-          "name": "Impact Occupation Core Competencies",
+          "name": "Impact Occupation Averages - Canada",
           "event": [
             {
               "listen": "test",
@@ -6434,7 +7015,8 @@
                   ""
                 ],
                 "type": "text/javascript",
-                "packages": {}
+                "packages": {},
+                "requests": {}
               }
             }
           ],
@@ -6446,7 +7028,59 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2019,\r\n  \"industryCode\": 308,\r\n  \"occupationCode\": \"11-1000\",\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
+              "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2021,\r\n  \"dollarYear\": 2026,\r\n  \"industryCode\": 1,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_domain}}api/v1/impact/results/ImpactOccupationAveragesCanada/:impactRunId",
+              "host": [
+                "{{api_domain}}api"
+              ],
+              "path": [
+                "v1",
+                "impact",
+                "results",
+                "ImpactOccupationAveragesCanada",
+                ":impactRunId"
+              ],
+              "variable": [
+                {
+                  "key": "impactRunId",
+                  "value": "{{impact_run_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Impact Occupation Core Competencies - US",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2023,\r\n  \"industryCode\": null,\r\n  \"occupationCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -6463,6 +7097,58 @@
                 "impact",
                 "results",
                 "ImpactOccupationCoreCompetencies",
+                ":impactRunId"
+              ],
+              "variable": [
+                {
+                  "key": "impactRunId",
+                  "value": "{{impact_run_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Impact Occupation Core Competencies - Canada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"occupationAggregationLevel\": 3,\r\n  \"occupationDataYear\": 2021,\r\n  \"industryCode\": 1,\r\n  \"occupationCode\": \"100\",\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": []\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_domain}}api/v1/impact/results/ImpactOccupationCoreCompetenciesCanada/:impactRunId",
+              "host": [
+                "{{api_domain}}api"
+              ],
+              "path": [
+                "v1",
+                "impact",
+                "results",
+                "ImpactOccupationCoreCompetenciesCanada",
                 ":impactRunId"
               ],
               "variable": [
