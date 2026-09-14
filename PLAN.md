@@ -3,7 +3,9 @@
 Date: 2026-09-14
 Repo reviewed: `C:\git\github\github_api` at `a15e312` (https://github.com/Implan-Group/api)
 Backend used as ground truth: `C:\git\ui_api` at `d9efcc35` (`main`), project `External.Api` (Impact API v1)
-Reviewer: Claude, at Timothy Jay's request. No repo files were modified (`git status` clean).
+Reviewer: Claude, at Timothy Jay's request.
+
+**Where this stands (resume here).** The review is complete, all thirteen questions are answered, and the decisions (Q1 through Q16) and revised plan are in section 15. Three files were added to the repo and nothing else was touched: this `PLAN.md`, `CLAUDE.md` (the rules and the twelve workflow specifications), and `sampleCode/README.md` (reader-facing). Their first versions were committed as `2fc3eca` on 2026-09-14; the same afternoon's refinements (three-folder rule, token cache rule, INT spec as the contract, workflows 10 through 12, R on `httr2`) followed as a second commit. No sample code has been changed yet. The next action is step 1 of section 15.2, Python, starting with a diff limited to `rest_helper.py` and `auth_helper.py` for review before the rest of the folder. Live verification needs a `.env` with `IMPLAN_USERNAME` and `IMPLAN_PASSWORD` next to the Python entry point.
 
 ---
 
@@ -31,7 +33,7 @@ Recommendation in one sentence: keep C#, `Python - General`, and one R implement
 Evidence labels used throughout:
 
 - **[build]**: compiled or linted locally.
-- **[live]**: read-only call to the production API through the IMPLAN MCP server on 2026-09-14.
+- **[live]**: read-only call through the IMPLAN MCP server on 2026-09-14. Correction added the same day: `health_check` reports that this session's MCP server is `IMPLAN DEV`, environment `dev`, loading `ImpactApi_version1.external.int.json`, so every [live] value came from the INT environment, not production. INT is expected to carry the same reference data (schemes, datasets, industry sets, industry codes) as production, but that is unverified until the Python step-1 run hits `https://api.implan.com` with real credentials. Treat [live] as "observed on INT".
 - **[backend]**: read from `External.Api` controllers, DTOs, `OpenApi/route-map.json`, or the gateway export.
 - **[inferred]**: framework or library behavior reasoned from source, not observed. Each one names what would close it.
 - **[static]**: R code read without an interpreter. R is not installed on this machine.
@@ -54,6 +56,8 @@ Not done:
 ---
 
 ## 3. Ground truth snapshot
+
+Every value marked [live] in this section was read from the INT environment through the DEV MCP server (see the label definitions in section 2). Confirm against production during the first Python run before treating the industry-set descriptions, default dataset ids, and the 491/509 code difference as production facts.
 
 ### 3.1 Aggregation schemes and datasets [live]
 
@@ -342,7 +346,7 @@ All thirteen were answered on 2026-09-14; see section 15.
 
 | # | Decision |
 | --- | --- |
-| Q1 | Consolidate to three folders: `CSharp`, `Python` (General absorbs GAMS and Regional Overview as workflow examples), and one `R` folder. |
+| Q1 | Consolidate to exactly three folders named for the language: `sampleCode/CSharp`, `sampleCode/Python`, and `sampleCode/R`. No sub-project or variant folders; the entry point sits at each folder root. C# `ConsoleApp/` is flattened up one level; `Python - General` becomes `Python` and absorbs GAMS and Regional Overview as workflow examples; the three R folders become one `R`. |
 | Q2 | Every sample authenticates at `POST /api/auth`. `/auth` is not mentioned. |
 | Q3 | Login body is lowercase `username` and `password` everywhere. No live test of PascalCase needed. |
 | Q4 | Identifiers are resolved at runtime: scheme by `mapCode` plus description, dataset by `isDefault`, industry by code plus description. |
@@ -355,17 +359,20 @@ All thirteen were answered on 2026-09-14; see section 15.
 | Q11 | The single R folder is built from the `R - Updated` files as the newer base, merging in the `R - Object Oriented` Endpoints and Services they reference and the Procedural helper. The `new_implan_api_helper.R` reference is pointed at the merged helper. |
 | Q12 | Ignoring `industrySetId` on `GET /IndustryCodes/{aggregationSchemeId}` is intentional. Samples and docs stop passing it on that route. |
 | Q13 | `GetIndustrySet(id)` helpers are deleted in all three languages; callers filter the list. |
+| Q14 | Three workflows added to the extended set after a survey of IMPLAN Support and the spec: 10 ImportEvents (Event Template upload), 11 MrioProject (`isMrio` project with spillover into a second region), and 12 AdvancedEvents (Industry Contribution Analysis and Industry Spending Pattern events, tags, tag-filtered results). Canada and International are folded into Identifiers and a map-code option on CreateProject; RegionalExports takes the export name as a parameter instead of growing new workflows. |
+| Q15 | Samples target production (`api.implan.com`). The contract to write against is the INT-generated spec, because the error-code corrections now on INT will be in production before the updated samples are published; that is the source of the disconnects between the INT observations in this review and today's production behavior. |
+| Q16 | The R folder is rebuilt on `httr2` with the native pipe and `jsonlite` as plain functions, the way the IMPLAN Support article "How to Use the IMPLAN API with R: Obtaining Your API Token" does it, not on the S4 classes and superseded `httr` of the existing folders. `req_auth_bearer_token()` for redaction, `req_error()` for problem details, `req_retry()` for the auth service's transient 503, `req_throttle()` in bulk workflows. The support article's "Procedural versus Object-Oriented" section will need updating once R is one folder. |
 
 ### 15.2 Revised plan
 
 Each step is one reviewable unit. Timothy reviews the pattern on the first folder before it is applied to the others.
 
-1. **Python - General first.** Fix P1 through P20 and apply every shared convention (X1 through X13 as decided above): `/api/auth`, one base URL, tolerant models, status polling with timeout and terminal states, region readiness via `GET /region/user/{hashId}`, no `industrySetId` on the scheme route, no `get_industry_set`, runtime id resolution, current-year dollar year, `requirements.txt`, README with the current Python version. Verify: compile, pyflakes, then a live run of identifiers, simple project, impact, and reports using `.env`.
-2. **Absorb GAMS and Regional Overview** into `Python - General/workflow_examples` on the shared client, with the redesigned readiness check. Delete the two folders. Verify: live run of each against a small region set.
-3. **C#.** Retarget to net10.0 and current RestSharp; remove the `DEBUG` and `LOCAL` blocks; read credentials from `.env` or environment; re-enable error surfacing with problem details; fix C2 and C3; apply the shared conventions; delete `GetIndustrySet`; fix region-type comments. Verify: build, then live run of the four workflows in sequence.
-4. **R.** Create the single folder from the Updated base plus the referenced OO Endpoints and Services and the Procedural helper; fix U1 through U5 and R1 through R13; `.env` credentials; current R. Verify: needs an R installation (none on this machine); either install R here or Timothy runs the steps.
+1. **Python first.** Move `Python - General` up to `sampleCode/Python` (entry point at the root). Fix P1 through P20 and apply every shared convention (X1 through X13 as decided above): `/api/auth`, one base URL, the token cache kept and made the reference pattern, tolerant models, status polling with timeout and terminal states, region readiness via `GET /region/user/{hashId}`, no `industrySetId` on the scheme route, no `get_industry_set`, runtime id resolution, current-year dollar year, `requirements.txt`, README with the current Python version. Rename workflow files to the CLAUDE.md names. Verify: compile, pyflakes, then a live run of identifiers, create project, impact, and reports using `.env`.
+2. **Extended set in Python.** Absorb GAMS and Regional Overview into `sampleCode/Python/workflows` as the BulkFromCsv and RegionalExports workflows on the shared client, with the redesigned readiness check, then add ImportEvents, MrioProject, and AdvancedEvents. Delete the two Python download folders. Verify: live run of each; BulkFromCsv and RegionalExports against a small region set.
+3. **C#.** Flatten `ConsoleApp/` up into `sampleCode/CSharp` so the `.csproj` sits at the folder root. Retarget to net10.0 and current RestSharp; remove the `DEBUG` and `LOCAL` blocks; read credentials from `.env`; add the token cache (C# has none today); re-enable error surfacing with problem details; fix C2 and C3; apply the shared conventions; delete `GetIndustrySet`; fix region-type comments; rename `RegionalWorkflow` and `CombinedRegionWorkflow` to the CLAUDE.md names; add `IdentifiersWorkflow`. Verify: build, then live run of the workflows in sequence.
+4. **R.** Create `sampleCode/R` from the Updated base plus the referenced OO Endpoints and Services and the Procedural helper (which already caches the token); fix U1 through U5 and R1 through R13; `.env` credentials; snake_case file and function names; current R. Verify: needs an R installation (none on this machine); either install R here or Timothy runs the steps.
 5. **Docs.** Fix D1 through D6 in place and relink to the wiki; update the three sample READMEs; update the wiki Code Examples note about which folders exist.
-6. **Cleanup.** Delete `R - Object Oriented`, `R - Updated`, `R - Procedural`, `Python - GAMS Download`, and `Python - Regional Overview Download`; delete verification projects and regions from the account; hand over the list of paths and a suggested commit message per step.
+6. **Cleanup.** Delete `R - Object Oriented`, `R - Updated`, `R - Procedural`, `Python - GAMS Download`, `Python - Regional Overview Download`, and the emptied `CSharp/ConsoleApp` and `Python/Python - General` shells so only `CSharp`, `Python`, and `R` remain under `sampleCode/` (plus `googleSheets`, which is out of scope); delete verification projects and regions from the account; hand over the list of paths and a suggested commit message per step.
 
 ### 15.3 Specification written, and status
 
@@ -384,6 +391,9 @@ Status by language. A checkmark means the workflow exists under the listed file 
 | 7 | RunImpactAnalysis | | | |
 | 8 | BulkFromCsv | | | |
 | 9 | RegionalExports | | | |
+| 10 | ImportEvents | | | |
+| 11 | MrioProject | | | |
+| 12 | AdvancedEvents | | | |
 
 ## Appendix A. Verification log
 

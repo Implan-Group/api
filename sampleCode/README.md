@@ -8,15 +8,15 @@ The API itself is documented in the [wiki](https://github.com/Implan-Group/api/w
 
 | Folder | Language | Start here |
 | --- | --- | --- |
-| [CSharp](CSharp/) | C# console application | [CSharp/README.md](CSharp/Readme.md) |
-| [Python](Python/) | Python scripts | [Python/README.md](Python/) |
-| [R](R/) | R scripts | [R/README.md](R/) |
+| [CSharp](CSharp/) | C# console application | [CSharp/README.md](CSharp/README.md) |
+| [Python](Python/) | Python scripts | [Python/README.md](Python/README.md) |
+| [R](R/) | R scripts | [R/README.md](R/README.md) |
 
 Each README tells you what to install, how to configure your credentials, how to run each workflow, and what you should see.
 
 ## The workflows
 
-The wiki's [Getting Started](https://github.com/Implan-Group/api/wiki/Getting-Started) page describes the Impact API as one ten-step process. Workflows 1 through 7 are that process cut into runnable pieces, in the order you would use them. Workflows 8 and 9 are larger, batch-style examples.
+The wiki's [Getting Started](https://github.com/Implan-Group/api/wiki/Getting-Started) page describes the Impact API as one ten-step process. Workflows 1 through 7 are that process cut into runnable pieces, in the order you would use them. Workflows 8 through 12 are larger or more specialized examples that build on them.
 
 | # | Workflow | What it shows | Getting Started steps |
 | --- | --- | --- | --- |
@@ -29,13 +29,16 @@ The wiki's [Getting Started](https://github.com/Implan-Group/api/wiki/Getting-St
 | 7 | RunImpactAnalysis | Run a project, wait for it correctly, and download the five standard CSV reports. | 8, 9, 10 |
 | 8 | BulkFromCsv | Build regions, projects, events, and groups from CSV input files, run them all, and save the results. | all |
 | 9 | RegionalExports | Download a regional data export for many regions at once without tripping the rate limits. | 3 |
+| 10 | ImportEvents | Fill a project from the official IMPLAN Event Template workbook in one upload. | 6, 7 |
+| 11 | MrioProject | Multi-regional input-output: an event in one state, effects reported in another. | 5 through 10 |
+| 12 | AdvancedEvents | Industry Contribution Analysis and Industry Spending Pattern events, tagged, with results filtered by tag. | 6 through 10 |
 
 Every workflow file is named for its row in this table, spelled in that language's style (`CreateProjectWorkflow.cs`, `create_project_workflow.py`, `create_project_workflow.R`), and every API call in the code names the wiki page it comes from.
 
 ## Before you run anything
 
 - You need an IMPLAN subscription with API access. Contact <support@implan.com> to add it.
-- Workflows 4 through 8 create real objects in your IMPLAN account (regions, projects, events, groups, impact runs). Each one prints what it created so you can find and delete it in IMPLAN Cloud.
+- Workflows 4 through 8 and 10 through 12 create real objects in your IMPLAN account (regions, projects, events, groups, impact runs). Each one prints what it created so you can find and delete it in IMPLAN Cloud.
 - The API has rate limits, listed on the wiki [Home](https://github.com/Implan-Group/api/wiki) page. The samples respect them; if you adapt one to loop over many regions, keep the pauses.
 
 ## Contributing

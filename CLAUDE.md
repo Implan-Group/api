@@ -1,6 +1,14 @@
 # Impact API samples: rules for `sampleCode/` and `impact/workflows/`
 
-This file is the contract for anyone, human or agent, editing the sample code or the workflow docs. The reader-facing orientation is `sampleCode/README.md`; the API contract is the [wiki](https://github.com/Implan-Group/api/wiki), also checked out at `C:\git\github\api.wiki`.
+This file is the contract for anyone, human or agent, editing the sample code or the workflow docs. The reader-facing orientation is `sampleCode/README.md`.
+
+Sources of truth, in order:
+
+1. The generated OpenAPI 3.1 spec for Impact API v1 in the `ui_api` repository (`C:\git\ui_api`, folder `UiApi/openapi/`), with its Postman collection beside it. It is produced from the controllers, validated against the API Gateway export, and carries request and response schemas, required fields, and every status an endpoint returns. Use the INT build, `ImpactApi_version1.external.int.json`, for the contract: it reflects the error-code corrections that will be in production by the time updated samples are published, so what a sample sees on INT today is what a reader sees on production later. The samples still target the production host, `https://api.implan.com`. Where a sample and the spec disagree, the spec wins.
+2. The [wiki](https://github.com/Implan-Group/api/wiki), checked out at `C:\git\github\api.wiki`, for narrative and page names to link.
+3. The `External.Api` controllers in `ui_api` when the spec text is ambiguous.
+
+The hand-maintained `IMPLAN-API.postman_collection.json` at this repository's root is older than the generated collection and is not a source of truth for the samples.
 
 One set of workflows, implemented once per language, each version tailored to its language but doing the same thing with the same example data. If a workflow is not in the list in section 5 it does not belong in a language folder, and if it is in the list every language folder must have it.
 
@@ -14,7 +22,7 @@ A language folder that departs from one of these needs a comment saying why.
 
 - Base URL is `https://api.implan.com`. Every endpoint is under `/api/v1/` except authentication.
 - Authenticate with `POST /api/auth` and a JSON body of lowercase `username` and `password`. The response body is the token, already prefixed with `Bearer `. Send it as the `Authorization` header on every other request.
-- Cache the token to a local file (gitignored) and reuse it; a token is valid for 24 hours. Before reusing a cached token, verify it with one cheap call (`GET /api/v1/region/RegionTypes`). Never print or log the token.
+- Every language caches the token to a local file and reuses it; requesting a new token on every run is not acceptable, and repeated authentication requests can get an account throttled or banned. The pattern is: load the cached token if the file exists; verify it with one cheap call (`GET /api/v1/region/RegionTypes`); only if there is no file or the verification fails, post credentials, write the new token to the file, and continue. A token is valid for 24 hours. On a 401 mid-run, refresh once and retry the request once. The cache file is `implan_auth.jwt` next to the entry point and is gitignored (`*.jwt` is already in the root `.gitignore`). Never print or log the token. The reference implementation is Python's existing `AuthHelper` (`get_bearer_token`, `_validate_token`, `get_fresh_token`); the R procedural helper's `getImplanAuth` follows the same idea with a timestamp. C# has no cache today and must add one.
 - Credentials come from a `.env` file next to the entry point with two variables, `IMPLAN_USERNAME` and `IMPLAN_PASSWORD`. Same names in all three languages. `.env` is gitignored; each folder ships a `.env.example`.
 
 **Identifiers are resolved at run time, never hardcoded**
@@ -71,11 +79,11 @@ Each language README has these sections in this order.
 
 1. **What this is.** Two sentences and a link to `sampleCode/README.md`.
 2. **Prerequisites.** The runtime or interpreter, the exact version verified, where to download it, and the one command that proves it is installed. Recommended editor with install link.
-3. **Install dependencies.** The exact command, and the manifest file it reads (`ConsoleApp.csproj`, `requirements.txt`, or the R package list).
+3. **Install dependencies.** The exact command, and the manifest file it reads (the `.csproj` at the folder root, `requirements.txt`, or the R package list).
 4. **Configure.** Copy `.env.example` to `.env` and fill in the two variables. Say where the token cache and logs are written.
 5. **Run.** One command per workflow, in list order, and how to pass a project id to the workflows that need one.
 6. **What you should see.** The console output shape for a successful run, and where exported CSV files land.
-7. **Troubleshooting.** What 401, 403, 409, 422, 429, and 503 mean from this API and what to do about each; the throttles; the user-regions list returning 503 for accounts with many custom schemes.
+7. **Troubleshooting.** What 401, 403, 409, 422, 429, and 503 mean from this API and what to do about each; the throttles; the user-regions list returning 503 for accounts with many custom schemes; and that a 503 from `POST /api/auth` usually means either the authentication service is briefly unavailable (wait a minute and retry) or API access has not been enabled on the account (contact the Customer Success Manager), as the IMPLAN Support article "How to Use the IMPLAN API with R: Obtaining Your API Token" explains.
 8. **Links.** Wiki home, the wiki pages used, and support.
 
 ---
@@ -100,9 +108,11 @@ Same in every language so outputs can be compared side by side.
 
 ## 5. Layout, naming, and the workflow list
 
+There are exactly three folders under `sampleCode/`, named for the language and nothing else: `CSharp`, `Python`, and `R`. No sub-project folders, no variant folders. The entry point, the manifest (`.csproj`, `requirements.txt`, or the R package list), the `.env.example`, and the README sit at the folder root.
+
 Every language keeps the same three layers so a reader who knows one folder can navigate the others. The endpoint files are named for the wiki's sidebar sections: Aggregation Schemes, Datasets, Industries, Regions and Regional Data Exports, Impacts with Events, Groups, and Projects, and Impact Results.
 
-| Layer | C# (`CSharp/ConsoleApp`) | Python (`Python`) | R (`R`) |
+| Layer | C# (`CSharp/`) | Python (`Python/`) | R (`R/`) |
 | --- | --- | --- | --- |
 | Entry point | `Program.cs` | `main.py` | `main.R` |
 | Endpoints (one file per wiki section) | `Endpoints/` | `endpoints/` | `endpoints/` |
@@ -112,6 +122,8 @@ Every language keeps the same three layers so a reader who knows one folder can 
 | Configuration | `.env.example` | `.env.example` | `.env.example` |
 
 Naming: the workflow names are the same words in every language, spelled the way that language spells things. C# uses PascalCase files, classes, and methods; Python uses lower_snake_case modules and functions; R follows the tidyverse style guide with lower_snake_case files and functions. Inside each folder the code is written the way a native reader of that language expects, not as a transliteration of another language.
+
+Library choices: C# uses `HttpClient` plus `System.Text.Json` (or the current RestSharp, if kept, at its current release); Python uses `requests` and `python-dotenv`; R uses `httr2` with the native `|>` pipe and `jsonlite`, matching the IMPLAN Support article "How to Use the IMPLAN API with R: Obtaining Your API Token", which is the first thing an R user finds. The R code is plain functions grouped by file, not S4 classes: `req_auth_bearer_token()` for the token (it redacts the token when a request is printed), `req_error()` to turn problem-details bodies into R errors, `req_retry()` for the auth service's transient 503, and `req_throttle()` in the bulk workflows to stay inside the published rate limits.
 
 | # | Workflow | C# | Python | R | Narrative doc |
 | --- | --- | --- | --- | --- | --- |
@@ -124,8 +136,11 @@ Naming: the workflow names are the same words in every language, spelled the way
 | 7 | RunImpactAnalysis | `RunImpactAnalysisWorkflow.cs` | `run_impact_analysis_workflow.py` | `run_impact_analysis_workflow.R` | `impact/workflows/RunImpactAnalysis.md` |
 | 8 | BulkFromCsv | `BulkFromCsvWorkflow.cs` | `bulk_from_csv_workflow.py` | `bulk_from_csv_workflow.R` | `impact/workflows/BulkFromCsv.md` (new) |
 | 9 | RegionalExports | `RegionalExportsWorkflow.cs` | `regional_exports_workflow.py` | `regional_exports_workflow.R` | `impact/workflows/RegionalExports.md` (new) |
+| 10 | ImportEvents | `ImportEventsWorkflow.cs` | `import_events_workflow.py` | `import_events_workflow.R` | `impact/workflows/ImportEvents.md` (new) |
+| 11 | MrioProject | `MrioProjectWorkflow.cs` | `mrio_project_workflow.py` | `mrio_project_workflow.R` | `impact/workflows/MrioProject.md` (new) |
+| 12 | AdvancedEvents | `AdvancedEventsWorkflow.cs` | `advanced_events_workflow.py` | `advanced_events_workflow.R` | `impact/workflows/AdvancedEvents.md` (new) |
 
-Workflows 1 through 7 are the core set. Workflows 8 and 9 are the extended set; 8 comes from the former R procedural script and 9 from the former Python download scripts. Adding a language means one more column in these two tables, one folder with these layers, and one README written to section 3. Adding a workflow means adding it to every language and to this table.
+Workflows 1 through 7 are the core set. Workflows 8 through 12 are the extended set: 8 comes from the former R procedural script, 9 from the former Python download scripts, and 10 through 12 were added on 2026-09-14 because each traces to a current IMPLAN Support topic (the Event Template, MRIO, and Contribution Analysis and Spending Pattern events) that no sample covered. Adding a language means one more column in these two tables, one folder with these layers, and one README written to section 3. Adding a workflow means adding it to every language and to this table.
 
 The wiki's Getting Started page is a ten-step process; the core workflows are that process cut into runnable pieces: step 1 is Authentication; steps 2 and 4 are Identifiers; step 3 is Regions and CombineRegions; steps 5 through 7 are CreateProject and MultiEventToMultiGroup; steps 8 through 10 are RunImpactAnalysis.
 
@@ -152,7 +167,7 @@ Needs: `.env`. Produces: token cache file. Done when: a second run reuses the ca
 
 Goal: show how every id the other workflows need is discovered from the API, and print the resolved values.
 
-Steps: list Industry Sets and pick the default; list Aggregation Schemes and pick the default scheme for that set; list Datasets for the scheme and pick the default; list Industry Codes for the scheme and show the code-plus-description check; list Region Types; show the Canada and International resolution rule.
+Steps: list Industry Sets and pick the default; list Aggregation Schemes and pick the default scheme for that set; list Datasets for the scheme and pick the default; list Industry Codes for the scheme and show the code-plus-description check; list Region Types; then apply the Canada and International rule and print the resolved scheme, dataset, and household set for `CAN` and `INTL` as well, so the three map codes sit side by side. The Canada considerations doc in `impact/workflows` is folded into this workflow's narrative rather than kept separate.
 
 | Endpoint | Wiki page |
 | --- | --- |
@@ -206,6 +221,8 @@ Steps: create the project with the resolved scheme and household set; list the e
 | `POST /api/v1/impact/project/{projectId}/event` | Create Event |
 | `POST /api/v1/impact/project/{projectId}/group` | Create Group |
 | `GET /api/v1/impact/project/{projectId}` | Get Project |
+
+The workflow takes an optional map code, default `US`. With `CAN` it resolves the Canadian scheme and dataset, uses a Canadian industry and province, and otherwise runs the same steps; with `INTL` it uses the country children endpoint for the region step, because international schemes have no top-level region.
 
 Needs: token, ids. Produces: a project id, two event ids, one group id, all printed. Done when: workflow 7 can run the project.
 
@@ -262,7 +279,7 @@ Needs: token, the three CSV files (shipped with the sample). Produces: one folde
 
 ### 9. RegionalExports (extended)
 
-Goal: download a regional data export for many regions without one status request per region. Ported from the former Python download scripts.
+Goal: download a regional data export for many regions without one status request per region. Ported from the former Python download scripts. The export is a parameter (default `RegionOverviewIndustries`, plus the single-file GAMS export), so the other exports under the wiki's Regional Data Exports section (environment, occupation, multipliers, SAM tables) can be pulled by naming them, without new workflows.
 
 Steps: optionally read a list of custom regions to combine (CSV with a region name and FIPS codes) and build them as in workflow 4; list the target regions (all MSAs, or all counties); check which are already built with one call; build the rest with `build-and-return` and wait; download the Region Overview Industries CSV and the single-file GAMS export per region into `reports/`, skipping files that already exist, and pausing between requests to respect the throttles.
 
@@ -276,8 +293,57 @@ Steps: optionally read a list of custom regions to combine (CSV with a region na
 
 Needs: token, ids, optional custom-region CSV. Produces: one CSV and one `.gms` per region. Done when: a rerun downloads nothing new and reports the count already present.
 
+### 10. ImportEvents (extended)
+
+Goal: populate a project from the official IMPLAN Event Template workbook instead of one event call at a time. This is how analysts already move work from spreadsheets into IMPLAN Cloud, and the API accepts the same file.
+
+Steps: create an empty project with the workflow 5 code; upload the filled template that ships with the sample (`data/event_template_us528.xlsx`: two Industry Output events on the Industry sheet, each with an event tag; one group on the Groups sheet identified by FIPS code; the assignments on the Group Events sheet) as a multipart form upload in a field named `excelFile`; on a 400, print the validation details the API returns, because the template is strict about formats; read back the project's events and groups and print their ids. The template family must match the project's Industry Set (US 528, US 546, Canada 235 or 236, International); the sample downloads nothing, it ships the filled copy and links the blank ones.
+
+| Endpoint | Wiki page |
+| --- | --- |
+| `POST /api/v1/impact/project` | Create Project |
+| `POST /api/v1/impact/project/import/{projectId}` (multipart, field `excelFile`) | Import Events |
+| `GET /api/v1/impact/project/{projectId}/event` | Get Events |
+| `GET /api/v1/impact/project/{projectId}/group` | Groups |
+
+Needs: token, ids, the shipped workbook. Produces: a project with the workbook's events and groups, ids printed. Done when: the read-back lists match the workbook and workflow 7 can run the project. Support reference: "Using the Event Template".
+
+### 11. MrioProject (extended)
+
+Goal: multi-regional input-output analysis, where an event in one region produces effects in another linked region. No earlier sample ever set `isMrio`.
+
+Steps: resolve ids; find Oregon and Wisconsin and check `isMrioAllowed` on both; create the project with `isMrio` true; add one Industry Output event for Oilseed farming; add a group for Oregon containing the event and a group for Wisconsin with no events, so anything reported for Wisconsin is spillover from Oregon (if the API refuses an empty group at run time, give Wisconsin a second, much smaller event and say so in the comment; confirm during implementation); run with the workflow 7 code; download Summary Economic Indicators twice, once filtered to Oregon and once to Wisconsin, and print the two totals side by side.
+
+| Endpoint | Wiki page |
+| --- | --- |
+| `POST /api/v1/impact/project` with `isMrio: true` | Create Project |
+| `POST /api/v1/impact/project/{projectId}/event` | Create Event |
+| `POST /api/v1/impact/project/{projectId}/group` (twice) | Create Group |
+| `POST /api/v1/impact/{projectId}`, `GET /api/v1/impact/status/{runId}` | Run Impact Analysis, Get Impact Status |
+| `GET /api/v1/impact/results/SummaryEconomicIndicators/{runId}?regions=` | Results - Summary Economic Indicators |
+
+Needs: token, ids. Produces: a completed MRIO run and two filtered CSVs. Done when: the Wisconsin-filtered report is non-empty although Wisconsin had no direct event. Support reference: "MRIO: Introduction to Multi-Regional Input-Output Analysis".
+
+### 12. AdvancedEvents (extended)
+
+Goal: the two event types analysts reach for after Industry Output, plus event tags and tag-filtered results.
+
+Steps: create a project with the workflow 5 code; add an Industry Contribution Analysis event (`impactEventType` `IndustryContributionAnalysis`, Full-service restaurants, `output` 1,000,000, `isOutputPercentage` false, tag `contribution`); fetch the default Industry spending pattern for Oilseed farming with the resolved dataset, change one commodity's coefficient and mark it `isUserCoefficient`, and add an Industry Spending Pattern event (`impactEventType` `IndustrySpendingPattern`, `output` 1,000,000, `spendingPatternValueType` `Output`, `spendingPatternDatasetId` the resolved dataset, `spendingPatternCommodities` the edited list, tag `spending`); add one group for Oregon with both events; run with the workflow 7 code; download Summary Economic Indicators filtered by `eventTags=contribution` and again by `eventTags=spending`, and Estimated Growth Percentage with `eventTags` in its body; print which events each report contains.
+
+| Endpoint | Wiki page |
+| --- | --- |
+| `GET /api/v1/impact/project/{projectId}/eventtype` | Get Event Types |
+| `GET /api/v1/impact/spending-patterns/{aggregationSchemeId}/Industry/{industryCode}?datasetId=` | Spending Pattern by Id |
+| `POST /api/v1/impact/project/{projectId}/event` (twice) | Create Event |
+| `POST /api/v1/impact/project/{projectId}/group` | Create Group |
+| `POST /api/v1/impact/{projectId}`, `GET /api/v1/impact/status/{runId}` | Run Impact Analysis, Get Impact Status |
+| `GET /api/v1/impact/results/SummaryEconomicIndicators/{runId}?eventTags=` | Results - Summary Economic Indicators |
+| `GET /api/v1/impact/results/EstimatedGrowthPercentage/{runId}` with `eventTags` in the JSON body | Results - Estimated Growth Percentage |
+
+Needs: token, ids. Produces: a completed run and two tag-filtered reports. Done when: each filtered report contains only its tagged event. Support references: "Industry Contribution Events", "Industry Spending Pattern Events", "Event Tags".
+
 ---
 
 ## 7. Endpoints the samples deliberately do not cover
 
-Update, delete, duplicate, share, and transfer for projects, events, and groups; folder sharing; spending-pattern events; custom aggregation schemes; the environmental, occupation, and multiplier exports; and the Instant and Batch APIs. They are documented in the wiki. Adding one means adding it to all languages and to section 5.
+Update, delete, duplicate, share, and transfer for projects, events, and groups; folder sharing; Institutional, Household, and Custom spending patterns; Industry Impact Analysis (Custom) and the International variants; custom aggregation schemes; the Instant and Batch APIs. They are documented in the wiki. Adding one means adding it to all languages and to section 5.
