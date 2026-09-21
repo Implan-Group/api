@@ -1,13 +1,17 @@
 # ImpactApi - Multi-Event to Multi-Group Workflow
+- [Impact API wiki - Groups](https://github.com/Implan-Group/api/wiki/Groups)
 - Sometimes for an advanced Project, several Events are created and then all of them are assigned to several Groups
 - The workflow here demonstrates an easy way of looping through Regions in order to accomplish this task.
+- Events belong to the Project rather than to a Group, so each Event is created once and then referenced from every Group that needs it
 
 ### 🗈 Notes
 
-- The document is a supplement to the [Main Impact Readme](https://github.com/Implan-Group/api/blob/main/impact/readme.md) and to the C# example workflow in `MultiEventToMultiGroupWorkflow.cs`
+- This document supplements the [Impact API wiki](https://github.com/Implan-Group/api/wiki), which is the current reference for every endpoint, and the [Main Impact Readme](https://github.com/Implan-Group/api/blob/main/impact/readme.md)
 - Additional workflows can be found in the [Workflows Directory](https://github.com/Implan-Group/api/tree/main/impact/workflows)
-- All API Endpoints require a valid JWT Bearer Token to be passed with each requrest ([JWT.IO](https://jwt.io/))
-  - Please see the [authentication](https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication---retrieving-bearer-access-token) section in the Readme to review authentication steps
+- Runnable versions of this workflow are in [sampleCode](https://github.com/Implan-Group/api/tree/main/sampleCode): `CSharp/Workflows/MultiEventToMultiGroupWorkflow.cs`, `Python/workflows/multi_event_to_multi_group_workflow.py`, and `R/workflows/multi_event_to_multi_group_workflow.R`
+- All API Endpoints require a valid JWT Bearer Token to be passed with each request ([JWT.IO](https://jwt.io/))
+  - See the wiki's [Authentication](https://github.com/Implan-Group/api/wiki/Authentication) page, or the [Authentication](https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication) section of the Readme, to review authentication steps
+  - A token is valid for 24 hours and must be cached and reused. Requesting a new one on every call is unsupported and repeated requests in a short period can earn a temporary ban on the account
 - Variables required for Endpoint calls will appear inside of double-braces (`{{}}`) and they must be replaced with valid values before the Request is sent
   - _e.g._ `{{api_domain}}` should be replaced with `https://api.implan.com/` for Public Production requests
   - See the [Production Variables](https://github.com/Implan-Group/api/blob/main/impact/readme.md#production-variables) section of the Readme for more information
@@ -98,7 +102,7 @@
     "projectId": "deadbeef-f5be-458f-8efc-3b50ac0e5b1a",
     "impactEventType": "IndustryOutput",
     "title": "EVENT TITLE",
-    "tags": [],
+    "tags": []
   }
   ```
   - `id` (guid): Unique identifier for this Event
@@ -145,7 +149,7 @@
     {
       "eventId": "E964EE78-350E-4717-B44B-85D37BE9637F"
     }
-  ],
+  ]
 }
 ```
 - `projectId` (guid): The Project's GUID Identifier -- does not need to be in incoming body as it is passed as an Url parameter

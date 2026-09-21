@@ -1,0 +1,13 @@
+# Dependencies for the IMPLAN Impact API Python samples.
+#
+# Install with:  pip install -r requirements.txt
+#
+# Deliberately short. Everything else these samples need is in the standard
+# library, including the camelCase-to-snake_case conversion and the filename
+# sanitizing that earlier versions pulled packages in for.
+
+# HTTP. The whole client layer in utilities/rest.py is built on this.
+requests>=2.32
+
+# Reads the .env file holding your IMPLAN credentials.
+python-dotenv>=1.0

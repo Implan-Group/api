@@ -125,6 +125,8 @@ Naming: the workflow names are the same words in every language, spelled the way
 
 Library choices: C# uses `HttpClient` plus `System.Text.Json` (or the current RestSharp, if kept, at its current release); Python uses `requests` and `python-dotenv`; R uses `httr2` with the native `|>` pipe and `jsonlite`, matching the IMPLAN Support article "How to Use the IMPLAN API with R: Obtaining Your API Token", which is the first thing an R user finds. The R code is plain functions grouped by file, not S4 classes: `req_auth_bearer_token()` for the token (it redacts the token when a request is printed), `req_error()` to turn problem-details bodies into R errors, `req_retry()` for the auth service's transient 503, and `req_throttle()` in the bulk workflows to stay inside the published rate limits.
 
+Version floors, and why they are where they are. R itself must be 4.1 or newer, for the native pipe and the `\(x)` lambda. `httr2` must be 1.2.0 or newer: `req_throttle()` gained the `capacity` and `fill_time_s` arguments in 1.1.1, and the request accessors the logger uses, `req_get_headers()`, `req_get_body()`, `req_get_method()`, and `req_get_url()`, arrived in 1.2.0. The R manifest is `packages.R` at the folder root; running it installs what is missing, and `check_required_packages()` inside it is what turns a missing package into a sentence rather than a "could not find function" ten frames deep.
+
 | # | Workflow | C# | Python | R | Narrative doc |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Authentication | `AuthenticationWorkflow.cs` | `authentication_workflow.py` | `authentication_workflow.R` | wiki Authentication |
@@ -281,12 +283,13 @@ Needs: token, the three CSV files (shipped with the sample). Produces: one folde
 
 Goal: download a regional data export for many regions without one status request per region. Ported from the former Python download scripts. The export is a parameter (default `RegionOverviewIndustries`, plus the single-file GAMS export), so the other exports under the wiki's Regional Data Exports section (environment, occupation, multipliers, SAM tables) can be pulled by naming them, without new workflows.
 
-Steps: optionally read a list of custom regions to combine (CSV with a region name and FIPS codes) and build them as in workflow 4; list the target regions (all MSAs, or all counties); check which are already built with one call; build the rest with `build-and-return` and wait; download the Region Overview Industries CSV and the single-file GAMS export per region into `reports/`, skipping files that already exist, and pausing between requests to respect the throttles.
+Steps: list the target regions (all MSAs, or all counties) with one children call, which already carries each region's `modelBuildStatus`, so the list and the build state cost one request between them rather than one request per region; build whichever are missing with `build-and-return` in batches and wait; download the export per region into `reports/`, skipping files that already exist so a rerun resumes, and treating a 400 as "still building" rather than as a malformed request.
+
+There is no separate built-regions endpoint. An earlier draft of this document listed `GET /api/v1/region/{aggregationSchemeId}/{datasetId}/built`; that route is absent from the generated v1 spec and from every gateway export, and the children listing is the supported way to get the same answer. Do not reintroduce it.
 
 | Endpoint | Wiki page |
 | --- | --- |
 | `GET /api/v1/region/{aggregationSchemeId}/{datasetId}/children?regionTypeFilter=` | Regional Children |
-| `GET /api/v1/region/{aggregationSchemeId}/{datasetId}/built` | Get Built Regions |
 | `POST /api/v1/region/build-and-return/{aggregationSchemeId}` | Build and Return Regions |
 | `GET /api/v1/regions/export/{aggregationSchemeId}/RegionOverviewIndustries?hashId=` | Regional Data Exports |
 | `GET /api/v1/regions/export/{aggregationSchemeId}/region-general-algebraic-modeling-single-file?hashId=` | Region Data - GAMS |

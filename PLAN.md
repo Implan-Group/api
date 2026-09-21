@@ -5,7 +5,7 @@ Repo reviewed: `C:\git\github\github_api` at `a15e312` (https://github.com/Impla
 Backend used as ground truth: `C:\git\ui_api` at `d9efcc35` (`main`), project `External.Api` (Impact API v1)
 Reviewer: Claude, at Timothy Jay's request.
 
-**Where this stands (resume here).** The review is complete, all thirteen questions are answered, and the decisions (Q1 through Q16) and revised plan are in section 15. Three files were added to the repo and nothing else was touched: this `PLAN.md`, `CLAUDE.md` (the rules and the twelve workflow specifications), and `sampleCode/README.md` (reader-facing). Their first versions were committed as `2fc3eca` on 2026-09-14; the same afternoon's refinements (three-folder rule, token cache rule, INT spec as the contract, workflows 10 through 12, R on `httr2`) followed as a second commit. No sample code has been changed yet. The next action is step 1 of section 15.2, Python, starting with a diff limited to `rest_helper.py` and `auth_helper.py` for review before the rest of the folder. Live verification needs a `.env` with `IMPLAN_USERNAME` and `IMPLAN_PASSWORD` next to the Python entry point.
+**Where this stands (resume here).** See section 16, which is the current state. Sections 1 through 15 are the original review and the decisions that came out of it; they are kept as the record of why the rebuild looks the way it does, and are no longer a description of the tree.
 
 ---
 
@@ -374,26 +374,110 @@ Each step is one reviewable unit. Timothy reviews the pattern on the first folde
 5. **Docs.** Fix D1 through D6 in place and relink to the wiki; update the three sample READMEs; update the wiki Code Examples note about which folders exist.
 6. **Cleanup.** Delete `R - Object Oriented`, `R - Updated`, `R - Procedural`, `Python - GAMS Download`, `Python - Regional Overview Download`, and the emptied `CSharp/ConsoleApp` and `Python/Python - General` shells so only `CSharp`, `Python`, and `R` remain under `sampleCode/` (plus `googleSheets`, which is out of scope); delete verification projects and regions from the account; hand over the list of paths and a suggested commit message per step.
 
-### 15.3 Specification written, and status
+### 15.3 Specification written
 
-The workflow specification lives in the repo as `CLAUDE.md` (rules, commenting standard, README standard, layout, naming, per-workflow specs) with a short reader-facing `sampleCode/README.md` pointing at it. Both written 2026-09-14, uncommitted.
+The workflow specification lives in the repo as `CLAUDE.md` (rules, commenting standard, README standard, layout, naming, per-workflow specs) with a short reader-facing `sampleCode/README.md` pointing at it. Both written 2026-09-14 and committed as `2fc3eca` and `2264a88`.
 
-Status by language. A checkmark means the workflow exists under the listed file name, follows the CLAUDE.md rules, and has been run end to end against production on the date shown.
+Status moved to section 16.3.
 
-| # | Workflow | C# | Python | R |
+---
+
+## 16. Build state (2026-09-16, last updated 2026-09-21)
+
+### 16.1 What was done
+
+All three folders were rebuilt against the section 6 specifications. `sampleCode/` now holds exactly `CSharp`, `Python`, `R`, and the unrelated `googleSheets`. The seven old folders are gone.
+
+**Python** (`sampleCode/Python`, 40 modules). Written first and used as the reference for the other two. Entry point `main.py` with an argparse CLI. Layers: `utilities/`, `models/`, `endpoints/`, `workflows/`. The `humps` dependency was removed by hand-writing the two case conversions, so the manifest is `requests` and `python-dotenv` and nothing else.
+
+**C#** (`sampleCode/CSharp`). `ConsoleApp/` was flattened so the `.csproj` sits at the folder root, retargeted to `net10.0`, and moved to RestSharp 114.0.0, which has no advisories. Entry point `Program.cs` with a hand-written argument parser, no argument package. The `.env` reader is hand-written for the same reason.
+
+**R** (`sampleCode/R`, 37 R files). Rebuilt from nothing on `httr2` and `jsonlite`, replacing all three old folders. Entry point `main.R`, which works under `Rscript` and under `source()` from RStudio. Plain functions, snake_case, S3 only for the `describe()` one-liners; environments in the two places state has to be mutable, the client and the region cache.
+
+### 16.2 Findings from the build, worth keeping
+
+- **There is no `/built` endpoint.** The section 6 spec for RegionalExports named `GET /api/v1/region/{aggregationSchemeId}/{datasetId}/built`. It is absent from the generated v1 spec and from every gateway export. The children listing already returns `modelBuildStatus` for every region it lists, so one call gives both the list and the build state. `CLAUDE.md` has been corrected and now says not to reintroduce it.
+- **Query parameters cannot be a dictionary.** Several filters are repeated parameters (`regions=Oregon&regions=Wisconsin`), and a map keyed by name silently keeps only the last value. C# got a `Query` list type; R uses `req_url_query(.multi = "explode")`; Python relies on `requests` handling a list value.
+- **Three `.gitignore` rules were dead.** `private/`, `.env`, and `results/` in the R block carried trailing comments. A `#` only starts a comment at the start of a line, so each pattern included its own comment text and matched nothing. `.env` was ignored only by an unrelated line in the Python block. Fixed, and the block now keeps every note on its own line.
+- **`docs/` was ignored repository-wide.** It came in with the boilerplate R `.gitignore` as the pkgdown output folder, and it is unanchored, so any folder of prose named `docs` anywhere in this repository would have been invisible to git. Removed.
+- **Folder ids change type.** A folder reports its own id as a string while a project's `folderId` and a folder's `parentId` are integers. Each language has one helper that converts, rather than a cast at each call site.
+
+### 16.3 Status by language
+
+Written means the file exists under the name `CLAUDE.md` gives it and follows the rules there. Built means the language's own compiler or interpreter accepts it. Run means it has been executed end to end against production, which has not happened for anything yet, because that needs credentials and creates real objects in an IMPLAN account.
+
+| # | Workflow | C# written | Python written | R written |
 | --- | --- | --- | --- | --- |
-| 1 | Authentication | | | |
-| 2 | Identifiers | | | |
-| 3 | Regions | | | |
-| 4 | CombineRegions | | | |
-| 5 | CreateProject | | | |
-| 6 | MultiEventToMultiGroup | | | |
-| 7 | RunImpactAnalysis | | | |
-| 8 | BulkFromCsv | | | |
-| 9 | RegionalExports | | | |
-| 10 | ImportEvents | | | |
-| 11 | MrioProject | | | |
-| 12 | AdvancedEvents | | | |
+| 1 | Authentication | yes | yes | yes |
+| 2 | Identifiers | yes | yes | yes |
+| 3 | Regions | yes | yes | yes |
+| 4 | CombineRegions | yes | yes | yes |
+| 5 | CreateProject | yes | yes | yes |
+| 6 | MultiEventToMultiGroup | yes | yes | yes |
+| 7 | RunImpactAnalysis | yes | yes | yes |
+| 8 | BulkFromCsv | yes | yes | yes |
+| 9 | RegionalExports | yes | yes | yes |
+| 10 | ImportEvents | yes | yes | yes |
+| 11 | MrioProject | yes | yes | yes |
+| 12 | AdvancedEvents | yes | yes | yes |
+
+| Language | Static check | Result |
+| --- | --- | --- |
+| C# | `dotnet build` (SDK 10.0.400, net10.0) | Succeeded, 0 warnings, 0 errors. `dotnet run -- --list` prints all twelve. |
+| Python | Import of all 40 modules, plus pyflakes (3.14.3) | All import, pyflakes silent. `python main.py --list` prints all twelve. |
+| R | `Rscript main.R --list` on R 4.6.1, which sources all 37 files, plus a 44-check behavior script | All parse and load, all 44 checks pass. Exit codes are 0 for the list and 4 for an unknown workflow. |
+
+R was installed on 2026-09-21 (R 4.6.1, via `winget install --id RProject.R`), which closed the gap this section previously described. httr2 resolved to 1.3.0 and jsonlite to 2.0.0, both above the floors in `packages.R`.
+
+The behavior script exercised the parts most likely to be wrong and could not be reasoned about safely: that a filter with several values becomes a repeated query parameter rather than one comma-separated value, that a single tag serializes as `["tag"]` rather than `"tag"`, that all five growth-report arrays survive as `[]`, that a GET carrying a JSON body stays a GET after `req_body_json()` would otherwise turn it into a POST, that the `Authorization` header reads `<REDACTED>` when a request is inspected, and that an event carrying a field the sample has never heard of still reads. All of those hold.
+
+### 16.3.1 Three defects the first R run found
+
+Writing R without running it cost three bugs, all of them in the two files a reader touches first.
+
+- **`packages.R` could not install anything on a fresh Windows machine.** The default library lives inside the R installation, under Program Files, and a standard user cannot write there. An interactive session offers to create a personal library instead; `Rscript` is never asked, so `install.packages()` failed with "unable to install packages" on the very first documented command. `user_library()` now creates the folder R already names in `R_LIBS_USER`, puts it on `.libPaths()`, and installs there.
+- **`find_sample_root()` checked the command line before the sourced-file path.** When one script sources `main.R`, `--file=` names the outer script, so the sample root resolved to the caller's folder and every `source()` after it failed. The `ofile` check now runs first, because it is the more specific answer.
+- **`main.R` ran the command line and quit whenever the session was non-interactive.** Sourcing it from another script is non-interactive too, so `source("main.R")` printed the workflow list and then killed the caller's session. The guard now keys off whether `--file=` names `main.R`, which is the question actually being asked.
+
+None of these would have shown up in a review of the code. All three needed an interpreter.
+
+### 16.4 Workflow docs, done 2026-09-17
+
+D1 through D7 are fixed in place in `impact/workflows/*.md`, and the shared notes block in every page now points at the wiki first, at the readme second, and at `sampleCode/` for a runnable version. The claim in an earlier draft of this section, that those pages describe the old folder layout, was wrong: they never named a sample folder except one mention of `MultiEventToMultiGroupWorkflow.cs`, which now lists all three languages.
+
+Three things turned up that the original review did not have:
+
+- **The JSON blocks were worse than D1 and D3 suggested.** Validating every fenced `json` block found 15 that do not parse across the repository, not the two the review named. Eight were in `impact/workflows` and are fixed. Two more are the deliberate placeholders in `Workflow Template.md` and were left alone.
+- **`Regions.md` had non-breaking spaces inside a JSON block**, so copying the region-type list out of the page produced something that would not parse. Replaced with ordinary spaces.
+- **`CanadaDataWorkflowConsiderations.md` had an unterminated code fence** around the Create Group body, so everything after it rendered as code.
+
+Two broken links were also fixed: `#authentication---retrieving-bearer-access-token`, which appeared in all six pages and has never existed in `impact/readme.md`, and `#summary-taxes-export-get`, where the heading carries no `(Get)`. Two `[Implan Support](support.implan.com)` links lacked a scheme and so resolved as relative paths. A link and anchor sweep now reports zero problems across `impact/workflows`.
+
+**Not fixed, because `impact/readme.md` was out of scope for this pass.** Five JSON blocks in it do not parse, at lines 492, 919, 2210, 2320, and 2355. Line 492 and line 2320 are the more serious: 492 contains non-breaking spaces, and 2320 opens a fence on a fragment rather than an object. The others are trailing commas and one missing comma.
+
+### 16.5 ImportEvents now explains all three outcomes, done 2026-09-21
+
+An import can land in three states, and until now the workflow only spoke about one of them. It explained a group that came back with no events attached, said nothing when the import produced no groups at all, and in that second case printed a bare "Groups: 0" and stopped.
+
+That second case is the common one, not an edge case. Timothy's own filled template, `Event Template V25.3_US 528_UR Visitor and Student Spending.xlsx`, is exactly it: 16 Industry events, and blank Groups and Group Events sheets. Plenty of analysts keep their events in the workbook and choose the regions afterwards, so a run that produces events and no groups is a normal outcome that needs a next step, not a silent one.
+
+All three languages now branch three ways: no groups at all names the blank Groups sheet and points at the Create Group endpoint, groups with nothing attached names the blank Group Events sheet as before, and only the third prints the "ready to run" command. The first two now say plainly that the Project cannot be run yet.
+
+### 16.6 Still to do
+
+1. **Live verification.** The only real gap left. Needs a `.env` in each folder. Workflows 1 through 3 only read; 4 onwards create real objects in the account and each prints what it made so it can be deleted. Workflow 10 is no longer blocked on an input: pass `--workbook` and the path to the filled template named above, which lives outside this repository.
+2. **`impact/readme.md` JSON blocks.** The five above. Re-checked 2026-09-21, still five, at those exact lines.
+3. **The wiki's Code Examples page**, in the separate `api.wiki` repository. An earlier draft of this list said it points at the seven old folders. It does not: it links to `sampleCode` generically, and that link is still correct. What is stale is the note under it, which is dated 2025/08, calls C# and Python the primarily supported languages, calls R limited, and lists Java. R is now a full peer of the other two, and there is no Java sample in this repository.
+4. **Delete `sampleCode/R/creds.json`.** Checked 2026-09-21: both fields hold empty strings, so it is an empty stub and nothing is lost. It is gitignored either way.
+
+### 16.7 Open questions
+
+- **Rate limits.** The wiki says Region Models is 5 per minute. Does that count region *reads* (children, user regions) or only *builds*? The bulk workflows currently throttle every request in the run to 5 per minute, which is safe and may be much slower than it needs to be.
+- **ImportEvents needs a workbook.** Workflow 10 uploads a filled IMPLAN Event Template. A valid one has to be made in Excel from IMPLAN's official blank template rather than generated, so the sample ships without one and explains where to get it. Should a filled `event_template.xlsx` be committed instead?
+- **The root Postman collection.** `IMPLAN-API.postman_collection.json` is hand-maintained and has 196 requests. Re-checked 2026-09-21: exactly one request carries a double-slash path, `Detail Economic Indicators Export`, whose URL reads `api/v1//impact/results/...`. Replacing it means choosing which generated collection, because `ui_api` holds several: the prod one has 149 requests, the INT one 161, and `External.Api/OpenApi` carries another at 181. Which, if any?
+
+- **A filled Event Template for the repository.** Timothy has four US 528 templates in `Documents\IMPLAN`; three are blank and one, `Event Template V25.3_US 528_UR Visitor and Student Spending.xlsx`, holds 16 Industry events with Event Name, Specification, and Output, and empty Groups and Group Events sheets. It is good enough to verify workflow 10 locally by passing `--workbook`, but it is named for a specific engagement and carries real event rows, so it should not be committed. Shipping one means making a small neutral workbook for the purpose.
+- **A leftover credentials file.** `sampleCode/R/creds.json` came from the old procedural R helper and was moved there when its folder was deleted. It is gitignored. Convert it to `.env` or delete it.
 
 ## Appendix A. Verification log
 

@@ -4,7 +4,7 @@ This document describes the basic IMPLAN workflow as it relates the IMPLAN's Imp
 
 ## Overview
 ### Authorization
-Please note that all API endpoint requests presented in this document require a bearer token. Please see the [authentication](https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication---retrieving-bearer-access-token) section of the ReadMe to review authentication steps.
+Please note that all API endpoint requests presented in this document require a bearer token. Please see the wiki's [Authentication](https://github.com/Implan-Group/api/wiki/Authentication) page, or the [Authentication](https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication) section of the ReadMe, to review authentication steps. A token is valid for 24 hours and must be cached and reused.
 
 ### Domain References
 See the [Production Variables](https://github.com/Implan-Group/api/blob/main/impact/readme.md#production-variables) section of the ReadMe for information regarding the `{{api_domain}}` variables used in this document.
@@ -24,8 +24,10 @@ One or the other of the above identifiers are used for calls to build combined r
 
 ### Aggregation Schemes Endpoint (Get)
 As the region identifiers are specific to both Aggregation Scheme and Dataset, both need to be determined before finally pulling a specific region identifier. This endpoint will return a list of aggregation schemes available for use.
-For Canadian analyses, only aggregation schemes with a `MapCode` of `CAN` are valid. Also take note of the `HosueholdSetId`, as it will be required for creating a project later in the process.
-There is currently only one Household Set available to Canadian data.
+For Canadian analyses, only aggregation schemes with a `MapCode` of `CAN` are valid. Also take note of the scheme's `householdSetIds`, as one of them will be required for creating a project later in the process.
+Each Canadian Aggregation Scheme lists its own Household Sets, and the value differs by scheme, so read it from the scheme you chose rather than carrying one between them.
+
+Two Canadian industry vintages are in use. Scheme 12 (235 Unaggregated Canada) is the older one and appears in the example below; scheme 17 (236 Unaggregated Canada) is the newer. Resolve the scheme at runtime rather than hardcoding either, by taking the newest Industry Set with a `mapCode` of `CAN` and using the Unaggregated scheme built on it.
 #### Parameters
 * Bearer Token
 * IndustrySetId (optional filter)
@@ -65,8 +67,10 @@ Use the desired Aggregation Scheme Id with this endpoint to pull a list of avail
 * Data Set ID (Number)
 * Data Set Description (Text)
 * Default Data Set (Boolean - only 1 record in the list should be true)
+
+Dataset Ids belong to one Aggregation Scheme and are not ordered by year, so never carry an Id from one scheme to another and never assume the newest is last in the list. Read the list for the scheme you are using and take the entry flagged `isDefault`. The Ids and years below are one scheme's list at one point in time, shown to illustrate the shape of the response; IMPLAN publishes a new data year annually, so yours will differ.
 #### Sample Response
-```
+```json
 [
 	{
 		"id": 86,
@@ -188,7 +192,7 @@ Events represent the economic activity taking place and come in different forms.
   }
 * [Get Event (GET)](https://github.com/Implan-Group/api/tree/main/impact#create-event-post)
   * Gets the event specified by the `EventId`.
-* [Update Event (PUT)](https://github.com/Implan-Group/api/tree/main/impact#update-event-put)
+* [Update Event (PUT)](https://github.com/Implan-Group/api/tree/main/impact#update-events)
   * Updates the event specified by the `EventId`.
 * [Delete Event (DELETE)](https://github.com/Implan-Group/api/tree/main/impact#delete-event-delete)
   * Deletes the even specified by the `EventId`.
@@ -198,19 +202,24 @@ Groups represent the region and timeframe in which an event takes place. Use the
 * [Create Group (POST)](https://github.com/Implan-Group/api/tree/main/impact#create-group-post)
   * Creates a group that contains a reference to a project, a region, and to 1 or more events. Returns a group identifier `GroupId` (GUID).
   * Sample Body Request:
-  ```
+  ```json
   {
-    "ProjectId": "32cf4b69-1b04-443a-a450-cc88e18e6905",
-    "Title" : "Sample Group 1",
-    "HashId" : "5Oad9R1PbZ",
-    "DollarYear" : 2024,
-    "DatasetId" : 93,
-    "Scaling Factor": 1,
-    "groupEvents": [{
-            "eventId": "6741df0d-c26c-44cf-9992-8aab695efd91",
-            "scalingFactor": 1
-        }]
+    "projectId": "32cf4b69-1b04-443a-a450-cc88e18e6905",
+    "title": "Sample Group 1",
+    "hashId": "5Oad9R1PbZ",
+    "dollarYear": 2024,
+    "datasetId": 93,
+    "scalingFactor": 1,
+    "groupEvents": [
+      {
+        "eventId": "6741df0d-c26c-44cf-9992-8aab695efd91",
+        "scalingFactor": 1
+      }
+    ]
   }
+  ```
+  * The field is `scalingFactor`, one word and camelCase. `"Scaling Factor"` with a space is not a field this API defines
+  * Always set `dollarYear`. There is no server-side default, and a Group stored without one produces an impact run that never attaches to the project, which surfaces later as a `404` from the status endpoint rather than as an error here
 * [Get Group (GET)](https://github.com/Implan-Group/api/tree/main/impact#get-group-get)
   * Returns data on the group specified by the `GroupId`.
 * [Update Group (PUT)](https://github.com/Implan-Group/api/tree/main/impact#update-group-put)

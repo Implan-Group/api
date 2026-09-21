@@ -4,10 +4,12 @@
 
 
 ### 🗈 Notes
-- The document is a supplement to the [Main Impact Readme](https://github.com/Implan-Group/api/blob/main/impact/readme.md)
+- This document supplements the [Impact API wiki](https://github.com/Implan-Group/api/wiki), which is the current reference for every endpoint, and the [Main Impact Readme](https://github.com/Implan-Group/api/blob/main/impact/readme.md)
 - Additional workflows can be found in the [Workflows Directory](https://github.com/Implan-Group/api/tree/main/impact/workflows)
-- All API Endpoints require a valid JWT Bearer Token to be passed with each requrest ([JWT.IO](https://jwt.io/))
-	- Please see the [authentication](https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication---retrieving-bearer-access-token) section in the Readme to review authentication steps
+- Runnable versions of these workflows in C#, Python, and R are in [sampleCode](https://github.com/Implan-Group/api/tree/main/sampleCode)
+- All API Endpoints require a valid JWT Bearer Token to be passed with each request ([JWT.IO](https://jwt.io/))
+	- See the wiki's [Authentication](https://github.com/Implan-Group/api/wiki/Authentication) page, or the [Authentication](https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication) section of the Readme, to review authentication steps
+	- A token is valid for 24 hours and must be cached and reused. Requesting a new one on every call is unsupported and repeated requests in a short period can earn a temporary ban on the account
 - Variables required for Endpoint calls will appear inside of double-braces (`{{}}`) and they must be replaced with valid values before the Request is sent
 	- _e.g._ `{{api_domain}}` should be replaced with `https://api.implan.com/` for Public Production requests
 	- See the [Production Variables](https://github.com/Implan-Group/api/blob/main/impact/readme.md#production-variables) section of the Readme for more information
@@ -89,8 +91,12 @@
 ]
 ```
   - `id` (number): Dataset Identifier
-  - `description` (text): Description of the Dataset
-  - `isDefault` (boolean): Whether or not this Dataset is the default
+  - `description` (text): Description of the Dataset, which is usually the Data Year
+  - `isDefault` (boolean): Whether or not this Dataset is the default. Exactly one entry in the list carries it
+
+- Dataset Ids belong to one Aggregation Scheme and are not ordered by year. An Id taken from another scheme is either rejected or, worse, quietly resolves to a different year, so read the list for the scheme you are using rather than reusing an Id
+- Take the entry flagged `isDefault` rather than the first or the last one. The default is often last, so taking the first would select 2001
+- The Ids and years above are one scheme's list at one point in time. IMPLAN publishes a new data year annually, and which Dataset is the default moves with it
 
 ---
 ### Region Json
@@ -138,9 +144,10 @@
 - `provinceCode` (text, optional): If a Canadian Region, the Code for the Province
 - `m49Code` (text, optional): The M49 standard Code for this Region
 - `regionType` (text, optional): The Region's Type, one of:
-    - `country`, `state`, `msa`, `county`, `Congressional District`, `zipcode`
+    - `Country`, `State`, `Msa`, `County`, `CongressionalDistrict`, `Zipcode`
+    - These are the exact values the `regionTypeFilter` query parameter accepts. Read them from `GET {{api_domain}}api/v1/region/RegionTypes` rather than hardcoding them
 - `hasAccessibleChildren` (boolean): Whether or not this Region has other children Regions associated with it
-    - _e.g. A `state` has many `county` and `zipcode` children
+    - _e.g._ A `State` has many `County` and `Zipcode` children
 - `regionTypeDescription` (text): A further description of the `regionType`
 - `geoId` (text, optional): The first non-`null` value among `provinceCode`, `fipsCode`, or `m49Code` (in that order) (used internally)
 - `isMrioAllowed` (boolean): Whether or not the Region supports Multi-Region Input/Ouput  (MRIO) Analysis
@@ -160,12 +167,12 @@
 - Returns a `json`-array of Region Types
 ```json
 [
-    "Country",
-    "State",
-    "Msa",
-    "County",
-    "CongressionalDistrict",
-    "Zipcode"
+    "Country",
+    "State",
+    "Msa",
+    "County",
+    "CongressionalDistrict",
+    "Zipcode"
 ]
 ```
 
