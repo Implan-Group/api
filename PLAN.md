@@ -463,21 +463,45 @@ That second case is the common one, not an edge case. Timothy's own filled templ
 
 All three languages now branch three ways: no groups at all names the blank Groups sheet and points at the Create Group endpoint, groups with nothing attached names the blank Group Events sheet as before, and only the third prints the "ready to run" command. The first two now say plainly that the Project cannot be run yet.
 
-### 16.6 Still to do
+### 16.6 Postman, the readme JSON, the wiki, and a behavior check, done 2026-09-21
 
-1. **Live verification.** The only real gap left. Needs a `.env` in each folder. Workflows 1 through 3 only read; 4 onwards create real objects in the account and each prints what it made so it can be deleted. Workflow 10 is no longer blocked on an input: pass `--workbook` and the path to the filled template named above, which lives outside this repository.
-2. **`impact/readme.md` JSON blocks.** The five above. Re-checked 2026-09-21, still five, at those exact lines.
-3. **The wiki's Code Examples page**, in the separate `api.wiki` repository. An earlier draft of this list said it points at the seven old folders. It does not: it links to `sampleCode` generically, and that link is still correct. What is stale is the note under it, which is dated 2025/08, calls C# and Python the primarily supported languages, calls R limited, and lists Java. R is now a full peer of the other two, and there is no Java sample in this repository.
-4. **Delete `sampleCode/R/creds.json`.** Checked 2026-09-21: both fields hold empty strings, so it is an empty stub and nothing is lost. It is gitignored either way.
+Four items, all answered by Timothy on 2026-09-21.
 
-### 16.7 Open questions
+**The root Postman collection is now the generated one.** `IMPLAN-API.postman_collection.json` is a copy of `ui_api/UiApi/openapi/ImpactApi_version1.external.prod.postman_collection.json`, so it regenerates from the OpenAPI spec rather than being maintained by hand. The filename is unchanged, because `impact/readme.md` and `CLAUDE.md` both link to it.
 
-- **Rate limits.** The wiki says Region Models is 5 per minute. Does that count region *reads* (children, user regions) or only *builds*? The bulk workflows currently throttle every request in the run to 5 per minute, which is safe and may be much slower than it needs to be.
-- **ImportEvents needs a workbook.** Workflow 10 uploads a filled IMPLAN Event Template. A valid one has to be made in Excel from IMPLAN's official blank template rather than generated, so the sample ships without one and explains where to get it. Should a filled `event_template.xlsx` be committed instead?
-- **The root Postman collection.** `IMPLAN-API.postman_collection.json` is hand-maintained and has 196 requests. Re-checked 2026-09-21: exactly one request carries a double-slash path, `Detail Economic Indicators Export`, whose URL reads `api/v1//impact/results/...`. Replacing it means choosing which generated collection, because `ui_api` holds several: the prod one has 149 requests, the INT one 161, and `External.Api/OpenApi` carries another at 181. Which, if any?
+Prod was chosen over INT deliberately. The INT collection is a superset by twelve requests, all of them occupation exports that do not exist in production and would answer 404 for a customer. Regenerate from INT once those ship.
 
-- **A filled Event Template for the repository.** Timothy has four US 528 templates in `Documents\IMPLAN`; three are blank and one, `Event Template V25.3_US 528_UR Visitor and Student Spending.xlsx`, holds 16 Industry events with Event Name, Specification, and Output, and empty Groups and Group Events sheets. It is good enough to verify workflow 10 locally by passing `--workbook`, but it is named for a specific engagement and carries real event rows, so it should not be committed. Shipping one means making a small neutral workbook for the purpose.
-- **A leftover credentials file.** `sampleCode/R/creds.json` came from the old procedural R helper and was moved there when its folder was deleted. It is gitignored. Convert it to `.env` or delete it.
+Replacing it dropped the count from 196 to 149, and that loss is a gain: the hand-maintained file carried eleven Instant and six Batch requests, both families excluded from IMPLAN's public documentation by standing rule, and the generated one carries none. It also removes the one double-slash URL, in `Detail Economic Indicators Export`.
+
+**`impact/readme.md`'s JSON now parses.** Of the five blocks, three were genuinely broken and two were the documentation ellipsis convention, left alone to match how the workflow pages treat it. The three fixed: the Custom Aggregation Scheme request was riddled with non-breaking spaces and could not be copied out of the page at all, a Custom Industry Impact Analysis example was missing a comma between two properties, and the commodities example opened its fence on a bare property rather than a document, so it was wrapped in the object it belongs to. The repository now holds no non-breaking spaces anywhere under `impact/`.
+
+**The wiki's Code Examples page is corrected**, on branch `fix/PHX-16395-API-Update-Workflow-Examples` in `api.wiki`. The stale note is gone and a table of the three languages and their READMEs replaces it.
+
+`code/Code Example - Authentication.md` is corrected too. Four things were wrong with it, and only the first was the one originally spotted:
+
+- Its R snippet taught `RCurl` and `postForm`, contradicting the `httr2` sample a reader finds one click away. It is now `httr2`, and the request it builds was confirmed on R 4.6.1 through httr2's own accessors: a POST to `/api/auth` with a JSON body carrying lowercase `username` and `password`, without anything being sent.
+- Its R and Java snippets sent `Content-Type: text/plain` with a JSON body, while the C# and Python snippets on the same page correctly sent `application/json`. Whether the endpoint tolerates `text/plain` was never tested and does not matter: all four are consistent now.
+- Every snippet printed the token to the console, which is the exact opposite of what the samples teach. None of them do now.
+- The Java snippet set infinite timeouts through the old Unirest API. That call is gone.
+
+The page also gains a short closing section on the two rules that hold in every language: cache the token and reuse it, because it lasts 24 hours and re-authenticating on every call can earn a temporary ban, and never print or log it.
+
+The Java snippet stays. It is where the removed note's Java claim came from, and it is useful even though there is no Java sample folder.
+
+**R gained `check.R`**, 46 checks that run with no network and no credentials and exit non-zero on failure. Loading it parses every file in the folder, so it doubles as the parse check. It covers only what a code review cannot see: a filter that must repeat rather than join with commas, a one-element array that must not collapse to a scalar, the growth report's five arrays surviving as `[]`, a GET that keeps its body instead of becoming a POST, the token staying redacted, and an unknown response field still reading. The failure path was verified by deliberately breaking one expectation and confirming it reports expected against actual and exits 1. `CLAUDE.md` section 5 now names it as the one optional file, and records that C# and Python have no equivalent yet.
+
+**Not done, by decision.** The rate-limit refactor was declined as too deep for sample code. Timothy confirmed the five-per-minute Region Models limit applies to **builds, not reads**, so the bulk workflows throttle more than they need to. See 16.7.
+
+### 16.7 Still to do
+
+1. **Live verification.** The only real gap left. Needs a `.env` in each folder. Workflows 1 through 3 only read; 4 onwards create real objects in the account and each prints what it made so it can be deleted.
+2. **A filled Event Template for the repository.** Timothy is sourcing a better example. Until then workflow 10 runs by passing `--workbook` and a path, and his `Event Template V25.3_US 528_UR Visitor and Student Spending.xlsx` works for that; it is engagement-named with real rows and must not be committed.
+3. **Behavior checks for C# and Python**, matching `sampleCode/R/check.R`. Both languages compile and import, which is weaker evidence than it looks: all three R bugs passed a code review and none would have been caught by compiling.
+4. **Delete `sampleCode/R/creds.json`.** An empty stub, both fields blank.
+
+### 16.8 Open questions
+
+- **The rate-limit comments now overstate the limit.** Timothy confirmed on 2026-09-21 that the five-per-minute Region Models limit is on builds, not reads, and declined the refactor that would act on it. The code still throttles every request in workflows 8 and 9, which is harmless but slow, and more importantly the comments and the three READMEs still read as though reads are limited. That is a statement the samples make that is now known to be wrong. Correcting the wording without changing the behavior is a small edit whenever it is wanted.
 
 ## Appendix A. Verification log
 

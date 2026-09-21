@@ -120,6 +120,11 @@ Every language keeps the same three layers so a reader who knows one folder can 
 | Services (REST, auth, JSON, logging, polling) | `Services/` | `utilities/` | `utilities/` |
 | Workflows (one file per workflow) | `Workflows/` | `workflows/` | `workflows/` |
 | Configuration | `.env.example` | `.env.example` | `.env.example` |
+| Behavior check (optional) | none yet | none yet | `check.R` |
+
+The behavior check is the one optional file. It runs without a network or credentials and exits non-zero on failure, so it belongs at the folder root beside the entry point and the manifest. It is not a test suite for the API, and it should not grow into one. It covers only the places where the language or its libraries will quietly do something other than what this API needs, and where the result is a request that is accepted and wrong rather than one that fails: a filter that must repeat rather than join with commas, a one-element array that must not collapse to a scalar, filter arrays that must survive as `[]`, a GET that must keep its body without becoming a POST, a token that must never appear in output, and a response field the sample has never seen that must still read.
+
+Only R has one, written 2026-09-21 after running R for the first time turned up three bugs that reading the code had not. Parity would mean adding the equivalent to the other two, and that is worth doing rather than assuming C# and Python are safe because they compile and import.
 
 Naming: the workflow names are the same words in every language, spelled the way that language spells things. C# uses PascalCase files, classes, and methods; Python uses lower_snake_case modules and functions; R follows the tidyverse style guide with lower_snake_case files and functions. Inside each folder the code is written the way a native reader of that language expects, not as a transliteration of another language.
 

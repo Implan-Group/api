@@ -490,40 +490,40 @@ This endpoint will return commodity margins data in CSV format.
 
 ### Request
 ```json
-{  
-    "description": "{{Custom Aggregation Scheme Name}}",  
-    "industrysetid": {{IndustrySetId}},
-    "groups": [  
-        {  
-            "description": "{{Group Description}}",  
-            "sectors": [  
-                {  
-                    "description": "{{Sector Description}}",  
-                    "code": {{Industry Code grouped in this Sector}}
-                },  
-            ...
-                {  
-                    "description": "{{Sector Description}}",  
-                    "code": {{Industry Code grouped in this Sector}}
-                }
-            ]  
-        },  
-    ...
-     {  
-            "description": "{{Group Description}}",  
-            "sectors": [  
-                {  
-                    "description": "{{Sector Description}}",  
-                    "code": {{Industry Code grouped in this Sector}}
-                },  
-            ...
-                {  
-                    "description": "{{Sector Description}}",  
-                    "code": {{Industry Code grouped in this Sector}}
-                }
-            ]  
-        }  
-    ]  
+{
+    "description": "{{Custom Aggregation Scheme Name}}",
+    "industrysetid": {{IndustrySetId}},
+    "groups": [
+        {
+            "description": "{{Group Description}}",
+            "sectors": [
+                {
+                    "description": "{{Sector Description}}",
+                    "code": {{Industry Code grouped in this Sector}}
+                },
+                ...
+                {
+                    "description": "{{Sector Description}}",
+                    "code": {{Industry Code grouped in this Sector}}
+                }
+            ]
+        },
+        ...
+        {
+            "description": "{{Group Description}}",
+            "sectors": [
+                {
+                    "description": "{{Sector Description}}",
+                    "code": {{Industry Code grouped in this Sector}}
+                },
+                ...
+                {
+                    "description": "{{Sector Description}}",
+                    "code": {{Industry Code grouped in this Sector}}
+                }
+            ]
+        }
+    ]
 }
 ```
 
@@ -2227,7 +2227,7 @@ A list of specifications data containing the following fields:
     "IsSam": false,
     "SpendingPatternValueType": "IntermediateExpenditure",
     "SpendingPatternCommodities": null,
-    "Tags": ["Testing"]
+    "Tags": ["Testing"],
     "isLocalEmployeeCompensation": false
 }
 ```
@@ -2318,7 +2318,8 @@ A list of specifications data containing the following fields:
 ### Create Event - Requests w/Commodities
 - In order to specify your own commodity information, simply add an additional property to any of the above Spending Pattern Events in order to modify the commodities used for the Event
 ```json
-"SpendingPatternCommodities": [
+{
+    "SpendingPatternCommodities": [
         {
             "coefficient": 0.0006157221001664674,
             "commodityCode": 3001,
@@ -2346,6 +2347,7 @@ A list of specifications data containing the following fields:
             "commodityDescription": "US Postal delivery services"
         }
     ]
+}
 ```
 
 

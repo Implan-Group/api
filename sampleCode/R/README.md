@@ -188,6 +188,23 @@ run_workflow("run-impact-analysis", "--project-id", "00000000-0000-0000-0000-000
 0 success, 2 authentication, 3 the API refused the request, 4 a problem with the
 input or the account.
 
+## Check the sample without calling the API
+
+```bash
+Rscript check.R
+```
+
+This needs no network and no credentials. It loads every file, which makes it a
+full parse of the folder, then exercises the handful of places where R and its
+libraries will quietly do something other than what this API needs: a filter that
+has to repeat rather than join with commas, a one-element array that must not
+collapse to a scalar, the growth report's five arrays surviving as `[]`, a GET
+that keeps its body instead of turning into a POST, the bearer token staying
+redacted, and a response field the sample has never seen still being read.
+
+It exits 0 when everything passes and 1 otherwise, so it works in CI. Run it after
+changing anything under `utilities/` or `models/`.
+
 ## What you should see
 
 Each workflow narrates itself as numbered steps:
@@ -264,6 +281,7 @@ Two R-specific failures are worth naming:
 | `models/` | The request and response shapes, as constructor and reader functions. |
 | `utilities/` | Configuration, authentication, the HTTP client, logging, JSON. |
 | `data/` | Input files the bulk workflow reads. |
+| `check.R` | The behavior check described above. No network, no credentials. |
 
 `utilities/rest.R` is the piece worth reading if you are writing your own client.
 It holds the bearer token, the problem-details handling, the retry and backoff,
