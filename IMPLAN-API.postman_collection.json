@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "714c6df3-c756-4b14-aeda-a71c3cd9065d",
+    "_postman_id": "4c5f116a-6f96-47fc-a57d-6846112f5925",
     "name": "IMPLAN-API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "12725670"
@@ -1394,6 +1394,40 @@
               "response": []
             },
             {
+              "name": "Region Overview Industries - Europe",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/eur/:aggregationSchemeId/RegionOverviewIndustries?hashId=Yzaw1qvYVQ",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    "eur",
+                    ":aggregationSchemeId",
+                    "RegionOverviewIndustries"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "Yzaw1qvYVQ"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "19"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "Study Area Data General Information",
               "request": {
                 "method": "GET",
@@ -1528,6 +1562,40 @@
               "response": []
             },
             {
+              "name": "Study Area Data Industry Detail - Europe",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/eur/:aggregationSchemeId/StudyAreaDataIndustryDetail?hashId=Yzaw1qvYVQ",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    "eur",
+                    ":aggregationSchemeId",
+                    "StudyAreaDataIndustryDetail"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "Yzaw1qvYVQ"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "19"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "Industry Averages - US",
               "request": {
                 "method": "GET",
@@ -1622,6 +1690,40 @@
                     {
                       "key": "aggregationSchemeId",
                       "value": "13"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Industry Averages - Europe",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/industry-averages/eur?hashId=Yzaw1qvYVQ",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "industry-averages",
+                    "eur"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "Yzaw1qvYVQ"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "19"
                     }
                   ]
                 }
@@ -1759,6 +1861,41 @@
                     {
                       "key": "aggregationSchemeId",
                       "value": "13"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Study Area Data Institution Commodity Demand - Europe",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/study-area-data-institution-commodity-demand/eur?hashId=Yzaw1qvYVQ",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "study-area-data-institution-commodity-demand",
+                    "eur"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "Yzaw1qvYVQ",
+                      "description": "Required"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "19"
                     }
                   ]
                 }
@@ -2587,6 +2724,40 @@
                     {
                       "key": "aggregationSchemeId",
                       "value": "18"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Region Institution Industry Demand - Europe",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/eur/:aggregationSchemeId/region-institution-industry-demand?hashId=Yzaw1qvYVQ",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    "eur",
+                    ":aggregationSchemeId",
+                    "region-institution-industry-demand"
+                  ],
+                  "query": [
+                    {
+                      "key": "hashId",
+                      "value": "Yzaw1qvYVQ"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "19"
                     }
                   ]
                 }
@@ -6853,6 +7024,65 @@
                 "results",
                 "SummaryTaxes",
                 "intl",
+                ":impactRunId"
+              ],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2023"
+                },
+                {
+                  "key": "regions",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "impacts",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "groups",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "events",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "eventTags",
+                  "value": null,
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "impactRunId",
+                  "value": "{{impact_run_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Summary Taxes Export - Europe",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_domain}}api/v1/impact/results/SummaryTaxes/eur/:impactRunId?year=2023",
+              "host": [
+                "{{api_domain}}api"
+              ],
+              "path": [
+                "v1",
+                "impact",
+                "results",
+                "SummaryTaxes",
+                "eur",
                 ":impactRunId"
               ],
               "query": [
