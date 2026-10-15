@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "678c5741-caeb-4def-ba23-c4956b41f5cb",
+    "_postman_id": "714c6df3-c756-4b14-aeda-a71c3cd9065d",
     "name": "IMPLAN-API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "12725670"
@@ -2756,7 +2756,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"environmentReleaseString\": \"2023\",\r\n  \"industryCodes\": []  \r\n}",
+                  "raw": "{\r\n  \"environmentReleaseString\": \"2023\",\r\n  \"industryCodes\": [],\r\n  \"environmentalDataSpecificity\": \"National\"\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -2811,7 +2811,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"environmentReleaseString\": \"2023\",\r\n  \"industryCodes\": [],\r\n  \"environmentCategory\": \"Greenhouse Gases\"\r\n}",
+                  "raw": "{\r\n  \"environmentReleaseString\": \"2023\",\r\n  \"industryCodes\": [],\r\n  \"environmentCategory\": \"Greenhouse Gases\",\r\n  \"environmentalDataSpecificity\": \"National\"\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -2850,6 +2850,92 @@
                     {
                       "key": "aggregationSchemeId",
                       "value": "8"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Environment Greenhouse Gas Damages",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/greenhouse-gas-damages/:hashId?environmentalDataSpecificity=National",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "greenhouse-gas-damages",
+                    ":hashId"
+                  ],
+                  "query": [
+                    {
+                      "key": "industryCode",
+                      "value": "1",
+                      "disabled": true
+                    },
+                    {
+                      "key": "environmentalDataSpecificity",
+                      "value": "National"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "8"
+                    },
+                    {
+                      "key": "hashId",
+                      "value": "k4bKJzKyaO"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Environment Land Use Damages",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{api_domain}}api/v1/regions/export/:aggregationSchemeId/land-use-damages/:hashId?environmentalDataSpecificity=National",
+                  "host": [
+                    "{{api_domain}}api"
+                  ],
+                  "path": [
+                    "v1",
+                    "regions",
+                    "export",
+                    ":aggregationSchemeId",
+                    "land-use-damages",
+                    ":hashId"
+                  ],
+                  "query": [
+                    {
+                      "key": "industryCode",
+                      "value": "1",
+                      "disabled": true
+                    },
+                    {
+                      "key": "environmentalDataSpecificity",
+                      "value": "National"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "key": "aggregationSchemeId",
+                      "value": "8"
+                    },
+                    {
+                      "key": "hashId",
+                      "value": "k4bKJzKyaO"
                     }
                   ]
                 }
@@ -7171,7 +7257,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"dollarYear\": 2019,\r\n  \"environmentReleaseString\": \"2023\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null\r\n}",
+              "raw": "{\r\n  \"dollarYear\": 2019,\r\n  \"environmentReleaseString\": \"2023\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null,\r\n  \"environmentalDataSpecificity\": \"National\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -7210,7 +7296,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"dollarYear\": 2019,\r\n  \"environmentReleaseString\": \"2023\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null\r\n}",
+              "raw": "{\r\n  \"dollarYear\": 2019,\r\n  \"environmentReleaseString\": \"2023\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null,\r\n  \"environmentalDataSpecificity\": \"National\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -7249,7 +7335,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"dollarYear\": 2025,\r\n  \"environmentReleaseString\": \"2024\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null\r\n}",
+              "raw": "{\r\n  \"dollarYear\": 2025,\r\n  \"environmentReleaseString\": \"2024\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null,\r\n  \"environmentalDataSpecificity\": \"National\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -7288,7 +7374,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"dollarYear\": 2025,\r\n  \"environmentReleaseString\": \"2024\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null\r\n}",
+              "raw": "{\r\n  \"dollarYear\": 2025,\r\n  \"environmentReleaseString\": \"2024\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null,\r\n  \"environmentalDataSpecificity\": \"National\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -7327,7 +7413,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"dollarYear\": 2025,\r\n  \"environmentReleaseString\": \"2024\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null\r\n}",
+              "raw": "{\r\n  \"dollarYear\": 2025,\r\n  \"environmentReleaseString\": \"2024\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null,\r\n  \"environmentalDataSpecificity\": \"National\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -7366,7 +7452,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"dollarYear\": 2025,\r\n  \"environmentReleaseString\": \"2024\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null\r\n}",
+              "raw": "{\r\n  \"dollarYear\": 2025,\r\n  \"environmentReleaseString\": \"2024\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null,\r\n  \"environmentalDataSpecificity\": \"National\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -7405,7 +7491,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"dollarYear\": 2025,\r\n  \"environmentReleaseString\": \"2024\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null\r\n}",
+              "raw": "{\r\n  \"dollarYear\": 2025,\r\n  \"environmentReleaseString\": \"2024\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null,\r\n  \"environmentalDataSpecificity\": \"National\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -7444,7 +7530,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"dollarYear\": 2025,\r\n  \"environmentReleaseString\": \"2024\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null\r\n}",
+              "raw": "{\r\n  \"dollarYear\": 2025,\r\n  \"environmentReleaseString\": \"2024\",\r\n  \"environmentName\": null,\r\n  \"environmentCategories\": [],\r\n  \"industryCode\": null,\r\n  \"regions\": [],\r\n  \"impacts\": [],\r\n  \"groupNames\": [],\r\n  \"eventNames\": [],\r\n  \"eventTags\": [],\r\n  \"naicsAggregationSchemeId\": null,\r\n  \"environmentalDataSpecificity\": \"National\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
