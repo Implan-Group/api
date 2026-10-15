@@ -49,6 +49,11 @@ IMPACT_TYPES <- c(DIRECT = "Direct", INDIRECT = "Indirect", INDUCED = "Induced")
 # `year` overrides the dollar year the results are expressed in. Left unset, the
 # API uses your account's dollar-year preference, falling back to the current
 # calendar year, so the samples set it explicitly to keep runs reproducible.
+#
+# `regions` and `groups` take the names exactly as the reports print them in the
+# ModelName and GroupName columns, and those carry the data year in brackets:
+# "Oregon (2024)", not "Oregon". A value that matches nothing is a 400 naming it,
+# not an empty report.
 result_filters <- function(year = NULL,
                            regions = NULL,
                            impacts = NULL,

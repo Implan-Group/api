@@ -33,15 +33,16 @@ def get_impact_status(client: ApiClient, run_id: int) -> ImpactStatus:
 
     GET /api/v1/impact/status/{runId}  (wiki: Get Impact Status)
 
-    The body is a bare string. Anything other than `Complete` means not ready;
+    The body is a bare word such as `Complete`, sent as plain text rather than as
+    JSON, so it is read as text. Anything other than `Complete` means not ready;
     `Error` and `UserCancelled` mean it stopped and will not produce results.
 
-    A 404 is also terminal and means something specific: the run never attached to
-    a project. The usual cause is a Group saved without a dollar year. Retrying
-    does not help; fix the Group and run again.
+    A 404 means the run has no analyses. For a few seconds after a run starts
+    that is normal, because the analyses are still being created; see
+    `wait_for_impact`, which allows for it. A 404 that persists means the run
+    never attached to a project.
     """
-    raw = client.get_json(f"/api/v1/impact/status/{run_id}")
-    text = str(raw).strip().strip('"')
+    text = client.get_text(f"/api/v1/impact/status/{run_id}").strip().strip('"')
     try:
         return ImpactStatus(text)
     except ValueError:
@@ -70,29 +71,46 @@ def wait_for_impact(
 ) -> ImpactStatus:
     """Poll until an impact run finishes, and return its final status.
 
-    Raises on a terminal failure, on a 404 meaning the run never attached, and on a
-    run that has not finished inside `timeout_seconds`.
+    Raises on a terminal failure, on a 404 that outlasts the start-up window, and
+    on a run that has not finished inside `timeout_seconds`.
 
     Poll this endpoint and not the results endpoints. The status call is cheap; the
     results endpoints are not, and reading one before the run is complete produces
     an error that looks like a different problem.
+
+    Expect a 404 on the first poll. For a few seconds after a run starts its
+    analyses do not exist yet, and status answers 404 "No analyses exist" until
+    they do; on INT the window was under 20 seconds. So a 404 is treated as "not
+    registered yet" for the first `config.IMPACT_START_GRACE_SECONDS`, and only a
+    404 that persists past that is reported as a run that never attached.
     """
     logger = logging_setup.get_logger()
-    deadline = time.monotonic() + timeout_seconds
+    started = time.monotonic()
+    deadline = started + timeout_seconds
     last_status: ImpactStatus | None = None
+    said_not_registered = False
 
     while True:
         try:
             status = get_impact_status(client, run_id)
         except ImplanApiError as error:
-            if error.status_code == 404:
-                raise RuntimeError(
-                    f"Impact run {run_id} has no analyses, which means it never "
-                    f"attached to the project. The usual cause is a Group saved "
-                    f"without a dollar year. This is terminal: fix the Group and "
-                    f"run the Project again.\n{error.problem.describe()}"
-                ) from error
-            raise
+            if error.status_code != 404:
+                raise
+
+            if time.monotonic() - started < config.IMPACT_START_GRACE_SECONDS:
+                if not said_not_registered:
+                    logger.info("  run %s: starting, not registered yet", run_id)
+                    said_not_registered = True
+                time.sleep(poll_seconds)
+                continue
+
+            raise RuntimeError(
+                f"Impact run {run_id} still has no analyses after "
+                f"{config.IMPACT_START_GRACE_SECONDS} seconds, which means it never "
+                f"attached to the project. A common cause is a Group saved without a "
+                f"dollar year. This is terminal: fix the Group and run the Project "
+                f"again.\n{error.problem.describe()}"
+            ) from error
 
         if status != last_status:
             last_status = status

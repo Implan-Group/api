@@ -23,6 +23,9 @@ namespace Implan.ApiSamples.Workflows;
 ///   - Formats matter. A cell the blank template shows as <c>100%</c> means
 ///     <c>100%</c>, not <c>100</c>.
 ///   - Do not leave an event with no value, and do not leave a formula in a cell.
+///   - On the Groups sheet, a state's FIPS code is five digits: <c>41000</c> for
+///     Oregon, not the <c>41</c> the region endpoints report. A county is five
+///     digits either way, such as <c>41019</c>.
 ///   - Keep an import to about 500 events.
 ///
 /// A rejected template answers 400 with the validation detail, which is the useful
@@ -48,8 +51,10 @@ public static class ImportEventsWorkflow
 
     public static Project Run(string? workbookPath = null)
     {
-        // The filled template to upload. It is not shipped, because a valid workbook
-        // has to be made from IMPLAN's own blank template rather than generated.
+        // The filled template to upload. The one shipped here is IMPLAN's US 528
+        // blank with a fictional example filled in: five Industry events for a timber
+        // panel plant, a Group for Douglas County, Oregon and one for the whole state,
+        // and every event assigned to both. Pass --workbook to upload your own instead.
         var path = workbookPath ?? Path.Combine(Config.DataDirectory, "event_template.xlsx");
 
         // Step 1. Check the input before doing anything that creates an account object.
@@ -100,7 +105,8 @@ public static class ImportEventsWorkflow
             ConsoleLog.Info();
             ConsoleLog.Info("  Common causes: the wrong template for this Industry Set, a value");
             ConsoleLog.Info("  written as 100 where the template wants 100%, an event with no");
-            ConsoleLog.Info("  value at all, or a formula left in a cell.");
+            ConsoleLog.Info("  value at all, a formula left in a cell, or a state FIPS code written");
+            ConsoleLog.Info("  as 41 rather than 41000.");
             throw;
         }
 
@@ -193,9 +199,13 @@ public static class ImportEventsWorkflow
             "  2. Fill in the sheet for the event type you want. The Industry sheet is",
             "     the simplest: an Event Name, a Specification (the industry code), and",
             "     one value such as Output.",
-            "  3. Optionally fill the Groups sheet with a FIPS code and dollar year, and",
-            "     the Group Events sheet to assign events to groups.",
-            $"  4. Save it as {path}",
+            "  3. Optionally fill the Groups sheet with a FIPS code, data year, and",
+            "     dollar year, and the Group Events sheet to assign events to groups.",
+            "     A state's FIPS code is five digits, such as 41000 for Oregon.",
+            "  4. Check every other sheet is empty. A row left on any sheet is",
+            "     imported as an event, and the US 528 blank these samples were built",
+            "     from had a test row left on its Industry Spending Pattern sheet.",
+            $"  5. Save it as {path}",
             string.Empty,
             "Full instructions, including every column on every sheet:",
             "  https://support.implan.com/hc/en-us/articles/360040713754",

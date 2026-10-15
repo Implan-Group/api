@@ -24,12 +24,15 @@ run_impact <- function(client, project_id) {
 #
 # GET /api/v1/impact/status/{runId}  (wiki: Get Impact Status)
 #
-# The body is a bare string. Anything other than "Complete" means not ready;
+# The body is a bare word such as "Complete", sent as plain text rather than as
+# JSON. get_json() falls back to the trimmed text when a body is not JSON, which is
+# why reading it that way works. Anything other than "Complete" means not ready;
 # "Error" and "UserCancelled" mean it stopped and will not produce results.
 #
-# A 404 is also terminal and means something specific: the run never attached to
-# a project. The usual cause is a Group saved without a dollar year. Retrying
-# does not help; fix the Group and run again.
+# A 404 means the run has no analyses. For a few seconds after a run starts that
+# is normal, because the analyses are still being created; see wait_for_impact(),
+# which allows for it. A 404 that persists means the run never attached to a
+# project.
 get_impact_status <- function(client, run_id) {
   raw <- get_json(client, sprintf("/api/v1/impact/status/%s", run_id))
   text <- gsub('^"|"$', "", trimws(as.character(raw)))
@@ -57,39 +60,64 @@ cancel_impact <- function(client, run_id) {
 
 # Polls until an impact run finishes, and returns its final status.
 #
-# Stops on a terminal failure, on a 404 meaning the run never attached, and on a
-# run that has not finished inside `timeout_seconds`.
+# Stops on a terminal failure, on a 404 that outlasts the start-up window, and on
+# a run that has not finished inside `timeout_seconds`.
 #
 # Poll this endpoint and not the results endpoints. The status call is cheap; the
 # results endpoints are not, and reading one before the run is complete produces
 # an error that looks like a different problem.
+#
+# Expect a 404 on the first poll. For a few seconds after a run starts its
+# analyses do not exist yet, and status answers 404 "No analyses exist" until they
+# do; on INT the window was under 20 seconds. So a 404 is treated as "not
+# registered yet" for the first IMPACT_START_GRACE_SECONDS, and only a 404 that
+# persists past that is reported as a run that never attached.
 wait_for_impact <- function(client,
                             run_id,
                             timeout_seconds = IMPACT_TIMEOUT_SECONDS,
                             poll_seconds = IMPACT_POLL_SECONDS) {
-  deadline <- Sys.time() + timeout_seconds
+  started <- Sys.time()
+  deadline <- started + timeout_seconds
   last_status <- ""
+  said_not_registered <- FALSE
 
   repeat {
     status <- tryCatch(
       get_impact_status(client, run_id),
       implan_api_error = function(condition) {
-        if (condition$status == 404L) {
-          stop(
-            sprintf(
-              paste0(
-                "Impact run %s has no analyses, which means it never attached to the ",
-                "project. The usual cause is a Group saved without a dollar year. This ",
-                "is terminal: fix the Group and run the Project again.\n%s"
-              ),
-              run_id, describe(condition$problem)
-            ),
-            call. = FALSE
-          )
+        if (condition$status != 404L) {
+          stop(condition)
         }
-        stop(condition)
+
+        waited <- as.numeric(difftime(Sys.time(), started, units = "secs"))
+        if (waited < IMPACT_START_GRACE_SECONDS) {
+          # Not registered yet. NA tells the loop below to wait and ask again.
+          return(NA_character_)
+        }
+
+        stop(
+          sprintf(
+            paste0(
+              "Impact run %s still has no analyses after %d seconds, which means it ",
+              "never attached to the project. A common cause is a Group saved without ",
+              "a dollar year. This is terminal: fix the Group and run the Project ",
+              "again.\n%s"
+            ),
+            run_id, IMPACT_START_GRACE_SECONDS, describe(condition$problem)
+          ),
+          call. = FALSE
+        )
       }
     )
+
+    if (is.na(status)) {
+      if (!said_not_registered) {
+        log_info("  run %s: starting, not registered yet", run_id)
+        said_not_registered <- TRUE
+      }
+      Sys.sleep(poll_seconds)
+      next
+    }
 
     if (!identical(status, last_status)) {
       last_status <- status

@@ -500,7 +500,7 @@ Found while answering where `.env` has to live. To test that without reaching IM
 - **C#** blamed the credentials. RestSharp does not throw on a dead host; it returns a response with `ResponseStatus.Error` and a status of 0. The code only looked at the status, so it fell through to "Authentication failed. 0 Request failed" and exit 2, sending the reader to check a password that was fine.
 - **R** already got this right, because `httr2` reports a transport failure as its own condition and the sample turned it into `implan_transport_error`. It was mapped to the general exit 4, though.
 
-Fixed by giving the failure its own name and its own exit code in all three. Python gains `TransportError`, raised from `ApiClient._send` and from `fetch_new_token`. C# gains `ImplanTransportException`, raised when `ResponseStatus` is anything other than `Completed`, in `ApiClient.Execute` and `Auth.FetchNewToken`. All three entry points map it to **exit 5, the API could not be reached**, documented in the three READMEs. Python's README had never listed its exit codes and now does.
+Fixed by giving the failure its own name and its own exit code in all three. Python gains `TransportError`, raised from `ApiClient._send` and from `fetch_new_token`. C# gains `ImplanTransportException`, raised when `ResponseStatus` is anything other than `Completed`, in `ApiClient.Execute` and `Auth.FetchNewToken`. (That C# test was wrong, and the first live C# run showed it: see 16.6.3. It now tests for a status code of zero.) All three entry points map it to **exit 5, the API could not be reached**, documented in the three READMEs. Python's README had never listed its exit codes and now does.
 
 A separate code rather than reusing 4 because this is the one failure a scheduler should retry rather than escalate: 2, 3, and 4 need a person, and 5 usually just needs the network back.
 
@@ -510,12 +510,76 @@ Left as it was: R retries a transport failure before giving up (`retry_on_failur
 
 **What `.env` needs, established by test on the same day.** Each language reads `.env` only from its own folder, so `sampleCode/.env` is ignored by all three; a file at `sampleCode/Python/.env` is found. The root `.gitignore` covers `.env` at any depth, confirmed with `git check-ignore`. Values must be double-quoted: unquoted, Python's `python-dotenv` treats a space followed by `#` as the start of a comment and silently truncates the value, while R and C# keep it whole, so a password containing ` #` would fail from Python alone. Quoted, all three read the same value. The INT host, per `ui_api/Implan.OpenApi/readme.md`, is `https://api.int.implan.com`.
 
+### 16.6.2 First live runs, Python against INT, 2026-10-15
+
+The first time any sample has run against a real API. Python only, against `https://api.int.implan.com`, with Timothy's credentials in `sampleCode/Python/.env`. Each language folder holds its own `.env`; the folders are deliberately isolated, so a shared or parent-folder fallback was tried, rejected by Timothy, and removed the same day.
+
+| Workflow | Result |
+| --- | --- |
+| 1 Authentication | Passed. One sign-in; every later call, including a second run, reused the cached token |
+| 2 Identifiers | Passed for US (528, scheme 14, dataset 124), Canada (236, scheme 17, dataset 125), and International (51, scheme 18, dataset 126) |
+| 3 Regions | Passed: country, 51 states, 36 Oregon counties, one region by HashId |
+| 4 CombineRegions | Passed. Lane and Douglas built as one region, `New` then `Complete` |
+| 5 CreateProject | Passed. One project, two events, one group |
+| 7 RunImpactAnalysis | Failed on the first run, passed after the fix below. All five reports downloaded with real data, including Estimated Growth Percentage, so the gateway's handling of a JSON body on a GET is confirmed live |
+
+The log from those runs held 25 `Authorization` headers, all `<redacted>`, no `password` field, and no token-shaped string.
+
+**Two defects in workflow 7, both fixed.** Starting a run and polling its status 140 ms later gave a 404 "No analyses exist"; polling 18 seconds later gave 200 `Complete`. So:
+
+- **The start-up race, in all three languages.** For a few seconds after a run starts its analyses do not exist yet, and status answers 404. Every sample polled immediately and treated that first 404 as fatal, blaming a group with no dollar year when the group had one. All three now read a 404 as "not registered yet" for the first 60 seconds (`IMPACT_START_GRACE_SECONDS`, `Config.ImpactStartGrace`), and only a 404 that persists past that is reported as a run that never attached. The 60 seconds is a choice with headroom, not a measured limit; the observed window was under 20.
+- **Plain-text status, in Python only.** INT returns the status as `text/plain`, `Complete` with no quotes. Python parsed it as JSON and would have crashed on the first successful read. It now reads text. C# already read text, and R's JSON reader already fell back to text.
+
+The READMEs and `CLAUDE.md` said never to retry a 404 from status. Both now describe the start-up window instead.
+
+**Also found: a `NotBuilt` build status**, which the samples never documented. The warehouse query returns it for any region with no model, as `ISNULL(MAX(m.modelbuildstatus),'NotBuilt')` in `PostgresRegionCardServiceWarehouseContext.cs`, and most Oregon counties on INT report it. Harmless, because only `Complete` counts as built, but the samples said any other status "means waiting", which is wrong for `NotBuilt`: nothing is building. All three now list it and say so.
+
+**Objects created on INT, to delete after verification:**
+
+| Object | Identifier |
+| --- | --- |
+| Combined region `ImpactApi Sample - Combined Region - 20261015-083024` | hashId `xAnXElwlga`, userModelId 13189 |
+| Project `ImpactApi Sample - Create Project - 20261015-083221` | `573a1b7f-e297-42bc-b0c7-0a63595eed52`, impact runs 30533 and 30534 |
+
+### 16.6.3 All twelve workflows live, in all three languages, against INT, 2026-10-15
+
+Every workflow ran against `https://api.int.implan.com` in Python, C#, and R, and every one ends with exit 0. Each language uses its own `.env`, token cache, logs, and reports folder.
+
+| Workflow | Python | C# | R |
+| --- | --- | --- | --- |
+| 1 Authentication | Passed | Passed after fix B | Passed |
+| 2 Identifiers | Passed | Passed after fix B | Passed |
+| 3 Regions | Passed | Passed | Passed |
+| 4 CombineRegions | Passed | Passed | Passed |
+| 5 CreateProject | Passed | Passed | Passed |
+| 6 MultiEventToMultiGroup | Passed | Passed | Passed |
+| 7 RunImpactAnalysis | Passed (16.6.2), and on the imported template project | Passed | Passed after fix D |
+| 8 BulkFromCsv | Passed: 5 combined regions built, 6 runs complete | Passed: reused the 5 regions, 6 runs complete | Passed: reused the 5 regions, 6 runs complete |
+| 9 RegionalExports | Passed after fix E; rerun skips all 10; GAMS export too | Passed; rerun skips all 10 | Passed; rerun skips all 10 |
+| 10 ImportEvents | Passed with the shipped template; a bad template is rejected with exit 3 | Same, both ways | Same, both ways |
+| 11 MrioProject | Passed after fix F; Wisconsin shows Oregon's spillover | Passed | Passed |
+| 12 AdvancedEvents | Passed | Passed | Passed |
+
+Every log's `Authorization` headers are `<redacted>` (366 in Python, 237 in C#, 260 in R), with no `password` field and no token-shaped string.
+
+**Defects the live runs found, all fixed:**
+
+- **A. The shipped Event Template.** Workflow 10 now ships `data/event_template.xlsx`, an identical copy in each folder: IMPLAN's local V25.3 US 528 blank with a fictional timber panel plant filled in (five Industry events, a Douglas County group and an Oregon group, every event in both). It was filled by editing the sheet XML directly, because openpyxl drops the cached values of column C's array formulas, and those cached values are what the importer reads. Three things learned building it: a state's FIPS code in a template is five digits, `41000`, although the region endpoints report Oregon as `41`, which the importer rejects as "Invalid Region selected"; industry 127 is not marginable, and the external API does not say which industries are, so the template sets no Margins; and the "blank" carried a leftover test event, "SP small SP", on its Industry Spending Pattern sheet, which imports as a real event and was removed. A successful import returns no warnings at all, only a 400 shows them. The workflow comments, the missing-file help, and the READMEs now describe the shipped file, and Python's rejection hint no longer prints `100%%`.
+- **B. C# could not authenticate, and reported every API error as "could not reach the API".** Two bugs. RestSharp asks for JSON by default, and the auth endpoint answers that with the token as a JSON string, quotes included; C# then prefixed it again, cached `Bearer "Bearer …"`, and every call was a 401. `Auth.FetchNewToken` now unwraps a quoted body. And RestSharp's default `CalculateResponseStatus` sets `ResponseStatus.Error` for every status other than 2xx and 404, so the exit-5 test from 16.6.1 turned every 400, 401, and 409 into a transport error, and also skipped the 401 refresh. Both `ApiClient.Execute` and `Auth.FetchNewToken` now test for a status code of zero. Verified: a closed port still exits 5, and a 404 on a missing project exits 3.
+- **C. Not built is 409, not 400.** Workflow 9 treated a 400 from the export endpoints as "still building". The backend answers 409 "Model not built" (`ReportsController.cs:247` and `:288`), so a not-built region was reported as a generic failure. All three now branch on 409, and the new branch was exercised live in each by asking for counties nobody had built.
+- **D. R swallowed every API error from `get_json`, `post_json`, `put_json`, and `post_file`.** Lazy evaluation: `parse_json_response(perform_request(...))` first touched its argument inside `tryCatch(..., error = function(condition) "")`, so the request ran inside that `tryCatch`, and any error became an empty body and a NULL. Found when workflow 7's start-up 404 surfaced as "argument is of length zero". `parse_json_response` now forces its argument first, and `check.R` gained a check (46 PASS lines now), confirmed to fail against the old function. Every R error path depended on this; the R rejection of a bad template now prints the 400 and exits 3.
+- **E. Same as C, found first in Python.**
+- **F. The results `regions` filter needs the data year.** Workflow 11 filtered by `Oregon` and got a 400 "The following values are invalid: Oregon". The filter matches the report's ModelName column, `Oregon (2024)`, and `groups` likewise matches GroupName with the year (tested live: bare name 400, bracketed name 6 rows). All three now send `Oregon (2024)`, and the results-filter models document it.
+
+`CLAUDE.md` records B, C, D, and F as rules, and its workflow 10 spec now describes the shipped template.
+
+**Objects created on INT.** Timothy said leftovers on INT are fine. The runs created, across the three languages, about 30 projects, the six `ImpactApi Sample` combined regions and the `ImpactApi Sample - Bulk From CSV` folder that workflow 8 reuses, two more combined regions from workflow 4, and IMPLAN model builds for ten MSAs and nine Indiana counties.
+
 ### 16.7 Still to do
 
-1. **Live verification.** The only real gap left. Needs a `.env`, in the folder of the language being run. Workflows 1 through 3 only read; 4 onwards create real objects in the account and each prints what it made so it can be deleted.
-2. **A filled Event Template for the repository.** Timothy is sourcing a better example. Until then workflow 10 runs by passing `--workbook` and a path, and his `Event Template V25.3_US 528_UR Visitor and Student Spending.xlsx` works for that; it is engagement-named with real rows and must not be committed.
-3. **Behavior checks for C# and Python**, matching `sampleCode/R/check.R`. Both languages compile and import, which is weaker evidence than it looks: all three R bugs passed a code review and none would have been caught by compiling.
-4. **Delete `sampleCode/R/creds.json`.** An empty stub, both fields blank.
+1. **Behavior checks for C# and Python**, matching `sampleCode/R/check.R`. Both languages compile and import, which is weaker evidence than it looks: all three R bugs passed a code review and none would have been caught by compiling. The live runs made the point again: C#'s quoted token and its `ResponseStatus` test, and R's swallowed errors, all compiled and passed review.
+2. **Delete `sampleCode/R/creds.json`.** An empty stub, both fields blank.
+3. **Live runs against production.** Everything in 16.6.3 ran on INT. Production has not been run, and region build status differs between tiers.
 
 ### 16.8 Open questions
 

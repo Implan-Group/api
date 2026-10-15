@@ -80,6 +80,11 @@ public sealed class ImpactResultsExportRequest
 /// unset, the API uses your account's dollar-year preference, falling back to the
 /// current calendar year, so the samples set it explicitly to keep runs
 /// reproducible.
+///
+/// <see cref="Regions"/> and <see cref="Groups"/> take the names exactly as the
+/// reports print them in the ModelName and GroupName columns, and those carry the
+/// data year in brackets: <c>Oregon (2024)</c>, not <c>Oregon</c>. A value that
+/// matches nothing is a 400 naming it, not an empty report.
 /// </remarks>
 public sealed class ResultFilters
 {

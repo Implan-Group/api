@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text.Json;
 using RestSharp.Serializers.Json;
 
 namespace Implan.ApiSamples.Services;
@@ -109,8 +110,10 @@ public static class Auth
 
         var response = client.Execute(request);
 
-        // Nothing answered, so this says nothing about the credentials.
-        if (response.ResponseStatus != ResponseStatus.Completed)
+        // Nothing answered, so this says nothing about the credentials. A status
+        // of zero is the test, not ResponseStatus, which RestSharp also sets to
+        // Error for a refused password.
+        if (response.StatusCode == 0)
         {
             throw ImplanTransportException.FromResponse(Config.BaseUrl, response);
         }
@@ -118,6 +121,15 @@ public static class Auth
         if (response.StatusCode == HttpStatusCode.OK)
         {
             var token = (response.Content ?? string.Empty).Trim();
+
+            // RestSharp asks for JSON by default, and the API answers that with the
+            // token as a JSON string, quotes included. Unwrap it, or the quotes end
+            // up inside the Authorization header and every call is a 401.
+            if (token.StartsWith('"'))
+            {
+                token = (JsonSerializer.Deserialize<string>(token) ?? string.Empty).Trim();
+            }
+
             if (string.IsNullOrWhiteSpace(token))
                 throw new AuthenticationException("The auth endpoint returned an empty token.");
 

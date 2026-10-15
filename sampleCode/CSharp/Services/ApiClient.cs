@@ -374,10 +374,12 @@ public sealed class ApiClient
 
             ConsoleLog.LogExchange(_client, request, response, timer.Elapsed);
 
-            // Completed means an HTTP response came back, whatever its status.
-            // Anything else means nothing answered, so there are no problem
-            // details to read and no status to retry on.
-            if (response.ResponseStatus != ResponseStatus.Completed)
+            // A status code of zero means no HTTP response came back at all, so
+            // there are no problem details to read and no status to retry on.
+            // ResponseStatus cannot answer this: RestSharp sets it to Error for
+            // every status other than 2xx and 404, so a 401 or a 409 looks the
+            // same there as a dead host.
+            if (response.StatusCode == 0)
             {
                 throw ImplanTransportException.FromResponse(Config.BaseUrl, response);
             }

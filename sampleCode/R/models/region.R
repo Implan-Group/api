@@ -26,10 +26,19 @@ REGION_TYPES <- c(
 
 # Where a region's economic model is in the build process.
 #
-# A newly combined region starts at "New" and is only usable at "Complete".
-# Anything else means waiting, and "Error" means it will never finish.
+# Only "Complete" means the region can be used to run impacts.
+#
+# "NotBuilt" means no model exists and none has been asked for. Nothing is
+# building, so waiting will not change it; it moves only when a build is
+# requested, which is what Build and Return Regions and Combine Regions do.
+# "New" and "InProgress" mean a build is under way. "Error" means the build
+# failed and will not finish.
 MODEL_BUILD_STATUS <- c(
-  NEW = "New", IN_PROGRESS = "InProgress", COMPLETE = "Complete", ERROR = "Error"
+  NOT_BUILT = "NotBuilt",
+  NEW = "New",
+  IN_PROGRESS = "InProgress",
+  COMPLETE = "Complete",
+  ERROR = "Error"
 )
 
 

@@ -18,6 +18,9 @@
 #     has to have its method set again afterwards.
 #   - The bearer token must never appear when a request is printed or logged.
 #   - A response carrying a field this sample has never heard of must still read.
+#   - An API error has to reach the caller. R evaluates arguments lazily, so a
+#     request passed straight into a function that reads it inside a tryCatch
+#     runs inside that tryCatch, and the error is swallowed.
 #
 # Every one of those is invisible to a code review, which is why they are checked
 # here rather than trusted.
@@ -187,6 +190,23 @@ with_body <- build_request(
 )
 ok("a GET carrying a body stays a GET", httr2::req_get_method(with_body), "GET")
 ok("and the body is JSON", httr2::req_get_body_type(with_body), "json")
+
+
+cat("\n-- an API error is raised, not swallowed --\n")
+raised <- tryCatch(
+  {
+    parse_json_response(stop(implan_api_error(
+      "GET", "https://example.invalid/api/v1/impact/status/1",
+      structure(
+        list(status = 404L, title = "Not Found", detail = "", trace_id = NULL),
+        class = "implan_problem"
+      )
+    )))
+    "returned"
+  },
+  implan_api_error = function(condition) "raised"
+)
+ok("a failed request reaches the caller as implan_api_error", raised, "raised")
 
 
 cat("\n")

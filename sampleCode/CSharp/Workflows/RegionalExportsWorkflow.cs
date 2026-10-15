@@ -100,7 +100,7 @@ public static class RegionalExportsWorkflow
 
                 // These are IMPLAN regions rather than user regions, so the
                 // user-region endpoint does not see them. Give the queue time to
-                // work and let the download step treat a 400 as "still building".
+                // work and let the download step treat a 409 as "still building".
                 Thread.Sleep(TimeSpan.FromSeconds(30));
             }
         }
@@ -143,11 +143,11 @@ public static class RegionalExportsWorkflow
             }
             catch (ImplanApiException error)
             {
-                if (error.StatusCode == 400)
+                if (error.StatusCode == 409)
                 {
-                    // From these endpoints a 400 nearly always means the model is
-                    // still building rather than that the request was wrong.
-                    ConsoleLog.Info("  {0}: not ready yet (400); run again later", region.Description);
+                    // 409 "Model not built": the region has no finished model yet,
+                    // usually because the build requested above is still running.
+                    ConsoleLog.Info("  {0}: not built yet (409); run again later", region.Description);
                 }
                 else
                 {

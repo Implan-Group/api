@@ -17,6 +17,9 @@
 #   - Formats matter. A cell the blank template shows as 100% means 100%, not
 #     100.
 #   - Do not leave an event with no value, and do not leave a formula in a cell.
+#   - On the Groups sheet, a state's FIPS code is five digits: 41000 for Oregon,
+#     not the 41 the region endpoints report. A county is five digits either way,
+#     such as 41019.
 #   - Keep an import to about 500 events.
 #
 # A rejected template answers 400 with the validation detail, which is the useful
@@ -63,9 +66,13 @@ require_workbook <- function(path) {
     "  2. Fill in the sheet for the event type you want. The Industry sheet is",
     "     the simplest: an Event Name, a Specification (the industry code), and",
     "     one value such as Output.",
-    "  3. Optionally fill the Groups sheet with a FIPS code and dollar year, and",
-    "     the Group Events sheet to assign events to groups.",
-    sprintf("  4. Save it as %s", path),
+    "  3. Optionally fill the Groups sheet with a FIPS code, data year, and",
+    "     dollar year, and the Group Events sheet to assign events to groups.",
+    "     A state's FIPS code is five digits, such as 41000 for Oregon.",
+    "  4. Check every other sheet is empty. A row left on any sheet is",
+    "     imported as an event, and the US 528 blank these samples were built",
+    "     from had a test row left on its Industry Spending Pattern sheet.",
+    sprintf("  5. Save it as %s", path),
     "",
     "Full instructions, including every column on every sheet:",
     "  https://support.implan.com/hc/en-us/articles/360040713754"
@@ -76,8 +83,10 @@ require_workbook <- function(path) {
 
 
 import_events_workflow <- function(workbook = NULL) {
-  # The filled template to upload. It is not shipped, because a valid workbook
-  # has to be made from IMPLAN's own blank template rather than generated.
+  # The filled template to upload. The one shipped here is IMPLAN's US 528 blank
+  # with a fictional example filled in: five Industry events for a timber panel
+  # plant, a Group for Douglas County, Oregon and one for the whole state, and
+  # every event assigned to both. Pass --workbook to upload your own instead.
   path <- if (is.null(workbook)) {
     file.path(data_directory(), "event_template.xlsx")
   } else {
@@ -129,7 +138,8 @@ import_events_workflow <- function(workbook = NULL) {
         log_info("")
         log_info("  Common causes: the wrong template for this Industry Set, a value")
         log_info("  written as 100 where the template wants 100%, an event with no")
-        log_info("  value at all, or a formula left in a cell.")
+        log_info("  value at all, a formula left in a cell, or a state FIPS code written")
+        log_info("  as 41 rather than 41000.")
       }
       stop(condition)
     }

@@ -39,10 +39,16 @@ class RegionType(str, enum.Enum):
 class ModelBuildStatus(str, enum.Enum):
     """Where a region's economic model is in the build process.
 
-    A newly combined region starts at `NEW` and is only usable at `COMPLETE`.
-    Anything else means waiting, and `ERROR` means it will never finish.
+    Only `COMPLETE` means the region can be used to run impacts.
+
+    `NOT_BUILT` means no model exists and none has been asked for. Nothing is
+    building, so waiting will not change it; it moves only when a build is
+    requested, which is what Build and Return Regions and Combine Regions do.
+    `NEW` and `IN_PROGRESS` mean a build is under way. `ERROR` means the build
+    failed and will not finish.
     """
 
+    NOT_BUILT = "NotBuilt"
     NEW = "New"
     IN_PROGRESS = "InProgress"
     COMPLETE = "Complete"

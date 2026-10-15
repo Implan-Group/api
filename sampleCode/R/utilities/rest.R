@@ -310,7 +310,13 @@ delete_resource <- function(client, path) {
 
 # Returns the response as parsed JSON when it is JSON, and as trimmed text
 # otherwise.
+#
+# `force(resp)` has to come first. The callers pass `perform_request(...)`
+# straight in, and R evaluates arguments lazily, so without it the request would
+# first run inside the tryCatch below, which would turn every API error into an
+# empty body and a NULL return.
 parse_json_response <- function(resp) {
+  force(resp)
   body <- tryCatch(resp_body_string(resp), error = function(condition) "")
   if (!nzchar(trimws(body))) {
     return(NULL)

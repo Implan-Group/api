@@ -16,6 +16,9 @@ The template is strict, and the rules are worth knowing before you fill one in:
   - Formats matter. A cell the blank template shows as `100%` means `100%`, not
     `100`.
   - Do not leave an event with no value, and do not leave a formula in a cell.
+  - On the Groups sheet, a state's FIPS code is five digits: 41000 for Oregon,
+    not the 41 the region endpoints report. A county is five digits either way,
+    such as 41019.
   - Keep an import to about 500 events.
 
 A rejected template answers 400 with the validation detail, which is the useful
@@ -34,9 +37,10 @@ from models.reference import MapCode
 from utilities import auth, config, logging_setup
 from utilities.rest import ImplanApiError
 
-# The filled template to upload. This is not shipped, because a valid workbook has
-# to be made from IMPLAN's own blank template rather than generated; see the
-# message in `_require_workbook` for where to get one.
+# The filled template to upload. The one shipped here is IMPLAN's US 528 blank
+# with a fictional example filled in: five Industry events for a timber panel
+# plant, a Group for Douglas County, Oregon and one for the whole state, and every
+# event assigned to both. Pass --workbook to upload your own instead.
 DEFAULT_WORKBOOK = config.DATA_DIRECTORY / "event_template.xlsx"
 
 # Where to download the blank templates, by Industry Set.
@@ -69,9 +73,13 @@ def _require_workbook(path: Path) -> Path:
         "  2. Fill in the sheet for the event type you want. The Industry sheet is",
         "     the simplest: an Event Name, a Specification (the industry code), and",
         "     one value such as Output.",
-        "  3. Optionally fill the Groups sheet with a FIPS code and dollar year, and",
-        "     the Group Events sheet to assign events to groups.",
-        f"  4. Save it as {path}",
+        "  3. Optionally fill the Groups sheet with a FIPS code, data year, and",
+        "     dollar year, and the Group Events sheet to assign events to groups.",
+        "     A state's FIPS code is five digits, such as 41000 for Oregon.",
+        "  4. Check every other sheet is empty. A row left on any sheet is",
+        "     imported as an event, and the US 528 blank these samples were built",
+        "     from had a test row left on its Industry Spending Pattern sheet.",
+        f"  5. Save it as {path}",
         "",
         "Full instructions, including every column on every sheet:",
         "  https://support.implan.com/hc/en-us/articles/360040713754",
@@ -131,8 +139,9 @@ def run(workbook: Path | None = None) -> Project:
             logger.info("  %s", error.problem.describe())
             logger.info("")
             logger.info("  Common causes: the wrong template for this Industry Set,")
-            logger.info("  a value written as 100 where the template wants 100%%, an")
-            logger.info("  event with no value at all, or a formula left in a cell.")
+            logger.info("  a value written as 100 where the template wants 100%, an")
+            logger.info("  event with no value at all, a formula left in a cell, or")
+            logger.info("  a state FIPS code written as 41 rather than 41000.")
         raise
     logger.info("  accepted")
 

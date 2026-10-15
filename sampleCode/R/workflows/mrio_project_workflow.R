@@ -153,7 +153,12 @@ mrio_project_workflow <- function() {
   destination <- file.path(reports_directory(), sprintf("MRIO-%d", run_id))
 
   for (region in list(source_region, linked_region)) {
-    filters <- result_filters(year = dollar_year, regions = region$description)
+    # The filter matches the report's ModelName column, which carries the data
+    # year: "Oregon (2024)". The bare region name is rejected with a 400.
+    filters <- result_filters(
+      year = dollar_year,
+      regions = sprintf("%s (%s)", region$description, ids$dataset$description)
+    )
 
     # GET /api/v1/impact/results/SummaryEconomicIndicators/{runId}?regions=...
     # (wiki: Results - Summary Economic Indicators)

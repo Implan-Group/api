@@ -42,9 +42,9 @@ def get_export(
     GET /api/v1/regions/export/{aggregationSchemeId}/{exportName}?hashId=...
     (wiki: Regional Data Exports)
 
-    Pass either a `Region` or a `hash_id`. A 400 from one of these usually means
-    the region's model has not been built yet rather than that the request was
-    malformed, which is worth knowing before you go looking for a syntax error.
+    Pass either a `Region` or a `hash_id`. A 409 titled "Model not built" means
+    the region's model has not finished building, or was never requested, rather
+    than that the request was malformed. Build the region and ask again.
 
     `export_name` is the segment from the wiki page for the report you want, for
     example `RegionOverviewIndustries` or `study_area_data_industry_summary`.

@@ -65,6 +65,17 @@ public static class Config
 
     public static readonly TimeSpan ImpactTimeout = TimeSpan.FromMinutes(15);
     public static readonly TimeSpan ImpactPollInterval = TimeSpan.FromSeconds(15);
+
+    /// <summary>
+    /// How long a 404 from the status endpoint is read as "not registered yet".
+    /// </summary>
+    /// <remarks>
+    /// Right after a run starts, its status answers 404 until the run's analyses
+    /// have been created. Past this, a 404 is treated as a run that never attached.
+    /// On INT the window was under 20 seconds; a minute leaves room for a busier
+    /// server.
+    /// </remarks>
+    public static readonly TimeSpan ImpactStartGrace = TimeSpan.FromSeconds(60);
     public static readonly TimeSpan RegionBuildTimeout = TimeSpan.FromMinutes(10);
     public static readonly TimeSpan RegionBuildPollInterval = TimeSpan.FromSeconds(15);
 

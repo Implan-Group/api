@@ -62,6 +62,12 @@ TITLE_PREFIX: str = "ImpactApi Sample"
 # under one, so these are generous.
 IMPACT_TIMEOUT_SECONDS: int = 15 * 60
 IMPACT_POLL_SECONDS: int = 15
+
+# Right after a run starts, its status answers 404 until the run's analyses have
+# been created. This is how long a 404 is read as "not registered yet" before it
+# is treated as a run that never attached. On INT the window was under 20
+# seconds; a minute leaves room for a busier server.
+IMPACT_START_GRACE_SECONDS: int = 60
 REGION_BUILD_TIMEOUT_SECONDS: int = 10 * 60
 REGION_BUILD_POLL_SECONDS: int = 15
 

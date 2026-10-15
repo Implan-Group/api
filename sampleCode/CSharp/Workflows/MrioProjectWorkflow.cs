@@ -162,10 +162,12 @@ public static class MrioProjectWorkflow
 
         foreach (var region in new[] { source, linked })
         {
+            // The filter matches the report's ModelName column, which carries the data
+            // year: "Oregon (2024)". The bare region name is rejected with a 400.
             var filters = new ResultFilters
             {
                 Year = dollarYear,
-                Regions = [region.Description],
+                Regions = [$"{region.Description} ({ids.Dataset.Description})"],
             };
 
             // GET /api/v1/impact/results/SummaryEconomicIndicators/{runId}?regions=...

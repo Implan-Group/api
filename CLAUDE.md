@@ -21,9 +21,9 @@ A language folder that departs from one of these needs a comment saying why.
 **Endpoints and authentication**
 
 - Base URL is `https://api.implan.com`. Every endpoint is under `/api/v1/` except authentication.
-- Authenticate with `POST /api/auth` and a JSON body of lowercase `username` and `password`. The response body is the token, already prefixed with `Bearer `. Send it as the `Authorization` header on every other request.
+- Authenticate with `POST /api/auth` and a JSON body of lowercase `username` and `password`. The response body is the token, already prefixed with `Bearer `. Send it as the `Authorization` header on every other request. When the request accepts JSON, which RestSharp's does by default, the body is a JSON string with its quotes; unwrap it, or the quotes land in the header and every call is a 401.
 - Every language caches the token to a local file and reuses it; requesting a new token on every run is not acceptable, and repeated authentication requests can get an account throttled or banned. The pattern is: load the cached token if the file exists; verify it with one cheap call (`GET /api/v1/region/RegionTypes`); only if there is no file or the verification fails, post credentials, write the new token to the file, and continue. A token is valid for 24 hours. On a 401 mid-run, refresh once and retry the request once. The cache file is `implan_auth.jwt` next to the entry point and is gitignored (`*.jwt` is already in the root `.gitignore`). Never print or log the token. The reference implementation is Python's existing `AuthHelper` (`get_bearer_token`, `_validate_token`, `get_fresh_token`); the R procedural helper's `getImplanAuth` follows the same idea with a timestamp. C# has no cache today and must add one.
-- Credentials come from a `.env` file next to the entry point with two variables, `IMPLAN_USERNAME` and `IMPLAN_PASSWORD`. Same names in all three languages. `.env` is gitignored; each folder ships a `.env.example`.
+- Credentials come from a `.env` file next to the entry point with two variables, `IMPLAN_USERNAME` and `IMPLAN_PASSWORD`, plus the optional `IMPLAN_API_URL`. Same names in all three languages. Each language folder reads only its own `.env` and never looks outside its own folder: the folders are meant to stand alone, so do not add a shared or parent-folder fallback. Values are double-quoted, because unquoted, `python-dotenv` cuts a value at a space followed by `#` while the C# and R loaders do not. `.env` is gitignored at any depth; each folder ships a `.env.example`.
 
 **Identifiers are resolved at run time, never hardcoded**
 
@@ -39,17 +39,20 @@ A language folder that departs from one of these needs a comment saying why.
 - There is no public single-Industry-Set endpoint. Filter the list from `GET /api/v1/industry-sets` client side.
 - `GET /api/v1/impact/results/EstimatedGrowthPercentage/{runId}` requires a JSON body even though it is a GET. All five filter arrays (`regions`, `impacts`, `groupNames`, `eventNames`, `eventTags`) must be present; send `[]` for no filter. API Gateway forwards GET bodies. Comment this at the call site.
 - Groups must include `dollarYear`; the API has no default and a group without one produces a run that never attaches.
+- The `regions` and `groups` filters on the results endpoints match the ModelName and GroupName columns of the reports, which carry the data year in brackets: `Oregon (2024)`, not `Oregon`. A value that matches nothing is a 400 that names it, not an empty report.
 - Titles for projects, events, groups, and combined regions must be unique per user and must not contain `& | ; % * ? ! = ' " ^ #`. Samples use the prefix `ImpactApi Sample - ` plus a timestamp.
 
 **Waiting for the API**
 
-- Impact status: poll `GET /api/v1/impact/status/{runId}` every 15 to 30 seconds. `Complete` means proceed. `Error` and `UserCancelled` are terminal failures. A 404 means the run never attached and is also terminal. Give up after 15 minutes with a message that names the run id.
+- Impact status: poll `GET /api/v1/impact/status/{runId}` every 15 to 30 seconds. The body is plain text, such as `Complete`, not JSON, so read it as text. `Complete` means proceed. `Error` and `UserCancelled` are terminal failures. A 404 means the run has no analyses yet: that is expected for the first few seconds after a run starts, so wait through it for up to a minute, and only a 404 that persists past that is terminal, meaning the run never attached. Give up after 15 minutes with a message that names the run id.
 - Combined-region build: poll `GET /api/v1/region/user/{hashId}` (the single-region endpoint, not the list) every 15 seconds until `modelBuildStatus` is `Complete`; treat `Error` as terminal; give up after 10 minutes.
 - Respect the published throttles (Region Models 5 per minute, Industry Codes and Datasets 10 per minute, Batch 6 per minute). Bulk workflows sleep between calls and never issue one status request per region.
 
 **Errors**
 
 - Every non-2xx response carries RFC 9457 problem details. Read `title`, `detail`, `status`, and `traceId`, print them, and stop. Never continue past a failed request, and never let a failure surface as a null-reference or subscript error somewhere else.
+- A region with no finished model answers 409 "Model not built" from the regional export endpoints. Workflow 9 reads that as "still building".
+- "Nothing answered" is its own failure, exit 5. In C#, test for a status code of zero: RestSharp sets `ResponseStatus.Error` for every status other than 2xx and 404, so `ResponseStatus` cannot tell a dead host from a 401. In R, read a response into a variable before passing it to anything that reads it inside `tryCatch`; lazy evaluation otherwise runs the request inside that `tryCatch` and swallows the error. `check.R` guards the second.
 - Logging goes to the console and to a `logs/` file (gitignored). Request and response bodies are logged; the `Authorization` header is redacted.
 
 **Housekeeping**
@@ -80,7 +83,7 @@ Each language README has these sections in this order.
 1. **What this is.** Two sentences and a link to `sampleCode/README.md`.
 2. **Prerequisites.** The runtime or interpreter, the exact version verified, where to download it, and the one command that proves it is installed. Recommended editor with install link.
 3. **Install dependencies.** The exact command, and the manifest file it reads (the `.csproj` at the folder root, `requirements.txt`, or the R package list).
-4. **Configure.** Copy `.env.example` to `.env` and fill in the two variables. Say where the token cache and logs are written.
+4. **Configure.** Copy `.env.example` to `.env` and fill in the two variables, and say to keep the double quotes. Say where the token cache and logs are written.
 5. **Run.** One command per workflow, in list order, and how to pass a project id to the workflows that need one.
 6. **What you should see.** The console output shape for a successful run, and where exported CSV files land.
 7. **Troubleshooting.** What 401, 403, 409, 422, 429, and 503 mean from this API and what to do about each; the throttles; the user-regions list returning 503 for accounts with many custom schemes; and that a 503 from `POST /api/auth` usually means either the authentication service is briefly unavailable (wait a minute and retry) or API access has not been enabled on the account (contact the Customer Success Manager), as the IMPLAN Support article "How to Use the IMPLAN API with R: Obtaining Your API Token" explains.
@@ -305,7 +308,7 @@ Needs: token, ids, optional custom-region CSV. Produces: one CSV and one `.gms` 
 
 Goal: populate a project from the official IMPLAN Event Template workbook instead of one event call at a time. This is how analysts already move work from spreadsheets into IMPLAN Cloud, and the API accepts the same file.
 
-Steps: create an empty project with the workflow 5 code; upload the filled template that ships with the sample (`data/event_template_us528.xlsx`: two Industry Output events on the Industry sheet, each with an event tag; one group on the Groups sheet identified by FIPS code; the assignments on the Group Events sheet) as a multipart form upload in a field named `excelFile`; on a 400, print the validation details the API returns, because the template is strict about formats; read back the project's events and groups and print their ids. The template family must match the project's Industry Set (US 528, US 546, Canada 235 or 236, International); the sample downloads nothing, it ships the filled copy and links the blank ones.
+Steps: create an empty project with the workflow 5 code; upload the filled template that ships with the sample (`data/event_template.xlsx`, one identical copy per language folder: IMPLAN's V25.3 US 528 blank with a fictional timber panel plant filled in, five Industry events on the Industry sheet, each with an event tag; two groups on the Groups sheet identified by FIPS code, Douglas County `41019` and Oregon `41000`, since a state's FIPS code in a template is five digits; every event assigned to both on the Group Events sheet; and the test row the blank shipped on its Industry Spending Pattern sheet removed) as a multipart form upload in a field named `excelFile`; on a 400, print the validation details the API returns, because the template is strict about formats; read back the project's events and groups and print their ids. The template family must match the project's Industry Set (US 528, US 546, Canada 235 or 236, International); the sample downloads nothing, it ships the filled copy and links the blank ones.
 
 | Endpoint | Wiki page |
 | --- | --- |

@@ -26,12 +26,17 @@ public enum RegionType
 /// Where a region's economic model is in the build process.
 /// </summary>
 /// <remarks>
-/// A newly combined region starts at <c>New</c> and is only usable at
-/// <c>Complete</c>. Anything else means waiting, and <c>Error</c> means it will
-/// never finish.
+/// Only <c>Complete</c> means the region can be used to run impacts.
+///
+/// <c>NotBuilt</c> means no model exists and none has been asked for. Nothing is
+/// building, so waiting will not change it; it moves only when a build is
+/// requested, which is what Build and Return Regions and Combine Regions do.
+/// <c>New</c> and <c>InProgress</c> mean a build is under way. <c>Error</c> means
+/// the build failed and will not finish.
 /// </remarks>
 public static class ModelBuildStatus
 {
+    public const string NotBuilt = "NotBuilt";
     public const string New = "New";
     public const string InProgress = "InProgress";
     public const string Complete = "Complete";

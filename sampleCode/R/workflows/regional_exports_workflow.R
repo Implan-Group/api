@@ -53,7 +53,7 @@ ensure_built <- function(client, aggregation_scheme_id, unbuilt) {
 
     # These are IMPLAN regions rather than user regions, so the user-region
     # endpoint does not see them. Give the queue time to work and let the
-    # download step below treat a 400 as "still building".
+    # download step below treat a 409 as "still building".
     Sys.sleep(30)
   }
 
@@ -138,10 +138,10 @@ regional_exports_workflow <- function(region_type = "Msa",
       # (wiki: Regional Data Exports)
       get_export(client, ids$aggregation_scheme_id, export_name, region = region),
       implan_api_error = function(condition) {
-        if (condition$status == 400L) {
-          # From these endpoints a 400 nearly always means the model is still
-          # building rather than that the request was wrong.
-          log_info("  %s: not ready yet (400); run again later", region$description)
+        if (condition$status == 409L) {
+          # 409 "Model not built": the region has no finished model yet, usually
+          # because the build requested above is still running.
+          log_info("  %s: not built yet (409); run again later", region$description)
         } else {
           log_info("  %s: %s", region$description, describe(condition$problem))
         }

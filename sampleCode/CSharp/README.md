@@ -50,6 +50,9 @@ Copy the example file and fill in your IMPLAN username and password.
     copy .env.example .env        # Windows
     cp .env.example .env          # macOS, Linux
 
+Keep the double quotes around each value. Unquoted, the Python sample cuts a value
+short at a space followed by `#`, which would break a password containing one.
+
 `.env` is gitignored. It holds a working login, so treat it the way you would treat
 the password itself. A real environment variable of the same name wins over the
 file, which is how to supply credentials in CI without writing them to disk.
@@ -94,7 +97,7 @@ The extended workflows:
 
     dotnet run -- bulk-from-csv                # 8  builds from data/*.csv
     dotnet run -- regional-exports             # 9  ten MSAs by default
-    dotnet run -- import-events                # 10 needs a filled Event Template
+    dotnet run -- import-events                # 10 uploads data/event_template.xlsx
     dotnet run -- mrio-project                 # 11
     dotnet run -- advanced-events              # 12
 
@@ -107,7 +110,7 @@ Useful options:
 | `--region-type` | 9 | `Msa`, `County`, `State`, and so on |
 | `--export-name` | 9 | Any report from the wiki's Regional Data Exports section |
 | `--limit 0` | 9 | Process every region rather than the first ten |
-| `--workbook <path>` | 10 | Point at your filled Event Template |
+| `--workbook <path>` | 10 | Upload your own filled Event Template instead of the example |
 
 The process returns an exit code, so a scheduled job can tell what went wrong:
 0 success, 2 authentication, 3 the API refused the request, 4 a problem with the
@@ -156,8 +159,8 @@ identifies the exact request in IMPLAN's logs.
 | --- | --- | --- |
 | **401** | The token is missing or expired. | The client refreshes once and retries by itself. If it repeats, delete `implan_auth.jwt` and run `authentication`. |
 | **403** | Your subscription does not include the thing you asked for, or you do not have access to that project or region. | Check the `detail`. If it names Impact API, the entitlement is missing. |
-| **404** | The thing does not exist. From the impact status endpoint it means something more specific: the run never attached to a project, usually because a Group was saved without a dollar year. That is terminal; fix the Group and run again. | Check the id. Do not retry a 404 from status. |
-| **409** | A name is already taken, or an impact run has not finished. | The samples put a timestamp in every title to avoid the first. |
+| **404** | The thing does not exist. From the impact status endpoint it is expected for the first few seconds of a run, while the run's analyses are still being created, and the samples wait through it. A 404 that lasts more than a minute means the run never attached to a project, often because a Group was saved without a dollar year; that is terminal, so fix the Group and run again. | Check the id. Right after starting a run, poll again; past a minute, stop. |
+| **409** | A name is already taken, an impact run has not finished, or a region's model is not built yet ("Model not built"). | The samples put a timestamp in every title to avoid the first. For the last, build the region, wait for it, and ask again. |
 | **422** | The request is well formed but cannot be applied, for example an event type that is not valid in the project's Aggregation Scheme, or regions that nest inside one another. | Read the `detail`; it names the conflict. |
 | **429** | You have exceeded a rate limit. | The client honors `Retry-After` and backs off. The bulk workflows also throttle themselves. If you hit this repeatedly, slow down rather than retrying harder: sustained overuse can get an account temporarily banned. |
 | **503** from `POST /api/auth` | Either the authentication service is briefly unavailable, or API access has not been enabled on your account. | Wait a minute and try again. Repeat 503s point to the entitlement; ask your Customer Success Manager. |
@@ -186,7 +189,7 @@ SDK is older than .NET 10. `dotnet --list-sdks` shows what you have.
 | `Endpoints/` | One static class per section of the wiki, wrapping the API calls. |
 | `Models/` | The request and response shapes. |
 | `Services/` | Configuration, authentication, the HTTP client, logging, JSON. |
-| `data/` | Input files the bulk workflow reads, copied next to the executable on build. |
+| `data/` | Input files: the CSVs the bulk workflow reads, copied next to the executable on build, and the example Event Template. |
 
 `Services/ApiClient.cs` is the piece worth reading if you are writing your own
 client: it holds the bearer token, the problem-details handling, the retry and

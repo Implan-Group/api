@@ -71,7 +71,7 @@ def _ensure_built(
 
         # These are IMPLAN regions rather than user regions, so the user-region
         # endpoint does not see them. Give the queue time to work and let the
-        # download step below treat a 400 as "still building".
+        # download step below treat a 409 as "still building".
         time.sleep(30)
 
 
@@ -149,11 +149,11 @@ def run(
                 client, ids.aggregation_scheme_id, export_name, region=region
             )
         except ImplanApiError as error:
-            if error.status_code == 400:
-                # From these endpoints a 400 nearly always means the model is still
-                # building rather than that the request was wrong.
+            if error.status_code == 409:
+                # 409 "Model not built": the region has no finished model yet,
+                # usually because the build requested above is still running.
                 logger.info(
-                    "  %s: not ready yet (400); run again later", region.description
+                    "  %s: not built yet (409); run again later", region.description
                 )
             else:
                 logger.info("  %s: %s", region.description, error.problem.describe())

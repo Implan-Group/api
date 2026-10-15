@@ -181,9 +181,11 @@ def run() -> int:
     destination = config.REPORTS_DIRECTORY / f"MRIO-{run_id}"
 
     for region in (source, linked):
+        # The filter matches the report's ModelName column, which carries the data
+        # year: "Oregon (2024)". The bare region name is rejected with a 400.
         filters = ResultFilters(
             year=dollar_year,
-            regions=[region.description],
+            regions=[f"{region.description} ({ids.dataset.description})"],
         )
 
         # GET /api/v1/impact/results/SummaryEconomicIndicators/{runId}?regions=...
