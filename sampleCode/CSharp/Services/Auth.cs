@@ -109,6 +109,12 @@ public static class Auth
 
         var response = client.Execute(request);
 
+        // Nothing answered, so this says nothing about the credentials.
+        if (response.ResponseStatus != ResponseStatus.Completed)
+        {
+            throw ImplanTransportException.FromResponse(Config.BaseUrl, response);
+        }
+
         if (response.StatusCode == HttpStatusCode.OK)
         {
             var token = (response.Content ?? string.Empty).Trim();

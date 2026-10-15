@@ -186,7 +186,9 @@ run_workflow("run-impact-analysis", "--project-id", "00000000-0000-0000-0000-000
 
 `Rscript main.R` returns an exit code, so a scheduled job can tell what went wrong:
 0 success, 2 authentication, 3 the API refused the request, 4 a problem with the
-input or the account.
+input or the account, 5 the API could not be reached, 130 interrupted. Only 5 is
+worth retrying unattended; it means nothing answered, usually the network, a VPN,
+or a wrong `IMPLAN_API_URL`, rather than anything wrong with the request.
 
 ## Check the sample without calling the API
 

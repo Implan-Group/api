@@ -113,6 +113,25 @@ class ImplanApiError(RuntimeError):
         return self.problem.status
 
 
+class TransportError(RuntimeError):
+    """Raised when a request never reached the API at all.
+
+    This is a different failure from `ImplanApiError`, and it needs a different
+    fix. An API error means IMPLAN answered and said no, so the request or the
+    account is the problem. A transport error means nothing answered: the
+    network is down, a VPN is off, a proxy is in the way, or `IMPLAN_API_URL`
+    names a host that is not there. Reporting it as anything else sends people
+    to check their password when the cable is unplugged.
+    """
+
+    def __init__(self, base_url: str, cause: Exception) -> None:
+        super().__init__(
+            f"Could not reach {base_url}.\n{cause}\n"
+            "Check your network connection and IMPLAN_API_URL."
+        )
+        self.base_url = base_url
+
+
 class RateLimiter:
     """Keeps a category of requests under a published per-minute limit.
 
@@ -212,9 +231,16 @@ class ApiClient:
             prepared = self._session.prepare_request(request)
 
             started = datetime.datetime.now()
-            response = self._session.send(
-                prepared, timeout=config.REQUEST_TIMEOUT_SECONDS
-            )
+            try:
+                response = self._session.send(
+                    prepared, timeout=config.REQUEST_TIMEOUT_SECONDS
+                )
+            except requests.RequestException as error:
+                # No response at all, so there are no problem details to read
+                # and no status to retry on. Say plainly that the API was never
+                # reached rather than letting a stack trace explain it.
+                self._logger.debug("%s %s -> no response: %s", method, url, error)
+                raise TransportError(self.base_url, error) from error
             elapsed = datetime.datetime.now() - started
 
             logging_setup.log_exchange(prepared, response, elapsed)

@@ -288,7 +288,9 @@ run_workflow <- function(name, ...) {
 # Runs the command line and returns an exit code.
 #
 # 0 success, 2 authentication, 3 the API refused the request, 4 a problem with
-# the input or the account, so a scheduler or a CI job can tell what went wrong.
+# the input or the account, 5 the API could not be reached, so a scheduler or a
+# CI job can tell what went wrong, and in particular can tell a failure worth
+# retrying later (5) from one that needs a person (2, 3, 4).
 main <- function(arguments = commandArgs(trailingOnly = TRUE)) {
   options <- parse_arguments(arguments)
 
@@ -324,6 +326,15 @@ main <- function(arguments = commandArgs(trailingOnly = TRUE)) {
       log_info("")
       log_info("Full request and response detail: %s", log_file_path())
       3L
+    },
+    implan_transport_error = function(condition) {
+      # Nothing answered. This has to come before the general `error` handler,
+      # which would otherwise claim it, since tryCatch uses the first handler
+      # whose class matches.
+      log_info("")
+      log_info("Could not reach the API.")
+      log_info(conditionMessage(condition))
+      5L
     },
     error = function(condition) {
       # Everything the workflows raise deliberately: a missing input file, a

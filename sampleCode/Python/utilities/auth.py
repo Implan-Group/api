@@ -23,7 +23,7 @@ https://support.implan.com/hc/en-us/articles/48279952909467
 import requests
 
 from utilities import config, logging_setup
-from utilities.rest import ApiClient, ProblemDetails
+from utilities.rest import ApiClient, ProblemDetails, TransportError
 
 # A small, fast, always-available endpoint used only to answer "is this token still
 # good?". It returns a handful of strings, so verifying costs almost nothing.
@@ -79,11 +79,15 @@ def fetch_new_token() -> str:
     logger = logging_setup.get_logger()
 
     url = f"{config.BASE_URL}/api/auth"
-    response = requests.post(
-        url,
-        json={"username": username, "password": password},
-        timeout=config.REQUEST_TIMEOUT_SECONDS,
-    )
+    try:
+        response = requests.post(
+            url,
+            json={"username": username, "password": password},
+            timeout=config.REQUEST_TIMEOUT_SECONDS,
+        )
+    except requests.RequestException as error:
+        # Nothing answered, so this says nothing about the credentials.
+        raise TransportError(config.BASE_URL, error) from error
 
     if response.status_code == 200:
         response.encoding = "utf-8"

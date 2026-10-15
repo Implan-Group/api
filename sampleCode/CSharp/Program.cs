@@ -54,7 +54,9 @@ public static class Program
     /// </summary>
     /// <remarks>
     /// 0 success, 2 authentication, 3 the API refused the request, 4 a problem in
-    /// the input or the account, 130 interrupted.
+    /// the input or the account, 5 the API could not be reached, 130 interrupted.
+    /// A scheduler can use these to tell a failure worth retrying (5) from one
+    /// that needs a person (2, 3, 4).
     /// </remarks>
     public static int Main(string[] args)
     {
@@ -99,6 +101,15 @@ public static class Program
             ConsoleLog.Info();
             ConsoleLog.Info("Full request and response detail: {0}", ConsoleLog.LogFilePath);
             return 3;
+        }
+        catch (ImplanTransportException error)
+        {
+            // Nothing answered. Kept apart from the cases above because it is the
+            // one failure a scheduled job should retry later rather than fix.
+            ConsoleLog.Info();
+            ConsoleLog.Info("Could not reach the API.");
+            ConsoleLog.Info(error.Message);
+            return 5;
         }
         catch (Exception error) when (error is FileNotFoundException
                                           or KeyNotFoundException

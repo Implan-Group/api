@@ -23,7 +23,7 @@ from models.reference import MapCode
 from models.region import RegionType
 from utilities import config, logging_setup
 from utilities.auth import AuthenticationError
-from utilities.rest import ImplanApiError
+from utilities.rest import ImplanApiError, TransportError
 
 # Every workflow, in the order of the set. The key is what you type on the command
 # line; the description is what `--list` prints.
@@ -184,6 +184,13 @@ def _dispatch(args: argparse.Namespace) -> None:
 
 
 def main() -> int:
+    """Run the command line and return an exit code.
+
+    0 success, 2 authentication, 3 the API refused the request, 4 a problem
+    with the input or the account, 5 the API could not be reached, 130
+    interrupted. A scheduler can use these to tell a failure worth retrying (5)
+    from one that needs a person (2, 3, 4).
+    """
     parser = _build_parser()
     args = parser.parse_args()
 
@@ -211,6 +218,13 @@ def main() -> int:
         logger.info("")
         logger.info("Full request and response detail: %s", logging_setup.log_path())
         return 3
+    except TransportError as error:
+        # Nothing answered. Kept apart from the cases above because it is the
+        # one failure a scheduled job should retry later rather than fix.
+        logger.info("")
+        logger.info("Could not reach the API.")
+        logger.info("%s", error)
+        return 5
     except (FileNotFoundError, LookupError, ValueError, RuntimeError, TimeoutError) as error:
         logger.info("")
         logger.info("%s", error)

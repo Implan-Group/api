@@ -490,11 +490,29 @@ The Java snippet stays. It is where the removed note's Java claim came from, and
 
 **R gained `check.R`**, 46 checks that run with no network and no credentials and exit non-zero on failure. Loading it parses every file in the folder, so it doubles as the parse check. It covers only what a code review cannot see: a filter that must repeat rather than join with commas, a one-element array that must not collapse to a scalar, the growth report's five arrays surviving as `[]`, a GET that keeps its body instead of becoming a POST, the token staying redacted, and an unknown response field still reading. The failure path was verified by deliberately breaking one expectation and confirming it reports expected against actual and exits 1. `CLAUDE.md` section 5 now names it as the one optional file, and records that C# and Python have no equivalent yet.
 
-**Not done, by decision.** The rate-limit refactor was declined as too deep for sample code. Timothy confirmed the five-per-minute Region Models limit applies to **builds, not reads**, so the bulk workflows throttle more than they need to. See 16.7.
+**Not done, by decision.** The rate-limit refactor was declined as too deep for sample code. Timothy confirmed the five-per-minute Region Models limit applies to **builds, not reads**, so the bulk workflows throttle more than they need to. See 16.8.
+
+### 16.6.1 An unreachable API, and exit code 5, done 2026-10-15
+
+Found while answering where `.env` has to live. To test that without reaching IMPLAN, the test pointed `IMPLAN_API_URL` at a closed local port, which is also exactly what a wrong host, a dropped VPN, or no network looks like. Two of the three languages got it wrong:
+
+- **Python** never caught a connection failure. `requests` raised, nothing handled it, and the run ended in four stack traces with exit 1, which is not one of the documented codes.
+- **C#** blamed the credentials. RestSharp does not throw on a dead host; it returns a response with `ResponseStatus.Error` and a status of 0. The code only looked at the status, so it fell through to "Authentication failed. 0 Request failed" and exit 2, sending the reader to check a password that was fine.
+- **R** already got this right, because `httr2` reports a transport failure as its own condition and the sample turned it into `implan_transport_error`. It was mapped to the general exit 4, though.
+
+Fixed by giving the failure its own name and its own exit code in all three. Python gains `TransportError`, raised from `ApiClient._send` and from `fetch_new_token`. C# gains `ImplanTransportException`, raised when `ResponseStatus` is anything other than `Completed`, in `ApiClient.Execute` and `Auth.FetchNewToken`. All three entry points map it to **exit 5, the API could not be reached**, documented in the three READMEs. Python's README had never listed its exit codes and now does.
+
+A separate code rather than reusing 4 because this is the one failure a scheduler should retry rather than escalate: 2, 3, and 4 need a person, and 5 usually just needs the network back.
+
+Verified with the same closed-port test: all three print "Could not reach the API", name the host, suggest checking the network and `IMPLAN_API_URL`, and exit 5, with no traceback.
+
+Left as it was: R retries a transport failure before giving up (`retry_on_failure = TRUE`), and Python and C# do not. That predates this fix and is a behavioral difference, not a reporting one.
+
+**What `.env` needs, established by test on the same day.** Each language reads `.env` only from its own folder, so `sampleCode/.env` is ignored by all three; a file at `sampleCode/Python/.env` is found. The root `.gitignore` covers `.env` at any depth, confirmed with `git check-ignore`. Values must be double-quoted: unquoted, Python's `python-dotenv` treats a space followed by `#` as the start of a comment and silently truncates the value, while R and C# keep it whole, so a password containing ` #` would fail from Python alone. Quoted, all three read the same value. The INT host, per `ui_api/Implan.OpenApi/readme.md`, is `https://api.int.implan.com`.
 
 ### 16.7 Still to do
 
-1. **Live verification.** The only real gap left. Needs a `.env` in each folder. Workflows 1 through 3 only read; 4 onwards create real objects in the account and each prints what it made so it can be deleted.
+1. **Live verification.** The only real gap left. Needs a `.env`, in the folder of the language being run. Workflows 1 through 3 only read; 4 onwards create real objects in the account and each prints what it made so it can be deleted.
 2. **A filled Event Template for the repository.** Timothy is sourcing a better example. Until then workflow 10 runs by passing `--workbook` and a path, and his `Event Template V25.3_US 528_UR Visitor and Student Spending.xlsx` works for that; it is engagement-named with real rows and must not be committed.
 3. **Behavior checks for C# and Python**, matching `sampleCode/R/check.R`. Both languages compile and import, which is weaker evidence than it looks: all three R bugs passed a code review and none would have been caught by compiling.
 4. **Delete `sampleCode/R/creds.json`.** An empty stub, both fields blank.

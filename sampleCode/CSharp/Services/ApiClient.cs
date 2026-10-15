@@ -102,6 +102,40 @@ public sealed class ImplanApiException : Exception
 }
 
 /// <summary>
+/// Thrown when a request never reached the API at all.
+/// </summary>
+/// <remarks>
+/// A different failure from <see cref="ImplanApiException"/>, and it needs a
+/// different fix. An API error means IMPLAN answered and said no, so the request
+/// or the account is the problem. A transport error means nothing answered: the
+/// network is down, a VPN is off, a proxy is in the way, or <c>IMPLAN_API_URL</c>
+/// names a host that is not there. Reporting it as anything else sends people to
+/// check their password when the cable is unplugged.
+/// </remarks>
+public sealed class ImplanTransportException : Exception
+{
+    public ImplanTransportException(string baseUrl, string detail, Exception? inner)
+        : base(
+            $"Could not reach {baseUrl}.{Environment.NewLine}{detail}{Environment.NewLine}"
+            + "Check your network connection and IMPLAN_API_URL.",
+            inner)
+    {
+        BaseUrl = baseUrl;
+    }
+
+    public string BaseUrl { get; }
+
+    /// <summary>Builds the exception from a response that never completed.</summary>
+    public static ImplanTransportException FromResponse(string baseUrl, RestResponse response)
+    {
+        var detail = response.ErrorException?.Message
+                     ?? response.ErrorMessage
+                     ?? $"The request ended with status {response.ResponseStatus}.";
+        return new ImplanTransportException(baseUrl, detail, response.ErrorException);
+    }
+}
+
+/// <summary>
 /// A list of query parameters, allowing the same name more than once.
 /// </summary>
 /// <remarks>
@@ -339,6 +373,14 @@ public sealed class ApiClient
             timer.Stop();
 
             ConsoleLog.LogExchange(_client, request, response, timer.Elapsed);
+
+            // Completed means an HTTP response came back, whatever its status.
+            // Anything else means nothing answered, so there are no problem
+            // details to read and no status to retry on.
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                throw ImplanTransportException.FromResponse(Config.BaseUrl, response);
+            }
 
             if (response.IsSuccessful)
                 return response;
