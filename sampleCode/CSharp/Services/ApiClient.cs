@@ -253,7 +253,17 @@ public sealed class ApiClient
     private readonly Func<string>? _tokenRefresher;
     private readonly Random _jitter = new();
 
-    public ApiClient(Func<string> tokenProvider, Func<string>? tokenRefresher = null)
+    /// <summary>Builds a client that signs every request with the current token.</summary>
+    /// <param name="tokenProvider">Returns the bearer token to send.</param>
+    /// <param name="tokenRefresher">Fetches a new token after a 401, or null to never refresh.</param>
+    /// <param name="handler">
+    /// Replaces the network. Only the tests pass one, so they can answer requests
+    /// from a script; leave it null.
+    /// </param>
+    public ApiClient(
+        Func<string> tokenProvider,
+        Func<string>? tokenRefresher = null,
+        HttpMessageHandler? handler = null)
     {
         _tokenProvider = tokenProvider;
         _tokenRefresher = tokenRefresher;
@@ -265,6 +275,7 @@ public sealed class ApiClient
             // Errors are turned into ImplanApiException below, which carries the
             // problem details. Letting RestSharp throw first would lose them.
             ThrowOnAnyError = false,
+            ConfigureMessageHandler = handler is null ? null : _ => handler,
         };
 
         _client = new RestClient(options, configureSerialization: s => s.UseSystemTextJson(Json.Options));

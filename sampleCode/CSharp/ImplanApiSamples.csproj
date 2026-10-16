@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <!-- .NET 10 is the current release. Verified with SDK 10.0.400, 2026-09-16. -->
+        <!-- .NET 10 is the current release. Verified with SDK 10.0.402, 2026-10-16. -->
         <TargetFramework>net10.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
@@ -13,7 +13,16 @@
              living with. -->
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <InvariantGlobalization>true</InvariantGlobalization>
+        <!-- The test project lives in Tests/, inside this folder, so keep its
+             sources and build output out of this project. -->
+        <DefaultItemExcludes>$(DefaultItemExcludes);Tests/**</DefaultItemExcludes>
     </PropertyGroup>
+
+    <ItemGroup>
+        <!-- The tests reach a few internal members: the command-line parser, the
+             token clean-up, and the log-file override. -->
+        <InternalsVisibleTo Include="ImplanApiSamples.Tests"/>
+    </ItemGroup>
 
     <ItemGroup>
         <Using Include="System.Text.Json"/>

@@ -9,7 +9,7 @@ These samples show how the endpoints fit together; the wiki is the contract.
 
 ## Prerequisites
 
-- **Python 3.11 or newer.** Verified on 3.14.3, 2026-09-16.
+- **Python 3.14 or newer.** Verified on 3.14.8 and 3.15.0, 2026-10-16.
   Download it from [python.org/downloads](https://www.python.org/downloads/).
   Check what you have:
 
@@ -111,6 +111,28 @@ input or the account, 5 the API could not be reached, 130 interrupted. Only 5 is
 worth retrying unattended; it means nothing answered, usually the network, a VPN,
 or a wrong `IMPLAN_API_URL`, rather than anything wrong with the request.
 
+## Run the tests
+
+From this folder, with the virtual environment active:
+
+    python -m unittest
+
+The tests use the standard library's `unittest`, so there is nothing more to
+install. They need no network and no credentials: every request goes to a
+scripted `requests` transport adapter (`tests/support.py`), so the real client runs
+its retries, token refresh, logging, and error handling against answers that never
+leave the machine.
+
+They cover the places where Python, `requests`, or the sample's own plumbing could
+quietly do something other than what this API needs: a filter that has to repeat
+rather than join with commas, a one-element array that must stay an array, the
+growth report's five arrays surviving as `[]`, a GET that keeps its body, the bearer
+token staying out of the log, a response field the sample has never seen still
+being read, an error arriving with its problem details, a 401 refreshing the token
+once, a dead host reported as one (exit 5) rather than as an API error, and the
+plain-text impact status. Run them after changing anything under `utilities/` or
+`models/`.
+
 ## What you should see
 
 Each workflow narrates itself as numbered steps:
@@ -167,6 +189,13 @@ Rate limits, from the [wiki home page](https://github.com/Implan-Group/api/wiki)
 | Datasets | 10 per minute |
 | Region Models | 5 per minute |
 
+The Region Models limit counts model builds, such as combining regions or building
+an IMPLAN region's model. Reading regions and downloading exports do not count
+against it. The two bulk workflows, `bulk-from-csv` and `regional-exports`, hold
+every request to five a minute anyway. That is slower than the limit requires,
+which is why a run over thousands of regions takes hours, but it keeps them simple
+and safely inside the limit.
+
 A report whose first line looks like JSON rather than a header row means the run
 was not finished when it was read. `run-impact-analysis` checks for this in its
 last step.
@@ -180,6 +209,7 @@ last step.
 | `models/` | The request and response shapes, as dataclasses. |
 | `utilities/` | Configuration, authentication, the HTTP client, logging, JSON. |
 | `data/` | Input files: the CSVs the bulk workflow reads, and the example Event Template. |
+| `tests/` | The tests, run with `python -m unittest`. No network, no credentials. |
 
 `utilities/rest.py` is the piece worth reading if you are writing your own client:
 it holds the bearer token, the problem-details handling, the retry and backoff, and

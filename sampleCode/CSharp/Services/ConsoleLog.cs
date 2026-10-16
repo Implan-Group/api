@@ -45,6 +45,15 @@ public static class ConsoleLog
         }
     }
 
+    /// <summary>
+    /// Sends the log to another file. Only the tests call this, so they can read back
+    /// what was logged without writing into <c>logs/</c>.
+    /// </summary>
+    internal static void UseLogFile(string path)
+    {
+        _logFilePath = path;
+    }
+
     /// <summary>Writes one line of narration to the console.</summary>
     public static void Info(string message = "")
     {

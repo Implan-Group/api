@@ -69,7 +69,7 @@ get_region <- function(client, aggregation_scheme_id, dataset_id, hash_id_or_uri
 # Worth knowing for bulk work: every region in this response carries its own
 # `modelBuildStatus`, so one call tells you both which regions exist and which of
 # them are already built. There is no separate endpoint for that, and asking
-# region by region is what makes a bulk script trip the rate limit.
+# region by region turns one call into thousands.
 get_region_children <- function(client,
                                 aggregation_scheme_id,
                                 dataset_id,

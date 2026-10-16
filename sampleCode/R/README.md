@@ -9,8 +9,9 @@ These samples show how the endpoints fit together; the wiki is the contract.
 
 ## Prerequisites
 
-- **R 4.1 or newer.** The samples use the native pipe `|>` and the `\(x)` lambda
-  shorthand, both of which arrived in 4.1. Install it as described below.
+- **R 4.1 or newer.** Verified on 4.6.1, 2026-10-16. The samples use the native
+  pipe `|>` and the `\(x)` lambda shorthand, both of which arrived in 4.1. Install
+  it as described below.
 
 - **An IMPLAN subscription with API access.** The samples sign in with your normal
   IMPLAN credentials, but API access is a separate entitlement. If a login that
@@ -96,15 +97,14 @@ From this folder, once:
 Rscript packages.R
 ```
 
-That installs two packages from CRAN and nothing else:
+That installs four packages from CRAN and nothing else:
 
 | Package | What it does here |
 | --- | --- |
-| `httr2` | The HTTP client. The bearer token, the retries, the rate limiting, and the error handling all come from it. Version 1.2.0 or newer. |
-| `jsonlite` | Reading and writing JSON. |
-
-`curl` arrives with `httr2` and is used directly in one place, for the multipart
-upload in the ImportEvents workflow.
+| `httr2` | The HTTP client. The bearer token, the retries, the rate limiting, and the error handling all come from it. Version 1.3.0 or newer. |
+| `jsonlite` | Reading and writing JSON. Version 2.0.0 or newer. |
+| `curl` | Arrives with `httr2`, and is used directly in one place, for the multipart upload in the ImportEvents workflow. Version 8.0.0 or newer. |
+| `testthat` | Runs the tests. The workflows never load it. Version 3.3.2 or newer. |
 
 Reading the `.env` file, parsing the command line, and reading the CSV inputs are
 all done with base R, so there is less to install and less to read that is not
@@ -193,21 +193,28 @@ input or the account, 5 the API could not be reached, 130 interrupted. Only 5 is
 worth retrying unattended; it means nothing answered, usually the network, a VPN,
 or a wrong `IMPLAN_API_URL`, rather than anything wrong with the request.
 
-## Check the sample without calling the API
+## Run the tests
+
+From this folder:
 
 ```bash
-Rscript check.R
+Rscript -e "testthat::test_dir('tests/testthat')"
 ```
 
-This needs no network and no credentials. It loads every file, which makes it a
-full parse of the folder, then exercises the handful of places where R and its
-libraries will quietly do something other than what this API needs: a filter that
-has to repeat rather than join with commas, a one-element array that must not
-collapse to a scalar, the growth report's five arrays surviving as `[]`, a GET
-that keeps its body instead of turning into a POST, the bearer token staying
-redacted, and a response field the sample has never seen still being read.
+The tests use testthat, which `Rscript packages.R` installs. They need no network
+and no credentials: requests are answered by httr2's built-in response mocking.
+Loading them sources every file, which makes the run a full parse of the folder
+too.
 
-It exits 0 when everything passes and 1 otherwise, so it works in CI. Run it after
+They cover the places where R and its libraries will quietly do something other
+than what this API needs: a filter that has to repeat rather than join with commas,
+a one-element array that must not collapse to a scalar, the growth report's five
+arrays surviving as `[]`, a GET that keeps its body instead of turning into a POST,
+the bearer token staying out of the request and the log, a response field the
+sample has never seen still being read, an error arriving as `implan_api_error`
+with its problem details rather than as `NULL`, a 401 refreshing the token once, a
+dead host reported as one (exit 5), and the plain-text impact status. Retries are
+not covered: httr2's mocking answers before its retry loop runs. Run them after
 changing anything under `utilities/` or `models/`.
 
 ## What you should see
@@ -266,6 +273,13 @@ Rate limits, from the [wiki home page](https://github.com/Implan-Group/api/wiki)
 | Datasets | 10 per minute |
 | Region Models | 5 per minute |
 
+The Region Models limit counts model builds, such as combining regions or building
+an IMPLAN region's model. Reading regions and downloading exports do not count
+against it. The two bulk workflows, `bulk-from-csv` and `regional-exports`, hold
+every request to five a minute anyway. That is slower than the limit requires,
+which is why a run over thousands of regions takes hours, but it keeps them simple
+and safely inside the limit.
+
 A report whose first line looks like JSON rather than a header row means the run
 was not finished when it was read. `run-impact-analysis` checks for this in its
 last step.
@@ -286,7 +300,7 @@ Two R-specific failures are worth naming:
 | `models/` | The request and response shapes, as constructor and reader functions. |
 | `utilities/` | Configuration, authentication, the HTTP client, logging, JSON. |
 | `data/` | Input files: the CSVs the bulk workflow reads, and the example Event Template. |
-| `check.R` | The behavior check described above. No network, no credentials. |
+| `tests/` | The testthat tests, run as shown above. No network, no credentials. |
 
 `utilities/rest.R` is the piece worth reading if you are writing your own client.
 It holds the bearer token, the problem-details handling, the retry and backoff,

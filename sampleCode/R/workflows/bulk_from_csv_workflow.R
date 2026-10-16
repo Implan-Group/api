@@ -14,7 +14,9 @@
 #   - Reuse what already exists. Re-running finds the regions, the folder, and
 #     the projects it made last time instead of failing on duplicate names.
 #   - Throttle. httr2's rate limiter is switched on for this workflow, because a
-#     loop over hundreds of regions will otherwise earn a 429 and then a ban.
+#     burst of region builds will otherwise earn a 429 and then a ban. The
+#     published limit counts builds, but the throttle applies to every request,
+#     which is slower than the limit requires and keeps the script simple.
 #
 # Input files, all in `data/`:
 #
@@ -301,7 +303,7 @@ run_and_download <- function(client, project, label) {
 bulk_from_csv_workflow <- function() {
   client <- create_client()
 
-  # Bulk work needs the throttle. Without it, a few hundred region calls earn a
+  # Bulk work needs the throttle. Without it, a burst of region builds earns a
   # 429 and then a temporary ban.
   set_rate_limit(client, REGION_REQUESTS_PER_MINUTE)
 

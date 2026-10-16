@@ -10,7 +10,7 @@ These samples show how the endpoints fit together; the wiki is the contract.
 
 ## Prerequisites
 
-- **The .NET 10 SDK.** Verified on 10.0.400, 2026-09-16.
+- **The .NET 10 SDK.** Verified on 10.0.402, 2026-10-16.
   Download it from [dotnet.microsoft.com/download](https://dotnet.microsoft.com/download).
   Check what you have:
 
@@ -118,6 +118,34 @@ input or the account, 5 the API could not be reached, 130 interrupted. Only 5 is
 worth retrying unattended; it means nothing answered, usually the network, a VPN,
 or a wrong `IMPLAN_API_URL`, rather than anything wrong with the request.
 
+## Run the tests
+
+From this folder:
+
+    dotnet test --project Tests
+
+The tests are an xUnit v3 project in `Tests/`, part of `ImplanApiSamples.sln`, so
+Visual Studio and Rider list them in their test explorers too. xUnit v3 runs on
+Microsoft.Testing.Platform, and `global.json` in this folder switches `dotnet test`
+over to it, which the .NET 10 SDK requires.
+
+They need no network and no credentials: every request goes to a scripted
+`HttpMessageHandler`, which `ApiClient` accepts in place of the real one, so the
+client runs its own retries, token refresh, logging, and error handling against
+answers that never leave the machine.
+
+They cover the places where C#, System.Text.Json, RestSharp, or the sample's own
+plumbing could quietly do something other than what this API needs: a filter that
+has to repeat rather than join with commas, a one-element array that must stay an
+array, the growth report's five arrays surviving as `[]`, a GET that keeps its body,
+the bearer token staying out of the log, a response field the sample has never seen
+still being read, an error arriving with its problem details, a 401 refreshing the
+token once, a token that arrives as a quoted JSON string, and the plain-text impact
+status. They also cover the trap that matters most with RestSharp: it marks every
+status other than 2xx and 404 as a failed request, so a 409 must still arrive as an
+API error and not as "could not reach the API". Run them after changing anything
+under `Services/` or `Models/`.
+
 ## What you should see
 
 Each workflow narrates itself as numbered steps:
@@ -174,6 +202,13 @@ Rate limits, from the [wiki home page](https://github.com/Implan-Group/api/wiki)
 | Datasets | 10 per minute |
 | Region Models | 5 per minute |
 
+The Region Models limit counts model builds, such as combining regions or building
+an IMPLAN region's model. Reading regions and downloading exports do not count
+against it. The two bulk workflows, `bulk-from-csv` and `regional-exports`, hold
+every request to five a minute anyway. That is slower than the limit requires,
+which is why a run over thousands of regions takes hours, but it keeps them simple
+and safely inside the limit.
+
 A report whose first line looks like JSON rather than a header row means the run
 was not finished when it was read. `run-impact-analysis` checks for this in its
 last step.
@@ -190,6 +225,7 @@ SDK is older than .NET 10. `dotnet --list-sdks` shows what you have.
 | `Models/` | The request and response shapes. |
 | `Services/` | Configuration, authentication, the HTTP client, logging, JSON. |
 | `data/` | Input files: the CSVs the bulk workflow reads, copied next to the executable on build, and the example Event Template. |
+| `Tests/` | The xUnit tests, run with `dotnet test --project Tests`. No network, no credentials. |
 
 `Services/ApiClient.cs` is the piece worth reading if you are writing your own
 client: it holds the bearer token, the problem-details handling, the retry and

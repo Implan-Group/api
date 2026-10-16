@@ -6,8 +6,11 @@
 # library, including the camelCase-to-snake_case conversion and the filename
 # sanitizing that earlier versions pulled packages in for.
 
+# The floors are the current releases, the versions the samples were verified on.
+# The tests need nothing more: they use the standard library's unittest.
+
 # HTTP. The whole client layer in utilities/rest.py is built on this.
-requests>=2.32
+requests>=2.34
 
 # Reads the .env file holding your IMPLAN credentials.
-python-dotenv>=1.0
+python-dotenv>=1.2

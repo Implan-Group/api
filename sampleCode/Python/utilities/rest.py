@@ -173,6 +173,9 @@ class ApiClient:
 
     Build one of these with `utilities.auth.create_client()` rather than directly,
     so the token cache is wired up for you.
+
+    `session` is for the tests, which pass a `requests.Session` with a scripted
+    transport adapter mounted, so no request leaves the machine. Leave it out.
     """
 
     def __init__(
@@ -180,11 +183,12 @@ class ApiClient:
         token_provider: Callable[[], str],
         token_refresher: Callable[[], str] | None = None,
         base_url: str = config.BASE_URL,
+        session: requests.Session | None = None,
     ) -> None:
         self._token_provider = token_provider
         self._token_refresher = token_refresher
         self.base_url = base_url.rstrip("/")
-        self._session = requests.Session()
+        self._session = session or requests.Session()
         self._logger = logging_setup.get_logger()
         # Set by the bulk workflows; `None` means no client-side throttling.
         self.rate_limiter: RateLimiter | None = None

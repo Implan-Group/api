@@ -12,8 +12,9 @@
 #
 # "Complete" is the only one that means results can be read. "Error" and
 # "UserCancelled" are terminal failures: polling past them waits forever. A 404
-# from the status endpoint is also terminal, and means the run never attached to
-# a project, most often because a group was saved without a dollar year.
+# from the status endpoint is expected for the first few seconds of a run; one
+# that lasts past a minute is terminal, and means the run never attached to a
+# project, most often because a group was saved without a dollar year.
 IMPACT_STATUSES <- c(
   UNKNOWN = "Unknown",
   NEW = "New",

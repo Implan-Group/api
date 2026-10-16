@@ -8,17 +8,22 @@
 # MSA, or every county in a state, is common.
 #
 # The naive version of this asks each region for its status, then downloads. That
-# is one extra call per region, which for three thousand counties is hours of
-# waiting under the published five-region-model-requests-per-minute limit. It is
-# also unnecessary: the children listing already carries `modelBuildStatus` for
-# every region it returns, so one call gives both the list and which of them are
-# ready.
+# is one extra call per region, three thousand for every county in the country,
+# and it is unnecessary: the children listing already carries `modelBuildStatus`
+# for every region it returns, so one call gives both the list and which of them
+# are ready.
 #
 # So the shape here is:
 #
 #   1. One children call: every region, with its build status.
 #   2. One build-and-return call for whichever are not built, then wait.
 #   3. Download, skipping any file already on disk so a re-run resumes.
+#
+# On the rate limit: the published five-per-minute Region Models limit counts
+# model builds, which step 2 makes. Listing regions and downloading exports do not
+# count against it. This workflow holds every request to five a minute anyway,
+# which is simple and safely inside the limit, and is why a run over thousands of
+# regions takes hours.
 #
 # The export is a parameter. RegionOverviewIndustries and the single-file GAMS
 # export are named for convenience, but any report from the wiki's Regional Data
@@ -64,8 +69,8 @@ ensure_built <- function(client, aggregation_scheme_id, unbuilt) {
 # Downloads one export for every region of a type.
 #
 # `limit` caps how many regions are processed, which keeps a first run short.
-# Pass NULL to process all of them, and expect it to take a while: the rate
-# limit, not the API's speed, sets the pace.
+# Pass NULL to process all of them, and expect it to take a while: the
+# client-side throttle, not the API's speed, sets the pace.
 regional_exports_workflow <- function(region_type = "Msa",
                                       export_name = REGION_OVERVIEW_INDUSTRIES,
                                       limit = 10) {
@@ -76,8 +81,8 @@ regional_exports_workflow <- function(region_type = "Msa",
   log_heading("Step 1: resolve the identifiers")
   ids <- resolve_identifiers(client, MAP_CODES[["US"]])
 
-  # Step 2. One call for the list and the build status together. This is the step
-  # that keeps the workflow inside the rate limit.
+  # Step 2. One call for the list and the build status together, rather than one
+  # status call per region.
   log_heading("Step 2: list the regions, with their build status")
 
   # GET /api/v1/region/{aggregationSchemeId}/{datasetId}/children?regionTypeFilter=...

@@ -8,9 +8,8 @@ project and no impact run, only a built region. Wanting one for every MSA, or ev
 county in a state, is common.
 
 The naive version of this asks each region for its status, then downloads. That is
-one extra call per region, which for three thousand counties is hours of waiting
-under the published five-region-model-requests-per-minute limit. It is also
-unnecessary: the children listing already carries `modelBuildStatus` for every
+one extra call per region, three thousand for every county in the country, and it
+is unnecessary: the children listing already carries `modelBuildStatus` for every
 region it returns, so one call gives both the list and which of them are ready.
 
 So the shape here is:
@@ -18,6 +17,12 @@ So the shape here is:
   1. One children call: every region, with its build status.
   2. One build-and-return call for whichever are not built, then wait.
   3. Download, skipping any file already on disk so a re-run resumes.
+
+On the rate limit: the published five-per-minute Region Models limit counts model
+builds, which step 2 makes. Listing regions and downloading exports do not count
+against it. This workflow holds every request to five a minute anyway, which is
+simple and safely inside the limit, and is why a run over thousands of regions
+takes hours.
 
 The export is a parameter. `RegionOverviewIndustries` and the single-file GAMS
 export are named for convenience, but any report from the wiki's Regional Data
@@ -36,6 +41,8 @@ from models.region import Region, RegionType
 from utilities import auth, config, logging_setup
 from utilities.rest import ApiClient, ImplanApiError, RateLimiter
 
+# The published Region Models limit. It counts builds, but every request here is
+# held to it; see the note on the rate limit above.
 REGION_REQUESTS_PER_MINUTE = 5
 
 # How many regions to ask for in one build-and-return call.
@@ -83,8 +90,8 @@ def run(
     """Download one export for every region of a type.
 
     `limit` caps how many regions are processed, which keeps a first run short.
-    Pass `None` to process all of them, and expect it to take a while: the rate
-    limit, not the API's speed, sets the pace.
+    Pass `None` to process all of them, and expect it to take a while: the
+    client-side throttle, not the API's speed, sets the pace.
     """
     logger = logging_setup.get_logger()
     client = auth.create_client()
@@ -94,8 +101,8 @@ def run(
     logging_setup.heading("Step 1: resolve the identifiers")
     ids = identifiers.resolve(client, MapCode.US)
 
-    # Step 2. One call for the list and the build status together. This is the
-    # step that keeps the workflow inside the rate limit.
+    # Step 2. One call for the list and the build status together, rather than one
+    # status call per region.
     logging_setup.heading("Step 2: list the regions, with their build status")
 
     # GET /api/v1/region/{aggregationSchemeId}/{datasetId}/children?regionTypeFilter=...

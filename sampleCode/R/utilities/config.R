@@ -124,10 +124,10 @@ REGION_BUILD_POLL_SECONDS <- 15
 REQUEST_TIMEOUT_SECONDS <- 60
 
 
-# Region model requests are the most tightly limited family of endpoints, so the
-# two bulk workflows stay under the published five per minute. The other limits,
-# ten per minute for Industry Codes and for Datasets, are not reached by any
-# workflow here.
+# The published Region Models limit, five a minute. It counts model builds, not
+# reads, but the two bulk workflows hold every request to that rate: slower than
+# needed, and safely inside the limit. The other limits, ten per minute for
+# Industry Codes and for Datasets, are not reached by any workflow here.
 #
 # Limits are on the wiki home page: https://github.com/Implan-Group/api/wiki
 REGION_REQUESTS_PER_MINUTE <- 5

@@ -95,8 +95,8 @@ public static class Auth
     ///
     /// The request body is a JSON object with lowercase <c>username</c> and
     /// <c>password</c>. The response body is the token, already carrying its
-    /// <c>Bearer </c> prefix, so it goes into the <c>Authorization</c> header
-    /// exactly as received.
+    /// <c>Bearer </c> prefix, so it goes into the <c>Authorization</c> header as
+    /// received once <see cref="NormalizeToken"/> has taken off any JSON quotes.
     /// </remarks>
     public static string FetchNewToken()
     {
@@ -120,23 +120,9 @@ public static class Auth
 
         if (response.StatusCode == HttpStatusCode.OK)
         {
-            var token = (response.Content ?? string.Empty).Trim();
-
-            // RestSharp asks for JSON by default, and the API answers that with the
-            // token as a JSON string, quotes included. Unwrap it, or the quotes end
-            // up inside the Authorization header and every call is a 401.
-            if (token.StartsWith('"'))
-            {
-                token = (JsonSerializer.Deserialize<string>(token) ?? string.Empty).Trim();
-            }
-
-            if (string.IsNullOrWhiteSpace(token))
+            var token = NormalizeToken(response.Content);
+            if (token.Length == 0)
                 throw new AuthenticationException("The auth endpoint returned an empty token.");
-
-            // The API already prefixes the token, but a proxy that trimmed it would
-            // produce a confusing 401 later, so make sure of it here.
-            if (!token.StartsWith("Bearer ", StringComparison.Ordinal))
-                token = $"Bearer {token}";
 
             WriteCachedToken(token);
             ConsoleLog.Debug($"Authenticated and cached a new token at {Config.TokenCachePath}");
@@ -171,6 +157,31 @@ public static class Auth
         }
 
         throw new AuthenticationException($"Could not authenticate.{Environment.NewLine}{problem.Describe()}");
+    }
+
+    /// <summary>
+    /// Turns the auth endpoint's response body into the <c>Authorization</c> header
+    /// value, or an empty string when there is no token in it.
+    /// </summary>
+    /// <remarks>
+    /// RestSharp asks for JSON by default, and the API answers that with the token as
+    /// a JSON string, quotes included. Unwrap it, or the quotes end up inside the
+    /// <c>Authorization</c> header and every call is a 401. The API already prefixes
+    /// the token, but a proxy that trimmed it would produce a confusing 401 later, so
+    /// make sure of it here.
+    /// </remarks>
+    internal static string NormalizeToken(string? content)
+    {
+        var token = (content ?? string.Empty).Trim();
+        if (token.StartsWith('"'))
+        {
+            token = (JsonSerializer.Deserialize<string>(token) ?? string.Empty).Trim();
+        }
+
+        if (token.Length == 0)
+            return token;
+
+        return token.StartsWith("Bearer ", StringComparison.Ordinal) ? token : $"Bearer {token}";
     }
 
     /// <summary>Returns a usable bearer token, reusing the cached one while it works.</summary>

@@ -14,9 +14,8 @@ namespace Implan.ApiSamples.Workflows;
 /// every county in a state, is common.
 ///
 /// The naive version of this asks each region for its status, then downloads. That
-/// is one extra call per region, which for three thousand counties is hours of
-/// waiting under the published five-region-model-requests-per-minute limit. It is
-/// also unnecessary: the children listing already carries the build status for every
+/// is one extra call per region, three thousand for every county in the country, and
+/// it is unnecessary: the children listing already carries the build status for every
 /// region it returns, so one call gives both the list and which of them are ready.
 ///
 /// So the shape here is:
@@ -24,6 +23,12 @@ namespace Implan.ApiSamples.Workflows;
 ///   1. One children call: every region, with its build status.
 ///   2. One build-and-return call for whichever are not built, then wait.
 ///   3. Download, skipping any file already on disk so a re-run resumes.
+///
+/// On the rate limit: the published five-per-minute Region Models limit counts model
+/// builds, which step 2 makes. Listing regions and downloading exports do not count
+/// against it. This workflow holds every request to five a minute anyway, which is
+/// simple and safely inside the limit, and is why a run over thousands of regions
+/// takes hours.
 ///
 /// The export is a parameter. RegionOverviewIndustries and the single-file GAMS
 /// export are named for convenience, but any report from the wiki's Regional Data
@@ -34,6 +39,10 @@ namespace Implan.ApiSamples.Workflows;
 /// </remarks>
 public static class RegionalExportsWorkflow
 {
+    /// <summary>
+    /// The published Region Models limit. It counts builds, but every request here
+    /// is held to it; see the note on the rate limit above.
+    /// </summary>
     private const int RegionRequestsPerMinute = 5;
 
     /// <summary>How many regions to ask for in one build-and-return call.</summary>
@@ -46,8 +55,8 @@ public static class RegionalExportsWorkflow
     /// <param name="exportName">Which report to download.</param>
     /// <param name="limit">
     /// Caps how many regions are processed, which keeps a first run short. Pass null
-    /// to process all of them, and expect it to take a while: the rate limit, not
-    /// the API's speed, sets the pace.
+    /// to process all of them, and expect it to take a while: the client-side
+    /// throttle, not the API's speed, sets the pace.
     /// </param>
     public static void Run(
         RegionType regionType = RegionType.Msa,
@@ -61,8 +70,8 @@ public static class RegionalExportsWorkflow
         ConsoleLog.Heading("Step 1: resolve the identifiers");
         var ids = Endpoints.Identifiers.Resolve(client, MapCode.US);
 
-        // Step 2. One call for the list and the build status together. This is the
-        // step that keeps the workflow inside the rate limit.
+        // Step 2. One call for the list and the build status together, rather than
+        // one status call per region.
         ConsoleLog.Heading("Step 2: list the regions, with their build status");
 
         // GET /api/v1/region/{aggregationSchemeId}/{datasetId}/children?regionTypeFilter=...

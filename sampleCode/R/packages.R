@@ -4,23 +4,34 @@
 #
 #   Rscript packages.R
 #
-# Two packages, both from CRAN:
+# Three packages for the samples and one for their tests, all from CRAN:
 #
 #   httr2     the HTTP client. Everything the samples do with the network goes
 #             through it, including the bearer token, the retries, and the rate
 #             limiting.
 #   jsonlite  reading and writing JSON.
-#
-# `curl` comes along with httr2 and is used directly in one place, for the
-# multipart upload in the ImportEvents workflow.
+#   curl      arrives with httr2, and is used directly in one place, for the
+#             multipart upload in the ImportEvents workflow.
+#   testthat  runs the tests in tests/testthat. The samples never load it.
 #
 # Nothing else is needed. Reading the `.env` file, parsing the command line, and
 # reading the CSV inputs are all done with base R, so there is less to install
 # and less to read that is not about the API.
+#
+# The floors are the current releases, the versions the samples were verified on.
+# The one exception is curl: 8.1.0 is out, but CRAN has only built 8.0.0 for
+# Windows so far, and building from source there needs Rtools.
 
 REQUIRED_PACKAGES <- c(
-  httr2 = "1.2.0", # req_throttle(capacity=), req_get_headers(), req_get_body()
-  jsonlite = "1.8.0"
+  httr2 = "1.3.0",
+  jsonlite = "2.0.0",
+  curl = "8.0.0"
+)
+
+# Installed alongside the packages above, but only the tests need it, so a
+# workflow never stops because it is missing.
+TEST_PACKAGES <- c(
+  testthat = "3.3.2"
 )
 
 # The native pipe |> and the \(x) lambda shorthand both arrived in R 4.1, and the
@@ -87,8 +98,9 @@ install_required_packages <- function(repos = "https://cloud.r-project.org") {
   library_path <- user_library()
   message("Installing into ", library_path)
 
-  for (package_name in names(REQUIRED_PACKAGES)) {
-    wanted <- REQUIRED_PACKAGES[[package_name]]
+  wanted_packages <- c(REQUIRED_PACKAGES, TEST_PACKAGES)
+  for (package_name in names(wanted_packages)) {
+    wanted <- wanted_packages[[package_name]]
     installed <- tryCatch(
       as.character(utils::packageVersion(package_name)),
       error = function(condition) NA_character_

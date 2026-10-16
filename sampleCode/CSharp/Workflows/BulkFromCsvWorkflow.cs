@@ -20,7 +20,9 @@ namespace Implan.ApiSamples.Workflows;
 ///   - Reuse what already exists. Re-running finds the regions, the folder, and the
 ///     projects it made last time instead of failing on duplicate names.
 ///   - Throttle. The client's rate limiter is switched on for this workflow, because
-///     a loop over hundreds of regions will otherwise earn a 429 and then a ban.
+///     a burst of region builds will otherwise earn a 429 and then a ban. The
+///     published limit counts builds, but the throttle applies to every request,
+///     which is slower than the limit requires and keeps the script simple.
 ///
 /// Input files, all in <c>data/</c>:
 ///
@@ -39,8 +41,9 @@ public static class BulkFromCsvWorkflow
     private static readonly string FolderName = $"{Config.TitlePrefix} - Bulk From CSV";
 
     /// <summary>
-    /// Region model requests are the most tightly limited family, so this workflow
-    /// stays under the published five per minute. See the wiki home page.
+    /// The published Region Models limit, five a minute. It counts model builds, not
+    /// reads, but this workflow holds every request to that rate: slower than needed,
+    /// and safely inside the limit. See the wiki home page.
     /// </summary>
     private const int RegionRequestsPerMinute = 5;
 
@@ -56,8 +59,8 @@ public static class BulkFromCsvWorkflow
     {
         var client = Auth.CreateClient();
 
-        // Bulk work needs the throttle. Without it, a few hundred region calls earn
-        // a 429 and then a temporary ban.
+        // Bulk work needs the throttle. Without it, a burst of region builds earns a
+        // 429 and then a temporary ban.
         client.RateLimiter = new RateLimiter(RegionRequestsPerMinute);
 
         // Step 1. Resolve identifiers and read the input files.

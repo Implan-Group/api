@@ -39,7 +39,7 @@ Every workflow file is named for its row in this table, spelled in that language
 
 - You need an IMPLAN subscription with API access. Contact <support@implan.com> to add it.
 - Workflows 4 through 8 and 10 through 12 create real objects in your IMPLAN account (regions, projects, events, groups, impact runs). Each one prints what it created so you can find and delete it in IMPLAN Cloud.
-- The API has rate limits, listed on the wiki [Home](https://github.com/Implan-Group/api/wiki) page. The samples respect them; if you adapt one to loop over many regions, keep the pauses.
+- The API has rate limits, listed on the wiki [Home](https://github.com/Implan-Group/api/wiki) page. The samples respect them. The tightest, five a minute for Region Models, counts model builds; if you adapt a sample to build many regions, keep the pauses.
 
 ## Contributing
 

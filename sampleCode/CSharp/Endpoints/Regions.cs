@@ -83,7 +83,7 @@ public static class Regions
     /// Worth knowing for bulk work: every region in this response carries its own
     /// <c>modelBuildStatus</c>, so one call tells you both which regions exist and
     /// which of them are already built. There is no separate endpoint for that, and
-    /// asking region by region is what makes a bulk script trip the rate limit.
+    /// asking region by region turns one call into thousands.
     /// </remarks>
     public static List<Region> GetRegionChildren(
         ApiClient client,
