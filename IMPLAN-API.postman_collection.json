@@ -1348,145 +1348,6 @@
           }
         },
         {
-          "id": "81a371ec-7649-4e66-a049-6fea6dc0b6e3",
-          "name": "Builds multiple Region models at once.",
-          "request": {
-            "name": "Builds multiple Region models at once.",
-            "description": {
-              "content": "Builds each of the supplied Regions (by HashId or URID) under the given Aggregation Scheme. Only\r\nRegions that needed to be built are returned - already-built Regions are omitted.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "region",
-                "build",
-                "batch",
-                ":AggregationSchemeId"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "type": "any",
-                  "value": "1513",
-                  "key": "AggregationSchemeId",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The Aggregation Scheme the new Regions belong to.",
-                    "type": "text/plain"
-                  }
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "POST",
-            "body": {
-              "mode": "raw",
-              "raw": "[\n  \"yDxXX13pxJ\",\n  \"A2xqMqdLxq\"\n]",
-              "options": {
-                "raw": {
-                  "headerFamily": "json",
-                  "language": "json"
-                }
-              }
-            },
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "0d666feb-11cb-49f7-97b2-c80e926274ad",
-          "name": "Builds multiple combined Region models at once.",
-          "request": {
-            "name": "Builds multiple combined Region models at once.",
-            "description": {
-              "content": "Each request combines two or more Regions (by URID/HashId) into a single combined Region, which is\r\nthen built. User-defined models cannot be combined, and each request must reference more than one\r\nRegion. All requests are validated before any are processed.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "region",
-                "build",
-                "batch",
-                "combined",
-                ":AggregationSchemeId"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [
-                {
-                  "disabled": true,
-                  "description": {
-                    "content": "Whether to process the builds as a batch. Defaults to `true`.",
-                    "type": "text/plain"
-                  },
-                  "key": "asBatch",
-                  "value": "true"
-                }
-              ],
-              "variable": [
-                {
-                  "type": "any",
-                  "value": "1513",
-                  "key": "AggregationSchemeId",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The Aggregation Scheme the combined Regions belong to.",
-                    "type": "text/plain"
-                  }
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "POST",
-            "body": {
-              "mode": "raw",
-              "raw": "[\n  {\n    \"urids\": [\n      1862706,\n      1863644\n    ],\n    \"description\": \"Combined Region A\"\n  }\n]",
-              "options": {
-                "raw": {
-                  "headerFamily": "json",
-                  "language": "json"
-                }
-              }
-            },
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
           "id": "7ee49aaa-6ad9-465d-a613-bf0a6e0074d8",
           "name": "Builds a single combined Region model.",
           "request": {
@@ -5131,6 +4992,650 @@
               "protocolProfileBehavior": {
                 "disableBodyPruning": true
               }
+            },
+            {
+              "id": "6aacb7b6-e14e-4d2a-8433-9c1b171aab4e",
+              "name": "Exports a Canadian Region's occupation core competencies for a specific occupation as a ZIP file.",
+              "request": {
+                "name": "Exports a Canadian Region's occupation core competencies for a specific occupation as a ZIP file.",
+                "description": {
+                  "content": "Returns the occupation competency KSAs (Knowledge, Skills, and Abilities) and competency requirements\r\nfor the requested occupation, as a ZIP archive of CSV files. Requires Occupation feature access.\r\nIdentify the Region with exactly one of hashId, urid, or\r\nuserModelId; the request body specifies the occupation aggregation level, data\r\nyear, and occupation code.",
+                  "type": "text/plain"
+                },
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "regions",
+                    "export",
+                    ":AggregationSchemeId",
+                    "RegionCoreCompetenciesOccupationSummaryCanada"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region's HashId (supply exactly one Region identifier).",
+                        "type": "text/plain"
+                      },
+                      "key": "hashId",
+                      "value": "string"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region's URID (supply exactly one Region identifier).",
+                        "type": "text/plain"
+                      },
+                      "key": "urid",
+                      "value": "984"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region's user model id (supply exactly one Region identifier).",
+                        "type": "text/plain"
+                      },
+                      "key": "userModelId",
+                      "value": "1038"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "type": "any",
+                      "value": "5553",
+                      "key": "AggregationSchemeId",
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) The Aggregation Scheme to filter by.",
+                        "type": "text/plain"
+                      }
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/zip"
+                  }
+                ],
+                "method": "GET",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"occupationAggregationLevel\": \"Broad\",\n  \"occupationDataYear\": 6395,\n  \"occupationCode\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": null
+              },
+              "response": [],
+              "event": [],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              }
+            },
+            {
+              "id": "e66cdf8c-6444-41b1-bc6d-5ac5e4a26e1b",
+              "name": "Exports a Canadian Region's industry occupation averages for an industry as a CSV file.",
+              "request": {
+                "name": "Exports a Canadian Region's industry occupation averages for an industry as a CSV file.",
+                "description": {
+                  "content": "Returns the average occupation metrics for the requested industry, optionally filtered to specific\r\noccupations, as a CSV file. Requires Occupation feature access. This endpoint serves Canadian Regions\r\nonly. Identify the Region with exactly one of hashId, urid, or\r\nuserModelId; the request body specifies the occupation aggregation level, data\r\nyear, industry code, and an optional occupation-code filter.",
+                  "type": "text/plain"
+                },
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "regions",
+                    "export",
+                    ":AggregationSchemeId",
+                    "RegionIndustryOccupationAveragesCanada"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region's HashId (supply exactly one Region identifier).",
+                        "type": "text/plain"
+                      },
+                      "key": "hashId",
+                      "value": "string"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region's URID (supply exactly one Region identifier).",
+                        "type": "text/plain"
+                      },
+                      "key": "urid",
+                      "value": "984"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region's user model id (supply exactly one Region identifier).",
+                        "type": "text/plain"
+                      },
+                      "key": "userModelId",
+                      "value": "1038"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "type": "any",
+                      "value": "5553",
+                      "key": "AggregationSchemeId",
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) The Aggregation Scheme to filter by.",
+                        "type": "text/plain"
+                      }
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/csv"
+                  }
+                ],
+                "method": "GET",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"occupationCodeFilter\": null,\n  \"occupationAggregationLevel\": \"Major\",\n  \"occupationDataYear\": 5589,\n  \"industryCode\": 9407\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": null
+              },
+              "response": [],
+              "event": [],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              }
+            },
+            {
+              "id": "2b8b8e7c-83da-4e74-9319-19e386851b66",
+              "name": "Exports a Canadian Region's industry occupation details for an industry as a CSV file.",
+              "request": {
+                "name": "Exports a Canadian Region's industry occupation details for an industry as a CSV file.",
+                "description": {
+                  "content": "Returns the detailed occupation metrics for the requested industry, optionally filtered to specific\r\noccupations, as a CSV file. Requires Occupation feature access. This endpoint serves Canadian Regions\r\nonly. Identify the Region with exactly one of hashId, urid, or\r\nuserModelId; the request body specifies the occupation aggregation level, data\r\nyear, industry code, and an optional occupation-code filter.",
+                  "type": "text/plain"
+                },
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "regions",
+                    "export",
+                    ":AggregationSchemeId",
+                    "RegionIndustryOccupationDetailCanada"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region's HashId (supply exactly one Region identifier).",
+                        "type": "text/plain"
+                      },
+                      "key": "hashId",
+                      "value": "string"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region's URID (supply exactly one Region identifier).",
+                        "type": "text/plain"
+                      },
+                      "key": "urid",
+                      "value": "984"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region's user model id (supply exactly one Region identifier).",
+                        "type": "text/plain"
+                      },
+                      "key": "userModelId",
+                      "value": "1038"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "type": "any",
+                      "value": "5553",
+                      "key": "AggregationSchemeId",
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) The Aggregation Scheme to filter by.",
+                        "type": "text/plain"
+                      }
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/csv"
+                  }
+                ],
+                "method": "GET",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"occupationCodeFilter\": null,\n  \"occupationAggregationLevel\": \"Major\",\n  \"occupationDataYear\": 5589,\n  \"industryCode\": 9407\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": null
+              },
+              "response": [],
+              "event": [],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              }
+            },
+            {
+              "id": "ffd793c6-804a-4ce7-a39e-325c40402c41",
+              "name": "Exports the Region Occupation Averages for a built Region as a CSV file.",
+              "request": {
+                "name": "Exports the Region Occupation Averages for a built Region as a CSV file.",
+                "description": {
+                  "content": "Region Occupation Averages report, per occupation, the average wage and salary income, average\r\nsupplements to wages and salaries, average employee compensation, average hours per year, and the\r\ncorresponding per-hour rates for the Region. Only Wage and Salary employment is included;\r\nProprietors are excluded. Occupations follow the Standard Occupational Classification (SOC) at the\r\nrequested aggregation level. This endpoint serves US Regions only.\r\n\r\nIdentify the Region with exactly one of hashId, urid, or\r\nuserModelId.",
+                  "type": "text/plain"
+                },
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "regions",
+                    "export",
+                    ":AggregationSchemeId",
+                    "RegionOccupationAverages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region HashId. Provide exactly one of hashId, urid, or userModelId.",
+                        "type": "text/plain"
+                      },
+                      "key": "hashId",
+                      "value": "string"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region URID. Provide exactly one of hashId, urid, or userModelId.",
+                        "type": "text/plain"
+                      },
+                      "key": "urid",
+                      "value": "984"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The user model id for a user-built Region. Provide exactly one of hashId, urid, or userModelId.",
+                        "type": "text/plain"
+                      },
+                      "key": "userModelId",
+                      "value": "1038"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "type": "any",
+                      "value": "5553",
+                      "key": "AggregationSchemeId",
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) The Aggregation Scheme the Region is built on.",
+                        "type": "text/plain"
+                      }
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/csv"
+                  }
+                ],
+                "method": "GET",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"occupationAggregationLevel\": \"Major\",\n  \"occupationDataYear\": 5343\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": null
+              },
+              "response": [],
+              "event": [],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              }
+            },
+            {
+              "id": "1f10b69d-2bb2-4897-828d-996f382fde33",
+              "name": "Exports the Region Occupation Averages for a built Canadian Region as a CSV file.",
+              "request": {
+                "name": "Exports the Region Occupation Averages for a built Canadian Region as a CSV file.",
+                "description": {
+                  "content": "Region Occupation Averages report, per occupation, the average wage and salary income, average\r\nsupplements to wages and salaries, average employee compensation, average hours per year, and the\r\ncorresponding per-hour rates for the Region. Only Wage and Salary employment is included;\r\nProprietors are excluded. Occupations follow the National Occupational Classification (NOC) at the\r\nrequested aggregation level. This endpoint serves Canadian Regions only.\r\n\r\nIdentify the Region with exactly one of hashId, urid, or\r\nuserModelId.",
+                  "type": "text/plain"
+                },
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "regions",
+                    "export",
+                    ":AggregationSchemeId",
+                    "RegionOccupationAveragesCanada"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region HashId. Provide exactly one of hashId, urid, or userModelId.",
+                        "type": "text/plain"
+                      },
+                      "key": "hashId",
+                      "value": "string"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region URID. Provide exactly one of hashId, urid, or userModelId.",
+                        "type": "text/plain"
+                      },
+                      "key": "urid",
+                      "value": "984"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The user model id for a user-built Region. Provide exactly one of hashId, urid, or userModelId.",
+                        "type": "text/plain"
+                      },
+                      "key": "userModelId",
+                      "value": "1038"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "type": "any",
+                      "value": "5553",
+                      "key": "AggregationSchemeId",
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) The Aggregation Scheme the Region is built on.",
+                        "type": "text/plain"
+                      }
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/csv"
+                  }
+                ],
+                "method": "GET",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"occupationAggregationLevel\": \"Broad\",\n  \"occupationDataYear\": 3086\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": null
+              },
+              "response": [],
+              "event": [],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              }
+            },
+            {
+              "id": "ea1819fc-661f-4225-aeb8-3ba4161bbd70",
+              "name": "Exports the Region Occupation Summary for a built Region as a CSV file.",
+              "request": {
+                "name": "Exports the Region Occupation Summary for a built Region as a CSV file.",
+                "description": {
+                  "content": "The Region Occupation Summary reports, per occupation, the Wage and Salary employment, wage and\r\nsalary income, supplements to wages and salaries, employee compensation, hours worked, and location\r\nquotient for the Region. Only Wage and Salary employment is included; Proprietors are excluded.\r\nOccupations follow the Standard Occupational Classification (SOC) at the requested aggregation level.\r\nThis endpoint serves US Regions only.\r\n\r\nIdentify the Region with exactly one of hashId, urid, or\r\nuserModelId.",
+                  "type": "text/plain"
+                },
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "regions",
+                    "export",
+                    ":AggregationSchemeId",
+                    "RegionOccupationSummary"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region HashId. Provide exactly one of hashId, urid, or userModelId.",
+                        "type": "text/plain"
+                      },
+                      "key": "hashId",
+                      "value": "string"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region URID. Provide exactly one of hashId, urid, or userModelId.",
+                        "type": "text/plain"
+                      },
+                      "key": "urid",
+                      "value": "984"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The user model id for a user-built Region. Provide exactly one of hashId, urid, or userModelId.",
+                        "type": "text/plain"
+                      },
+                      "key": "userModelId",
+                      "value": "1038"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "type": "any",
+                      "value": "5553",
+                      "key": "AggregationSchemeId",
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) The Aggregation Scheme the Region is built on.",
+                        "type": "text/plain"
+                      }
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/csv"
+                  }
+                ],
+                "method": "GET",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"occupationAggregationLevel\": \"Major\",\n  \"occupationDataYear\": 5343\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": null
+              },
+              "response": [],
+              "event": [],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              }
+            },
+            {
+              "id": "7b7abbd2-ffcf-43b2-9042-03dfa3c49b1b",
+              "name": "Exports the Region Occupation Summary for a built Canadian Region as a CSV file.",
+              "request": {
+                "name": "Exports the Region Occupation Summary for a built Canadian Region as a CSV file.",
+                "description": {
+                  "content": "The Region Occupation Summary reports, per occupation, the Wage and Salary employment, wage and\r\nsalary income, supplements to wages and salaries, employee compensation, hours worked, and location\r\nquotient for the Region. Only Wage and Salary employment is included; Proprietors are excluded.\r\nOccupations follow the National Occupational Classification (NOC) at the requested aggregation level.\r\nThis endpoint serves Canadian Regions only.\r\n\r\nIdentify the Region with exactly one of hashId, urid, or\r\nuserModelId.",
+                  "type": "text/plain"
+                },
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "regions",
+                    "export",
+                    ":AggregationSchemeId",
+                    "RegionOccupationSummaryCanada"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region HashId. Provide exactly one of hashId, urid, or userModelId.",
+                        "type": "text/plain"
+                      },
+                      "key": "hashId",
+                      "value": "string"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The Region URID. Provide exactly one of hashId, urid, or userModelId.",
+                        "type": "text/plain"
+                      },
+                      "key": "urid",
+                      "value": "984"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "The user model id for a user-built Region. Provide exactly one of hashId, urid, or userModelId.",
+                        "type": "text/plain"
+                      },
+                      "key": "userModelId",
+                      "value": "1038"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "type": "any",
+                      "value": "5553",
+                      "key": "AggregationSchemeId",
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) The Aggregation Scheme the Region is built on.",
+                        "type": "text/plain"
+                      }
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/csv"
+                  }
+                ],
+                "method": "GET",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"occupationAggregationLevel\": \"Broad\",\n  \"occupationDataYear\": 3086\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": null
+              },
+              "response": [],
+              "event": [],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              }
             }
           ]
         },
@@ -5214,7 +5719,7 @@
                 "method": "GET",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"environmentalReleaseYear\": null,\n  \"environmentReleaseString\": \"string\",\n  \"industryCodes\": null,\n  \"environmentCategory\": \"string\"\n}",
+                  "raw": "{\n  \"environmentalReleaseYear\": null,\n  \"environmentReleaseString\": \"string\",\n  \"industryCodes\": null,\n  \"environmentCategory\": \"string\",\n  \"environmentalDataSpecificity\": \"National\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -5306,7 +5811,7 @@
                 "method": "GET",
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"environmentalReleaseYear\": null,\n  \"environmentReleaseString\": null,\n  \"industryCodes\": [\n    48,\n    3594\n  ]\n}",
+                  "raw": "{\n  \"environmentalReleaseYear\": null,\n  \"environmentReleaseString\": null,\n  \"industryCodes\": [\n    48,\n    3594\n  ],\n  \"environmentalDataSpecificity\": \"National\"\n}",
                   "options": {
                     "raw": {
                       "headerFamily": "json",
@@ -5353,6 +5858,15 @@
                       },
                       "key": "industryCode",
                       "value": "7028"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "Optional. National or Subnational environmental data. Left out, the API uses its default.",
+                        "type": "text/plain"
+                      },
+                      "key": "environmentalDataSpecificity",
+                      "value": "National"
                     }
                   ],
                   "variable": [
@@ -5425,6 +5939,15 @@
                       },
                       "key": "industryCode",
                       "value": "7028"
+                    },
+                    {
+                      "disabled": true,
+                      "description": {
+                        "content": "Optional. National or Subnational environmental data. Left out, the API uses its default.",
+                        "type": "text/plain"
+                      },
+                      "key": "environmentalDataSpecificity",
+                      "value": "National"
                     }
                   ],
                   "variable": [
@@ -5829,770 +6352,6 @@
       "name": "Instant and Batch Impacts",
       "description": "Run impacts without a saved project: instant single-event impacts (US, Canada, international, optionally by model) and batch runs, plus instant model/dataset lookups.",
       "item": [
-        {
-          "id": "9d8c1561-a812-4101-bb6a-20422f06afd1",
-          "name": "Runs a batch of instant impacts for US Regions.",
-          "request": {
-            "name": "Runs a batch of instant impacts for US Regions.",
-            "description": {
-              "content": "Estimates many US Industry Output impacts in one request. Each item identifies its Region by\r\nexactly one of `ModelId`, `Urid`, or `HashId`. Results are returned in the same\r\norder as the submitted events.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "impact",
-                "batch"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "POST",
-            "body": {
-              "mode": "raw",
-              "raw": "[\n  {\n    \"modelId\": 26899,\n    \"industryCode\": 1,\n    \"eventValue\": 10002.9\n  },\n  {\n    \"modelId\": 26899,\n    \"industryCode\": 2,\n    \"eventValue\": 30002.9\n  }\n]",
-              "options": {
-                "raw": {
-                  "headerFamily": "json",
-                  "language": "json"
-                }
-              }
-            },
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "0d6eb534-558e-480f-a135-f4e90096b615",
-          "name": "Runs a batch of instant impacts for Canada Regions.",
-          "request": {
-            "name": "Runs a batch of instant impacts for Canada Regions.",
-            "description": {
-              "content": "The Canada equivalent of `RunBatchImpact`; results follow the Canada result structure.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "impact",
-                "batch",
-                "can"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "POST",
-            "body": {
-              "mode": "raw",
-              "raw": "[\n  {\n    \"modelId\": 26899,\n    \"industryCode\": 1,\n    \"eventValue\": 10002.9\n  },\n  {\n    \"modelId\": 26899,\n    \"industryCode\": 2,\n    \"eventValue\": 30002.9\n  }\n]",
-              "options": {
-                "raw": {
-                  "headerFamily": "json",
-                  "language": "json"
-                }
-              }
-            },
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "3078c656-550b-4987-b1f8-f1603e9b0bfb",
-          "name": "Runs a batch of instant impacts for International Regions.",
-          "request": {
-            "name": "Runs a batch of instant impacts for International Regions.",
-            "description": {
-              "content": "The International equivalent of `RunBatchImpact`; results follow the International result\r\nstructure (Gross Operating Surplus in place of Proprietor and Other Property Income).",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "impact",
-                "batch",
-                "intl"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "POST",
-            "body": {
-              "mode": "raw",
-              "raw": "[\n  {\n    \"modelId\": 26899,\n    \"industryCode\": 1,\n    \"eventValue\": 10002.9\n  },\n  {\n    \"modelId\": 26899,\n    \"industryCode\": 2,\n    \"eventValue\": 30002.9\n  }\n]",
-              "options": {
-                "raw": {
-                  "headerFamily": "json",
-                  "language": "json"
-                }
-              }
-            },
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "0328834d-feee-4b45-82d2-abdded0c50c1",
-          "name": "Estimates an instant impact for a US Region identified by URID or HashId.",
-          "request": {
-            "name": "Estimates an instant impact for a US Region identified by URID or HashId.",
-            "description": {
-              "content": "Estimates the economic impact of an Industry Output event of eventValue dollars\r\nin industry industryCode. Supply exactly one of urid or\r\nhashId to identify the US Region.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "impact",
-                "instant",
-                ":IndustryCode",
-                ":EventValue"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [
-                {
-                  "disabled": true,
-                  "description": {
-                    "content": "The Region's HashId (supply this or urid).",
-                    "type": "text/plain"
-                  },
-                  "key": "hashId",
-                  "value": "string"
-                },
-                {
-                  "disabled": true,
-                  "description": {
-                    "content": "The Region's URID (supply this or hashId).",
-                    "type": "text/plain"
-                  },
-                  "key": "urid",
-                  "value": "572"
-                }
-              ],
-              "variable": [
-                {
-                  "type": "any",
-                  "value": "1513",
-                  "key": "IndustryCode",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The IMPLAN industry code the output event applies to.",
-                    "type": "text/plain"
-                  }
-                },
-                {
-                  "type": "any",
-                  "value": "2274.7819361102074",
-                  "key": "EventValue",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The Industry Output event value, in dollars.",
-                    "type": "text/plain"
-                  }
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "GET",
-            "body": {},
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "41f7c359-a5a4-443f-a962-e3fd31c7f1a5",
-          "name": "Estimates an instant impact for a US Region identified by Model Id.",
-          "request": {
-            "name": "Estimates an instant impact for a US Region identified by Model Id.",
-            "description": {
-              "content": "Estimates the economic impact of an Industry Output event of eventValue dollars\r\nin industry industryCode, against the US Region model modelId.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "impact",
-                "instant",
-                ":ModelId",
-                ":IndustryCode",
-                ":EventValue"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "type": "any",
-                  "value": "1513",
-                  "key": "ModelId",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The Model Id of the US Region (from the Region models endpoint).",
-                    "type": "text/plain"
-                  }
-                },
-                {
-                  "type": "any",
-                  "value": "1513",
-                  "key": "IndustryCode",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The IMPLAN industry code the output event applies to.",
-                    "type": "text/plain"
-                  }
-                },
-                {
-                  "type": "any",
-                  "value": "2274.7819361102074",
-                  "key": "EventValue",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The Industry Output event value, in dollars.",
-                    "type": "text/plain"
-                  }
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "GET",
-            "body": {},
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "9c649382-e465-4d0d-9ba2-3e3c918613ec",
-          "name": "Estimates an instant impact for a Canada Region identified by URID or HashId.",
-          "request": {
-            "name": "Estimates an instant impact for a Canada Region identified by URID or HashId.",
-            "description": {
-              "content": "The Canada equivalent of `GetInstantImpact`. Supply exactly one of urid or\r\nhashId.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "impact",
-                "instant",
-                "can",
-                ":IndustryCode",
-                ":EventValue"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [
-                {
-                  "disabled": true,
-                  "description": {
-                    "content": "The Region's HashId (supply this or urid).",
-                    "type": "text/plain"
-                  },
-                  "key": "hashId",
-                  "value": "string"
-                },
-                {
-                  "disabled": true,
-                  "description": {
-                    "content": "The Region's URID (supply this or hashId).",
-                    "type": "text/plain"
-                  },
-                  "key": "urid",
-                  "value": "572"
-                }
-              ],
-              "variable": [
-                {
-                  "type": "any",
-                  "value": "1513",
-                  "key": "IndustryCode",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The IMPLAN industry code the output event applies to.",
-                    "type": "text/plain"
-                  }
-                },
-                {
-                  "type": "any",
-                  "value": "2274.7819361102074",
-                  "key": "EventValue",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The Industry Output event value, in dollars.",
-                    "type": "text/plain"
-                  }
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "GET",
-            "body": {},
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "ff736e3d-8064-4c60-94cd-36c2301ef46a",
-          "name": "Estimates an instant impact for a Canada Region identified by Model Id.",
-          "request": {
-            "name": "Estimates an instant impact for a Canada Region identified by Model Id.",
-            "description": {
-              "content": "The Canada equivalent of `GetInstantImpactByModel`. Results follow the same structure as US\r\nresults, with some differences in terminology.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "impact",
-                "instant",
-                "can",
-                ":ModelId",
-                ":IndustryCode",
-                ":EventValue"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "type": "any",
-                  "value": "1513",
-                  "key": "ModelId",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The Model Id of the Canada Region.",
-                    "type": "text/plain"
-                  }
-                },
-                {
-                  "type": "any",
-                  "value": "1513",
-                  "key": "IndustryCode",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The IMPLAN industry code the output event applies to.",
-                    "type": "text/plain"
-                  }
-                },
-                {
-                  "type": "any",
-                  "value": "2274.7819361102074",
-                  "key": "EventValue",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The Industry Output event value, in dollars.",
-                    "type": "text/plain"
-                  }
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "GET",
-            "body": {},
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "de499eb5-5129-409a-98f3-bcef2236a0b4",
-          "name": "Gets the Datasets available for Instant and Batch impacts.",
-          "request": {
-            "name": "Gets the Datasets available for Instant and Batch impacts.",
-            "description": {
-              "content": "Returns the Datasets the Instant/Batch API can process. Exactly one is flagged as the default.\r\nThis is the Instant/Batch counterpart to `GetDatasets`; the list may be cached.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "impact",
-                "instant",
-                "datasets"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "GET",
-            "body": {},
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "b6139d7b-185a-4e25-a976-5261bf97d1b6",
-          "name": "Estimates an instant impact for an International Region identified by URID or HashId.",
-          "request": {
-            "name": "Estimates an instant impact for an International Region identified by URID or HashId.",
-            "description": {
-              "content": "The International equivalent of `GetInstantImpact`. Supply exactly one of\r\nurid or hashId.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "impact",
-                "instant",
-                "intl",
-                ":IndustryCode",
-                ":EventValue"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [
-                {
-                  "disabled": true,
-                  "description": {
-                    "content": "The Region's HashId (supply this or urid).",
-                    "type": "text/plain"
-                  },
-                  "key": "hashId",
-                  "value": "string"
-                },
-                {
-                  "disabled": true,
-                  "description": {
-                    "content": "The Region's URID (supply this or hashId).",
-                    "type": "text/plain"
-                  },
-                  "key": "urid",
-                  "value": "572"
-                }
-              ],
-              "variable": [
-                {
-                  "type": "any",
-                  "value": "1513",
-                  "key": "IndustryCode",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The IMPLAN industry code the output event applies to.",
-                    "type": "text/plain"
-                  }
-                },
-                {
-                  "type": "any",
-                  "value": "2274.7819361102074",
-                  "key": "EventValue",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The Industry Output event value, in dollars.",
-                    "type": "text/plain"
-                  }
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "GET",
-            "body": {},
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "539b0898-c61c-4db4-8c58-53b11943a5af",
-          "name": "Estimates an instant impact for an International Region identified by Model Id.",
-          "request": {
-            "name": "Estimates an instant impact for an International Region identified by Model Id.",
-            "description": {
-              "content": "The International equivalent of `GetInstantImpactByModel`. International results report Gross\r\nOperating Surplus in place of Proprietor and Other Property Income.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "impact",
-                "instant",
-                "intl",
-                ":ModelId",
-                ":IndustryCode",
-                ":EventValue"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "type": "any",
-                  "value": "1513",
-                  "key": "ModelId",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The Model Id of the International Region.",
-                    "type": "text/plain"
-                  }
-                },
-                {
-                  "type": "any",
-                  "value": "1513",
-                  "key": "IndustryCode",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The IMPLAN industry code the output event applies to.",
-                    "type": "text/plain"
-                  }
-                },
-                {
-                  "type": "any",
-                  "value": "2274.7819361102074",
-                  "key": "EventValue",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The Industry Output event value, in dollars.",
-                    "type": "text/plain"
-                  }
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "GET",
-            "body": {},
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "dee176cf-9f19-4bbe-aa2b-595a7fcb59ee",
-          "name": "Gets the Region models available for Instant and Batch impacts.",
-          "request": {
-            "name": "Gets the Region models available for Instant and Batch impacts.",
-            "description": {
-              "content": "Returns the Region \"cards\" usable with the Instant/Batch API - each carries the identifiers\r\n(`modelId`, `urid`, `hashId`) needed to run an instant or batch impact, plus summary\r\neconomic totals. This is exposed in two forms: supply a Dataset id in the route to get that\r\nDataset's models, or call the route with no id to list models across all Datasets; either form can\r\nbe narrowed with the optional Region type filter. The list may be cached.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "impact",
-                "instant",
-                "models"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [
-                {
-                  "disabled": true,
-                  "description": {
-                    "content": "Optional Region type to filter by (for example, `State`, `County`, `MSA`). (This can only be one of Unknown,Country,State,Msa,County,CongressionalDistrict,Zipcode,)",
-                    "type": "text/plain"
-                  },
-                  "key": "regionTypeFilter",
-                  "value": "CongressionalDistrict"
-                }
-              ],
-              "variable": []
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "GET",
-            "body": {},
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "0d544ffc-99f8-484d-b804-b3a45dc8e024",
-          "name": "Gets the Region models available for Instant and Batch impacts.",
-          "request": {
-            "name": "Gets the Region models available for Instant and Batch impacts.",
-            "description": {
-              "content": "Returns the Region \"cards\" usable with the Instant/Batch API - each carries the identifiers\r\n(`modelId`, `urid`, `hashId`) needed to run an instant or batch impact, plus summary\r\neconomic totals. This is exposed in two forms: supply a Dataset id in the route to get that\r\nDataset's models, or call the route with no id to list models across all Datasets; either form can\r\nbe narrowed with the optional Region type filter. The list may be cached.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "api",
-                "v1",
-                "impact",
-                "instant",
-                "models",
-                ":DatasetId"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [
-                {
-                  "disabled": true,
-                  "description": {
-                    "content": "Optional Region type to filter by (for example, `State`, `County`, `MSA`). (This can only be one of Unknown,Country,State,Msa,County,CongressionalDistrict,Zipcode,)",
-                    "type": "text/plain"
-                  },
-                  "key": "regionTypeFilter",
-                  "value": "CongressionalDistrict"
-                }
-              ],
-              "variable": [
-                {
-                  "type": "any",
-                  "value": "7028",
-                  "key": "DatasetId",
-                  "disabled": false,
-                  "description": {
-                    "content": "(Required) The Dataset identifier whose models to return. Required on this route; to list models across all\r\nDatasets, call the Instant Models endpoint that takes no Dataset id.",
-                    "type": "text/plain"
-                  }
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "text/plain"
-              }
-            ],
-            "method": "GET",
-            "body": {},
-            "auth": null
-          },
-          "response": [],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
         {
           "id": "47a1e5e1-f112-4052-88f5-52095fb4c935",
           "name": "Gets the built Region models available for a Dataset.",
@@ -9010,7 +8769,7 @@
             "method": "GET",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null\n}",
+              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null,\n  \"environmentalDataSpecificity\": \"National\"\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -9074,7 +8833,7 @@
             "method": "GET",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null\n}",
+              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null,\n  \"environmentalDataSpecificity\": \"National\"\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -9353,7 +9112,7 @@
             "method": "GET",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null\n}",
+              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null,\n  \"environmentalDataSpecificity\": \"National\"\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -9417,7 +9176,7 @@
             "method": "GET",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null\n}",
+              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null,\n  \"environmentalDataSpecificity\": \"National\"\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -9481,7 +9240,7 @@
             "method": "GET",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null\n}",
+              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null,\n  \"environmentalDataSpecificity\": \"National\"\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -9737,7 +9496,7 @@
             "method": "GET",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null\n}",
+              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null,\n  \"environmentalDataSpecificity\": \"National\"\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -9801,7 +9560,7 @@
             "method": "GET",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null\n}",
+              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null,\n  \"environmentalDataSpecificity\": \"National\"\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -9865,7 +9624,7 @@
             "method": "GET",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null\n}",
+              "raw": "{\n  \"dollarYear\": null,\n  \"environmentalReleaseYear\": 1382,\n  \"environmentReleaseString\": \"string\",\n  \"environmentName\": \"string\",\n  \"environmentCategories\": null,\n  \"industryCode\": null,\n  \"regions\": null,\n  \"impacts\": null,\n  \"groupNames\": null,\n  \"eventNames\": null,\n  \"eventTags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"naicsAggregationSchemeId\": null,\n  \"environmentalDataSpecificity\": \"National\"\n}",
               "options": {
                 "raw": {
                   "headerFamily": "json",
@@ -10479,6 +10238,198 @@
             ],
             "method": "GET",
             "body": {},
+            "auth": null
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1a7976ec-01ec-48d6-b092-e3d4802975ac",
+          "name": "Exports the per-occupation average results for a Canadian Impact Analysis as a CSV file.",
+          "request": {
+            "name": "Exports the per-occupation average results for a Canadian Impact Analysis as a CSV file.",
+            "description": {
+              "content": "Returns average wage and salary income, supplements, employee compensation, and hours worked per occupation\r\nfor the Impact Analysis at the requested occupation aggregation level and data year. Requires the Occupation\r\nfeature; this endpoint serves Canadian Impacts only.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "impact",
+                "results",
+                "ImpactOccupationAveragesCanada",
+                ":RunId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "type": "any",
+                  "value": "5553",
+                  "key": "RunId",
+                  "disabled": false,
+                  "description": {
+                    "content": "(Required) The Impact Analysis run identifier.",
+                    "type": "text/plain"
+                  }
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/csv"
+              }
+            ],
+            "method": "GET",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"occupationAggregationLevel\": \"Broad\",\n  \"occupationDataYear\": 2023,\n  \"dollarYear\": 2024,\n  \"industryCode\": null,\n  \"regions\": [],\n  \"impacts\": [],\n  \"groupNames\": [],\n  \"eventNames\": [],\n  \"eventTags\": []\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "auth": null
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2c6c2499-c679-47a2-b9b6-ac4d866d82c9",
+          "name": "Exports the occupation results for a Canadian Impact Analysis as a CSV file.",
+          "request": {
+            "name": "Exports the occupation results for a Canadian Impact Analysis as a CSV file.",
+            "description": {
+              "content": "Returns the modeled employment, income, and compensation distributed across occupations for the Impact\r\nAnalysis at the requested occupation aggregation level and data year. Requires the Occupation feature;\r\nthis endpoint serves Canadian Impacts only.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "impact",
+                "results",
+                "ImpactOccupationCanada",
+                ":RunId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "type": "any",
+                  "value": "5553",
+                  "key": "RunId",
+                  "disabled": false,
+                  "description": {
+                    "content": "(Required) The Impact Analysis run identifier.",
+                    "type": "text/plain"
+                  }
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/csv"
+              }
+            ],
+            "method": "GET",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"occupationAggregationLevel\": \"Broad\",\n  \"occupationDataYear\": 2023,\n  \"dollarYear\": 2024,\n  \"industryCode\": null,\n  \"regions\": [],\n  \"impacts\": [],\n  \"groupNames\": [],\n  \"eventNames\": [],\n  \"eventTags\": []\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "auth": null
+          },
+          "response": [],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b85af76f-834f-42c7-b3c1-02f8d3632ce5",
+          "name": "Exports the occupation core competency results for a Canadian Impact Analysis as a ZIP archive.",
+          "request": {
+            "name": "Exports the occupation core competency results for a Canadian Impact Analysis as a ZIP archive.",
+            "description": {
+              "content": "Returns the occupation core competencies for the Canadian Impact Analysis. The response is a .zip archive\r\ncontaining one CSV file per Canadian competency category (Abilities, Knowledge, Skills, Personal Attributes,\r\nWork Activities, and Work Context). Requires the Occupation feature.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "impact",
+                "results",
+                "ImpactOccupationCoreCompetenciesCanada",
+                ":RunId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "type": "any",
+                  "value": "5553",
+                  "key": "RunId",
+                  "disabled": false,
+                  "description": {
+                    "content": "(Required) The Impact Analysis run identifier.",
+                    "type": "text/plain"
+                  }
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/zip"
+              }
+            ],
+            "method": "GET",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"occupationAggregationLevel\": \"Broad\",\n  \"occupationDataYear\": 2023,\n  \"industryCode\": null,\n  \"occupationCode\": null,\n  \"regions\": [],\n  \"impacts\": [],\n  \"groupNames\": [],\n  \"eventNames\": [],\n  \"eventTags\": []\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
             "auth": null
           },
           "response": [],

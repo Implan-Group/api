@@ -8,7 +8,7 @@ Sources of truth, in order:
 2. The [wiki](https://github.com/Implan-Group/api/wiki), checked out at `C:\git\github\api.wiki`, for narrative and page names to link.
 3. The `External.Api` controllers in `ui_api` when the spec text is ambiguous.
 
-The hand-maintained `IMPLAN-API.postman_collection.json` at this repository's root is older than the generated collection and is not a source of truth for the samples.
+`IMPLAN-API.postman_collection.json` at this repository's root is ui_api's generated production collection, `ImpactApi_version1.external.prod.postman_collection.json`, with every Instant and Batch request removed and the release 26.5 additions copied in until ui_api regenerates it (see PLAN.md 16.6.5). When ui_api's generated file catches up, replace the root copy with it and remove Instant and Batch again. It is not a source of truth for the samples; the spec is.
 
 One set of workflows, implemented once per language, each version tailored to its language but doing the same thing with the same example data. If a workflow is not in the list in section 5 it does not belong in a language folder, and if it is in the list every language folder must have it.
 

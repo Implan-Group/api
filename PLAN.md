@@ -605,6 +605,20 @@ Each suite was verified against a negative control, a scratch copy with the 2026
 
 **`sampleCode/R/creds.json` deleted.** It was untracked (gitignored) and both fields were empty, so there was nothing to commit.
 
+### 16.6.5 Merging main, and release 26.5 in the Postman collection, done 2026-10-16
+
+`main` had moved on by six commits, the team's Postman updates for releases 26.4 and 26.5 (pull requests 41 and 42). Merging it into this branch conflicted only in `IMPLAN-API.postman_collection.json`: `main` had extended its hand-maintained collection, and this branch had replaced that collection with ui_api's generated production one (16.6). Compared request by request:
+
+- The generated collection already had the two damage exports `main` added (`greenhouse-gas-damages`, `land-use-damages`).
+- It lacked the 26.5 additions, because ui_api last regenerated `ImpactApi_version1.external.prod.postman_collection.json` on 2026-08-14, for 26.4. The occupation exports, Canadian and US, are in ui_api's `26-5 Prod Export.json` gateway configuration, and `environmentalDataSpecificity` (`National` or `Subnational`, `Implan.Api.Utilities/Enums/EnvironmentalDataSpecificity.cs`) is in the controllers.
+- `main`'s version still had `/built`, which does not exist, the `api/v1//impact` double slash, and two Canadian core-competencies routes the 26.5 gateway does not serve.
+
+Timothy chose to keep the generated collection and copy in 26.5, and to remove Instant and Batch while there. The resolution: ten occupation exports copied from ui_api's generated INT collection (same generator, so the same format), which with the six already present makes all sixteen the 26.5 gateway serves; `environmentalDataSpecificity` added where `main` added it, in the JSON body of ten environmental requests and as an optional query parameter on the two damage exports; and every Instant request (9) and Batch request (5) removed. 145 requests, none duplicated, no empty folders.
+
+**Correction to 16.6.** It said the swap to the generated collection dropped eleven Instant and six Batch requests. It did not: the generated production collection carried nine Instant and five Batch requests, and so did this repository's copy until this merge.
+
+The wiki's `master` had also moved on by five commits (Canadian occupation pages, `environmentalDataSpecificity`). It merged into the wiki's fix branch with no conflicts, as `5fc9afd`.
+
 ### 16.7 Still to do
 
 1. **Live runs against production.** Everything in 16.6.3 ran on INT. Production has not been run, and region build status differs between tiers.
