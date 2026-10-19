@@ -248,6 +248,84 @@ Reports land in `reports/<project title>/` as `.csv` files that open in Excel or
 Sheets. A run takes a few minutes: the analysis itself is the slow part, and the
 workflow polls every 15 seconds until it finishes.
 
+## Run your own numbers
+
+The workflows ship with example regions and events. To analyze your own, change the
+inputs rather than the code: two workflows read everything they build from files you
+can fill in yourself.
+
+### Your events, from the Event Template (workflow 10)
+
+The closest match to working in IMPLAN Cloud. Fill in IMPLAN's Event Template
+workbook as you would for the Upload Template button, then upload it:
+
+```bash
+Rscript main.R import-events --workbook "C:\path\to\your template.xlsx"
+```
+
+The workflow creates a project on the current default US Aggregation Scheme, uploads
+the workbook, lists the Events and Groups it created, and, when the groups have
+events attached, prints the command that runs the project. Without `--workbook` it
+uploads the example in `data/event_template.xlsx`, a fictional timber panel plant in
+Douglas County, Oregon.
+
+The template is strict:
+
+- Use the template for the project's Industry Set, which the workflow prints in
+  Step 2. The US 528, US 546, Canada, and International templates are not
+  interchangeable.
+- Put each event type on its own sheet.
+- Keep the formats the blank template shows: a `100%` cell means 100%, not 100.
+- Give every event a value, and leave no formulas in the cells.
+- On the Groups sheet, a state's FIPS code is five digits: `41000` for Oregon.
+- Fill in the Group Events sheet. The import does not pair Events with Groups on
+  its own, and a Group with no Events cannot be run.
+- Keep one upload to about 500 events.
+
+If the upload is refused, the error message names what to fix.
+
+### The same events across many regions, from CSV files (workflow 8)
+
+Edit the three files in `data/`, keeping their header rows:
+
+| File | Columns | Each row is |
+| --- | --- | --- |
+| `state_based.csv` | `fips`, `region_description`, `model_name` | A state, by its five-digit FIPS code: `41000` for Oregon |
+| `county_based.csv` | `fips`, `region_description`, `model_name` | A county, by its five-digit FIPS code: `41019` for Douglas County, Oregon |
+| `demo_events.csv` | `Name`, `Code`, `Type`, `Value` | An event. `Type` is `Industry Output` or `Commodity Output`, `Code` is the industry or commodity code, and `Value` is the output in dollars |
+
+- Rows that share a `model_name` are combined into one region. A `model_name` on
+  only one row uses that state or county as it is.
+- The region is found by `fips`. `region_description` is a label for you.
+- Take codes from the current default Industry Set, which workflow 2 prints. The
+  same code is a different industry in another set.
+- Every event is applied to every region.
+- A file you do not need can be left with only its header row.
+- Excel drops leading zeros, so Alabama's `01000` becomes `1000`, which is not a
+  place. Type such a code with an apostrophe in front, `'01000`, or edit the file in
+  a text editor.
+
+Then run:
+
+```bash
+Rscript main.R bulk-from-csv
+```
+
+It builds the combined regions, reusing any it built on an earlier run, creates one
+project per region and one holding them all, runs each, and saves four reports per
+run under `reports/ImpactApi Sample - Bulk From CSV/`. The projects are filed in an
+IMPLAN Cloud folder of the same name.
+
+### Workflow 5 with your own industry, state, and amount
+
+If you are comfortable changing a line of code,
+`workflows/create_project_workflow.R` names its example near the top:
+`INDUSTRY_NAME` is the industry, spelled as IMPLAN lists it, and `DEFAULT_REGION` is
+the state for each map code. The amount is `output = 1000000` on the Industry Output
+event in Step 5. Change them, save, and run `Rscript main.R create-project` again.
+The Industry Impact Analysis event beside it keeps its example operating figures, so
+check those before relying on its results.
+
 ## Troubleshooting
 
 Every failure from this API carries a `title`, a `detail`, and a `traceId`. The

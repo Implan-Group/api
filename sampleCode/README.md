@@ -12,7 +12,7 @@ The API itself is documented in the [wiki](https://github.com/Implan-Group/api/w
 | [Python](Python/) | Python scripts | [Python/README.md](Python/README.md) |
 | [R](R/) | R scripts | [R/README.md](R/README.md) |
 
-Each README tells you what to install, how to configure your credentials, how to run each workflow, and what you should see.
+Each README tells you what to install, how to configure your credentials, how to run each workflow, and what you should see. Its "Run your own numbers" section shows how to analyze your own regions and events by filling in the IMPLAN Event Template or three CSV files, without writing code.
 
 ## The workflows
 

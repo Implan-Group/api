@@ -86,8 +86,9 @@ Each language README has these sections in this order.
 4. **Configure.** Copy `.env.example` to `.env` and fill in the two variables, and say to keep the double quotes. Say where the token cache and logs are written.
 5. **Run.** One command per workflow, in list order, and how to pass a project id to the workflows that need one.
 6. **What you should see.** The console output shape for a successful run, and where exported CSV files land.
-7. **Troubleshooting.** What 401, 403, 409, 422, 429, and 503 mean from this API and what to do about each; the throttles; the user-regions list returning 503 for accounts with many custom schemes; and that a 503 from `POST /api/auth` usually means either the authentication service is briefly unavailable (wait a minute and retry) or API access has not been enabled on the account (contact the Customer Success Manager), as the IMPLAN Support article "How to Use the IMPLAN API with R: Obtaining Your API Token" explains.
-8. **Links.** Wiki home, the wiki pages used, and support.
+7. **Run your own numbers.** For readers who know IMPLAN but not code: filling the Event Template for workflow 10, the CSV columns and rules for workflow 8, and which named values to change in workflow 5.
+8. **Troubleshooting.** What 401, 403, 409, 422, 429, and 503 mean from this API and what to do about each; the throttles; the user-regions list returning 503 for accounts with many custom schemes; and that a 503 from `POST /api/auth` usually means either the authentication service is briefly unavailable (wait a minute and retry) or API access has not been enabled on the account (contact the Customer Success Manager), as the IMPLAN Support article "How to Use the IMPLAN API with R: Obtaining Your API Token" explains.
+9. **Links.** Wiki home, the wiki pages used, and support.
 
 ---
 
