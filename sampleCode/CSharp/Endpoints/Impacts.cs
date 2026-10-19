@@ -63,21 +63,6 @@ public static class Impacts
     }
 
     /// <summary>
-    /// Cancels a running impact analysis.
-    /// </summary>
-    /// <remarks>
-    /// PUT /api/v1/impact/cancel/{runId}  (wiki: Cancel Impact)
-    ///
-    /// Useful when a run is taking far longer than expected, or when you spotted a
-    /// mistake in the Project. Answers with a short sentence confirming the
-    /// cancellation.
-    /// </remarks>
-    public static string CancelImpact(ApiClient client, long runId)
-    {
-        return client.PutText($"/api/v1/impact/cancel/{runId}").Trim().Trim('"');
-    }
-
-    /// <summary>
     /// Polls until an impact run finishes, and returns its final status.
     /// </summary>
     /// <remarks>
@@ -90,7 +75,7 @@ public static class Impacts
     ///
     /// Expect a 404 on the first poll. For a few seconds after a run starts its
     /// analyses do not exist yet, and status answers 404 "No analyses exist" until
-    /// they do; on INT the window was under 20 seconds. So a 404 is treated as "not
+    /// they do; in testing the window was under 20 seconds. So a 404 is treated as "not
     /// registered yet" for the first <see cref="Config.ImpactStartGrace"/>, and only
     /// a 404 that persists past that is reported as a run that never attached.
     /// </remarks>

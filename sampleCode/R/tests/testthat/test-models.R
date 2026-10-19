@@ -70,6 +70,13 @@ test_that("a region reads its build status and keeps unknown fields", {
   expect_equal(region$somethingAddedLater, 1)
 })
 
+test_that("a user-defined region says it is yours", {
+  region <- region_from_api(list(hashId = "h", description = "Two counties", userModelId = 42))
+
+  expect_true(is_user_defined(region))
+  expect_match(describe(region), "yours, userModelId=42", fixed = TRUE)
+})
+
 test_that("combining regions sends hashIds as an array", {
   body <- to_api(combine_region_request("desc", hash_ids = c("a", "b")))
 

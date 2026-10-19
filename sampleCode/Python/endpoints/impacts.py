@@ -51,18 +51,6 @@ def get_impact_status(client: ApiClient, run_id: int) -> ImpactStatus:
         return ImpactStatus.UNKNOWN
 
 
-def cancel_impact(client: ApiClient, run_id: int) -> str:
-    """Cancel a running impact analysis.
-
-    PUT /api/v1/impact/cancel/{runId}  (wiki: Cancel Impact)
-
-    Useful when a run is taking far longer than expected, or when you spotted a
-    mistake in the Project. Answers with a short sentence confirming the
-    cancellation.
-    """
-    return str(client.put_json(f"/api/v1/impact/cancel/{run_id}"))
-
-
 def wait_for_impact(
     client: ApiClient,
     run_id: int,
@@ -80,7 +68,7 @@ def wait_for_impact(
 
     Expect a 404 on the first poll. For a few seconds after a run starts its
     analyses do not exist yet, and status answers 404 "No analyses exist" until
-    they do; on INT the window was under 20 seconds. So a 404 is treated as "not
+    they do; in testing the window was under 20 seconds. So a 404 is treated as "not
     registered yet" for the first `config.IMPACT_START_GRACE_SECONDS`, and only a
     404 that persists past that is reported as a run that never attached.
     """

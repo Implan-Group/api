@@ -91,13 +91,6 @@ public static class RunImpactAnalysisWorkflow
         Impacts.WaitForImpact(client, runId);
         ConsoleLog.Info("  complete");
 
-        // Cancelling is the other half of this endpoint pair. Not run here, but this
-        // is the call:
-        //
-        //   Impacts.CancelImpact(client, runId);
-        //
-        // PUT /api/v1/impact/cancel/{runId}  (wiki: Cancel Impact)
-
         // Step 4. Download the reports. Every one of them is CSV text.
         ConsoleLog.Heading("Step 4: download the results");
         var destination = Path.Combine(
@@ -125,6 +118,21 @@ public static class RunImpactAnalysisWorkflow
         var growthCsv = ImpactResults.GetEstimatedGrowthPercentage(client, runId, growthRequest);
         ImpactResults.SaveCsv(growthCsv, Path.Combine(destination, "Estimated Growth Percentage.csv"));
 
+        // The CSV reports all take the same filters. Impacts keeps only the effects
+        // you name, out of Direct, Indirect, and Induced, so this reads the headline
+        // report again for the activity itself, without its supply chain or
+        // household spending.
+        var directFilters = new ResultFilters
+        {
+            Year = Config.CurrentDollarYear,
+            Impacts = [ImpactType.Direct.ToString()],
+        };
+
+        // GET /api/v1/impact/results/SummaryEconomicIndicators/{runId}?impacts=Direct
+        // (wiki: Results - Summary Economic Indicators)
+        var directCsv = ImpactResults.GetSummaryEconomicIndicators(client, runId, directFilters);
+        ImpactResults.SaveCsv(directCsv, Path.Combine(destination, "Summary Economic Indicators - Direct.csv"));
+
         // Step 5. Confirm what landed. A report whose first line is JSON rather than
         // a header row means something went wrong that the status check did not catch.
         ConsoleLog.Heading("Step 5: check the files");
@@ -132,7 +140,7 @@ public static class RunImpactAnalysisWorkflow
         {
             var firstLine = File.ReadLines(path).FirstOrDefault() ?? string.Empty;
             var looksLikeCsv = firstLine.Contains(',') && !firstLine.StartsWith('{');
-            ConsoleLog.Info("  {0,-34} {1}  {2}",
+            ConsoleLog.Info("  {0,-42} {1}  {2}",
                 Path.GetFileName(path),
                 looksLikeCsv ? "ok " : "??",
                 firstLine.Length > 60 ? firstLine[..60] : firstLine);

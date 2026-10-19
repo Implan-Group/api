@@ -1,5 +1,7 @@
 """The command line: what it accepts, and the exit code each kind of failure gets."""
 
+import contextlib
+import io
 import sys
 import unittest
 from unittest import mock
@@ -43,6 +45,10 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(args.region_type, "County")
         # 0 means every region; the entry point passes `args.limit or None`.
         self.assertEqual(args.limit, 0)
+
+    def test_an_unknown_region_type_is_rejected(self) -> None:
+        with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            self.parser.parse_args(["regions", "--region-type", "Planet"])
 
     def test_project_id_and_the_default_map_code(self) -> None:
         args = self.parser.parse_args(["run-impact-analysis", "--project-id", "abc-123"])

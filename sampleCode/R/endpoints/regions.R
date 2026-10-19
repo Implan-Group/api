@@ -106,27 +106,6 @@ get_user_regions_for_scheme <- function(client, aggregation_scheme_id, dataset_i
 }
 
 
-# Lists all of your combined and customized regions.
-#
-# GET /api/v1/region/user  (wiki: Get User Regions)
-#
-# On an account with many custom schemes this call can answer 503 while IMPLAN
-# rebuilds its region cache, and the first request can exceed the gateway's
-# 30-second limit. Narrowing it with a scheme and dataset, or using the
-# scheme-scoped call above, is more reliable.
-get_user_regions <- function(client, aggregation_scheme_id = NULL, dataset_id = NULL) {
-  query <- list()
-  if (!is.null(aggregation_scheme_id)) {
-    query$aggregationSchemeId <- aggregation_scheme_id
-  }
-  if (!is.null(dataset_id)) {
-    query$datasetId <- dataset_id
-  }
-
-  list_from_api(get_json(client, "/api/v1/region/user", query = query), region_from_api)
-}
-
-
 # Reads one of your regions by HashId.
 #
 # GET /api/v1/region/user/{hashId}  (wiki: Get User Region)

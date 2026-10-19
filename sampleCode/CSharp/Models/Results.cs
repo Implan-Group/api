@@ -100,23 +100,18 @@ public sealed class ResultFilters
     /// Renders the filters as query parameters, omitting the empty ones.
     /// </summary>
     /// <remarks>
-    /// A list becomes a repeated parameter, which is the shape the API expects for
-    /// these, so the caller adds each value separately.
+    /// A list becomes a repeated parameter, one per value, which is the shape the
+    /// API expects for these: two regions means
+    /// <c>regions=Oregon&amp;regions=Wisconsin</c>.
     /// </remarks>
-    public IEnumerable<KeyValuePair<string, string>> ToQuery()
+    public Query ToQuery()
     {
-        if (Year is not null)
-            yield return new KeyValuePair<string, string>("year", Year.Value.ToString());
-
-        foreach (var value in Regions)
-            yield return new KeyValuePair<string, string>("regions", value);
-        foreach (var value in Impacts)
-            yield return new KeyValuePair<string, string>("impacts", value);
-        foreach (var value in Groups)
-            yield return new KeyValuePair<string, string>("groups", value);
-        foreach (var value in Events)
-            yield return new KeyValuePair<string, string>("events", value);
-        foreach (var value in EventTags)
-            yield return new KeyValuePair<string, string>("eventTags", value);
+        return new Query()
+            .With("year", Year)
+            .WithEach("regions", Regions)
+            .WithEach("impacts", Impacts)
+            .WithEach("groups", Groups)
+            .WithEach("events", Events)
+            .WithEach("eventTags", EventTags);
     }
 }

@@ -230,7 +230,19 @@ parse_arguments <- function(arguments) {
       options$map_code <- toupper(next_value())
       index <- index + 1L
     } else if (identical(argument, "--region-type")) {
-      options$region_type <- next_value()
+      # Matched against REGION_TYPES, ignoring case, so a typo stops here rather
+      # than coming back from the API as an empty list of regions.
+      matched <- REGION_TYPES[tolower(REGION_TYPES) == tolower(next_value())]
+      if (length(matched) == 0L) {
+        stop(
+          sprintf(
+            "Unknown region type '%s'. Use one of: %s.",
+            next_value(), paste(REGION_TYPES, collapse = ", ")
+          ),
+          call. = FALSE
+        )
+      }
+      options$region_type <- matched
       index <- index + 1L
     } else if (identical(argument, "--export-name")) {
       options$export_name <- next_value()

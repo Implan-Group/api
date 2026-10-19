@@ -31,6 +31,12 @@ public sealed class CommandLineTests
     }
 
     [Fact]
+    public void Parse_UnknownRegionType_Throws()
+    {
+        Assert.Throws<ArgumentException>(() => CommandLineOptions.Parse(["regions", "--region-type", "Planet"]));
+    }
+
+    [Fact]
     public void SafeFileName_ReplacesCharactersWindowsRejects()
     {
         Assert.Equal(

@@ -126,6 +126,10 @@ public sealed class Region
         };
         if (Urid is not null)
             parts.Add($"urid={Urid}");
+        if (IsUserDefined)
+        {
+            parts.Add($"yours, userModelId={UserModelId}");
+        }
         if (!string.IsNullOrWhiteSpace(ModelBuildStatus))
             parts.Add(ModelBuildStatus);
         return string.Join("  ", parts);

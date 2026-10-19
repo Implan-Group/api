@@ -15,6 +15,17 @@ There is a full Wiki available for the API [here](https://github.com/Implan-Grou
 
 ---
 
+## OpenAPI specification
+
+The machine-readable contract for Impact API v1 is
+[openapi/impact-api-v1.json](openapi/impact-api-v1.json), an OpenAPI 3.1 document
+generated from the API itself and checked against the production gateway. It covers
+every endpoint's parameters, request and response schemas, and the statuses each one
+returns, and it can be imported into Postman, Swagger UI, or a client generator. The
+[Postman collection](IMPLAN-API.postman_collection.json) covers the same endpoints.
+
+---
+
 ## Sample code
 
 Working examples live in [sampleCode](sampleCode/), in three languages. Each folder

@@ -50,8 +50,7 @@ test_that("an error response arrives as implan_api_error with its problem detail
 test_that("every way of sending raises an API error rather than returning NULL", {
   for (send in list(
     function(client) get_json(client, "/x"),
-    function(client) post_json(client, "/x"),
-    function(client) put_json(client, "/x")
+    function(client) post_json(client, "/x")
   )) {
     httr2::local_mocked_responses(list(mock_response(409, '{"title":"Model not built"}')))
     expect_error(send(test_client()), class = "implan_api_error")

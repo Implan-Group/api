@@ -14,8 +14,11 @@
 # https://github.com/Implan-Group/api/wiki/Regional-Data-Exports
 
 
-# The two exports the samples download by name. Any other report from the wiki's
-# Regional Data Exports section can be passed to `get_export()` as a string.
+# The two exports the samples name. Any other report from the wiki's Regional
+# Data Exports section can be passed to `get_export()` as a string. The GAMS file
+# (wiki: Region Data - GAMS) takes an IMPLAN region into the General Algebraic
+# Modeling System, which is why it saves as `.gms`. Support: Exporting Data from
+# IMPLAN to GAMS, https://support.implan.com/hc/en-us/articles/360033706954
 REGION_OVERVIEW_INDUSTRIES <- "RegionOverviewIndustries"
 GAMS_SINGLE_FILE <- "region-general-algebraic-modeling-single-file"
 
@@ -50,34 +53,4 @@ get_export <- function(client, aggregation_scheme_id, export_name, region = NULL
     sprintf("/api/v1/regions/export/%s/%s", aggregation_scheme_id, export_name),
     query = list(hashId = hash_id)
   )
-}
-
-
-# Every industry in a region, with employment, output, and value added.
-#
-# GET /api/v1/regions/export/{aggregationSchemeId}/RegionOverviewIndustries
-# (wiki: Regional Data Exports)
-#
-# The usual starting point for describing a regional economy, and the report the
-# RegionalExports workflow downloads in bulk.
-get_region_overview_industries <- function(client,
-                                           aggregation_scheme_id,
-                                           region = NULL,
-                                           hash_id = NULL) {
-  get_export(client, aggregation_scheme_id, REGION_OVERVIEW_INDUSTRIES, region, hash_id)
-}
-
-
-# A region's model as one GAMS input file.
-#
-# GET /api/v1/regions/export/{aggregationSchemeId}/region-general-algebraic-modeling-single-file
-# (wiki: Region Data - GAMS)
-#
-# For taking an IMPLAN region into the General Algebraic Modeling System. Save it
-# with a `.gms` extension.
-#
-# Support: Exporting Data from IMPLAN to GAMS
-# https://support.implan.com/hc/en-us/articles/360033706954
-get_gams_single_file <- function(client, aggregation_scheme_id, region = NULL, hash_id = NULL) {
-  get_export(client, aggregation_scheme_id, GAMS_SINGLE_FILE, region, hash_id)
 }

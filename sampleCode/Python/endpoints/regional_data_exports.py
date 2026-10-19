@@ -16,8 +16,11 @@ https://github.com/Implan-Group/api/wiki/Regional-Data-Exports
 from models.region import Region
 from utilities.rest import ApiClient
 
-# The two exports the samples download by name. Any other report from the wiki's
-# Regional Data Exports section can be passed to `get_export` as a string.
+# The two exports the samples name. Any other report from the wiki's Regional Data
+# Exports section can be passed to `get_export` as a string. The GAMS file (wiki:
+# Region Data - GAMS) takes an IMPLAN region into the General Algebraic Modeling
+# System, which is why it saves as `.gms`. Support: Exporting Data from IMPLAN to
+# GAMS, https://support.implan.com/hc/en-us/articles/360033706954
 REGION_OVERVIEW_INDUSTRIES = "RegionOverviewIndustries"
 GAMS_SINGLE_FILE = "region-general-algebraic-modeling-single-file"
 
@@ -57,53 +60,4 @@ def get_export(
     return client.get_text(
         f"/api/v1/regions/export/{aggregation_scheme_id}/{export_name}",
         params={"hashId": hash_id},
-    )
-
-
-def get_region_overview_industries(
-    client: ApiClient,
-    aggregation_scheme_id: int,
-    region: Region | None = None,
-    hash_id: str | None = None,
-) -> str:
-    """Every industry in a region, with employment, output, and value added.
-
-    GET /api/v1/regions/export/{aggregationSchemeId}/RegionOverviewIndustries
-    (wiki: Regional Data Exports)
-
-    The usual starting point for describing a regional economy, and the report the
-    RegionalExports workflow downloads in bulk.
-    """
-    return get_export(
-        client,
-        aggregation_scheme_id,
-        REGION_OVERVIEW_INDUSTRIES,
-        region=region,
-        hash_id=hash_id,
-    )
-
-
-def get_gams_single_file(
-    client: ApiClient,
-    aggregation_scheme_id: int,
-    region: Region | None = None,
-    hash_id: str | None = None,
-) -> str:
-    """A region's model as one GAMS input file.
-
-    GET /api/v1/regions/export/{aggregationSchemeId}/region-general-algebraic-modeling-single-file
-    (wiki: Region Data - GAMS)
-
-    For taking an IMPLAN region into the General Algebraic Modeling System. Save it
-    with a `.gms` extension.
-
-    Support: Exporting Data from IMPLAN to GAMS
-    https://support.implan.com/hc/en-us/articles/360033706954
-    """
-    return get_export(
-        client,
-        aggregation_scheme_id,
-        GAMS_SINGLE_FILE,
-        region=region,
-        hash_id=hash_id,
     )

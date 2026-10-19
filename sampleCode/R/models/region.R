@@ -106,6 +106,9 @@ describe.implan_region <- function(x, ...) {
   if (!is.null(x$urid)) {
     parts <- c(parts, paste0("urid=", x$urid))
   }
+  if (is_user_defined(x)) {
+    parts <- c(parts, paste0("yours, userModelId=", x$user_model_id))
+  }
   if (nzchar(x$model_build_status)) {
     parts <- c(parts, x$model_build_status)
   }

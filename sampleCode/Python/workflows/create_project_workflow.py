@@ -24,6 +24,7 @@ from models.event import (
     EventType,
     IndustryImpactAnalysisEvent,
     IndustryOutputEvent,
+    MarginType,
     SpendingPatternValueType,
 )
 from models.group import Group, GroupEvent
@@ -95,6 +96,10 @@ def run(map_code: MapCode = MapCode.US) -> Project:
         title=config.unique_title("Industry Output"),
         industry_code=industry.code,
         output=1_000_000.00,
+        # Farm output is valued at the price the producer received. Only retail and
+        # wholesale industries can be margined; PURCHASER_PRICE on anything else is
+        # reverted to PRODUCER_PRICE before the impact runs.
+        margin_type=MarginType.PRODUCER_PRICE.value,
     )
 
     # POST /api/v1/impact/project/{projectId}/event  (wiki: Create Event)
@@ -170,13 +175,23 @@ def run(map_code: MapCode = MapCode.US) -> Project:
     group = groups.create_group(client, project.id, group)
     logger.info("  %s", group.describe())
 
-    # Step 8. Read the project back, to confirm what was built.
-    logging_setup.heading("Step 8: read the Project back")
+    # Step 8. Read everything back, to confirm what was built.
+    logging_setup.heading("Step 8: read the Project, an Event, and the Group back")
 
     # GET /api/v1/impact/project/{projectId}  (wiki: Get Project)
     project = projects.get_project(client, project.id)
     logger.info("  %s", project.describe())
     logger.info("  Aggregation Scheme %d, Household Set %d", project.aggregation_scheme_id, project.household_set_id)
+
+    # GET /api/v1/impact/project/{projectId}/event/{eventId}  (wiki: Get Event)
+    stored_event = events.get_event(client, project.id, output_event.id)
+    logger.info("  %s", stored_event.describe())
+
+    # GET /api/v1/impact/project/{projectId}/group/{groupId}  (wiki: Get Group)
+    # Read one Group by id rather than scanning the list when you care about its
+    # settings; the single-Group read is the authoritative one.
+    stored_group = groups.get_group(client, project.id, group.id)
+    logger.info("  %s", stored_group.describe())
 
     logging_setup.heading("Done")
     logger.info("Project id:  %s", project.id)

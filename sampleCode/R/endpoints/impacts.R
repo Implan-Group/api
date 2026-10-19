@@ -46,18 +46,6 @@ get_impact_status <- function(client, run_id) {
 }
 
 
-# Cancels a running impact analysis.
-#
-# PUT /api/v1/impact/cancel/{runId}  (wiki: Cancel Impact)
-#
-# Useful when a run is taking far longer than expected, or when you spotted a
-# mistake in the Project. Answers with a short sentence confirming the
-# cancellation.
-cancel_impact <- function(client, run_id) {
-  as.character(put_json(client, sprintf("/api/v1/impact/cancel/%s", run_id)))
-}
-
-
 # Polls until an impact run finishes, and returns its final status.
 #
 # Stops on a terminal failure, on a 404 that outlasts the start-up window, and on
@@ -69,7 +57,7 @@ cancel_impact <- function(client, run_id) {
 #
 # Expect a 404 on the first poll. For a few seconds after a run starts its
 # analyses do not exist yet, and status answers 404 "No analyses exist" until they
-# do; on INT the window was under 20 seconds. So a 404 is treated as "not
+# do; in testing the window was under 20 seconds. So a 404 is treated as "not
 # registered yet" for the first IMPACT_START_GRACE_SECONDS, and only a 404 that
 # persists past that is reported as a run that never attached.
 wait_for_impact <- function(client,

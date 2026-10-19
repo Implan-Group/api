@@ -50,6 +50,16 @@ public static class IdentifiersWorkflow
             ConsoleLog.Info("    {0,3}  {1,-40}{2}{3}", set.Id, set.Description, active, marker);
         }
 
+        // GET /api/v1/aggregationSchemes/{aggregationSchemeId}
+        // (wiki: Aggregation Scheme by Id)
+        // Reading the scheme back by id is how you check one you were handed: its
+        // Industry Set, its map code, and its status, which must be Complete before
+        // the scheme is usable.
+        var scheme = AggregationSchemes.GetAggregationScheme(client, us.AggregationSchemeId);
+        ConsoleLog.Info();
+        ConsoleLog.Info("  Aggregation Scheme {0}, read back by id: '{1}', Industry Set {2}, {3}, status {4}",
+            scheme.Id, scheme.Description, scheme.IndustrySetId, scheme.MapCode, scheme.Status);
+
         // GET /api/v1/datasets/{aggregationSchemeId}  (wiki: Dataset by Aggregation Scheme)
         var schemeDatasets = Datasets.GetDatasetsForScheme(client, us.AggregationSchemeId);
         ConsoleLog.Info();
@@ -62,6 +72,20 @@ public static class IdentifiersWorkflow
             ConsoleLog.Info("    {0,3}  {1}{2}", dataset.Id, dataset.Description, marker);
         }
 
+        // GET /api/v1/datasets  (wiki: Datasets)
+        // The unscoped list answers for whichever scheme is the current default,
+        // without saying which. Compare it with the scoped list rather than relying
+        // on it.
+        var defaultSchemeDatasets = Datasets.GetDatasets(client);
+        var sameIds = defaultSchemeDatasets.Select(d => d.Id).ToHashSet()
+            .SetEquals(schemeDatasets.Select(d => d.Id));
+        ConsoleLog.Info();
+        ConsoleLog.Info("  The unscoped Datasets list has {0} entries, {1} the list for scheme {2}.",
+            defaultSchemeDatasets.Count,
+            sameIds ? "the same ids as" : "different ids from",
+            us.AggregationSchemeId);
+        ConsoleLog.Info("  Prefer the scoped call: it names the scheme the ids belong to.");
+
         // Step 3. Look an industry up properly. Checking the description alongside
         // the code is what catches a code that has moved between industry vintages.
         ConsoleLog.Heading("Step 3: look up an industry by code, and verify it");
@@ -71,6 +95,17 @@ public static class IdentifiersWorkflow
         // This route takes no query string: the scheme already implies its Industry Set.
         var codes = Industries.GetIndustryCodesForScheme(client, us.AggregationSchemeId);
         ConsoleLog.Info("  {0} industries in this Aggregation Scheme", codes.Count);
+
+        // GET /api/v1/IndustryCodes?industrySetId=...  (wiki: Industry Codes by Industry Set)
+        // The same list keyed by Industry Set instead. An unaggregated scheme has
+        // every industry in its set; an aggregated one has fewer, so the
+        // scheme-scoped list is the one that matches what an Event in that scheme may
+        // use.
+        var setCodes = Industries.GetIndustryCodesForSet(client, us.IndustrySet.Id);
+        ConsoleLog.Info("  {0} industries in Industry Set {1}, {2}",
+            setCodes.Count,
+            us.IndustrySet.Id,
+            setCodes.Count == codes.Count ? "the same list" : "more than the scheme uses");
 
         var oilseed = Industries.FindIndustry(codes, 1, "Oilseed farming");
         ConsoleLog.Info("  code {0} is '{1}', as expected", oilseed.Code, oilseed.Description);

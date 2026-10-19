@@ -62,19 +62,6 @@ public static class Projects
     }
 
     /// <summary>
-    /// Deletes a Project and everything in it.
-    /// </summary>
-    /// <remarks>
-    /// DELETE /api/v1/impact/project/{projectId}  (wiki: Delete Project)
-    ///
-    /// This is how you clean up after running the samples. It cannot be undone.
-    /// </remarks>
-    public static void DeleteProject(ApiClient client, Guid projectId)
-    {
-        client.Delete($"/api/v1/impact/project/{projectId}");
-    }
-
-    /// <summary>
     /// Imports Events into a Project from a filled IMPLAN Event Template.
     /// </summary>
     /// <remarks>

@@ -49,11 +49,3 @@ get_group <- function(client, project_id, group_id) {
   )
   group_from_api(payload)
 }
-
-
-# Removes a Group from a Project.
-#
-# DELETE /api/v1/impact/project/{projectId}/group/{groupId}  (wiki: Delete Group)
-delete_group <- function(client, project_id, group_id) {
-  delete_resource(client, sprintf("/api/v1/impact/project/%s/group/%s", project_id, group_id))
-}

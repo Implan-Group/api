@@ -83,7 +83,11 @@ create_project_workflow <- function(map_code = MAP_CODES[["US"]]) {
   output_event <- create_event(client, project$id, industry_output_event(
     title = unique_title("Industry Output"),
     industry_code = industry$code,
-    output = 1000000
+    output = 1000000,
+    # Farm output is valued at the price the producer received. Only retail and
+    # wholesale industries can be margined; "PurchaserPrice" on anything else is
+    # reverted to "ProducerPrice" before the impact runs.
+    margin_type = MARGIN_TYPES[["PRODUCER_PRICE"]]
   ))
   log_info("  %s", describe(output_event))
 
@@ -155,8 +159,8 @@ create_project_workflow <- function(map_code = MAP_CODES[["US"]]) {
   ))
   log_info("  %s", describe(group))
 
-  # Step 8. Read the project back, to confirm what was built.
-  log_heading("Step 8: read the Project back")
+  # Step 8. Read everything back, to confirm what was built.
+  log_heading("Step 8: read the Project, an Event, and the Group back")
 
   # GET /api/v1/impact/project/{projectId}  (wiki: Get Project)
   project <- get_project(client, project$id)
@@ -165,6 +169,16 @@ create_project_workflow <- function(map_code = MAP_CODES[["US"]]) {
     "  Aggregation Scheme %s, Household Set %s",
     project$aggregation_scheme_id, project$household_set_id
   )
+
+  # GET /api/v1/impact/project/{projectId}/event/{eventId}  (wiki: Get Event)
+  stored_event <- get_event(client, project$id, output_event$id)
+  log_info("  %s", describe(stored_event))
+
+  # GET /api/v1/impact/project/{projectId}/group/{groupId}  (wiki: Get Group)
+  # Read one Group by id rather than scanning the list when you care about its
+  # settings; the single-Group read is the authoritative one.
+  stored_group <- get_group(client, project$id, group$id)
+  log_info("  %s", describe(stored_group))
 
   created_ids <- c(output_event$id, if (is.null(detailed_event)) NULL else detailed_event$id)
 

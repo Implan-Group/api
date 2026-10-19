@@ -270,9 +270,9 @@ get_text <- function(client, path, query = NULL, body = NULL) {
 
 # POSTs a JSON body and reads whatever comes back.
 #
-# A few endpoints answer with a bare number or a sentence rather than an object:
-# RunImpact returns a run id, and CancelImpact returns a confirmation. Both still
-# need reading, so an unparseable response comes back as trimmed text.
+# A few endpoints answer with a bare number rather than an object: RunImpact
+# returns a run id, and it still needs reading, so an unparseable response comes
+# back as trimmed text.
 post_json <- function(client, path, body = NULL) {
   parse_json_response(perform_request(client, build_request(client, path, "POST", body = body)))
 }
@@ -292,19 +292,6 @@ post_file <- function(client, path, field_name, file_path) {
   req <- do.call(req_body_multipart, c(list(req), parts))
 
   parse_json_response(perform_request(client, req))
-}
-
-
-# PUTs a JSON body and reads whatever comes back.
-put_json <- function(client, path, body = NULL) {
-  parse_json_response(perform_request(client, build_request(client, path, "PUT", body = body)))
-}
-
-
-# DELETEs a resource. The API returns no body worth reading.
-delete_resource <- function(client, path) {
-  perform_request(client, build_request(client, path, "DELETE"))
-  invisible(NULL)
 }
 
 

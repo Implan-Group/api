@@ -329,7 +329,7 @@ This endpoint will return a list of aggregation schemes available for use.
     ...
     {
         "id": 1090,
-        "description": "PHX-10001 Test",
+        "description": "Custom Aggregation Scheme",
         "industrySetId": 8,
         "householdSetIds": [
             1

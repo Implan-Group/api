@@ -118,11 +118,3 @@ def get_event(client: ApiClient, project_id: str, event_id: str) -> Event:
         f"/api/v1/impact/project/{project_id}/event/{event_id}"
     )
     return event_from_api(payload)
-
-
-def delete_event(client: ApiClient, project_id: str, event_id: str) -> None:
-    """Remove an Event from a Project.
-
-    DELETE /api/v1/impact/project/{projectId}/event/{eventId}  (wiki: Delete Event)
-    """
-    client.delete(f"/api/v1/impact/project/{project_id}/event/{event_id}")

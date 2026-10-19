@@ -112,6 +112,8 @@ class Region(ApiModel):
         parts.append(f"hashId={self.hash_id}")
         if self.urid is not None:
             parts.append(f"urid={self.urid}")
+        if self.is_user_defined:
+            parts.append(f"yours, userModelId={self.user_model_id}")
         if self.model_build_status:
             parts.append(self.model_build_status)
         return "  ".join(parts)

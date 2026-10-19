@@ -150,17 +150,5 @@ public static class Events
         using var document = JsonDocument.Parse(text);
         return EventFactory.FromJson(document.RootElement);
     }
-
-    /// <summary>
-    /// Removes an Event from a Project.
-    /// </summary>
-    /// <remarks>
-    /// DELETE /api/v1/impact/project/{projectId}/event/{eventId}
-    /// (wiki: Delete Event)
-    /// </remarks>
-    public static void DeleteEvent(ApiClient client, Guid projectId, Guid eventId)
-    {
-        client.Delete($"/api/v1/impact/project/{projectId}/event/{eventId}");
-    }
 }
 

@@ -48,16 +48,6 @@ get_shared_projects <- function(client) {
 }
 
 
-# Deletes a Project and everything in it.
-#
-# DELETE /api/v1/impact/project/{projectId}  (wiki: Delete Project)
-#
-# This is how you clean up after running the samples. It cannot be undone.
-delete_project <- function(client, project_id) {
-  delete_resource(client, sprintf("/api/v1/impact/project/%s", project_id))
-}
-
-
 # Imports Events into a Project from a filled IMPLAN Event Template.
 #
 # POST /api/v1/impact/project/import/{projectId}  (wiki: Import Events)

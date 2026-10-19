@@ -98,6 +98,10 @@ public static class CreateProjectWorkflow
             Title = Config.UniqueTitle("Industry Output"),
             IndustryCode = industry.Code,
             Output = 1_000_000.00,
+            // Farm output is valued at the price the producer received. Only retail
+            // and wholesale industries can be margined; PurchaserPrice on anything
+            // else is reverted to ProducerPrice before the impact runs.
+            MarginType = MarginType.ProducerPrice,
         });
         ConsoleLog.Info("  {0}", outputEvent.Describe());
 
@@ -167,14 +171,24 @@ public static class CreateProjectWorkflow
         });
         ConsoleLog.Info("  {0}", group.Describe());
 
-        // Step 8. Read the project back, to confirm what was built.
-        ConsoleLog.Heading("Step 8: read the Project back");
+        // Step 8. Read everything back, to confirm what was built.
+        ConsoleLog.Heading("Step 8: read the Project, an Event, and the Group back");
 
         // GET /api/v1/impact/project/{projectId}  (wiki: Get Project)
         project = Projects.GetProject(client, projectId);
         ConsoleLog.Info("  {0}", project.Describe());
         ConsoleLog.Info("  Aggregation Scheme {0}, Household Set {1}",
             project.AggregationSchemeId, project.HouseholdSetId);
+
+        // GET /api/v1/impact/project/{projectId}/event/{eventId}  (wiki: Get Event)
+        var storedEvent = Events.GetEvent(client, projectId, outputEvent.Id!.Value);
+        ConsoleLog.Info("  {0}", storedEvent.Describe());
+
+        // GET /api/v1/impact/project/{projectId}/group/{groupId}  (wiki: Get Group)
+        // Read one Group by id rather than scanning the list when you care about its
+        // settings; the single-Group read is the authoritative one.
+        var storedGroup = Groups.GetGroup(client, projectId, group.Id!.Value);
+        ConsoleLog.Info("  {0}", storedGroup.Describe());
 
         ConsoleLog.Heading("Done");
         ConsoleLog.Info("Project id:  {0}", project.Id);

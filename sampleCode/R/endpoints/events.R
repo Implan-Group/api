@@ -117,11 +117,3 @@ get_event <- function(client, project_id, event_id) {
   )
   event_from_api(payload)
 }
-
-
-# Removes an Event from a Project.
-#
-# DELETE /api/v1/impact/project/{projectId}/event/{eventId}  (wiki: Delete Event)
-delete_event <- function(client, project_id, event_id) {
-  delete_resource(client, sprintf("/api/v1/impact/project/%s/event/%s", project_id, event_id))
-}

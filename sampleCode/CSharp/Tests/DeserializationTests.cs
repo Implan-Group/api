@@ -45,6 +45,16 @@ public sealed class DeserializationTests
     }
 
     [Fact]
+    public void Describe_UserDefinedRegion_SaysItIsYours()
+    {
+        var region = Json.Deserialize<Region>(
+            """{"hashId":"x","description":"Two counties","userModelId":42}""")!;
+
+        Assert.True(region.IsUserDefined);
+        Assert.Contains("yours, userModelId=42", region.Describe());
+    }
+
+    [Fact]
     public void Deserialize_Group_ReadsNestedGroupEvents()
     {
         var group = Json.Deserialize<Group>(

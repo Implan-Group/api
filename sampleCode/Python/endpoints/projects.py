@@ -56,16 +56,6 @@ def get_shared_projects(client: ApiClient) -> list[Project]:
     return Project.list_from_api(payload)
 
 
-def delete_project(client: ApiClient, project_id: str) -> None:
-    """Delete a Project and everything in it.
-
-    DELETE /api/v1/impact/project/{projectId}  (wiki: Delete Project)
-
-    This is how you clean up after running the samples. It cannot be undone.
-    """
-    client.delete(f"/api/v1/impact/project/{project_id}")
-
-
 def import_event_template(client: ApiClient, project_id: str, workbook_path) -> object:
     """Import Events into a Project from a filled IMPLAN Event Template.
 

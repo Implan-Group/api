@@ -23,6 +23,13 @@ public static class RegionalDataExports
     public const string RegionOverviewIndustries = "RegionOverviewIndustries";
 
     /// <summary>A region's model as one GAMS input file.</summary>
+    /// <remarks>
+    /// Wiki: Region Data - GAMS. For taking an IMPLAN region into the General
+    /// Algebraic Modeling System, which is why it saves as <c>.gms</c>.
+    ///
+    /// Support: Exporting Data from IMPLAN to GAMS
+    /// https://support.implan.com/hc/en-us/articles/360033706954
+    /// </remarks>
     public const string GamsSingleFile = "region-general-algebraic-modeling-single-file";
 
     /// <summary>Reports whose natural file extension is not <c>.csv</c>.</summary>
@@ -61,39 +68,5 @@ public static class RegionalDataExports
         return client.GetText(
             $"/api/v1/regions/export/{aggregationSchemeId}/{exportName}",
             new Query().With("hashId", hashId));
-    }
-
-    /// <summary>
-    /// Every industry in a region, with employment, output, and value added.
-    /// </summary>
-    /// <remarks>
-    /// GET /api/v1/regions/export/{aggregationSchemeId}/RegionOverviewIndustries
-    /// (wiki: Regional Data Exports)
-    ///
-    /// The usual starting point for describing a regional economy, and the report
-    /// the RegionalExports workflow downloads in bulk.
-    /// </remarks>
-    public static string GetRegionOverviewIndustries(
-        ApiClient client, int aggregationSchemeId, string hashId)
-    {
-        return GetExport(client, aggregationSchemeId, RegionOverviewIndustries, hashId);
-    }
-
-    /// <summary>
-    /// A region's model as one GAMS input file.
-    /// </summary>
-    /// <remarks>
-    /// GET /api/v1/regions/export/{aggregationSchemeId}/region-general-algebraic-modeling-single-file
-    /// (wiki: Region Data - GAMS)
-    ///
-    /// For taking an IMPLAN region into the General Algebraic Modeling System. Save
-    /// it with a <c>.gms</c> extension.
-    ///
-    /// Support: Exporting Data from IMPLAN to GAMS
-    /// https://support.implan.com/hc/en-us/articles/360033706954
-    /// </remarks>
-    public static string GetGamsSingleFile(ApiClient client, int aggregationSchemeId, string hashId)
-    {
-        return GetExport(client, aggregationSchemeId, GamsSingleFile, hashId);
     }
 }

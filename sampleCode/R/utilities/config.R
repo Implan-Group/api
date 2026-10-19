@@ -111,7 +111,7 @@ IMPACT_POLL_SECONDS <- 15
 
 # Right after a run starts, its status answers 404 until the run's analyses have
 # been created. This is how long a 404 is read as "not registered yet" before it
-# is treated as a run that never attached. On INT the window was under 20
+# is treated as a run that never attached. In testing the window was under 20
 # seconds; a minute leaves room for a busier server.
 IMPACT_START_GRACE_SECONDS <- 60L
 

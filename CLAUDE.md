@@ -4,11 +4,11 @@ This file is the contract for anyone, human or agent, editing the sample code or
 
 Sources of truth, in order:
 
-1. The generated OpenAPI 3.1 spec for Impact API v1 in the `ui_api` repository (`C:\git\ui_api`, folder `UiApi/openapi/`), with its Postman collection beside it. It is produced from the controllers, validated against the API Gateway export, and carries request and response schemas, required fields, and every status an endpoint returns. Use the INT build, `ImpactApi_version1.external.int.json`, for the contract: it reflects the error-code corrections that will be in production by the time updated samples are published, so what a sample sees on INT today is what a reader sees on production later. The samples still target the production host, `https://api.implan.com`. Where a sample and the spec disagree, the spec wins.
-2. The [wiki](https://github.com/Implan-Group/api/wiki), checked out at `C:\git\github\api.wiki`, for narrative and page names to link.
-3. The `External.Api` controllers in `ui_api` when the spec text is ambiguous.
+1. The OpenAPI 3.1 spec for Impact API v1, in this repository at `openapi/impact-api-v1.json`. It is generated from the API's code, validated against the production API Gateway, and carries request and response schemas, required fields, and every status an endpoint returns. The samples target the production host, `https://api.implan.com`. Where a sample and the spec disagree, the spec wins.
+2. The [wiki](https://github.com/Implan-Group/api/wiki), for narrative and page names to link.
+3. The API's own source, when the spec text is ambiguous.
 
-`IMPLAN-API.postman_collection.json` at this repository's root is ui_api's generated production collection, `ImpactApi_version1.external.prod.postman_collection.json`, with every Instant and Batch request removed and the release 26.5 additions copied in until ui_api regenerates it (see PLAN.md 16.6.5). When ui_api's generated file catches up, replace the root copy with it and remove Instant and Batch again. It is not a source of truth for the samples; the spec is.
+`IMPLAN-API.postman_collection.json` at this repository's root is generated from the same source as the spec, with every Instant and Batch request removed. Until the generated collection includes release 26.5, it also carries the 26.5 additions copied in by hand: the Canadian and US occupation exports, and `environmentalDataSpecificity` on the environmental requests. When a regenerated collection includes them, replace the root copy with it and remove Instant and Batch again. It is not a source of truth for the samples; the spec is.
 
 One set of workflows, implemented once per language, each version tailored to its language but doing the same thing with the same example data. If a workflow is not in the list in section 5 it does not belong in a language folder, and if it is in the list every language folder must have it.
 
@@ -46,7 +46,7 @@ A language folder that departs from one of these needs a comment saying why.
 
 - Impact status: poll `GET /api/v1/impact/status/{runId}` every 15 to 30 seconds. The body is plain text, such as `Complete`, not JSON, so read it as text. `Complete` means proceed. `Error` and `UserCancelled` are terminal failures. A 404 means the run has no analyses yet: that is expected for the first few seconds after a run starts, so wait through it for up to a minute, and only a 404 that persists past that is terminal, meaning the run never attached. Give up after 15 minutes with a message that names the run id.
 - Combined-region build: poll `GET /api/v1/region/user/{hashId}` (the single-region endpoint, not the list) every 15 seconds until `modelBuildStatus` is `Complete`; treat `Error` as terminal; give up after 10 minutes.
-- Respect the published throttles (Region Models 5 per minute, Industry Codes and Datasets 10 per minute, Batch 6 per minute). Bulk workflows sleep between calls and never issue one status request per region. The Region Models limit counts model builds, not reads (confirmed by Timothy, 2026-09-21). The bulk workflows still hold every request to five a minute, a deliberate choice for simplicity; say so wherever the throttle is explained, and never describe reads as limited.
+- Respect the published throttles (Region Models 5 per minute, Industry Codes and Datasets 10 per minute, Batch 6 per minute). Bulk workflows sleep between calls and never issue one status request per region. The Region Models limit counts model builds, not reads. The bulk workflows still hold every request to five a minute, a deliberate choice for simplicity; say so wherever the throttle is explained, and never describe reads as limited.
 
 **Errors**
 
@@ -111,7 +111,7 @@ Same in every language so outputs can be compared side by side.
 
 ## 5. Layout, naming, and the workflow list
 
-There are exactly three folders under `sampleCode/`, named for the language and nothing else: `CSharp`, `Python`, and `R`. No variant folders, and no sub-project folders except one: the C# test project in `CSharp/Tests/`, because a separate test project is how .NET does tests (agreed with Timothy, 2026-10-16). The entry point, the manifest (`.csproj`, `requirements.txt`, or the R package list), the `.env.example`, and the README sit at the folder root.
+There are exactly three folders under `sampleCode/`, named for the language and nothing else: `CSharp`, `Python`, and `R`. No variant folders, and no sub-project folders except one: the C# test project in `CSharp/Tests/`, because a separate test project is how .NET does tests. The entry point, the manifest (`.csproj`, `requirements.txt`, or the R package list), the `.env.example`, and the README sit at the folder root.
 
 Every language keeps the same three layers so a reader who knows one folder can navigate the others. The endpoint files are named for the wiki's sidebar sections: Aggregation Schemes, Datasets, Industries, Regions and Regional Data Exports, Impacts with Events, Groups, and Projects, and Impact Results.
 
@@ -129,13 +129,13 @@ Each language tests with its standard framework, written the way a native reader
 
 The tests need no network and no credentials, and write nothing into the sample's folders. They are not a test suite for the API, and should not grow into one. They cover the places where the language or its libraries will quietly do something other than what this API needs, and where the result is a request that is accepted and wrong, or a failure reported as the wrong kind: a filter that must repeat rather than join with commas, a one-element array that must not collapse to a scalar, filter arrays that must survive as `[]`, a GET that must keep its body without becoming a POST, a token that must never appear in output, a response field the sample has never seen that must still read, and an API error that must arrive with its problem details rather than as nothing (R) or as "could not reach the API" (C#).
 
-They replace the network, not the client, so the real retry, refresh, logging, and error handling run: C#'s `ApiClient` takes an optional `HttpMessageHandler`, Python's takes an optional `requests` session with a scripted transport adapter mounted, and R uses httr2's built-in response mocking. httr2 answers a mock before its retry loop, so R alone cannot test retries. Run a folder's tests after touching its services or models, and add a test whenever a live run finds a bug of this kind; every bug in PLAN.md 16.6.3 compiled and passed review before a live run found it.
+They replace the network, not the client, so the real retry, refresh, logging, and error handling run: C#'s `ApiClient` takes an optional `HttpMessageHandler`, Python's takes an optional `requests` session with a scripted transport adapter mounted, and R uses httr2's built-in response mocking. httr2 answers a mock before its retry loop, so R alone cannot test retries. Run a folder's tests after touching its services or models, and add a test whenever a live run finds a bug of this kind; every bug the first live runs found had compiled and passed review.
 
 Naming: the workflow names are the same words in every language, spelled the way that language spells things. C# uses PascalCase files, classes, and methods; Python uses lower_snake_case modules and functions; R follows the tidyverse style guide with lower_snake_case files and functions. Inside each folder the code is written the way a native reader of that language expects, not as a transliteration of another language.
 
 Library choices: C# uses `HttpClient` plus `System.Text.Json` (or the current RestSharp, if kept, at its current release); Python uses `requests` and `python-dotenv`; R uses `httr2` with the native `|>` pipe and `jsonlite`, matching the IMPLAN Support article "How to Use the IMPLAN API with R: Obtaining Your API Token", which is the first thing an R user finds. The R code is plain functions grouped by file, not S4 classes: `req_auth_bearer_token()` for the token (it redacts the token when a request is printed), `req_error()` to turn problem-details bodies into R errors, `req_retry()` for the auth service's transient 503, and `req_throttle()` in the bulk workflows to stay inside the published rate limits.
 
-Version floors, and why they are where they are. Package floors are the current release at the time the samples were last verified, rechecked 2026-10-16: RestSharp 114.0.0; `requests` 2.34 and `python-dotenv` 1.2; `httr2` 1.3.0, `jsonlite` 2.0.0, `curl` 8.0.0 (8.1.0 is out, but CRAN has not yet built it for Windows), and `testthat` 3.3.2 for the R tests only. Python must be 3.14 or newer, by Timothy's choice. The C# target is the current release, net10.0; do not target a release candidate. R itself must be 4.1 or newer, for the native pipe and the `\(x)` lambda. Below `httr2` 1.2.0 the samples would not work at all: `req_throttle()` gained the `capacity` and `fill_time_s` arguments in 1.1.1, and the request accessors the logger uses, `req_get_headers()`, `req_get_body()`, `req_get_method()`, and `req_get_url()`, arrived in 1.2.0. The R manifest is `packages.R` at the folder root; running it installs what is missing, and `check_required_packages()` inside it is what turns a missing package into a sentence rather than a "could not find function" ten frames deep.
+Version floors, and why they are where they are. Package floors are the current release at the time the samples were last verified, rechecked 2026-10-16: RestSharp 114.0.0; `requests` 2.34 and `python-dotenv` 1.2; `httr2` 1.3.0, `jsonlite` 2.0.0, `curl` 8.0.0 (8.1.0 is out, but CRAN has not yet built it for Windows), and `testthat` 3.3.2 for the R tests only. Python must be 3.14 or newer. The C# target is the current release, net10.0; do not target a release candidate. R itself must be 4.1 or newer, for the native pipe and the `\(x)` lambda. Below `httr2` 1.2.0 the samples would not work at all: `req_throttle()` gained the `capacity` and `fill_time_s` arguments in 1.1.1, and the request accessors the logger uses, `req_get_headers()`, `req_get_body()`, `req_get_method()`, and `req_get_url()`, arrived in 1.2.0. The R manifest is `packages.R` at the folder root; running it installs what is missing, and `check_required_packages()` inside it is what turns a missing package into a sentence rather than a "could not find function" ten frames deep.
 
 | # | Workflow | C# | Python | R | Narrative doc |
 | --- | --- | --- | --- | --- | --- |
@@ -179,14 +179,17 @@ Needs: `.env`. Produces: token cache file. Done when: a second run reuses the ca
 
 Goal: show how every id the other workflows need is discovered from the API, and print the resolved values.
 
-Steps: list Industry Sets and pick the default; list Aggregation Schemes and pick the default scheme for that set; list Datasets for the scheme and pick the default; list Industry Codes for the scheme and show the code-plus-description check; list Region Types; then apply the Canada and International rule and print the resolved scheme, dataset, and household set for `CAN` and `INTL` as well, so the three map codes sit side by side. The Canada considerations doc in `impact/workflows` is folded into this workflow's narrative rather than kept separate.
+Steps: list Industry Sets and pick the default; list Aggregation Schemes and pick the default scheme for that set, then read that scheme back by id to show its Industry Set and status; list Datasets for the scheme and pick the default, then compare the unscoped Datasets list against it; list Industry Codes for the scheme and show the code-plus-description check, then list the codes for the Industry Set and compare the two; list Region Types; then apply the Canada and International rule and print the resolved scheme, dataset, and household set for `CAN` and `INTL` as well, so the three map codes sit side by side. The Canada considerations doc in `impact/workflows` is folded into this workflow's narrative rather than kept separate.
 
 | Endpoint | Wiki page |
 | --- | --- |
 | `GET /api/v1/industry-sets` | Get Industry Sets |
 | `GET /api/v1/aggregationSchemes` | Aggregation Schemes |
+| `GET /api/v1/aggregationSchemes/{aggregationSchemeId}` | Aggregation Scheme by Id |
 | `GET /api/v1/datasets/{aggregationSchemeId}` | Dataset by Aggregation Scheme |
+| `GET /api/v1/datasets` | Datasets |
 | `GET /api/v1/IndustryCodes/{aggregationSchemeId}` | Industry Codes by Aggregation Scheme |
+| `GET /api/v1/IndustryCodes?industrySetId={industrySetId}` | Industry Codes by Industry Set |
 | `GET /api/v1/region/RegionTypes` | Get Region Types |
 
 Needs: token. Produces: a printed table of the resolved ids. Done when: the printed scheme, dataset, and household set match what IMPLAN Cloud shows as current.
@@ -224,7 +227,7 @@ Needs: token, ids. Produces: a built combined region. Done when: the poll return
 
 Goal: the minimum path from nothing to a runnable project.
 
-Steps: create the project with the resolved scheme and household set; list the event types valid for it; add one Industry Output event and one Industry Impact Analysis event for Oilseed farming; find Oregon; add one group for Oregon with both events and the current dollar year; read the project back.
+Steps: create the project with the resolved scheme and household set; list the event types valid for it; add one Industry Output event (`marginType` `ProducerPrice`, set explicitly) and one Industry Impact Analysis event for Oilseed farming; find Oregon; add one group for Oregon with both events and the current dollar year; read the project, the Industry Output event, and the group back.
 
 | Endpoint | Wiki page |
 | --- | --- |
@@ -233,6 +236,8 @@ Steps: create the project with the resolved scheme and household set; list the e
 | `POST /api/v1/impact/project/{projectId}/event` | Create Event |
 | `POST /api/v1/impact/project/{projectId}/group` | Create Group |
 | `GET /api/v1/impact/project/{projectId}` | Get Project |
+| `GET /api/v1/impact/project/{projectId}/event/{eventId}` | Get Event |
+| `GET /api/v1/impact/project/{projectId}/group/{groupId}` | Get Group |
 
 The workflow takes an optional map code, default `US`. With `CAN` it resolves the Canadian scheme and dataset, uses a Canadian industry and province, and otherwise runs the same steps; with `INTL` it uses the country children endpoint for the region step, because international schemes have no top-level region.
 
@@ -256,14 +261,13 @@ Needs: token, ids, a project id. Produces: three event ids and three group ids. 
 
 Goal: run a project, wait correctly, and download every standard report.
 
-Steps: list the user's projects and shared projects, read the target project; start the run; poll status with the timeout and terminal-state rules; show how to cancel (code present, not executed by default); download the five reports to `reports/{project title}/` as `.csv`, passing the current dollar year where the endpoint accepts one; print the run id and the folder.
+Steps: list the user's projects and shared projects, read the target project; start the run; poll status with the timeout and terminal-state rules; download the five reports to `reports/{project title}/` as `.csv`, passing the current dollar year where the endpoint accepts one; download Summary Economic Indicators once more filtered to the Direct effect (`impacts=Direct`); print the run id and the folder.
 
 | Endpoint | Wiki page |
 | --- | --- |
 | `GET /api/v1/impact/project`, `GET /api/v1/impact/project/shared`, `GET /api/v1/impact/project/{projectId}` | Get Projects, Get Shared Projects, Get Project |
 | `POST /api/v1/impact/{projectId}` | Run Impact Analysis |
 | `GET /api/v1/impact/status/{runId}` | Get Impact Status |
-| `PUT /api/v1/impact/cancel/{runId}` | Cancel Impact |
 | `GET /api/v1/impact/results/SummaryEconomicIndicators/{runId}` | Results - Summary Economic Indicators |
 | `GET /api/v1/impact/results/ExportDetailEconomicIndicators/{runId}` | Results - Detailed Economic Indicators |
 | `GET /api/v1/impact/results/SummaryTaxes/{runId}` | Results - Summary Taxes |
@@ -359,4 +363,4 @@ Needs: token, ids. Produces: a completed run and two tag-filtered reports. Done 
 
 ## 7. Endpoints the samples deliberately do not cover
 
-Update, delete, duplicate, share, and transfer for projects, events, and groups; folder sharing; Institutional, Household, and Custom spending patterns; Industry Impact Analysis (Custom) and the International variants; custom aggregation schemes; the Instant and Batch APIs. They are documented in the wiki. Adding one means adding it to all languages and to section 5.
+Update, delete, duplicate, share, and transfer for projects, events, and groups; cancelling an impact run; folder sharing; Institutional, Household, and Custom spending patterns; Industry Impact Analysis (Custom) and the International variants; custom aggregation schemes; the Instant and Batch APIs. They are documented in the wiki. Adding one means adding it to all languages and to section 5.

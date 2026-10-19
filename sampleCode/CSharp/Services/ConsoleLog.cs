@@ -160,7 +160,7 @@ public static class ConsoleLog
         try
         {
             using var document = JsonDocument.Parse(body);
-            return JsonSerializer.Serialize(document, new JsonSerializerOptions { WriteIndented = true });
+            return JsonSerializer.Serialize(document, Json.PrettyOptions);
         }
         catch (JsonException)
         {

@@ -19,7 +19,7 @@ run and pass the result around.
 Wiki: Getting Started - https://github.com/Implan-Group/api/wiki/Getting-Started
 """
 
-from endpoints import datasets, identifiers, industries, regions
+from endpoints import aggregation_schemes, datasets, identifiers, industries, regions
 from models.reference import MapCode
 from utilities import auth, logging_setup
 
@@ -53,6 +53,22 @@ def run() -> None:
             marker,
         )
 
+    # GET /api/v1/aggregationSchemes/{aggregationSchemeId}
+    # (wiki: Aggregation Scheme by Id)
+    # Reading the scheme back by id is how you check one you were handed: its
+    # Industry Set, its map code, and its status, which must be Complete before
+    # the scheme is usable.
+    scheme = aggregation_schemes.get_aggregation_scheme(client, us.aggregation_scheme_id)
+    logger.info("")
+    logger.info(
+        "  Aggregation Scheme %d, read back by id: '%s', Industry Set %d, %s, status %s",
+        scheme.id,
+        scheme.description,
+        scheme.industry_set_id,
+        scheme.map_code,
+        scheme.status,
+    )
+
     # GET /api/v1/datasets/{aggregationSchemeId}  (wiki: Dataset by Aggregation Scheme)
     scheme_datasets = datasets.get_datasets_for_scheme(client, us.aggregation_scheme_id)
     logger.info("")
@@ -66,6 +82,20 @@ def run() -> None:
         marker = " <- default" if dataset.is_default else ""
         logger.info("    %3d  %s%s", dataset.id, dataset.description, marker)
 
+    # GET /api/v1/datasets  (wiki: Datasets)
+    # The unscoped list answers for whichever scheme is the current default, without
+    # saying which. Compare it with the scoped list rather than relying on it.
+    default_scheme_datasets = datasets.get_datasets(client)
+    same_ids = {d.id for d in default_scheme_datasets} == {d.id for d in scheme_datasets}
+    logger.info("")
+    logger.info(
+        "  The unscoped Datasets list has %d entries, %s the list for scheme %d.",
+        len(default_scheme_datasets),
+        "the same ids as" if same_ids else "different ids from",
+        us.aggregation_scheme_id,
+    )
+    logger.info("  Prefer the scoped call: it names the scheme the ids belong to.")
+
     # Step 3. Look an industry up properly. Checking the description alongside the
     # code is what catches a code that has moved between industry vintages.
     logging_setup.heading("Step 3: look up an industry by code, and verify it")
@@ -75,6 +105,18 @@ def run() -> None:
     # This route takes no query string: the scheme already implies its Industry Set.
     codes = industries.get_industry_codes_for_scheme(client, us.aggregation_scheme_id)
     logger.info("  %d industries in this Aggregation Scheme", len(codes))
+
+    # GET /api/v1/IndustryCodes?industrySetId=...  (wiki: Industry Codes by Industry Set)
+    # The same list keyed by Industry Set instead. An unaggregated scheme has every
+    # industry in its set; an aggregated one has fewer, so the scheme-scoped list is
+    # the one that matches what an Event in that scheme may use.
+    set_codes = industries.get_industry_codes_for_set(client, us.industry_set.id)
+    logger.info(
+        "  %d industries in Industry Set %d, %s",
+        len(set_codes),
+        us.industry_set.id,
+        "the same list" if len(set_codes) == len(codes) else "more than the scheme uses",
+    )
 
     oilseed = industries.find_industry(codes, 1, "Oilseed farming")
     logger.info("  code %d is '%s', as expected", oilseed.code, oilseed.description)

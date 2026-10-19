@@ -66,6 +66,13 @@ class RegionTests(unittest.TestCase):
         self.assertFalse(region.is_user_defined)
         self.assertEqual(region.extra["somethingAddedLater"], 1)
 
+    def test_a_user_defined_region_says_it_is_yours(self) -> None:
+        region = Region.from_api(
+            {"hashId": "x", "description": "Two counties", "userModelId": 42}
+        )
+        self.assertTrue(region.is_user_defined)
+        self.assertIn("yours, userModelId=42", region.describe())
+
     def test_combining_sends_hash_ids_as_an_array(self) -> None:
         body = CombineRegionRequest(description="d", hash_ids=["a", "b"]).to_api()
         self.assertEqual(body["hashIds"], ["a", "b"])

@@ -311,9 +311,9 @@ public sealed class ApiClient
 
     /// <summary>POSTs a JSON body and returns the raw response text.</summary>
     /// <remarks>
-    /// A few endpoints answer with a bare number or a sentence rather than an
-    /// object: <c>RunImpact</c> returns a run id, and <c>CancelImpact</c> returns a
-    /// confirmation.
+    /// A few endpoints answer with something other than a typed object:
+    /// <c>RunImpact</c> returns a bare run id, and <c>CreateEvent</c> returns an event
+    /// whose type decides which class to read it into.
     /// </remarks>
     public string PostText(string path, object? body = null)
     {
@@ -326,18 +326,6 @@ public sealed class ApiClient
         var request = new RestRequest(path, Method.Post);
         request.AddFile(fieldName, filePath);
         return Execute(request).Content ?? string.Empty;
-    }
-
-    /// <summary>PUTs a JSON body and returns the raw response text.</summary>
-    public string PutText(string path, object? body = null)
-    {
-        return Send(Method.Put, path, query: null, body).Content ?? string.Empty;
-    }
-
-    /// <summary>DELETEs a resource. The API returns no body worth reading.</summary>
-    public void Delete(string path)
-    {
-        Send(Method.Delete, path);
     }
 
     private RestResponse Send(

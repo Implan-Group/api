@@ -23,7 +23,7 @@ Wiki: Impact Results - https://github.com/Implan-Group/api/wiki/Impact-Results
 import re
 
 from endpoints import impact_results, impacts, projects
-from models.results import ImpactResultsExportRequest, ResultFilters
+from models.results import ImpactResultsExportRequest, ImpactType, ResultFilters
 from utilities import auth, config, logging_setup
 
 # The five standard reports, and the file each is saved as.
@@ -94,13 +94,6 @@ def run(project_id: str | None = None) -> int:
     impacts.wait_for_impact(client, run_id)
     logger.info("  complete")
 
-    # Cancelling is the other half of this endpoint pair. Not run here, but this is
-    # the call:
-    #
-    #   impacts.cancel_impact(client, run_id)
-    #
-    # PUT /api/v1/impact/cancel/{runId}  (wiki: Cancel Impact)
-
     # Step 4. Download the reports. Every one of them is CSV text.
     logging_setup.heading("Step 4: download the results")
     destination = config.REPORTS_DIRECTORY / _safe_folder_name(project.title)
@@ -127,6 +120,20 @@ def run(project_id: str | None = None) -> int:
     )
     impact_results.save_csv(growth_csv, destination / "Estimated Growth Percentage.csv")
 
+    # The CSV reports all take the same filters. `impacts` keeps only the effects
+    # you name, out of Direct, Indirect, and Induced, so this reads the headline
+    # report again for the activity itself, without its supply chain or household
+    # spending.
+    direct_filters = ResultFilters(
+        year=config.current_dollar_year(),
+        impacts=[ImpactType.DIRECT.value],
+    )
+
+    # GET /api/v1/impact/results/SummaryEconomicIndicators/{runId}?impacts=Direct
+    # (wiki: Results - Summary Economic Indicators)
+    direct_csv = impact_results.get_summary_economic_indicators(client, run_id, direct_filters)
+    impact_results.save_csv(direct_csv, destination / "Summary Economic Indicators - Direct.csv")
+
     # Step 5. Confirm what landed. A report whose first line is JSON rather than a
     # header row means something went wrong that the status check did not catch.
     logging_setup.heading("Step 5: check the files")
@@ -135,7 +142,7 @@ def run(project_id: str | None = None) -> int:
             first_line = handle.readline().strip()
         looks_like_csv = "," in first_line and not first_line.startswith("{")
         logger.info(
-            "  %-34s %s  %s",
+            "  %-42s %s  %s",
             path.name,
             "ok " if looks_like_csv else "??",
             first_line[:60],

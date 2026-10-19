@@ -21,6 +21,10 @@ test_that("regional-exports options parse", {
   expect_null(options$limit)
 })
 
+test_that("an unknown region type is rejected", {
+  expect_error(parse_arguments(c("regions", "--region-type", "Planet")), "Unknown region type")
+})
+
 test_that("a project id parses, and the map code defaults to US", {
   options <- parse_arguments(c("run-impact-analysis", "--project-id", "abc-123"))
 

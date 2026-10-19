@@ -73,13 +73,6 @@ run_impact_analysis_workflow <- function(project_id = NULL) {
   wait_for_impact(client, run_id)
   log_info("  complete")
 
-  # Cancelling is the other half of this endpoint pair. Not run here, but this is
-  # the call:
-  #
-  #   cancel_impact(client, run_id)
-  #
-  # PUT /api/v1/impact/cancel/{runId}  (wiki: Cancel Impact)
-
   # Step 4. Download the reports. Every one of them is CSV text.
   log_heading("Step 4: download the results")
   destination <- file.path(reports_directory(), safe_file_name(project$title, 120))
@@ -105,6 +98,20 @@ run_impact_analysis_workflow <- function(project_id = NULL) {
   growth_csv <- get_estimated_growth_percentage(client, run_id, growth_request)
   save_csv(growth_csv, file.path(destination, "Estimated Growth Percentage.csv"))
 
+  # The CSV reports all take the same filters. `impacts` keeps only the effects
+  # you name, out of Direct, Indirect, and Induced, so this reads the headline
+  # report again for the activity itself, without its supply chain or household
+  # spending.
+  direct_filters <- result_filters(
+    year = current_dollar_year(),
+    impacts = IMPACT_TYPES[["DIRECT"]]
+  )
+
+  # GET /api/v1/impact/results/SummaryEconomicIndicators/{runId}?impacts=Direct
+  # (wiki: Results - Summary Economic Indicators)
+  direct_csv <- get_summary_economic_indicators(client, run_id, direct_filters)
+  save_csv(direct_csv, file.path(destination, "Summary Economic Indicators - Direct.csv"))
+
   # Step 5. Confirm what landed. A report whose first line is JSON rather than a
   # header row means something went wrong that the status check did not catch.
   log_heading("Step 5: check the files")
@@ -115,7 +122,7 @@ run_impact_analysis_workflow <- function(project_id = NULL) {
     }
     looks_like_csv <- grepl(",", first_line, fixed = TRUE) && !startsWith(first_line, "{")
     log_info(
-      "  %-34s %s  %s",
+      "  %-42s %s  %s",
       basename(path),
       if (looks_like_csv) "ok " else "??",
       substr(first_line, 1, 60)

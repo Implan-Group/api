@@ -330,12 +330,6 @@ class ApiClient:
         response.encoding = response.encoding or "utf-8"
         return response.text
 
-    def get_bytes(
-        self, path: str, *, params: Mapping[str, Any] | None = None
-    ) -> bytes:
-        """GET a binary document, such as a zipped export."""
-        return self._send("GET", path, params=params).content
-
     def post_json(
         self,
         path: str,
@@ -359,25 +353,12 @@ class ApiClient:
             response = self._send("POST", path, files=files)
         return _json_or_text(response)
 
-    def put_json(self, path: str, *, json_body: Any | None = None) -> Any:
-        """PUT a JSON body and read whatever comes back."""
-        return _json_or_text(self._send("PUT", path, json_body=json_body))
-
-    def patch_json(self, path: str, *, json_body: Any | None = None) -> Any:
-        """PATCH a JSON body and read whatever comes back."""
-        return _json_or_text(self._send("PATCH", path, json_body=json_body))
-
-    def delete(self, path: str) -> None:
-        """DELETE a resource. The API returns no body worth reading."""
-        self._send("DELETE", path)
-
 
 def _json_or_text(response: requests.Response) -> Any:
     """Return the response as JSON when it is JSON, and as trimmed text otherwise.
 
-    `POST /api/v1/impact/{projectId}` answers with a bare run id, and
-    `PUT /api/v1/impact/cancel/{runId}` answers with a sentence, so neither is a
-    JSON object. Both still need reading.
+    `POST /api/v1/impact/{projectId}` answers with a bare run id rather than a
+    JSON object, and it still needs reading.
     """
     if not response.content:
         return None

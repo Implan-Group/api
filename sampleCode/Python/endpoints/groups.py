@@ -50,12 +50,3 @@ def get_group(client: ApiClient, project_id: str, group_id: str) -> Group:
         f"/api/v1/impact/project/{project_id}/group/{group_id}"
     )
     return Group.from_api(payload)
-
-
-def delete_group(client: ApiClient, project_id: str, group_id: str) -> None:
-    """Remove a Group from a Project.
-
-    DELETE /api/v1/impact/project/{projectId}/group/{groupId}
-    (wiki: Delete Group)
-    """
-    client.delete(f"/api/v1/impact/project/{project_id}/group/{group_id}")

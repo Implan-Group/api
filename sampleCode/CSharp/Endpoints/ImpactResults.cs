@@ -32,7 +32,7 @@ public static class ImpactResults
     public static string GetSummaryEconomicIndicators(
         ApiClient client, long runId, ResultFilters? filters = null)
     {
-        return client.GetText($"{Results}/SummaryEconomicIndicators/{runId}", ToQuery(filters));
+        return client.GetText($"{Results}/SummaryEconomicIndicators/{runId}", filters?.ToQuery());
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ public static class ImpactResults
     public static string GetDetailedEconomicIndicators(
         ApiClient client, long runId, ResultFilters? filters = null)
     {
-        return client.GetText($"{Results}/ExportDetailEconomicIndicators/{runId}", ToQuery(filters));
+        return client.GetText($"{Results}/ExportDetailEconomicIndicators/{runId}", filters?.ToQuery());
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public static class ImpactResults
     /// </remarks>
     public static string GetSummaryTaxes(ApiClient client, long runId, ResultFilters? filters = null)
     {
-        return client.GetText($"{Results}/SummaryTaxes/{runId}", ToQuery(filters));
+        return client.GetText($"{Results}/SummaryTaxes/{runId}", filters?.ToQuery());
     }
 
     /// <summary>
@@ -74,7 +74,7 @@ public static class ImpactResults
     /// </remarks>
     public static string GetDetailedTaxes(ApiClient client, long runId, ResultFilters? filters = null)
     {
-        return client.GetText($"{Results}/DetailedTaxes/{runId}", ToQuery(filters));
+        return client.GetText($"{Results}/DetailedTaxes/{runId}", filters?.ToQuery());
     }
 
     /// <summary>
@@ -138,25 +138,5 @@ public static class ImpactResults
             cleaned = cleaned[..120];
 
         return cleaned.Length == 0 ? "results" : cleaned;
-    }
-
-    /// <summary>
-    /// Turns the filters into query parameters.
-    /// </summary>
-    /// <remarks>
-    /// <see cref="Query"/> rather than a dictionary, because these filters repeat:
-    /// two regions means <c>regions=Oregon&amp;regions=Wisconsin</c>, and a
-    /// dictionary keyed by name would silently keep only the last.
-    /// </remarks>
-    private static Query? ToQuery(ResultFilters? filters)
-    {
-        if (filters is null)
-            return null;
-
-        var query = new Query();
-        foreach (var (name, value) in filters.ToQuery())
-            query.Add(new KeyValuePair<string, string>(name, value));
-
-        return query;
     }
 }

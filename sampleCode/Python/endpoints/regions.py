@@ -118,30 +118,6 @@ def get_user_regions_for_scheme(
     return Region.list_from_api(payload)
 
 
-def get_user_regions(
-    client: ApiClient,
-    aggregation_scheme_id: int | None = None,
-    dataset_id: int | None = None,
-) -> list[Region]:
-    """List all of your combined and customized regions.
-
-    GET /api/v1/region/user  (wiki: Get User Regions)
-
-    On an account with many custom schemes this call can answer 503 while IMPLAN
-    rebuilds its region cache, and the first request can exceed the gateway's
-    30-second limit. Narrowing it with a scheme and dataset, or using the
-    scheme-scoped call above, is more reliable.
-    """
-    params = {}
-    if aggregation_scheme_id is not None:
-        params["aggregationSchemeId"] = aggregation_scheme_id
-    if dataset_id is not None:
-        params["datasetId"] = dataset_id
-
-    payload = client.get_json("/api/v1/region/user", params=params)
-    return Region.list_from_api(payload)
-
-
 def get_user_region(client: ApiClient, hash_id: str) -> Region | None:
     """Read one of your regions by HashId.
 

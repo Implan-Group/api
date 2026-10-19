@@ -52,15 +52,4 @@ public static class Groups
     {
         return client.GetJson<Group>($"/api/v1/impact/project/{projectId}/group/{groupId}");
     }
-
-    /// <summary>
-    /// Removes a Group from a Project.
-    /// </summary>
-    /// <remarks>
-    /// DELETE /api/v1/impact/project/{projectId}/group/{groupId}  (wiki: Delete Group)
-    /// </remarks>
-    public static void DeleteGroup(ApiClient client, Guid projectId, Guid groupId)
-    {
-        client.Delete($"/api/v1/impact/project/{projectId}/group/{groupId}");
-    }
 }
