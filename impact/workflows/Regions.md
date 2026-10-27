@@ -147,7 +147,7 @@
     - `Country`, `State`, `Msa`, `County`, `CongressionalDistrict`, `Zipcode`
     - These are the exact values the `regionTypeFilter` query parameter accepts. Read them from `GET {{api_domain}}api/v1/region/RegionTypes` rather than hardcoding them
 - `hasAccessibleChildren` (boolean): Whether or not this Region has other children Regions associated with it
-    - _e.g._ A `State` has many `County` and `Zipcode` children
+    - _e.g._ Unfiltered, a `State`'s children are its `County`, `Msa`, and `CongressionalDistrict` Regions; with `regionTypeFilter=Zipcode` the same call returns its `Zipcode` Regions
 - `regionTypeDescription` (text): A further description of the `regionType`
 - `geoId` (text, optional): The first non-`null` value among `provinceCode`, `fipsCode`, or `m49Code` (in that order) (used internally)
 - `isMrioAllowed` (boolean): Whether or not the Region supports Multi-Region Input/Ouput  (MRIO) Analysis
