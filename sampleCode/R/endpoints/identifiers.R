@@ -136,10 +136,6 @@ resolve_identifiers <- function(client, map_code = MAP_CODES[["US"]]) {
     scheme <- if (length(unaggregated) > 0L) unaggregated[[1]] else schemes[[1]]
   }
 
-  # GET /api/v1/datasets/{aggregationSchemeId}
-  # (wiki: Dataset by Aggregation Scheme)
-  dataset <- default_dataset(get_datasets_for_scheme(client, scheme$id))
-
   if (length(scheme$household_set_ids) == 0L) {
     stop(
       sprintf(
@@ -150,12 +146,55 @@ resolve_identifiers <- function(client, map_code = MAP_CODES[["US"]]) {
     )
   }
 
+  with_default_dataset(client, map_code, industry_set, scheme, scheme$household_set_ids[[1]])
+}
+
+
+# Works out the identifiers an existing Project was built with.
+#
+# A Project's Aggregation Scheme and Household Set are fixed when it is created,
+# so anything added to it later has to use the same ones. Resolving the current
+# defaults instead would be wrong for a Project made on an older Industry Set or
+# a custom scheme: the industry codes, Datasets, and regions would belong to a
+# different scheme from the Project's.
+#
+# The Dataset is the scheme's default, as `resolve_identifiers()` picks it.
+resolve_identifiers_for_project <- function(client, project) {
+  # GET /api/v1/aggregationSchemes/{aggregationSchemeId}
+  # (wiki: Aggregation Scheme by Id)
+  scheme <- get_aggregation_scheme(client, project$aggregation_scheme_id)
+
+  # GET /api/v1/industry-sets  (wiki: Get Industry Sets)
+  matching <- Filter(
+    function(industry_set) identical(as.integer(industry_set$id), as.integer(scheme$industry_set_id)),
+    get_industry_sets(client)
+  )
+  if (length(matching) == 0L) {
+    stop(
+      sprintf(
+        "Aggregation Scheme %s refers to Industry Set %s, which is not in the Industry Set list.",
+        scheme$id, scheme$industry_set_id
+      ),
+      call. = FALSE
+    )
+  }
+
+  with_default_dataset(client, scheme$map_code, matching[[1]], scheme, project$household_set_id)
+}
+
+
+# Adds the scheme's default Dataset, and prints what was resolved.
+with_default_dataset <- function(client, map_code, industry_set, scheme, household_set_id) {
+  # GET /api/v1/datasets/{aggregationSchemeId}
+  # (wiki: Dataset by Aggregation Scheme)
+  dataset <- default_dataset(get_datasets_for_scheme(client, scheme$id))
+
   resolved <- identifiers(
     map_code = map_code,
     industry_set = industry_set,
     aggregation_scheme = scheme,
     dataset = dataset,
-    household_set_id = scheme$household_set_ids[[1]]
+    household_set_id = household_set_id
   )
 
   log_info("Resolved identifiers from the API:")

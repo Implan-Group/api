@@ -83,11 +83,6 @@ The IMPLAN API will currently support the following requests per timeframe, to e
   - Requests per minute = 10
 - Region Models
   - Requests per minute = 5
-- Instant
-  - Requests per second = 5
-- Batch
-  - Requests per minute = 6
-  - 2500 events per request supported.
 
 ---
 # Authentication
@@ -2446,6 +2441,13 @@ Status Code 200 if event successfully deleted.
 
 ### Import Events (POST)
 Use this endpoint along with the [Event Template](https://support.implan.com/hc/en-us/articles/360040713754-Using-the-Event-Template) to import events created in an excel file.
+#### Blank Templates
+Fill the blank template for the Project's Industry Set; a template for a different set is rejected.
+- [US 528](https://support.implan.com/hc/article_attachments/31846310653723)
+- [US 546](https://support.implan.com/hc/article_attachments/28726382924059)
+- [Canada 235](https://support.implan.com/hc/article_attachments/34805745157147)
+- [Canada 236](https://support.implan.com/hc/article_attachments/49510601287323)
+- [International](https://support.implan.com/hc/article_attachments/28726664391451)
 #### Parameters
 Project Id (In URL)
 #### Response

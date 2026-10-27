@@ -50,39 +50,32 @@ combine_regions_workflow <- function() {
     log_info("    %s", describe(county))
   }
 
-  # Step 3. Ask for the combination. The description has to be unique for your
-  # account, so it carries a timestamp.
+  # Step 3. Ask for the combination. The description carries a timestamp so that
+  # each run builds a new region to watch.
+  #
+  # There is no need to look for an existing region first: the API does it. A
+  # name you already have, sent with the same regions in any order, returns that
+  # region instead of building it again. Sent with different regions, it is
+  # refused with a 422 saying the name is taken.
   log_heading("Step 3: request the combined region")
   description <- unique_title("Combined Region")
+  log_info("  combining %d regions as '%s'", length(chosen), description)
 
-  # Re-running this workflow should not fail on a name that already exists, and
-  # should not build the same region twice.
-  existing <- find_existing_user_region(
-    client, ids$aggregation_scheme_id, ids$dataset_id, description
+  # POST /api/v1/region/build/combined/{aggregationSchemeId}
+  # (wiki: Combine Regions)
+  combined <- build_combined_region(
+    client,
+    ids$aggregation_scheme_id,
+    combine_region_request(
+      description = description,
+      hash_ids = vapply(chosen, function(county) county$hash_id, character(1))
+    )
   )
-
-  if (!is.null(existing)) {
-    log_info("  a region named '%s' already exists; reusing it", description)
-    combined <- existing
-  } else {
-    log_info("  combining %d regions as '%s'", length(chosen), description)
-
-    # POST /api/v1/region/build/combined/{aggregationSchemeId}
-    # (wiki: Combine Regions)
-    combined <- build_combined_region(
-      client,
-      ids$aggregation_scheme_id,
-      combine_region_request(
-        description = description,
-        hash_ids = vapply(chosen, function(county) county$hash_id, character(1))
-      )
-    )
-    log_info("  accepted: %s", describe(combined))
-    log_info(
-      "  status is '%s'; the model builds in the background",
-      combined$model_build_status
-    )
-  }
+  log_info("  accepted: %s", describe(combined))
+  log_info(
+    "  status is '%s'; the model builds in the background",
+    combined$model_build_status
+  )
 
   # Step 4. Wait for the model. A combined region usually finishes inside a
   # minute; the helper gives up after ten and says so rather than looping.

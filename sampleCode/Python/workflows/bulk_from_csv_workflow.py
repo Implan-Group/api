@@ -11,8 +11,9 @@ the rate limit or falls over halfway:
 
   - Look up regions once and cache the lookup. The FIPS-to-region map is built from
     two calls per state, not one call per county.
-  - Reuse what already exists. Re-running finds the regions, the folder, and the
-    projects it made last time instead of failing on duplicate names.
+  - Reuse what already exists. Re-running gets back the combined regions it built
+    last time, because the API returns an existing region when both its name and
+    its member regions match, and files the new projects in the same folder.
   - Throttle. The client's rate limiter is switched on for this workflow, because
     a burst of region builds will otherwise earn a 429 and then a ban. The
     published limit counts builds, but the throttle applies to every request,
@@ -24,7 +25,9 @@ Input files, all in `data/`:
   county_based.csv  fips, region_description, model_name
   demo_events.csv   Name, Code, Type, Value
 
-Rows sharing a `model_name` are combined into one region.
+Rows sharing a `model_name` are combined into one region. Every row is checked
+before anything is created in your account, so a mistake in the files stops the
+run with the file and line to fix, not halfway through.
 
 Wiki: Combine Regions - https://github.com/Implan-Group/api/wiki/Combine-Regions
 Wiki: Projects - https://github.com/Implan-Group/api/wiki/Projects
@@ -59,6 +62,13 @@ FOLDER_NAME = f"{config.TITLE_PREFIX} - Bulk From CSV"
 # and safely inside the limit. See the wiki home page for the table.
 REGION_REQUESTS_PER_MINUTE = 5
 
+# The columns each input file must have.
+REGION_COLUMNS = ("fips", "region_description", "model_name")
+EVENT_COLUMNS = ("Name", "Code", "Type", "Value")
+
+# The event types the events file can use, matched without regard to case.
+EVENT_TYPES = ("industry output", "commodity output")
+
 # The four reports downloaded for each run.
 REPORTS = [
     ("Summary Economic Indicators", impact_results.get_summary_economic_indicators),
@@ -68,21 +78,132 @@ REPORTS = [
 ]
 
 
-def _read_csv(path: Path) -> list[dict[str, str]]:
-    """Read one input file, keeping FIPS codes as text.
+def _read_csv(path: Path, columns: tuple[str, ...]) -> list[dict[str, str]]:
+    """Read one input file, keeping FIPS codes as text and skipping empty rows.
 
     FIPS codes have leading zeros that matter: Alabama is `01000`, and reading that
-    as a number turns it into 1000, which is not a place.
+    as a number turns it into 1000, which is not a place. Each row also records
+    its line in the file under `line`, so a problem can be reported where it is.
     """
     if not path.exists():
         raise FileNotFoundError(
             f"Missing input file {path}. The samples ship with these in data/."
         )
     with open(path, newline="", encoding="utf-8-sig") as handle:
-        return [
-            {key: (value or "").strip() for key, value in row.items()}
-            for row in csv.DictReader(handle)
-        ]
+        reader = csv.DictReader(handle)
+        missing = [column for column in columns if column not in (reader.fieldnames or [])]
+        if missing:
+            raise ValueError(
+                f"{path.name} has no {', '.join(missing)} column. It needs a "
+                f"comma-separated header row: {','.join(columns)}"
+            )
+
+        rows = []
+        for row in reader:
+            # A value holding an unquoted comma splits in two, and the extra value
+            # lands under the key None.
+            if None in row:
+                raise ValueError(
+                    f"{path.name} line {reader.line_num} has more values than its "
+                    f"header. Put double quotes around any value that contains a "
+                    f'comma, such as "Douglas County, OR".'
+                )
+            values = {key: (value or "").strip() for key, value in row.items()}
+
+            # Clearing cells in Excel can leave rows of bare commas behind.
+            if not any(values.values()):
+                continue
+            values["line"] = str(reader.line_num)
+            rows.append(values)
+        return rows
+
+
+def _check_inputs(
+    state_rows: list[dict[str, str]],
+    county_rows: list[dict[str, str]],
+    event_rows: list[dict[str, str]],
+) -> None:
+    """Check every row before anything is created, and report every problem at once.
+
+    FIPS codes come back padded and amounts come back as plain numbers, so the
+    rest of the workflow can read them directly.
+    """
+    problems: list[str] = []
+
+    models_by_file: dict[str, set[str]] = {}
+    for file_name, rows in (("state_based.csv", state_rows), ("county_based.csv", county_rows)):
+        models_by_file[file_name] = set()
+        for row in rows:
+            where = f"{file_name} line {row['line']}"
+            fips = _padded_fips(row["fips"])
+            if fips is None:
+                problems.append(f"{where}: '{row['fips']}' is not a state or county FIPS code.")
+            else:
+                row["fips"] = fips
+            problems += _name_problems(where, "model_name", row["model_name"])
+            models_by_file[file_name].add(row["model_name"])
+
+    # Each file is grouped on its own, so a name in both would make two regions,
+    # or two copies of one.
+    for name in sorted(models_by_file["state_based.csv"] & models_by_file["county_based.csv"]):
+        problems.append(
+            f"model_name '{name}' is in both state_based.csv and county_based.csv. "
+            f"Give the counties a model_name of their own."
+        )
+    if not state_rows and not county_rows:
+        problems.append("state_based.csv and county_based.csv are both empty, so there is no region.")
+
+    if not event_rows:
+        problems.append("demo_events.csv is empty, so there is no event to analyze.")
+    names: set[str] = set()
+    for row in event_rows:
+        where = f"demo_events.csv line {row['line']}"
+        problems += _name_problems(where, "Name", row["Name"])
+        if row["Name"].casefold() in names:
+            problems.append(f"{where}: the Name '{row['Name']}' is already used. Event titles must be unique.")
+        names.add(row["Name"].casefold())
+
+        if row["Type"].casefold() not in EVENT_TYPES:
+            problems.append(f"{where}: Type '{row['Type']}' is not Industry Output or Commodity Output.")
+        if not row["Code"].isdigit():
+            problems.append(f"{where}: Code '{row['Code']}' is not a whole number.")
+
+        # Excel writes a Currency cell as "$1,000,000", so the symbol and the
+        # separators are dropped before reading the number.
+        amount = row["Value"].replace("$", "").replace(",", "").strip()
+        try:
+            float(amount)
+            row["Value"] = amount
+        except ValueError:
+            problems.append(f"{where}: Value '{row['Value']}' is not an amount in dollars.")
+
+    if problems:
+        raise ValueError(
+            "Fix these in the input files, then run again. Nothing was created.\n  "
+            + "\n  ".join(problems)
+        )
+
+
+def _padded_fips(code: str) -> str | None:
+    """Return a FIPS code at full length, or None if it is not one.
+
+    Excel drops leading zeros, so Alabama's `01000` can arrive as `1000`. A state
+    code is two digits and a county code five, so a one- or four-digit code is
+    unambiguous and is padded back.
+    """
+    if not code.isdigit() or len(code) not in (1, 2, 4, 5):
+        return None
+    return code.zfill(2) if len(code) <= 2 else code.zfill(5)
+
+
+def _name_problems(where: str, column: str, name: str) -> list[str]:
+    """What is wrong with a name that becomes part of a title, if anything."""
+    if not name:
+        return [f"{where}: {column} is empty."]
+    rejected = sorted({char for char in name if char in config.DISALLOWED_TITLE_CHARACTERS})
+    if rejected:
+        return [f"{where}: {column} '{name}' contains {' '.join(rejected)}, which IMPLAN does not allow in a title."]
+    return []
 
 
 class RegionLookup:
@@ -167,34 +288,33 @@ class RegionLookup:
         return county
 
 
+def _members_by_model(
+    rows: list[dict[str, str]], lookup: RegionLookup
+) -> dict[str, list[Region]]:
+    """Look up every row's region, grouped by model name, in file order."""
+    fips_by_model: dict[str, list[str]] = {}
+    for row in rows:
+        fips_by_model.setdefault(row["model_name"], []).append(row["fips"])
+    return {
+        model_name: [lookup.find(fips) for fips in fips_codes]
+        for model_name, fips_codes in fips_by_model.items()
+    }
+
+
 def _build_models(
-    client: ApiClient, ids: Identifiers, rows: list[dict[str, str]], lookup: RegionLookup
+    client: ApiClient, ids: Identifiers, members_by_model: dict[str, list[Region]]
 ) -> list[Region]:
-    """Turn the rows of one input file into built regions, one per model name."""
+    """Turn each model's regions into one built region."""
     logger = logging_setup.get_logger()
     built: list[Region] = []
 
-    by_model: dict[str, list[str]] = {}
-    for row in rows:
-        by_model.setdefault(row["model_name"], []).append(row["fips"])
-
-    for model_name, fips_codes in by_model.items():
+    for model_name, members in members_by_model.items():
         # Naming the region for the scheme and dataset means the same input file
         # can be run against several data years without a name collision.
         description = (
             f"{config.TITLE_PREFIX} {model_name} "
             f"{ids.aggregation_scheme_id}-{ids.dataset_id}"
         )
-
-        existing = regions.find_existing_user_region(
-            client, ids.aggregation_scheme_id, ids.dataset_id, description
-        )
-        if existing is not None and existing.is_built:
-            logger.info("  %s already built, reusing it", model_name)
-            built.append(existing)
-            continue
-
-        members = [lookup.find(fips) for fips in fips_codes]
 
         if len(members) == 1:
             # One region needs no combining; use IMPLAN's own region directly.
@@ -210,6 +330,11 @@ def _build_models(
 
         # POST /api/v1/region/build/combined/{aggregationSchemeId}
         # (wiki: Combine Regions)
+        # There is no need to look for an existing region first: the API does it.
+        # A name you already have, sent with the same regions in any order, returns
+        # that region instead of building it again, so a re-run reuses last run's
+        # regions. Sent with different regions, it is refused with a 422 saying the
+        # name is taken, so give a changed set of regions a new model_name.
         combined = regions.build_combined_region(
             client,
             ids.aggregation_scheme_id,
@@ -221,7 +346,7 @@ def _build_models(
 
         # GET /api/v1/region/user/{hashId}, polled  (wiki: Get User Region)
         built.append(regions.wait_for_region_build(client, combined.hash_id))
-        logger.info("    built as %s", combined.hash_id)
+        logger.info("    ready as %s", combined.hash_id)
 
     return built
 
@@ -301,22 +426,24 @@ def run() -> None:
     logging_setup.heading("Step 1: resolve identifiers and read the input files")
     ids = identifiers.resolve(client, MapCode.US)
 
-    state_rows = _read_csv(config.DATA_DIRECTORY / "state_based.csv")
-    county_rows = _read_csv(config.DATA_DIRECTORY / "county_based.csv")
-    event_rows = _read_csv(config.DATA_DIRECTORY / "demo_events.csv")
+    state_rows = _read_csv(config.DATA_DIRECTORY / "state_based.csv", REGION_COLUMNS)
+    county_rows = _read_csv(config.DATA_DIRECTORY / "county_based.csv", REGION_COLUMNS)
+    event_rows = _read_csv(config.DATA_DIRECTORY / "demo_events.csv", EVENT_COLUMNS)
     logger.info(
         "  %d state rows, %d county rows, %d event rows",
         len(state_rows),
         len(county_rows),
         len(event_rows),
     )
+    _check_inputs(state_rows, county_rows, event_rows)
 
-    # Step 2. Build the combined regions. The lookup is shared so the state list is
-    # fetched once for both files.
+    # Step 2. Build the combined regions. Every FIPS code is looked up before any
+    # region is built, so a code that is not a place stops the run before anything
+    # is created. The lookup is shared so the state list is fetched once.
     logging_setup.heading("Step 2: build the combined regions")
     lookup = RegionLookup(client, ids)
-    models = _build_models(client, ids, state_rows, lookup)
-    models += _build_models(client, ids, county_rows, lookup)
+    members_by_model = _members_by_model(state_rows + county_rows, lookup)
+    models = _build_models(client, ids, members_by_model)
     logger.info("  %d regions ready", len(models))
 
     # Step 3. A folder to keep the projects together.

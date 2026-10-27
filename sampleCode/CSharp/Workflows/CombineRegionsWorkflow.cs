@@ -57,38 +57,28 @@ public static class CombineRegionsWorkflow
         foreach (var county in chosen)
             ConsoleLog.Info("    {0}", county.Describe());
 
-        // Step 3. Ask for the combination. The description has to be unique for your
-        // account, so it carries a timestamp.
+        // Step 3. Ask for the combination. The description carries a timestamp so
+        // that each run builds a new region to watch.
+        //
+        // There is no need to look for an existing region first: the API does it. A
+        // name you already have, sent with the same regions in any order, returns
+        // that region instead of building it again. Sent with different regions, it
+        // is refused with a 422 saying the name is taken.
         ConsoleLog.Heading("Step 3: request the combined region");
         var description = Config.UniqueTitle("Combined Region");
-
-        // Re-running this workflow should not fail on a name that already exists,
-        // and should not build the same region twice.
-        var existing = Regions.FindExistingUserRegion(
-            client, ids.AggregationSchemeId, ids.DatasetId, description);
-
-        Region combined;
-        if (existing is not null)
+        var request = new CombineRegionRequest
         {
-            ConsoleLog.Info("  a region named '{0}' already exists; reusing it", description);
-            combined = existing;
-        }
-        else
-        {
-            var request = new CombineRegionRequest
-            {
-                Description = description,
-                HashIds = chosen.Select(c => c.HashId).ToList(),
-            };
-            ConsoleLog.Info("  combining {0} regions as '{1}'", chosen.Count, description);
+            Description = description,
+            HashIds = chosen.Select(c => c.HashId).ToList(),
+        };
+        ConsoleLog.Info("  combining {0} regions as '{1}'", chosen.Count, description);
 
-            // POST /api/v1/region/build/combined/{aggregationSchemeId}
-            // (wiki: Combine Regions)
-            combined = Regions.BuildCombinedRegion(client, ids.AggregationSchemeId, request);
-            ConsoleLog.Info("  accepted: {0}", combined.Describe());
-            ConsoleLog.Info("  status is '{0}'; the model builds in the background",
-                combined.ModelBuildStatus);
-        }
+        // POST /api/v1/region/build/combined/{aggregationSchemeId}
+        // (wiki: Combine Regions)
+        var combined = Regions.BuildCombinedRegion(client, ids.AggregationSchemeId, request);
+        ConsoleLog.Info("  accepted: {0}", combined.Describe());
+        ConsoleLog.Info("  status is '{0}'; the model builds in the background",
+            combined.ModelBuildStatus);
 
         // Step 4. Wait for the model. A combined region usually finishes inside a
         // minute; the helper gives up after ten and says so rather than looping.

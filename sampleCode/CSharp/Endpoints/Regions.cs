@@ -151,8 +151,13 @@ public static class Regions
     /// is what <see cref="WaitForRegionBuild"/> waits for.
     ///
     /// The regions being combined must come from the same dataset, must not overlap,
-    /// and must not nest: a state and a county inside it cannot be combined. The
-    /// description has to be unique for your account.
+    /// and must not nest: a state and a county inside it cannot be combined.
+    ///
+    /// The API checks the description against the regions you already have, so
+    /// there is no need to look first. A description you already have, sent with
+    /// the same regions in any order, returns that region instead of building it
+    /// again, at whatever status it has reached. Sent with different regions, it is
+    /// refused with a 422 whose detail says you already have a model with that name.
     ///
     /// The endpoint answers with an array holding the single new region.
     /// </remarks>
@@ -235,8 +240,10 @@ public static class Regions
                 if (region.ModelBuildStatus == Models.ModelBuildStatus.Error)
                 {
                     throw new InvalidOperationException(
-                        $"The model for region {hashId} failed to build. Try the request "
-                        + "again, or contact support@implan.com if it repeats.");
+                        $"The model for region {hashId} failed to build. Delete the region in "
+                        + "IMPLAN Cloud and run again: asking again with the same name and "
+                        + "regions returns this failed region. Contact support@implan.com if a "
+                        + "fresh build fails too.");
                 }
             }
 
@@ -266,38 +273,6 @@ public static class Regions
                ?? throw new KeyNotFoundException(
                    $"No region named '{description}' in this list of {regions.Count} regions. "
                    + "Check the spelling, including the state abbreviation.");
-    }
-
-    /// <summary>
-    /// Returns one of your regions by name, or null if you have not built it.
-    /// </summary>
-    /// <remarks>
-    /// Bulk workflows call this first so that re-running them reuses the regions
-    /// they built last time instead of failing on a duplicate name.
-    /// </remarks>
-    public static Region? FindExistingUserRegion(
-        ApiClient client,
-        int aggregationSchemeId,
-        int datasetId,
-        string description)
-    {
-        List<Region> existing;
-        try
-        {
-            existing = GetUserRegionsForScheme(client, aggregationSchemeId, datasetId);
-        }
-        catch (ImplanApiException error) when (error.StatusCode == 503)
-        {
-            // The region cache is rebuilding. Treat it as "cannot tell", and let the
-            // caller try the build, which reports a duplicate name clearly.
-            ConsoleLog.Info(
-                "  the user-regions list is temporarily unavailable (503); "
-                + "continuing without checking for an existing region");
-            return null;
-        }
-
-        return existing.FirstOrDefault(r =>
-            string.Equals(r.Description, description, StringComparison.OrdinalIgnoreCase));
     }
 }
 

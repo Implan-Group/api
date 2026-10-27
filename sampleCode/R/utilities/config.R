@@ -103,6 +103,10 @@ data_directory <- function() file.path(implan_root(), "data")
 # prefix, so you can find it later and delete it.
 TITLE_PREFIX <- "ImpactApi Sample"
 
+# The characters IMPLAN rejects in the title of a Project, Event, or Group, and in
+# the name of a combined region.
+DISALLOWED_TITLE_CHARACTERS <- "&|;%*?!='\"^#"
+
 # How long a workflow waits for a long-running operation before giving up. An
 # impact usually finishes in a couple of minutes and a combined-region build in
 # under one, so these are generous.
@@ -150,9 +154,13 @@ current_dollar_year <- function() {
 
 # Builds a title that is unique per run and easy to find in IMPLAN Cloud.
 #
-# Titles must be unique for your user, and the API rejects an ampersand and the
-# characters | ; % * ? ! = ' " ^ #, so keep `label` to plain words.
+# Titles must be unique for your user. Any character in
+# DISALLOWED_TITLE_CHARACTERS is dropped from `label`, which matters when the label
+# is one of IMPLAN's own region descriptions.
 unique_title <- function(label) {
+  rejected <- strsplit(DISALLOWED_TITLE_CHARACTERS, "")[[1]]
+  kept <- strsplit(label, "")[[1]]
+  label <- paste(kept[!kept %in% rejected], collapse = "")
   sprintf("%s - %s - %s", TITLE_PREFIX, label, format(Sys.time(), "%Y%m%d-%H%M%S"))
 }
 

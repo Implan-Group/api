@@ -124,6 +124,30 @@ public sealed class ApiClientTests
     }
 
     [Fact]
+    public void PostFile_RetriedAfterUnauthorized_SendsTheWholeFileAgain()
+    {
+        const string Workbook = "stand-in workbook bytes";
+        var path = Path.GetTempFileName();
+        File.WriteAllText(path, Workbook);
+        try
+        {
+            var (client, handler) = Scripted.ClientWithRefresh(
+                () => Scripted.FakeToken,
+                Scripted.Answer(HttpStatusCode.Unauthorized),
+                Scripted.Answer(HttpStatusCode.OK, """{"ok":true}"""));
+
+            client.PostFile("/x", "excelFile", path);
+
+            Assert.Equal(2, handler.Sent.Count);
+            Assert.All(handler.Sent, sent => Assert.Contains(Workbook, sent.Body));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
     public void ServiceUnavailable_IsRetriedWhenTheApiSaysWhen()
     {
         var (client, handler) = Scripted.Client(

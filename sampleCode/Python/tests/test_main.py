@@ -60,6 +60,9 @@ class TitleTests(unittest.TestCase):
     def test_unique_title_carries_the_prefix(self) -> None:
         self.assertTrue(config.unique_title("Label").startswith("ImpactApi Sample - Label - "))
 
+    def test_unique_title_drops_characters_implan_rejects(self) -> None:
+        self.assertTrue(config.unique_title("Prince George's County").startswith("ImpactApi Sample - Prince Georges County - "))
+
 
 if __name__ == "__main__":
     unittest.main()

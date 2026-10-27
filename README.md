@@ -1,6 +1,6 @@
 # IMPLAN Impact API
 
-This project provides the documentation, source code, and other resources for the IMPLAN Batch and Impact APIs. 
+This project provides the documentation, source code, and other resources for the IMPLAN Impact API. 
 
 These APIs enable you to perform nearly every operation that you can do in Implan Cloud.
 
@@ -22,7 +22,8 @@ The machine-readable contract for Impact API v1 is
 generated from the API itself and checked against the production gateway. It covers
 every endpoint's parameters, request and response schemas, and the statuses each one
 returns, and it can be imported into Postman, Swagger UI, or a client generator. The
-[Postman collection](IMPLAN-API.postman_collection.json) covers the same endpoints.
+[Postman collection](IMPLAN-API.postman_collection.json) is generated from the same
+source and covers the same endpoints. Both describe what is in production.
 
 ---
 

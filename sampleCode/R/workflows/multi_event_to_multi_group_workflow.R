@@ -24,7 +24,7 @@ COMPARISON_STATES <- c("Oregon", "Wisconsin", "North Carolina")
 RESTAURANT_INDUSTRY <- "Full-service restaurants"
 
 # The two household income brackets, by specification code. These are checked
-# against the project's own specification list in step 4 rather than trusted.
+# against the project's own specification list in step 3 rather than trusted.
 HOUSEHOLD_BRACKETS <- list(
   list(code = 10002, label = "Households 15-30k", value = 25000),
   list(code = 10005, label = "Households 50-70k", value = 125000)
@@ -34,14 +34,17 @@ HOUSEHOLD_BRACKETS <- list(
 multi_event_to_multi_group_workflow <- function(project_id = NULL) {
   client <- create_client()
 
-  # Step 1. Resolve the identifiers.
-  log_heading("Step 1: resolve the identifiers")
-  ids <- resolve_identifiers(client, MAP_CODES[["US"]])
-
-  # Step 2. Get a project to work in. An existing empty one can be passed in;
-  # otherwise one is created here.
-  log_heading("Step 2: the Project")
+  # Step 1. Get a project to work in, and the identifiers that go with it. An
+  # existing empty project can be passed in; otherwise one is created here.
+  #
+  # An existing project keeps the Aggregation Scheme and Household Set it was
+  # created with, so its identifiers are resolved from the project rather than
+  # from today's defaults. The industry codes, Dataset, and states below then all
+  # belong to the project's own scheme.
+  log_heading("Step 1: the Project and its identifiers")
   if (is.null(project_id)) {
+    ids <- resolve_identifiers(client, MAP_CODES[["US"]])
+
     # POST /api/v1/impact/project  (wiki: Create Project)
     project <- create_project(client, new_project(
       title = unique_title("Multi Event Multi Group"),
@@ -53,10 +56,25 @@ multi_event_to_multi_group_workflow <- function(project_id = NULL) {
     # GET /api/v1/impact/project/{projectId}  (wiki: Get Project)
     project <- get_project(client, project_id)
     log_info("  using existing %s", describe(project))
+    ids <- resolve_identifiers_for_project(client, project)
+
+    # The three states only exist in a United States scheme.
+    if (!identical(ids$map_code, MAP_CODES[["US"]])) {
+      stop(
+        sprintf(
+          paste0(
+            "Project %s uses a %s Aggregation Scheme. This workflow adds groups for ",
+            "three US states, so it needs a Project on a US scheme."
+          ),
+          project$id, ids$map_code
+        ),
+        call. = FALSE
+      )
+    }
   }
 
-  # Step 3. The restaurant event needs an industry code.
-  log_heading("Step 3: find the restaurant industry")
+  # Step 2. The restaurant event needs an industry code.
+  log_heading("Step 2: find the restaurant industry")
 
   # GET /api/v1/IndustryCodes/{aggregationSchemeId}
   # (wiki: Industry Codes by Aggregation Scheme)
@@ -66,9 +84,9 @@ multi_event_to_multi_group_workflow <- function(project_id = NULL) {
   log_info("  (it is a different code in other Industry Sets, which is why this")
   log_info("   sample looks it up by name)")
 
-  # Step 4. Household Income events take a specification code rather than an
+  # Step 3. Household Income events take a specification code rather than an
   # industry code, so read the valid ones for this project first.
-  log_heading("Step 4: read the Household Income specification codes")
+  log_heading("Step 3: read the Household Income specification codes")
 
   # GET /api/v1/impact/project/{projectId}/eventtype/HouseholdIncome/specification
   # (wiki: Get Event Specifications)
@@ -91,9 +109,9 @@ multi_event_to_multi_group_workflow <- function(project_id = NULL) {
     }
   }
 
-  # Step 5. Create the events. Each one is created once and will be referenced by
+  # Step 4. Create the events. Each one is created once and will be referenced by
   # all three groups.
-  log_heading("Step 5: add the Events")
+  log_heading("Step 4: add the Events")
 
   # POST /api/v1/impact/project/{projectId}/event  (wiki: Create Event)
   restaurant_event <- create_event(client, project$id, industry_output_event(
@@ -114,8 +132,8 @@ multi_event_to_multi_group_workflow <- function(project_id = NULL) {
     log_info("  %s", describe(household_event))
   }
 
-  # Step 6. Find the states.
-  log_heading("Step 6: find the Regions")
+  # Step 5. Find the states.
+  log_heading("Step 5: find the Regions")
 
   # GET /api/v1/region/{aggregationSchemeId}/{datasetId}/children?regionTypeFilter=State
   # (wiki: Regional Children)
@@ -130,10 +148,10 @@ multi_event_to_multi_group_workflow <- function(project_id = NULL) {
     log_info("  %s", describe(state))
   }
 
-  # Step 7. One group per region, each holding every event. This is the nested
+  # Step 6. One group per region, each holding every event. This is the nested
   # loop the workflow exists to show: events on the inside, regions on the
   # outside, and the group titles distinct.
-  log_heading("Step 7: one Group per Region, each holding every Event")
+  log_heading("Step 6: one Group per Region, each holding every Event")
   dollar_year <- current_dollar_year()
   event_links <- lapply(created, function(event) group_event(event$id))
 
@@ -150,16 +168,19 @@ multi_event_to_multi_group_workflow <- function(project_id = NULL) {
     log_info("  %s", describe(group))
   }
 
-  # Step 8. Read it back.
-  log_heading("Step 8: read the Groups back")
+  # Step 7. Read it back.
+  log_heading("Step 7: read the Groups back")
 
   # GET /api/v1/impact/project/{projectId}/group  (wiki: Groups)
   all_groups <- get_groups(client, project$id)
-  log_info("  %d groups, each with %d events", length(all_groups), length(created))
+  log_info("  %d groups in the Project", length(all_groups))
+  for (group in all_groups) {
+    log_info("    %s", describe(group))
+  }
 
   log_heading("Done")
   log_info("Project id: %s", project$id)
-  log_info("%d events across %d groups", length(created), length(all_groups))
+  log_info("Added %d events, in each of %d new groups", length(created), length(chosen))
   log_info("")
   log_info("Run it, then filter the results by region to compare the states:")
   log_info("  Rscript main.R run-impact-analysis --project-id %s", project$id)

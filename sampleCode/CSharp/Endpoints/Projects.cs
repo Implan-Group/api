@@ -79,6 +79,14 @@ public static class Projects
     ///
     /// Support: Using the Event Template
     /// https://support.implan.com/hc/en-us/articles/360040713754
+    ///
+    /// Blank templates, by Industry Set. Fill the one for the Project's set; a
+    /// template for a different set is rejected.
+    ///   US 528         https://support.implan.com/hc/article_attachments/31846310653723
+    ///   US 546         https://support.implan.com/hc/article_attachments/28726382924059
+    ///   Canada 235     https://support.implan.com/hc/article_attachments/34805745157147
+    ///   Canada 236     https://support.implan.com/hc/article_attachments/49510601287323
+    ///   International  https://support.implan.com/hc/article_attachments/28726664391451
     /// </remarks>
     public static string ImportEventTemplate(ApiClient client, Guid projectId, string workbookPath)
     {

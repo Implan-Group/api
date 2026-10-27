@@ -347,10 +347,15 @@ class ApiClient:
         return _json_or_text(response)
 
     def post_file(self, path: str, *, field_name: str, file_path) -> Any:
-        """POST a file as multipart form data, for the Event Template upload."""
-        with open(file_path, "rb") as handle:
-            files = {field_name: (file_path.name, handle)}
-            response = self._send("POST", path, files=files)
+        """POST a file as multipart form data, for the Event Template upload.
+
+        The file is read into memory once rather than passed as an open handle.
+        `requests` reads a handle to its end while preparing the request, so a
+        retry after a refreshed token or a 429 would send the same handle again
+        and upload an empty file.
+        """
+        files = {field_name: (file_path.name, file_path.read_bytes())}
+        response = self._send("POST", path, files=files)
         return _json_or_text(response)
 
 

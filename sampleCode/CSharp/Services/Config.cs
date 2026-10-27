@@ -63,6 +63,12 @@ public static class Config
     /// </summary>
     public const string TitlePrefix = "ImpactApi Sample";
 
+    /// <summary>
+    /// The characters IMPLAN rejects in the title of a Project, Event, or Group, and
+    /// in the name of a combined region.
+    /// </summary>
+    public const string DisallowedTitleCharacters = "&|;%*?!='\"^#";
+
     public static readonly TimeSpan ImpactTimeout = TimeSpan.FromMinutes(15);
     public static readonly TimeSpan ImpactPollInterval = TimeSpan.FromSeconds(15);
 
@@ -105,13 +111,15 @@ public static class Config
     /// Builds a title that is unique per run and easy to find in IMPLAN Cloud.
     /// </summary>
     /// <remarks>
-    /// Titles must be unique for your user, and the API rejects an ampersand and
-    /// the characters <c>| ; % * ? ! = ' " ^ #</c>, so keep <paramref name="label"/>
-    /// to plain words.
+    /// Titles must be unique for your user. Any character in
+    /// <see cref="DisallowedTitleCharacters"/> is dropped from
+    /// <paramref name="label"/>, which matters when the label is one of IMPLAN's own
+    /// region descriptions.
     /// </remarks>
     public static string UniqueTitle(string label)
     {
-        return $"{TitlePrefix} - {label} - {DateTime.Now:yyyyMMdd-HHmmss}";
+        var cleaned = new string(label.Where(c => !DisallowedTitleCharacters.Contains(c)).ToArray());
+        return $"{TitlePrefix} - {cleaned} - {DateTime.Now:yyyyMMdd-HHmmss}";
     }
 
     /// <summary>

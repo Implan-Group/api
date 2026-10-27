@@ -83,6 +83,28 @@ test_that("a second 401 is raised without refreshing again", {
   expect_equal(refreshes, 1)
 })
 
+test_that("an upload retried after a 401 sends the whole file again", {
+  workbook <- withr::local_tempfile(fileext = ".xlsx")
+  writeLines("stand-in workbook bytes", workbook)
+
+  sent <- list()
+  answers <- list(mock_response(401), mock_response(200, '{"ok":true}'))
+  httr2::local_mocked_responses(function(req) {
+    sent[[length(sent) + 1L]] <<- req$body$data$excelFile
+    answers[[length(sent)]]
+  })
+
+  post_file(test_client(token_refresher = function() FAKE_TOKEN), "/x", "excelFile", workbook)
+
+  # curl reads a form_file from its path as the request goes out, so every
+  # attempt that still carries the path sends the whole file.
+  expect_length(sent, 2)
+  for (part in sent) {
+    expect_s3_class(part, "form_file")
+    expect_equal(normalizePath(part$path), normalizePath(workbook))
+  }
+})
+
 test_that("a request that reaches nothing is a transport error, not an API error", {
   httr2::local_mocked_responses(function(req) {
     stop(errorCondition("Could not connect to server", class = "httr2_failure"))

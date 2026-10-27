@@ -60,3 +60,10 @@ test_that("small helpers", {
   expect_equal(bare_token("Bearer abc.def"), "abc.def")
   expect_true(startsWith(unique_title("X"), paste(TITLE_PREFIX, "- X -")))
 })
+
+test_that("unique_title drops characters IMPLAN rejects", {
+  expect_true(startsWith(
+    unique_title("Prince George's County"),
+    paste(TITLE_PREFIX, "- Prince Georges County -")
+  ))
+})

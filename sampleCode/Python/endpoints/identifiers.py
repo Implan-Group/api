@@ -14,7 +14,8 @@ https://github.com/Implan-Group/api/wiki/Getting-Started
 """
 
 from endpoints import aggregation_schemes, datasets, industries
-from models.reference import Identifiers, IndustrySet, MapCode
+from models.project import Project
+from models.reference import AggregationScheme, Identifiers, IndustrySet, MapCode
 from utilities import logging_setup
 from utilities.rest import ApiClient
 
@@ -79,8 +80,6 @@ def resolve(client: ApiClient, map_code: MapCode = MapCode.US) -> Identifiers:
 
     Every workflow starts here, so the console prints what was chosen.
     """
-    logger = logging_setup.get_logger()
-
     # GET /api/v1/industry-sets  (wiki: Get Industry Sets)
     all_sets = industries.get_industry_sets(client)
 
@@ -113,24 +112,71 @@ def resolve(client: ApiClient, map_code: MapCode = MapCode.US) -> Identifiers:
             (s for s in schemes if "Unaggregated" in s.description), schemes[0]
         )
 
-    # GET /api/v1/datasets/{aggregationSchemeId}  (wiki: Dataset by Aggregation Scheme)
-    scheme_datasets = datasets.get_datasets_for_scheme(client, scheme.id)
-    dataset = datasets.default_dataset(scheme_datasets)
-
     if not scheme.household_set_ids:
         raise LookupError(
             f"Aggregation Scheme {scheme.id} lists no Household Sets, so a Project "
             f"cannot be created against it."
         )
 
+    return _with_default_dataset(
+        client, map_code, industry_set, scheme, scheme.household_set_ids[0]
+    )
+
+
+def resolve_for_project(client: ApiClient, project: Project) -> Identifiers:
+    """Work out the identifiers an existing Project was built with.
+
+    A Project's Aggregation Scheme and Household Set are fixed when it is created,
+    so anything added to it later has to use the same ones. Resolving the current
+    defaults instead would be wrong for a Project made on an older Industry Set or
+    a custom scheme: the industry codes, Datasets, and regions would belong to a
+    different scheme from the Project's.
+
+    The Dataset is the scheme's default, as `resolve` picks it.
+    """
+    # GET /api/v1/aggregationSchemes/{aggregationSchemeId}
+    # (wiki: Aggregation Scheme by Id)
+    scheme = aggregation_schemes.get_aggregation_scheme(
+        client, project.aggregation_scheme_id
+    )
+
+    # GET /api/v1/industry-sets  (wiki: Get Industry Sets)
+    industry_set = next(
+        (s for s in industries.get_industry_sets(client) if s.id == scheme.industry_set_id),
+        None,
+    )
+    if industry_set is None:
+        raise LookupError(
+            f"Aggregation Scheme {scheme.id} refers to Industry Set "
+            f"{scheme.industry_set_id}, which is not in the Industry Set list."
+        )
+
+    return _with_default_dataset(
+        client, MapCode(scheme.map_code), industry_set, scheme, project.household_set_id
+    )
+
+
+def _with_default_dataset(
+    client: ApiClient,
+    map_code: MapCode,
+    industry_set: IndustrySet,
+    scheme: AggregationScheme,
+    household_set_id: int,
+) -> Identifiers:
+    """Add the scheme's default Dataset, and print what was resolved."""
+    # GET /api/v1/datasets/{aggregationSchemeId}  (wiki: Dataset by Aggregation Scheme)
+    scheme_datasets = datasets.get_datasets_for_scheme(client, scheme.id)
+    dataset = datasets.default_dataset(scheme_datasets)
+
     identifiers = Identifiers(
         map_code=map_code,
         industry_set=industry_set,
         aggregation_scheme=scheme,
         dataset=dataset,
-        household_set_id=scheme.household_set_ids[0],
+        household_set_id=household_set_id,
     )
 
+    logger = logging_setup.get_logger()
     logger.info("Resolved identifiers from the API:")
     logger.info(identifiers.describe())
     return identifiers

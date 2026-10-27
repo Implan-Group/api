@@ -59,33 +59,26 @@ def run() -> str:
     for county in chosen:
         logger.info("    %s", county.describe())
 
-    # Step 3. Ask for the combination. The description has to be unique for your
-    # account, so it carries a timestamp.
+    # Step 3. Ask for the combination. The description carries a timestamp so that
+    # each run builds a new region to watch.
+    #
+    # There is no need to look for an existing region first: the API does it. A
+    # name you already have, sent with the same regions in any order, returns that
+    # region instead of building it again. Sent with different regions, it is
+    # refused with a 422 saying the name is taken.
     logging_setup.heading("Step 3: request the combined region")
     description = config.unique_title("Combined Region")
-
-    # Re-running this workflow should not fail on a name that already exists, and
-    # should not build the same region twice.
-    existing = regions.find_existing_user_region(
-        client, ids.aggregation_scheme_id, ids.dataset_id, description
+    request = CombineRegionRequest(
+        description=description,
+        hash_ids=[county.hash_id for county in chosen],
     )
-    if existing is not None:
-        logger.info("  a region named '%s' already exists; reusing it", description)
-        combined = existing
-    else:
-        request = CombineRegionRequest(
-            description=description,
-            hash_ids=[county.hash_id for county in chosen],
-        )
-        logger.info("  combining %d regions as '%s'", len(chosen), description)
+    logger.info("  combining %d regions as '%s'", len(chosen), description)
 
-        # POST /api/v1/region/build/combined/{aggregationSchemeId}
-        # (wiki: Combine Regions)
-        combined = regions.build_combined_region(
-            client, ids.aggregation_scheme_id, request
-        )
-        logger.info("  accepted: %s", combined.describe())
-        logger.info("  status is '%s'; the model builds in the background", combined.model_build_status)
+    # POST /api/v1/region/build/combined/{aggregationSchemeId}
+    # (wiki: Combine Regions)
+    combined = regions.build_combined_region(client, ids.aggregation_scheme_id, request)
+    logger.info("  accepted: %s", combined.describe())
+    logger.info("  status is '%s'; the model builds in the background", combined.model_build_status)
 
     # Step 4. Wait for the model. A combined region usually finishes inside a
     # minute; the helper gives up after ten and says so rather than looping.

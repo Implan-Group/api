@@ -17,8 +17,10 @@ namespace Implan.ApiSamples.Workflows;
 ///
 ///   - Look up regions once and cache the lookup. The FIPS-to-region map is built
 ///     from two calls per state, not one call per county.
-///   - Reuse what already exists. Re-running finds the regions, the folder, and the
-///     projects it made last time instead of failing on duplicate names.
+///   - Reuse what already exists. Re-running gets back the combined regions it
+///     built last time, because the API returns an existing region when both its
+///     name and its member regions match, and files the new projects in the same
+///     folder.
 ///   - Throttle. The client's rate limiter is switched on for this workflow, because
 ///     a burst of region builds will otherwise earn a 429 and then a ban. The
 ///     published limit counts builds, but the throttle applies to every request,
@@ -30,7 +32,9 @@ namespace Implan.ApiSamples.Workflows;
 ///   county_based.csv  fips, region_description, model_name
 ///   demo_events.csv   Name, Code, Type, Value
 ///
-/// Rows sharing a model_name are combined into one region.
+/// Rows sharing a model_name are combined into one region. Every row is checked
+/// before anything is created in your account, so a mistake in the files stops
+/// the run with the file and line to fix, not halfway through.
 ///
 /// Wiki: Combine Regions - https://github.com/Implan-Group/api/wiki/Combine-Regions
 /// Wiki: Projects - https://github.com/Implan-Group/api/wiki/Projects
@@ -46,6 +50,14 @@ public static class BulkFromCsvWorkflow
     /// and safely inside the limit. See the wiki home page.
     /// </summary>
     private const int RegionRequestsPerMinute = 5;
+
+    /// <summary>The columns each input file must have.</summary>
+    private static readonly string[] RegionColumns = ["fips", "region_description", "model_name"];
+
+    private static readonly string[] EventColumns = ["Name", "Code", "Type", "Value"];
+
+    /// <summary>The event types the events file can use, matched without regard to case.</summary>
+    private static readonly string[] EventTypes = ["industry output", "commodity output"];
 
     private static readonly (string Label, Func<ApiClient, long, ResultFilters?, string> Fetch)[] Reports =
     [
@@ -67,18 +79,20 @@ public static class BulkFromCsvWorkflow
         ConsoleLog.Heading("Step 1: resolve identifiers and read the input files");
         var ids = Endpoints.Identifiers.Resolve(client, MapCode.US);
 
-        var stateRows = ReadCsv(Path.Combine(Config.DataDirectory, "state_based.csv"));
-        var countyRows = ReadCsv(Path.Combine(Config.DataDirectory, "county_based.csv"));
-        var eventRows = ReadCsv(Path.Combine(Config.DataDirectory, "demo_events.csv"));
+        var stateRows = ReadCsv(Path.Combine(Config.DataDirectory, "state_based.csv"), RegionColumns);
+        var countyRows = ReadCsv(Path.Combine(Config.DataDirectory, "county_based.csv"), RegionColumns);
+        var eventRows = ReadCsv(Path.Combine(Config.DataDirectory, "demo_events.csv"), EventColumns);
         ConsoleLog.Info("  {0} state rows, {1} county rows, {2} event rows",
             stateRows.Count, countyRows.Count, eventRows.Count);
+        CheckInputs(stateRows, countyRows, eventRows);
 
-        // Step 2. Build the combined regions. The lookup is shared so the state list
-        // is fetched once for both files.
+        // Step 2. Build the combined regions. Every FIPS code is looked up before any
+        // region is built, so a code that is not a place stops the run before
+        // anything is created. The lookup is shared so the state list is fetched once.
         ConsoleLog.Heading("Step 2: build the combined regions");
         var lookup = new RegionLookup(client, ids);
-        var models = BuildModels(client, ids, stateRows, lookup);
-        models.AddRange(BuildModels(client, ids, countyRows, lookup));
+        var membersByModel = MembersByModel(stateRows.Concat(countyRows), lookup);
+        var models = BuildModels(client, ids, membersByModel);
         ConsoleLog.Info("  {0} regions ready", models.Count);
 
         // Step 3. A folder to keep the projects together.
@@ -163,17 +177,19 @@ public static class BulkFromCsvWorkflow
     }
 
     /// <summary>
-    /// Reads one input file, keeping FIPS codes as text.
+    /// Reads one input file, keeping FIPS codes as text and skipping empty rows.
     /// </summary>
     /// <remarks>
     /// FIPS codes have leading zeros that matter: Alabama is <c>01000</c>, and
-    /// reading that as a number turns it into 1000, which is not a place.
+    /// reading that as a number turns it into 1000, which is not a place. Each row
+    /// also records its line in the file under <c>line</c>, so a problem can be
+    /// reported where it is.
     ///
     /// This parser handles quoted fields, which the region files use because some
     /// descriptions contain a comma. It is not a general CSV library, and does not
     /// need to be for these files.
     /// </remarks>
-    private static List<Dictionary<string, string>> ReadCsv(string path)
+    internal static List<Dictionary<string, string>> ReadCsv(string path, string[] columns)
     {
         if (!File.Exists(path))
         {
@@ -182,26 +198,174 @@ public static class BulkFromCsvWorkflow
         }
 
         var lines = File.ReadAllLines(path);
-        if (lines.Length < 2)
-            return [];
+        var name = Path.GetFileName(path);
+        var headers = lines.Length == 0 ? [] : SplitCsvLine(lines[0]);
 
-        var headers = SplitCsvLine(lines[0]);
-        var rows = new List<Dictionary<string, string>>();
-
-        foreach (var line in lines.Skip(1))
+        var missing = columns.Where(c => !headers.Contains(c, StringComparer.OrdinalIgnoreCase)).ToList();
+        if (missing.Count > 0)
         {
-            if (string.IsNullOrWhiteSpace(line))
+            throw new ArgumentException(
+                $"{name} has no {string.Join(", ", missing)} column. It needs a "
+                + $"comma-separated header row: {string.Join(",", columns)}");
+        }
+
+        var rows = new List<Dictionary<string, string>>();
+        for (var index = 1; index < lines.Length; index++)
+        {
+            var values = SplitCsvLine(lines[index]);
+            var lineNumber = index + 1;
+
+            // A value holding an unquoted comma splits in two.
+            if (values.Count > headers.Count)
+            {
+                throw new ArgumentException(
+                    $"{name} line {lineNumber} has more values than its header. Put double "
+                    + "quotes around any value that contains a comma, such as \"Douglas County, OR\".");
+            }
+
+            // Clearing cells in Excel can leave rows of bare commas behind.
+            if (values.All(string.IsNullOrWhiteSpace))
                 continue;
 
-            var values = SplitCsvLine(line);
             var row = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             for (var i = 0; i < headers.Count; i++)
+            {
                 row[headers[i]] = i < values.Count ? values[i] : string.Empty;
+            }
 
+            row["line"] = lineNumber.ToString(System.Globalization.CultureInfo.InvariantCulture);
             rows.Add(row);
         }
 
         return rows;
+    }
+
+    /// <summary>
+    /// Checks every row before anything is created, and reports every problem at once.
+    /// </summary>
+    /// <remarks>
+    /// FIPS codes come back padded and amounts come back as plain numbers, so the rest
+    /// of the workflow can read them directly.
+    /// </remarks>
+    internal static void CheckInputs(
+        List<Dictionary<string, string>> stateRows,
+        List<Dictionary<string, string>> countyRows,
+        List<Dictionary<string, string>> eventRows)
+    {
+        var problems = new List<string>();
+
+        var modelsByFile = new Dictionary<string, HashSet<string>>();
+        foreach (var (fileName, rows) in new[] { ("state_based.csv", stateRows), ("county_based.csv", countyRows) })
+        {
+            modelsByFile[fileName] = [];
+            foreach (var row in rows)
+            {
+                var where = $"{fileName} line {row["line"]}";
+                var fips = PaddedFips(row["fips"]);
+                if (fips is null)
+                {
+                    problems.Add($"{where}: '{row["fips"]}' is not a state or county FIPS code.");
+                }
+                else
+                {
+                    row["fips"] = fips;
+                }
+
+                problems.AddRange(NameProblems(where, "model_name", row["model_name"]));
+                modelsByFile[fileName].Add(row["model_name"]);
+            }
+        }
+
+        // Each file is grouped on its own, so a name in both would make two regions,
+        // or two copies of one.
+        foreach (var name in modelsByFile["state_based.csv"].Intersect(modelsByFile["county_based.csv"]).Order())
+        {
+            problems.Add(
+                $"model_name '{name}' is in both state_based.csv and county_based.csv. "
+                + "Give the counties a model_name of their own.");
+        }
+
+        if (stateRows.Count == 0 && countyRows.Count == 0)
+        {
+            problems.Add("state_based.csv and county_based.csv are both empty, so there is no region.");
+        }
+
+        if (eventRows.Count == 0)
+        {
+            problems.Add("demo_events.csv is empty, so there is no event to analyze.");
+        }
+
+        var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var row in eventRows)
+        {
+            var where = $"demo_events.csv line {row["line"]}";
+            problems.AddRange(NameProblems(where, "Name", row["Name"]));
+            if (!names.Add(row["Name"]))
+            {
+                problems.Add($"{where}: the Name '{row["Name"]}' is already used. Event titles must be unique.");
+            }
+
+            if (!EventTypes.Contains(row["Type"].ToLowerInvariant()))
+            {
+                problems.Add($"{where}: Type '{row["Type"]}' is not Industry Output or Commodity Output.");
+            }
+
+            if (row["Code"].Length == 0 || !row["Code"].All(char.IsAsciiDigit))
+            {
+                problems.Add($"{where}: Code '{row["Code"]}' is not a whole number.");
+            }
+
+            // Excel writes a Currency cell as "$1,000,000", so the symbol and the
+            // separators are dropped before reading the number.
+            var amount = row["Value"].Replace("$", "").Replace(",", "").Trim();
+            if (double.TryParse(amount, System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out _))
+            {
+                row["Value"] = amount;
+            }
+            else
+            {
+                problems.Add($"{where}: Value '{row["Value"]}' is not an amount in dollars.");
+            }
+        }
+
+        if (problems.Count > 0)
+        {
+            throw new ArgumentException(
+                "Fix these in the input files, then run again. Nothing was created.\n  "
+                + string.Join("\n  ", problems));
+        }
+    }
+
+    /// <summary>Returns a FIPS code at full length, or null if it is not one.</summary>
+    /// <remarks>
+    /// Excel drops leading zeros, so Alabama's <c>01000</c> can arrive as
+    /// <c>1000</c>. A state code is two digits and a county code five, so a one- or
+    /// four-digit code is unambiguous and is padded back.
+    /// </remarks>
+    internal static string? PaddedFips(string code)
+    {
+        if (code.Length is not (1 or 2 or 4 or 5) || !code.All(char.IsAsciiDigit))
+            return null;
+
+        return code.Length <= 2 ? code.PadLeft(2, '0') : code.PadLeft(5, '0');
+    }
+
+    /// <summary>What is wrong with a name that becomes part of a title, if anything.</summary>
+    private static IEnumerable<string> NameProblems(string where, string column, string name)
+    {
+        if (name.Length == 0)
+        {
+            yield return $"{where}: {column} is empty.";
+            yield break;
+        }
+
+        var rejected = name.Where(c => Config.DisallowedTitleCharacters.Contains(c)).Distinct().Order().ToList();
+        if (rejected.Count > 0)
+        {
+            yield return $"{where}: {column} '{name}' contains {string.Join(" ", rejected)}, "
+                         + "which IMPLAN does not allow in a title.";
+        }
     }
 
     /// <summary>Splits one CSV line, honoring double quotes around a field.</summary>
@@ -232,37 +396,30 @@ public static class BulkFromCsvWorkflow
         return fields;
     }
 
-    /// <summary>Turns the rows of one input file into built regions, one per model name.</summary>
+    /// <summary>Looks up every row's region, grouped by model name, in file order.</summary>
+    private static Dictionary<string, List<Region>> MembersByModel(
+        IEnumerable<Dictionary<string, string>> rows,
+        RegionLookup lookup)
+    {
+        return rows
+            .GroupBy(r => r["model_name"])
+            .ToDictionary(g => g.Key, g => g.Select(r => lookup.Find(r["fips"])).ToList());
+    }
+
+    /// <summary>Turns each model's regions into one built region.</summary>
     private static List<Region> BuildModels(
         ApiClient client,
         Models.Identifiers ids,
-        List<Dictionary<string, string>> rows,
-        RegionLookup lookup)
+        Dictionary<string, List<Region>> membersByModel)
     {
         var built = new List<Region>();
 
-        var byModel = rows
-            .GroupBy(r => r["model_name"])
-            .ToDictionary(g => g.Key, g => g.Select(r => r["fips"]).ToList());
-
-        foreach (var (modelName, fipsCodes) in byModel)
+        foreach (var (modelName, members) in membersByModel)
         {
             // Naming the region for the scheme and dataset means the same input file
             // can be run against several data years without a name collision.
             var description =
                 $"{Config.TitlePrefix} {modelName} {ids.AggregationSchemeId}-{ids.DatasetId}";
-
-            var existing = Regions.FindExistingUserRegion(
-                client, ids.AggregationSchemeId, ids.DatasetId, description);
-
-            if (existing is { IsBuilt: true })
-            {
-                ConsoleLog.Info("  {0} already built, reusing it", modelName);
-                built.Add(existing);
-                continue;
-            }
-
-            var members = fipsCodes.Select(lookup.Find).ToList();
 
             if (members.Count == 1)
             {
@@ -277,6 +434,12 @@ public static class BulkFromCsvWorkflow
 
             // POST /api/v1/region/build/combined/{aggregationSchemeId}
             // (wiki: Combine Regions)
+            // There is no need to look for an existing region first: the API does
+            // it. A name you already have, sent with the same regions in any order,
+            // returns that region instead of building it again, so a re-run reuses
+            // last run's regions. Sent with different regions, it is refused with a
+            // 422 saying the name is taken, so give a changed set of regions a new
+            // model_name.
             var combined = Regions.BuildCombinedRegion(client, ids.AggregationSchemeId,
                 new CombineRegionRequest
                 {
@@ -286,7 +449,7 @@ public static class BulkFromCsvWorkflow
 
             // GET /api/v1/region/user/{hashId}, polled  (wiki: Get User Region)
             built.Add(Regions.WaitForRegionBuild(client, combined.HashId));
-            ConsoleLog.Info("    built as {0}", combined.HashId);
+            ConsoleLog.Info("    ready as {0}", combined.HashId);
         }
 
         return built;
@@ -311,7 +474,7 @@ public static class BulkFromCsvWorkflow
         {
             var title = Config.UniqueTitle(row["Name"]);
             var code = int.Parse(row["Code"]);
-            var value = double.Parse(row["Value"]);
+            var value = double.Parse(row["Value"], System.Globalization.CultureInfo.InvariantCulture);
             var kind = row["Type"].Trim();
 
             ImpactEvent impactEvent = kind.ToLowerInvariant() switch

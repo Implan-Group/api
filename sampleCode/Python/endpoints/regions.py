@@ -17,7 +17,7 @@ import time
 
 from models.region import CombineRegionRequest, ModelBuildStatus, Region, RegionType
 from utilities import config, logging_setup
-from utilities.rest import ApiClient, ImplanApiError
+from utilities.rest import ApiClient
 
 
 def get_region_types(client: ApiClient) -> list[str]:
@@ -149,8 +149,13 @@ def build_combined_region(
     `wait_for_region_build` waits for.
 
     The regions being combined must come from the same dataset, must not overlap,
-    and must not nest: a state and a county inside it cannot be combined. The
-    description has to be unique for your account.
+    and must not nest: a state and a county inside it cannot be combined.
+
+    The API checks the description against the regions you already have, so there
+    is no need to look first. A description you already have, sent with the same
+    regions in any order, returns that region instead of building it again, at
+    whatever status it has reached. Sent with different regions, it is refused
+    with a 422 whose detail says you already have a model with that name.
 
     The endpoint answers with an array holding the single new region.
     """
@@ -221,8 +226,10 @@ def wait_for_region_build(
 
             if region.model_build_status == ModelBuildStatus.ERROR.value:
                 raise RuntimeError(
-                    f"The model for region {hash_id} failed to build. Try the "
-                    f"request again, or contact support@implan.com if it repeats."
+                    f"The model for region {hash_id} failed to build. Delete the "
+                    f"region in IMPLAN Cloud and run again: asking again with the "
+                    f"same name and regions returns this failed region. Contact "
+                    f"support@implan.com if a fresh build fails too."
                 )
 
         if time.monotonic() >= deadline:
@@ -249,33 +256,3 @@ def find_region_by_description(regions: list[Region], description: str) -> Regio
         f"No region named '{description}' in this list of {len(regions)} regions. "
         f"Check the spelling, including the state abbreviation."
     )
-
-
-def find_existing_user_region(
-    client: ApiClient, aggregation_scheme_id: int, dataset_id: int, description: str
-) -> Region | None:
-    """Return one of your regions by name, or `None` if you have not built it.
-
-    Bulk workflows call this first so that re-running them reuses the regions they
-    built last time instead of failing on a duplicate name.
-    """
-    try:
-        existing = get_user_regions_for_scheme(
-            client, aggregation_scheme_id, dataset_id
-        )
-    except ImplanApiError as error:
-        if error.status_code == 503:
-            # The region cache is rebuilding. Treat it as "cannot tell", and let
-            # the caller try the build, which reports a duplicate name clearly.
-            logging_setup.get_logger().info(
-                "  the user-regions list is temporarily unavailable (503); "
-                "continuing without checking for an existing region"
-            )
-            return None
-        raise
-
-    wanted = description.casefold()
-    for region in existing:
-        if region.description.casefold() == wanted:
-            return region
-    return None

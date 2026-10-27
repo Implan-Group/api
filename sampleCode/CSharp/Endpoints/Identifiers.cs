@@ -60,9 +60,6 @@ public static class Identifiers
                          s.Description.Contains("Unaggregated", StringComparison.OrdinalIgnoreCase))
                      ?? schemes[0];
 
-        // GET /api/v1/datasets/{aggregationSchemeId}  (wiki: Dataset by Aggregation Scheme)
-        var dataset = Datasets.DefaultDataset(Datasets.GetDatasetsForScheme(client, scheme.Id));
-
         if (scheme.HouseholdSetIds.Count == 0)
         {
             throw new KeyNotFoundException(
@@ -70,13 +67,55 @@ public static class Identifiers
                 + "cannot be created against it.");
         }
 
+        return WithDefaultDataset(client, mapCode, industrySet, scheme, scheme.HouseholdSetIds[0]);
+    }
+
+    /// <summary>
+    /// Works out the identifiers an existing Project was built with.
+    /// </summary>
+    /// <remarks>
+    /// A Project's Aggregation Scheme and Household Set are fixed when it is created,
+    /// so anything added to it later has to use the same ones. Resolving the current
+    /// defaults instead would be wrong for a Project made on an older Industry Set or
+    /// a custom scheme: the industry codes, Datasets, and regions would belong to a
+    /// different scheme from the Project's.
+    ///
+    /// The Dataset is the scheme's default, as <see cref="Resolve"/> picks it.
+    /// </remarks>
+    public static Models.Identifiers ResolveForProject(ApiClient client, Project project)
+    {
+        // GET /api/v1/aggregationSchemes/{aggregationSchemeId}
+        // (wiki: Aggregation Scheme by Id)
+        var scheme = AggregationSchemes.GetAggregationScheme(client, project.AggregationSchemeId);
+
+        // GET /api/v1/industry-sets  (wiki: Get Industry Sets)
+        var industrySet = Industries.GetIndustrySets(client).FirstOrDefault(s => s.Id == scheme.IndustrySetId)
+                          ?? throw new KeyNotFoundException(
+                              $"Aggregation Scheme {scheme.Id} refers to Industry Set "
+                              + $"{scheme.IndustrySetId}, which is not in the Industry Set list.");
+
+        var mapCode = Enum.Parse<MapCode>(scheme.MapCode, ignoreCase: true);
+        return WithDefaultDataset(client, mapCode, industrySet, scheme, project.HouseholdSetId);
+    }
+
+    /// <summary>Adds the scheme's default Dataset, and prints what was resolved.</summary>
+    private static Models.Identifiers WithDefaultDataset(
+        ApiClient client,
+        MapCode mapCode,
+        IndustrySet industrySet,
+        AggregationScheme scheme,
+        int householdSetId)
+    {
+        // GET /api/v1/datasets/{aggregationSchemeId}  (wiki: Dataset by Aggregation Scheme)
+        var dataset = Datasets.DefaultDataset(Datasets.GetDatasetsForScheme(client, scheme.Id));
+
         var identifiers = new Models.Identifiers
         {
             MapCode = mapCode,
             IndustrySet = industrySet,
             AggregationScheme = scheme,
             Dataset = dataset,
-            HouseholdSetId = scheme.HouseholdSetIds[0],
+            HouseholdSetId = householdSetId,
         };
 
         ConsoleLog.Info("Resolved identifiers from the API:");

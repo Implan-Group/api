@@ -57,6 +57,10 @@ DATA_DIRECTORY: Path = SAMPLE_ROOT / "data"
 # regions all use it.
 TITLE_PREFIX: str = "ImpactApi Sample"
 
+# IMPLAN rejects these characters in the title of a Project, Event, or Group, and
+# in the name of a combined region.
+DISALLOWED_TITLE_CHARACTERS: str = "&|;%*?!='\"^#"
+
 # How long a workflow waits for a long-running operation before giving up. An
 # impact usually finishes in a couple of minutes and a combined-region build in
 # under one, so these are generous.
@@ -95,9 +99,11 @@ def current_dollar_year() -> int:
 def unique_title(label: str) -> str:
     """Build a title that is unique per run and easy to find in IMPLAN Cloud.
 
-    Titles must be unique for your user, and the API rejects an ampersand and the
-    characters `| ; % * ? ! = ' " ^ #`, so keep `label` to plain words.
+    Titles must be unique for your user. Any character in
+    `DISALLOWED_TITLE_CHARACTERS` is dropped from `label`, which matters when the
+    label is one of IMPLAN's own region descriptions.
     """
+    label = "".join(char for char in label if char not in DISALLOWED_TITLE_CHARACTERS)
     stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     return f"{TITLE_PREFIX} - {label} - {stamp}"
 

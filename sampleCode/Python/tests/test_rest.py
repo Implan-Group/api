@@ -1,7 +1,9 @@
 """The HTTP client: bodies, logging, errors, token refresh, retries, and transport."""
 
 import json
+import tempfile
 import unittest
+from pathlib import Path
 
 import requests
 
@@ -82,6 +84,23 @@ class TokenRefreshTests(unittest.TestCase):
 
         self.assertEqual(caught.exception.status_code, 401)
         self.assertEqual(len(refreshes), 1)
+
+    def test_an_upload_retried_after_a_401_sends_the_whole_file_again(self) -> None:
+        workbook = b"stand-in workbook bytes"
+        client, adapter = client_answering(
+            reply(401),
+            reply(200, '{"ok": true}'),
+            token_refresher=lambda: FAKE_TOKEN,
+        )
+
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "template.xlsx"
+            path.write_bytes(workbook)
+            client.post_file("/x", field_name="excelFile", file_path=path)
+
+        self.assertEqual(len(adapter.sent), 2)
+        for request in adapter.sent:
+            self.assertIn(workbook, request.body)
 
 
 class RetryTests(unittest.TestCase):

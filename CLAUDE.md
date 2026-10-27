@@ -8,7 +8,7 @@ Sources of truth, in order:
 2. The [wiki](https://github.com/Implan-Group/api/wiki), for narrative and page names to link.
 3. The API's own source, when the spec text is ambiguous.
 
-`IMPLAN-API.postman_collection.json` at this repository's root is generated from the same source as the spec, with every Instant and Batch request removed. Until the generated collection includes release 26.5, it also carries the 26.5 additions copied in by hand: the Canadian and US occupation exports, and `environmentalDataSpecificity` on the environmental requests. When a regenerated collection includes them, replace the root copy with it and remove Instant and Batch again. It is not a source of truth for the samples; the spec is.
+`IMPLAN-API.postman_collection.json` at this repository's root is generated from the same production build as the spec. Both have the operations tagged "Instant and Batch Impacts" removed, and nothing else; the region batch builds under `/api/v1/region/build/batch/` are ordinary region endpoints and stay. Neither file is edited by hand: when production changes, regenerate both from the production release branch and replace them together. The collection is not a source of truth for the samples; the spec is.
 
 One set of workflows, implemented once per language, each version tailored to its language but doing the same thing with the same example data. If a workflow is not in the list in section 5 it does not belong in a language folder, and if it is in the list every language folder must have it.
 
@@ -46,7 +46,7 @@ A language folder that departs from one of these needs a comment saying why.
 
 - Impact status: poll `GET /api/v1/impact/status/{runId}` every 15 to 30 seconds. The body is plain text, such as `Complete`, not JSON, so read it as text. `Complete` means proceed. `Error` and `UserCancelled` are terminal failures. A 404 means the run has no analyses yet: that is expected for the first few seconds after a run starts, so wait through it for up to a minute, and only a 404 that persists past that is terminal, meaning the run never attached. Give up after 15 minutes with a message that names the run id.
 - Combined-region build: poll `GET /api/v1/region/user/{hashId}` (the single-region endpoint, not the list) every 15 seconds until `modelBuildStatus` is `Complete`; treat `Error` as terminal; give up after 10 minutes.
-- Respect the published throttles (Region Models 5 per minute, Industry Codes and Datasets 10 per minute, Batch 6 per minute). Bulk workflows sleep between calls and never issue one status request per region. The Region Models limit counts model builds, not reads. The bulk workflows still hold every request to five a minute, a deliberate choice for simplicity; say so wherever the throttle is explained, and never describe reads as limited.
+- Respect the published throttles (Region Models 5 per minute, Industry Codes and Datasets 10 per minute). Bulk workflows sleep between calls and never issue one status request per region. The Region Models limit counts model builds, not reads. The bulk workflows still hold every request to five a minute, a deliberate choice for simplicity; say so wherever the throttle is explained, and never describe reads as limited.
 
 **Errors**
 
@@ -86,7 +86,7 @@ Each language README has these sections in this order.
 4. **Configure.** Copy `.env.example` to `.env` and fill in the two variables, and say to keep the double quotes. Say where the token cache and logs are written.
 5. **Run.** One command per workflow, in list order, and how to pass a project id to the workflows that need one.
 6. **What you should see.** The console output shape for a successful run, and where exported CSV files land.
-7. **Run your own numbers.** For readers who know IMPLAN but not code: filling the Event Template for workflow 10, the CSV columns and rules for workflow 8, and which named values to change in workflow 5.
+7. **Run your own numbers.** For readers who know IMPLAN but not code: the commands for workflows 10 and 8, each linking to its narrative doc in `impact/workflows`, which holds the template and CSV rules once for every language.
 8. **Troubleshooting.** What 401, 403, 409, 422, 429, and 503 mean from this API and what to do about each; the throttles; the user-regions list returning 503 for accounts with many custom schemes; and that a 503 from `POST /api/auth` usually means either the authentication service is briefly unavailable (wait a minute and retry) or API access has not been enabled on the account (contact the Customer Success Manager), as the IMPLAN Support article "How to Use the IMPLAN API with R: Obtaining Your API Token" explains.
 9. **Links.** Wiki home, the wiki pages used, and support.
 
@@ -147,9 +147,9 @@ Version floors, and why they are where they are. Package floors are the current 
 | 5 | CreateProject | `CreateProjectWorkflow.cs` | `create_project_workflow.py` | `create_project_workflow.R` | `impact/workflows/CreateProject.md` |
 | 6 | MultiEventToMultiGroup | `MultiEventToMultiGroupWorkflow.cs` | `multi_event_to_multi_group_workflow.py` | `multi_event_to_multi_group_workflow.R` | `impact/workflows/MultiEventToMultiGroup.md` |
 | 7 | RunImpactAnalysis | `RunImpactAnalysisWorkflow.cs` | `run_impact_analysis_workflow.py` | `run_impact_analysis_workflow.R` | `impact/workflows/RunImpactAnalysis.md` |
-| 8 | BulkFromCsv | `BulkFromCsvWorkflow.cs` | `bulk_from_csv_workflow.py` | `bulk_from_csv_workflow.R` | `impact/workflows/BulkFromCsv.md` (new) |
+| 8 | BulkFromCsv | `BulkFromCsvWorkflow.cs` | `bulk_from_csv_workflow.py` | `bulk_from_csv_workflow.R` | `impact/workflows/BulkFromCsv.md` |
 | 9 | RegionalExports | `RegionalExportsWorkflow.cs` | `regional_exports_workflow.py` | `regional_exports_workflow.R` | `impact/workflows/RegionalExports.md` (new) |
-| 10 | ImportEvents | `ImportEventsWorkflow.cs` | `import_events_workflow.py` | `import_events_workflow.R` | `impact/workflows/ImportEvents.md` (new) |
+| 10 | ImportEvents | `ImportEventsWorkflow.cs` | `import_events_workflow.py` | `import_events_workflow.R` | `impact/workflows/ImportEvents.md` |
 | 11 | MrioProject | `MrioProjectWorkflow.cs` | `mrio_project_workflow.py` | `mrio_project_workflow.R` | `impact/workflows/MrioProject.md` (new) |
 | 12 | AdvancedEvents | `AdvancedEventsWorkflow.cs` | `advanced_events_workflow.py` | `advanced_events_workflow.R` | `impact/workflows/AdvancedEvents.md` (new) |
 
@@ -248,7 +248,7 @@ Needs: token, ids. Produces: a project id, two event ids, one group id, all prin
 
 Goal: the same events applied to several regions, the common "compare states" shape.
 
-Steps: take an existing empty project id (or create one with the workflow 5 code); read the Household Income specifications and check codes 10002 and 10005; add one Industry Output event for Full-service restaurants and two Household Income events; find the three states; add one group per state containing all three events.
+Steps: take an existing empty project id and resolve the identifiers from that project's own Aggregation Scheme and Household Set, refusing a project on a non-US scheme (or create one with the workflow 5 code); read the Household Income specifications and check codes 10002 and 10005; add one Industry Output event for Full-service restaurants and two Household Income events; find the three states; add one group per state containing all three events.
 
 | Endpoint | Wiki page |
 | --- | --- |
@@ -281,7 +281,7 @@ Needs: token, a project id with at least one group. Produces: five CSV files tha
 
 Goal: drive many builds and runs from input files, the way an analyst batches work. Ported from the former R procedural script.
 
-Steps: read `state_based.csv`, `county_based.csv`, and `demo_events.csv`; resolve each FIPS code to a region by walking the state and county children (cached locally); create or reuse a combined region per model name and wait for each build; create or reuse a folder; for each model create a project in the folder, add Industry Output and Commodity Output events from the CSV, add one group, run, wait, and download the four indicator and tax reports; finally create one "all models" project with a group per region. Sleep between calls to stay inside the throttles.
+Steps: read `state_based.csv`, `county_based.csv`, and `demo_events.csv`, and check every row before anything is created (column count, header, FIPS codes padded to full length, names free of the characters IMPLAN rejects and unique, a `model_name` in one file only, amounts with `$` and separators dropped, at least one region and one event), reporting every problem at once; resolve each FIPS code to a region by walking the state and county children (cached locally); post a combined build per model name, letting the API return the region already built under that name when its members match (a changed member list under a used name is refused with a 422), and wait for each build; create or reuse a folder; for each model create a project in the folder, add Industry Output and Commodity Output events from the CSV, add one group, run, wait, and download the four indicator and tax reports; finally create one "all models" project with a group per region. Sleep between calls to stay inside the throttles.
 
 | Endpoint | Wiki page |
 | --- | --- |

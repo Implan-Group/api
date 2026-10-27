@@ -7317,82 +7317,6 @@
         }
       }
     },
-    "/api/v1/models": {
-      "get": {
-        "tags": [
-          "Instant and Batch Impacts"
-        ],
-        "summary": "Gets the built Region models available for a Dataset.",
-        "description": "Returns the models whose build status is `Built` or `Complete` for the Aggregation\r\nScheme tied to the given Dataset. A model's `id` is the Model Id used to run an impact.\r\nOmit datasetId (or pass `0`) to use the default Aggregation Scheme.",
-        "operationId": "GetModels",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "query",
-            "description": "The Dataset to list models for. Pass `0` (or omit) for the default.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The built Region models available for the Dataset.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Model"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "The request did not carry valid authentication credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "The caller does not have access to a resource this operation uses.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No Dataset exists with the supplied id.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "The request failed for a reason the caller cannot correct. Quote the traceId from the response body when reporting it.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/region/{AggregationSchemeId}/{DatasetId}": {
       "get": {
         "tags": [
@@ -8010,6 +7934,270 @@
           },
           "422": {
             "description": "One of the supplied Regions cannot be built, because it sits inside another Region in the same request.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The request failed for a reason the caller cannot correct. Quote the traceId from the response body when reporting it.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/region/build/batch/{AggregationSchemeId}": {
+      "post": {
+        "tags": [
+          "Region Building and Customization"
+        ],
+        "summary": "Builds multiple Region models at once.",
+        "description": "Builds each of the supplied Regions (by HashId or URID) under the given Aggregation Scheme. Only\r\nRegions that needed to be built are returned - already-built Regions are omitted.",
+        "operationId": "BuildRegionBatch",
+        "parameters": [
+          {
+            "name": "AggregationSchemeId",
+            "in": "path",
+            "description": "The Aggregation Scheme the new Regions belong to.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The HashIds or URIDs of the Regions to build.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "example": [
+                "yDxXX13pxJ",
+                "A2xqMqdLxq"
+              ]
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The newly built Region models.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExternalRegionCard"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No Region identifiers were supplied, or one of them is not a valid hashId or urid.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The request did not carry valid authentication credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The caller does not have access to a resource this operation uses.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No Aggregation Scheme exists with the supplied id.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The caller already has a model with the requested name.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The supplied Regions cannot be built together, because one sits inside another.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The request failed for a reason the caller cannot correct. Quote the traceId from the response body when reporting it.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/region/build/batch/combined/{AggregationSchemeId}": {
+      "post": {
+        "tags": [
+          "Region Building and Customization"
+        ],
+        "summary": "Builds multiple combined Region models at once.",
+        "description": "Each request combines two or more Regions (by URID/HashId) into a single combined Region, which is\r\nthen built. User-defined models cannot be combined, and each request must reference more than one\r\nRegion. All requests are validated before any are processed.",
+        "operationId": "BuildCombinedRegionBatch",
+        "parameters": [
+          {
+            "name": "AggregationSchemeId",
+            "in": "path",
+            "description": "The Aggregation Scheme the combined Regions belong to.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "asBatch",
+            "in": "query",
+            "description": "Whether to process the builds as a batch. Defaults to `true`.",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The combined-Region build requests.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CombinedBuildRequest"
+                }
+              },
+              "example": [
+                {
+                  "urids": [
+                    1862706,
+                    1863644
+                  ],
+                  "description": "Combined Region A"
+                }
+              ]
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The built combined Region models.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExternalRegionCard"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A request combines user-defined models, references only one Region, or fails validation.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The request did not carry valid authentication credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The caller does not have access to a resource this operation uses.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No Aggregation Scheme exists with the supplied id.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The caller already has a model with the requested name.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The supplied Regions cannot be built together, because one sits inside another.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -19950,31 +20138,6 @@
           "string"
         ]
       },
-      "Model": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "The model's identifier (the Model Id used when running an impact).",
-            "format": "int32"
-          },
-          "description": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "description": "A description of the model's Region (for example, the state or county name)."
-          },
-          "regionType": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "description": "The Region type of the model (for example, `State`, `County`, `MSA`)."
-          }
-        },
-        "description": "A built Region model that can be used to run an impact analysis."
-      },
       "ModelCommodityRpcEconomicData": {
         "type": "object",
         "properties": {
@@ -20788,10 +20951,6 @@
     {
       "name": "GAMS Files",
       "description": "Export the region's model data as GAMS (General Algebraic Modeling System) files, bundled or as a single file."
-    },
-    {
-      "name": "Instant and Batch Impacts",
-      "description": "Run impacts without a saved project: instant single-event impacts (US, Canada, international, optionally by model) and batch runs, plus instant model/dataset lookups."
     },
     {
       "name": "Projects and Folders",
