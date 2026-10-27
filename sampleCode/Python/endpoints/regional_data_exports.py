@@ -50,7 +50,7 @@ def get_export(
     than that the request was malformed. Build the region and ask again.
 
     `export_name` is the segment from the wiki page for the report you want, for
-    example `RegionOverviewIndustries` or `study_area_data_industry_summary`.
+    example `RegionOverviewIndustries` or `StudyAreaDataIndustrySummary`.
     """
     if hash_id is None:
         if region is None:

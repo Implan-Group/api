@@ -26,8 +26,10 @@
 # regions takes hours.
 #
 # The export is a parameter. RegionOverviewIndustries and the single-file GAMS
-# export are named for convenience, but any report from the wiki's Regional Data
-# Exports section can be passed by name.
+# export are named for convenience. Any other export that needs only the region,
+# such as StudyAreaDataIndustrySummary, can be passed by name. The occupation,
+# environment, and multiplier exports also need a JSON body or another
+# parameter, which this workflow does not send.
 #
 # Wiki: Regional Data Exports
 # https://github.com/Implan-Group/api/wiki/Regional-Data-Exports

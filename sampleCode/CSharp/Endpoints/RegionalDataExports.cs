@@ -57,7 +57,7 @@ public static class RegionalDataExports
     ///
     /// <paramref name="exportName"/> is the segment from the wiki page for the
     /// report you want, for example <c>RegionOverviewIndustries</c> or
-    /// <c>study_area_data_industry_summary</c>.
+    /// <c>StudyAreaDataIndustrySummary</c>.
     /// </remarks>
     public static string GetExport(
         ApiClient client,

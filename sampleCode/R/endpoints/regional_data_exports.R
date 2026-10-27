@@ -39,7 +39,7 @@ file_extension_for <- function(export_name) {
 # that the request was malformed. Build the region and ask again.
 #
 # `export_name` is the segment from the wiki page for the report you want, for
-# example "RegionOverviewIndustries" or "study_area_data_industry_summary".
+# example "RegionOverviewIndustries" or "StudyAreaDataIndustrySummary".
 get_export <- function(client, aggregation_scheme_id, export_name, region = NULL, hash_id = NULL) {
   if (is.null(hash_id)) {
     if (is.null(region)) {

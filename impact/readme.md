@@ -231,15 +231,13 @@ Will return Models
 
 
 ## Industry Codes Endpoint (Get)
-**Use with project analysis endpoints.  **The Industries supported by this API will be the current standard IMPLAN 546 Industry scheme. This response may be cached.  A list of those industries can be found here: [https://support.implan.com/hc/en-us/articles/360034896614-546-Industries-Conversions-Bridges-Construction-2018-Data](https://support.implan.com/hc/en-us/articles/15398463942683-U-S-546-Industries-Conversions-Bridges)
-
-In 2022, the BEA will redefine the North American Industry Classifications System (NAICS) codes. This change will result in a change to the IMPLAN industry scheme for the 2023 IMPLAN data release. The API will then be updated to include these new industry designations when that data is added to the system.
+**Use with project analysis endpoints.** Returns the Industry Codes of one Industry Set. IMPLAN publishes a new Industry Set when the North American Industry Classification System changes, and the same code is a different industry in another set: Full-service restaurants is 509 in the 546 set and 491 in the 528 set. Read the codes from the set your project uses rather than copying them from an example. See the wiki's [Industries](https://github.com/Implan-Group/api/wiki/Industries) page.
 #### Parameters
 * Bearer Token
 * `IndustrySetId` _(optional)_
-  * If no `IndustrySetId` is specifed, the current default Industry Set will be used
+  * If no `IndustrySetId` is specified, the current default United States Industry Set is used: the one flagged `isDefault` in `GET {{api_domain}}api/v1/industry-sets`
 #### Response
-- A `json` response will include _all_ Industry Codes unless an optional `IndustrySetId` is specific, in which case the response will be filtered to only the Industry Codes from that Industry Set
+- A `json` list of every Industry Code in that one Industry Set, ordered by code. The example below is from the 546 set
 ```json
 [
     {

@@ -141,17 +141,17 @@ Version floors, and why they are where they are. Package floors are the current 
 | # | Workflow | C# | Python | R | Narrative doc |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Authentication | `AuthenticationWorkflow.cs` | `authentication_workflow.py` | `authentication_workflow.R` | wiki Authentication |
-| 2 | Identifiers | `IdentifiersWorkflow.cs` | `identifiers_workflow.py` | `identifiers_workflow.R` | `impact/workflows/Identifiers.md` (new) |
+| 2 | Identifiers | `IdentifiersWorkflow.cs` | `identifiers_workflow.py` | `identifiers_workflow.R` | `impact/workflows/Identifiers.md` |
 | 3 | Regions | `RegionsWorkflow.cs` | `regions_workflow.py` | `regions_workflow.R` | `impact/workflows/Regions.md` |
 | 4 | CombineRegions | `CombineRegionsWorkflow.cs` | `combine_regions_workflow.py` | `combine_regions_workflow.R` | `impact/workflows/CombineRegions.md` |
 | 5 | CreateProject | `CreateProjectWorkflow.cs` | `create_project_workflow.py` | `create_project_workflow.R` | `impact/workflows/CreateProject.md` |
 | 6 | MultiEventToMultiGroup | `MultiEventToMultiGroupWorkflow.cs` | `multi_event_to_multi_group_workflow.py` | `multi_event_to_multi_group_workflow.R` | `impact/workflows/MultiEventToMultiGroup.md` |
 | 7 | RunImpactAnalysis | `RunImpactAnalysisWorkflow.cs` | `run_impact_analysis_workflow.py` | `run_impact_analysis_workflow.R` | `impact/workflows/RunImpactAnalysis.md` |
 | 8 | BulkFromCsv | `BulkFromCsvWorkflow.cs` | `bulk_from_csv_workflow.py` | `bulk_from_csv_workflow.R` | `impact/workflows/BulkFromCsv.md` |
-| 9 | RegionalExports | `RegionalExportsWorkflow.cs` | `regional_exports_workflow.py` | `regional_exports_workflow.R` | `impact/workflows/RegionalExports.md` (new) |
+| 9 | RegionalExports | `RegionalExportsWorkflow.cs` | `regional_exports_workflow.py` | `regional_exports_workflow.R` | `impact/workflows/RegionalExports.md` |
 | 10 | ImportEvents | `ImportEventsWorkflow.cs` | `import_events_workflow.py` | `import_events_workflow.R` | `impact/workflows/ImportEvents.md` |
-| 11 | MrioProject | `MrioProjectWorkflow.cs` | `mrio_project_workflow.py` | `mrio_project_workflow.R` | `impact/workflows/MrioProject.md` (new) |
-| 12 | AdvancedEvents | `AdvancedEventsWorkflow.cs` | `advanced_events_workflow.py` | `advanced_events_workflow.R` | `impact/workflows/AdvancedEvents.md` (new) |
+| 11 | MrioProject | `MrioProjectWorkflow.cs` | `mrio_project_workflow.py` | `mrio_project_workflow.R` | `impact/workflows/MrioProject.md` |
+| 12 | AdvancedEvents | `AdvancedEventsWorkflow.cs` | `advanced_events_workflow.py` | `advanced_events_workflow.R` | `impact/workflows/AdvancedEvents.md` |
 
 Workflows 1 through 7 are the core set. Workflows 8 through 12 are the extended set: 8 comes from the former R procedural script, 9 from the former Python download scripts, and 10 through 12 were added on 2026-09-14 because each traces to a current IMPLAN Support topic (the Event Template, MRIO, and Contribution Analysis and Spending Pattern events) that no sample covered. Adding a language means one more column in these two tables, one folder with these layers, and one README written to section 3. Adding a workflow means adding it to every language and to this table.
 
@@ -296,9 +296,9 @@ Needs: token, the three CSV files (shipped with the sample). Produces: one folde
 
 ### 9. RegionalExports (extended)
 
-Goal: download a regional data export for many regions without one status request per region. Ported from the former Python download scripts. The export is a parameter (default `RegionOverviewIndustries`, plus the single-file GAMS export), so the other exports under the wiki's Regional Data Exports section (environment, occupation, multipliers, SAM tables) can be pulled by naming them, without new workflows.
+Goal: download a regional data export for many regions without one status request per region. Ported from the former Python download scripts. The export is a parameter (default `RegionOverviewIndustries`, plus the single-file GAMS export), so any other export under the wiki's Regional Data Exports section that needs only the region, such as the SAM tables or `StudyAreaDataIndustrySummary`, can be pulled by naming it, without new workflows. The occupation, environment, and multiplier exports also need a JSON body or another parameter, which the workflow does not send.
 
-Steps: list the target regions (all MSAs, or all counties) with one children call, which already carries each region's `modelBuildStatus`, so the list and the build state cost one request between them rather than one request per region; build whichever are missing with `build-and-return` in batches and wait; download the export per region into `reports/`, skipping files that already exist so a rerun resumes, and treating a 400 as "still building" rather than as a malformed request.
+Steps: list the target regions (all MSAs, or all counties) with one children call, which already carries each region's `modelBuildStatus`, so the list and the build state cost one request between them rather than one request per region; build whichever are missing with `build-and-return` in batches and wait; download the export per region into `reports/`, skipping files that already exist so a rerun resumes, and treating a 409 "Model not built" as "still building" rather than as a failure.
 
 There is no separate built-regions endpoint. An earlier draft of this document listed `GET /api/v1/region/{aggregationSchemeId}/{datasetId}/built`; that route is absent from the generated v1 spec and from every gateway export, and the children listing is the supported way to get the same answer. Do not reintroduce it.
 
@@ -330,7 +330,7 @@ Needs: token, ids, the shipped workbook. Produces: a project with the workbook's
 
 Goal: multi-regional input-output analysis, where an event in one region produces effects in another linked region. No earlier sample ever set `isMrio`.
 
-Steps: resolve ids; find Oregon and Wisconsin and check `isMrioAllowed` on both; create the project with `isMrio` true; add one Industry Output event for Oilseed farming; add a group for Oregon containing the event and a group for Wisconsin with no events, so anything reported for Wisconsin is spillover from Oregon (if the API refuses an empty group at run time, give Wisconsin a second, much smaller event and say so in the comment; confirm during implementation); run with the workflow 7 code; download Summary Economic Indicators twice, once filtered to Oregon and once to Wisconsin, and print the two totals side by side.
+Steps: resolve ids; find Oregon and Wisconsin and check `isMrioAllowed` on both; create the project with `isMrio` true; add one Industry Output event of $10,000,000 for Full-service restaurants, looked up by name; add a group for Oregon containing the event and a group for Wisconsin containing the same event scaled to 0.01, because the API requires every group to carry at least one event, so Wisconsin's own direct effect is negligible and nearly everything reported for it is spillover from Oregon; run with the workflow 7 code; download Summary Economic Indicators twice, once filtered to Oregon and once to Wisconsin, and print the two totals side by side.
 
 | Endpoint | Wiki page |
 | --- | --- |
@@ -340,13 +340,13 @@ Steps: resolve ids; find Oregon and Wisconsin and check `isMrioAllowed` on both;
 | `POST /api/v1/impact/{projectId}`, `GET /api/v1/impact/status/{runId}` | Run Impact Analysis, Get Impact Status |
 | `GET /api/v1/impact/results/SummaryEconomicIndicators/{runId}?regions=` | Results - Summary Economic Indicators |
 
-Needs: token, ids. Produces: a completed MRIO run and two filtered CSVs. Done when: the Wisconsin-filtered report is non-empty although Wisconsin had no direct event. Support reference: "MRIO: Introduction to Multi-Regional Input-Output Analysis".
+Needs: token, ids. Produces: a completed MRIO run and two filtered CSVs. Done when: the Wisconsin-filtered report shows indirect and induced effects far larger than its own scaled-down event explains. Support reference: "MRIO: Introduction to Multi-Regional Input-Output Analysis".
 
 ### 12. AdvancedEvents (extended)
 
 Goal: the two event types analysts reach for after Industry Output, plus event tags and tag-filtered results.
 
-Steps: create a project with the workflow 5 code; add an Industry Contribution Analysis event (`impactEventType` `IndustryContributionAnalysis`, Full-service restaurants, `output` 1,000,000, `isOutputPercentage` false, tag `contribution`); fetch the default Industry spending pattern for Oilseed farming with the resolved dataset, change one commodity's coefficient and mark it `isUserCoefficient`, and add an Industry Spending Pattern event (`impactEventType` `IndustrySpendingPattern`, `output` 1,000,000, `spendingPatternValueType` `Output`, `spendingPatternDatasetId` the resolved dataset, `spendingPatternCommodities` the edited list, tag `spending`); add one group for Oregon with both events; run with the workflow 7 code; download Summary Economic Indicators filtered by `eventTags=contribution` and again by `eventTags=spending`, and Estimated Growth Percentage with `eventTags` in its body; print which events each report contains.
+Steps: create a project with the workflow 5 code; add an Industry Contribution Analysis event (`impactEventType` `IndustryContributionAnalysis`, Full-service restaurants, `output` 1,000,000, `isOutputPercentage` false, tag `contribution`); fetch the default Industry spending pattern for Oilseed farming with the resolved dataset, change one commodity's coefficient and mark it `isUserCoefficient`, and add an Industry Spending Pattern event (`impactEventType` `IndustrySpendingPattern`, `output` 1,000,000, `spendingPatternValueType` `IntermediateExpenditure`, so the whole value is spent across the pattern, `spendingPatternDatasetId` the resolved dataset, `spendingPatternCommodities` the edited list, tag `spending`); add one group for Oregon with both events; run with the workflow 7 code; download Summary Economic Indicators filtered by `eventTags=contribution` and again by `eventTags=spending`, and Estimated Growth Percentage with `eventTags` in its body; print which events each report contains.
 
 | Endpoint | Wiki page |
 | --- | --- |

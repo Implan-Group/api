@@ -103,7 +103,7 @@ Useful options:
 | `--project-id` | 6, 7 | Work in an existing project instead of creating one |
 | `--map-code US\|CAN\|INTL` | 5 | Build a Canadian or international project |
 | `--region-type` | 9 | `Msa`, `County`, `State`, and so on |
-| `--export-name` | 9 | Any report from the wiki's Regional Data Exports section |
+| `--export-name` | 9 | A Regional Data Exports report that needs only the region, such as `StudyAreaDataIndustrySummary` |
 | `--limit 0` | 9 | Process every region rather than the first ten |
 | `--workbook <path>` | 10 | Upload your own filled Event Template instead of the example |
 
