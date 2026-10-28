@@ -4,10 +4,12 @@
 - Inside the project, you will define the Events, which are the changes to an economy that you want to analyze, and the Groups, which are the Regions and time frame the changes take place. 
 
 ### 🗈 Notes
-- The document is a supplement to the [Main Impact Readme](https://github.com/Implan-Group/api/blob/main/impact/readme.md)
+- This document supplements the [Impact API wiki](https://github.com/Implan-Group/api/wiki), which is the current reference for every endpoint, and the [Main Impact Readme](https://github.com/Implan-Group/api/blob/main/impact/readme.md)
 - Additional workflows can be found in the [Workflows Directory](https://github.com/Implan-Group/api/tree/main/impact/workflows)
-- All API Endpoints require a valid JWT Bearer Token to be passed with each requrest ([JWT.IO](https://jwt.io/))
-	- Please see the [authentication](https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication---retrieving-bearer-access-token) section in the Readme to review authentication steps
+- Runnable versions of these workflows in C#, Python, and R are in [sampleCode](https://github.com/Implan-Group/api/tree/main/sampleCode)
+- All API Endpoints require a valid JWT Bearer Token to be passed with each request ([JWT.IO](https://jwt.io/))
+	- See the wiki's [Authentication](https://github.com/Implan-Group/api/wiki/Authentication) page, or the [Authentication](https://github.com/Implan-Group/api/blob/main/impact/readme.md#authentication) section of the Readme, to review authentication steps
+	- A token is valid for 24 hours and must be cached and reused. Requesting a new one on every call is unsupported and repeated requests in a short period can earn a temporary ban on the account
 - Variables required for Endpoint calls will appear inside of double-braces (`{{}}`) and they must be replaced with valid values before the Request is sent
 	- _e.g._ `{{api_domain}}` should be replaced with `https://api.implan.com/` for Public Production requests
 	- See the [Production Variables](https://github.com/Implan-Group/api/blob/main/impact/readme.md#production-variables) section of the Readme for more information
@@ -55,7 +57,7 @@
 - `description` (text): Description of the aggregation scheme
 - `industrySetId` (number): Industry Set Identifier
 - `householdSetIds` (array of numbers): Valid Household Set Identifiers that can be used with this aggregation scheme
-- `mapCode` (text): A code to describe
+- `mapCode` (text): Which country's data the scheme covers: `US`, `CAN`, or `INTL`
 - `status` (text): Whether or not this aggregation scheme has been built yet
 
 ---
@@ -69,22 +71,22 @@
 - A `json` Project definition must be included in the body:
 ```json
 {
-    "id": "deadbeef-2600-1337-cafe-123456789abc",
     "title": "Project Title",
     "aggregationSchemeId": 8,
     "householdSetId": 1,
     "isMrio": false,
-    "folderId": null,
-    "lastImpactRunId": null
-},
+    "folderId": null
+}
 ```
-- `id` (guid): The unique identifier for this Project
-- `title` (text): The unique description for this Project
-- `aggregationSchemeId` (number): The Aggregation Scheme this Project is using
-- `householdSetId` (number): The Household Set this Project is using
-- `isMrio` (boolean): Whether or not this Project is using Multi-Region Input/Output (MRIO) Analysis
+- `title` (text): The description for this Project. It must be unique for your account, and must not contain an ampersand or any of the characters `| ; % * ? ! = ' " ^ #`
+- `aggregationSchemeId` (number): The Aggregation Scheme this Project is using. Fixed at creation and cannot be changed afterwards
+- `householdSetId` (number): The Household Set this Project is using. It must be one of the `householdSetIds` the Aggregation Scheme lists, so read it from the scheme rather than assuming `1`. Also fixed at creation
+- `isMrio` (boolean): Whether or not this Project is using Multi-Region Input/Output (MRIO) Analysis. Also fixed at creation
 - `folderId` (number, optional): If present, the identifier of the Folder that the Project is located under in IMPLAN Cloud
-- `lastImpactRunId` (number, optional): If an Impact Analysis has already been performed for this Project, the Id of the last one (used for querying Analysis status)
+
+- Leave `id` and `lastImpactRunId` out of the request. Both are set by IMPLAN and returned on the response:
+	- `id` (guid): The unique identifier generated for this Project
+	- `lastImpactRunId` (number): Once an Impact Analysis has been run for this Project, the Id of the most recent one. This is the reliable way to find which run a Project actually started
 
 ##### Response
 - Returns the `json` for the newly created Project (see Project Json above)
@@ -114,16 +116,17 @@
 	{
 		"id": 5222,
 		"code": 2,
-	"description": "Greenhouse, nursery and floriculture production (except cannabis)"
-	},
+		"description": "Greenhouse, nursery and floriculture production (except cannabis)"
+	}
 	...
 ]
 ```
 
 ---
 ### Event Types
-- [Impact Readme - Event Types](TODO)
+- [Impact API wiki - Events](https://github.com/Implan-Group/api/wiki/Events)
 - There are many types of Events that can be added to a Group, this endpoint retrieves a list of them
+- Which types are valid depends on the Project's Aggregation Scheme. An international scheme accepts the international impact-analysis types and refuses the domestic ones, and the reverse, so reading this list is cheaper than discovering the rule from a `422`
 
 ##### Request
 - `GET {{api_domain}}api/v1/impact/project/{{projectId}}/eventtype`
@@ -132,20 +135,28 @@
 ##### Response
 - This endpoint returns a `json` array of the names of valid Event Types
 ```json
-[  
-  "IndustryOutput",  
-  "IndustryEmployment",  
-  "IndustryEmployeeCompensation",  
-  "IndustryProprietorIncome",  
-  "IndustryImpactAnalysis",  
-  "IndustryContributionAnalysis",  
-  "CommodityOutput",  
-  "LaborIncome",  
-  "HouseholdIncome",  
-  "IndustrySpendingPattern",  
-  "InstitutionalSpendingPattern"  
+[
+  "IndustryOutput",
+  "IndustryEmployment",
+  "IndustryEmployeeCompensation",
+  "IndustryProprietorIncome",
+  "IndustryImpactAnalysis",
+  "CustomIndustryImpactAnalysis",
+  "InternationalIndustryImpactAnalysis",
+  "CustomInternationalIndustryImpactAnalysis",
+  "IndustryContributionAnalysis",
+  "CommodityOutput",
+  "LaborIncome",
+  "HouseholdIncome",
+  "IndustrySpendingPattern",
+  "InstitutionalSpendingPattern",
+  "HouseholdSpendingPattern",
+  "CustomSpendingPattern"
 ]
 ```
+- The list above is every type the API defines. The response holds only the ones valid for this Project, which is why it is worth reading rather than assuming
+	- `IndustryImpactAnalysis` and `IndustryProprietorIncome` are not valid in an international Aggregation Scheme
+	- The `International...` types are valid only in an international Aggregation Scheme
 
 
 ---
@@ -163,7 +174,7 @@
     "projectId": "deadbeef-f5be-458f-8efc-3b50ac0e5b1a",
     "impactEventType": "IndustryOutput",
     "title": "EVENT TITLE",
-    "tags": [],
+    "tags": []
   }
   ```
   - `id` (guid): Unique identifier for this Event
@@ -184,7 +195,7 @@
   "industryCode": 1,
   "marginType": null,
   "percentage": null,
-  "datasetId": 96,  
+  "datasetId": 96
 }
 ```
   - `output` (number, optional): Total output value of this Industry Output Event
@@ -192,8 +203,8 @@
   - `employeeCompensation` (number, optional): Total employee compensation
   - `proprietorIncome` (number, optional): Total proprietor compensation
   - `industryCode` (number): The Industry's Code (see above)
-  - `marginType` (text, optional): See [Implan Support](support.implan.com)
-  - `percentage` (number, optional): See [Implan Support](support.implan.com)
+  - `marginType` (text, optional): See [IMPLAN Support](https://support.implan.com/hc/en-us)
+  - `percentage` (number, optional): See [IMPLAN Support](https://support.implan.com/hc/en-us)
   - `datasetId` (number, optional): The Dataset Id (see above)
 
 #### Additional Industry Impact Analysis Event Json
@@ -201,7 +212,7 @@
 ```json
 {
   "industryCode": 1,
-  "intermediateOutputs": 500000,
+  "intermediateInputs": 500000,
   "totalEmployment": 5,
   "employeeCompensation": 250000,
   "proprietorIncome": 50000,
@@ -222,12 +233,14 @@
       "commodityDescription": "Beef cattle",
       "isSamValue": false,
       "isUserCoefficient": false,
-      "localPurchasePercentage": 1.0,
-    },
-    ...
+      "localPurchasePercentage": 1.0
+    }
   ]
 }
 ```
+  - `intermediateInputs` (number): What the industry spends on goods and services, excluding labor. This is the value that flows through the spending pattern
+  - `localPurchasePercentage` (number): The share of intermediate inputs bought inside the region, from 0 to 1. Leave it at `1.0` when everything is local, or set `isSam` to have IMPLAN substitute the region's own trade data instead
+  - `spendingPatternCommodities` (array, optional): Leave it out to use IMPLAN's default pattern for the industry. To adjust the pattern, read the default first, change the coefficients you want, and set `isUserCoefficient` to `true` on each one you changed so IMPLAN knows the number is yours
 
 ---
 ### Add Event
@@ -268,9 +281,8 @@
     {
       "eventId": "deadbeef-7eec-4241-bc82-d58f65fac4f0",
       "scalingFactor": 1.0
-    },
-    ...
-  ],
+    }
+  ]
 }
 ```
 - `id` (guid): Unique identifier for this Group, will be created during the `CreateGroup` endpoint call -- do not specify in incoming body

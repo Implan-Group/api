@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <!-- xUnit v3 test projects build as executables. -->
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>Implan.ApiSamples.Tests</RootNamespace>
+        <AssemblyName>ImplanApiSamples.Tests</AssemblyName>
+        <InvariantGlobalization>true</InvariantGlobalization>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Using Include="System.Net"/>
+        <Using Include="System.Text.Json"/>
+        <Using Include="Xunit"/>
+        <Using Include="Implan.ApiSamples.Endpoints"/>
+        <Using Include="Implan.ApiSamples.Models"/>
+        <Using Include="Implan.ApiSamples.Services"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- The current release, checked 2026-10-16. xUnit v3 runs on
+             Microsoft.Testing.Platform, so no VSTest packages are needed;
+             global.json in the folder above switches dotnet test to that
+             platform, which the .NET 10 SDK requires. -->
+        <PackageReference Include="xunit.v3" Version="4.0.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ImplanApiSamples.csproj"/>
+    </ItemGroup>
+
+</Project>

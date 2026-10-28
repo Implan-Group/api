@@ -83,11 +83,6 @@ The IMPLAN API will currently support the following requests per timeframe, to e
   - Requests per minute = 10
 - Region Models
   - Requests per minute = 5
-- Instant
-  - Requests per second = 5
-- Batch
-  - Requests per minute = 6
-  - 2500 events per request supported.
 
 ---
 # Authentication
@@ -236,15 +231,13 @@ Will return Models
 
 
 ## Industry Codes Endpoint (Get)
-**Use with project analysis endpoints.  **The Industries supported by this API will be the current standard IMPLAN 546 Industry scheme. This response may be cached.  A list of those industries can be found here: [https://support.implan.com/hc/en-us/articles/360034896614-546-Industries-Conversions-Bridges-Construction-2018-Data](https://support.implan.com/hc/en-us/articles/15398463942683-U-S-546-Industries-Conversions-Bridges)
-
-In 2022, the BEA will redefine the North American Industry Classifications System (NAICS) codes. This change will result in a change to the IMPLAN industry scheme for the 2023 IMPLAN data release. The API will then be updated to include these new industry designations when that data is added to the system.
+**Use with project analysis endpoints.** Returns the Industry Codes of one Industry Set. IMPLAN publishes a new Industry Set when the North American Industry Classification System changes, and the same code is a different industry in another set: Full-service restaurants is 509 in the 546 set and 491 in the 528 set. Read the codes from the set your project uses rather than copying them from an example. See the wiki's [Industries](https://github.com/Implan-Group/api/wiki/Industries) page.
 #### Parameters
 * Bearer Token
 * `IndustrySetId` _(optional)_
-  * If no `IndustrySetId` is specifed, the current default Industry Set will be used
+  * If no `IndustrySetId` is specified, the current default United States Industry Set is used: the one flagged `isDefault` in `GET {{api_domain}}api/v1/industry-sets`
 #### Response
-- A `json` response will include _all_ Industry Codes unless an optional `IndustrySetId` is specific, in which case the response will be filtered to only the Industry Codes from that Industry Set
+- A `json` list of every Industry Code in that one Industry Set, ordered by code. The example below is from the 546 set
 ```json
 [
     {
@@ -329,7 +322,7 @@ This endpoint will return a list of aggregation schemes available for use.
     ...
     {
         "id": 1090,
-        "description": "PHX-10001 Test",
+        "description": "Custom Aggregation Scheme",
         "industrySetId": 8,
         "householdSetIds": [
             1
@@ -490,40 +483,40 @@ This endpoint will return commodity margins data in CSV format.
 
 ### Request
 ```json
-{  
-    "description": "{{Custom Aggregation Scheme Name}}",  
-    "industrysetid": {{IndustrySetId}},
-    "groups": [  
-        {  
-            "description": "{{Group Description}}",  
-            "sectors": [  
-                {  
-                    "description": "{{Sector Description}}",  
-                    "code": {{Industry Code grouped in this Sector}}
-                },  
-            ...
-                {  
-                    "description": "{{Sector Description}}",  
-                    "code": {{Industry Code grouped in this Sector}}
-                }
-            ]  
-        },  
-    ...
-     {  
-            "description": "{{Group Description}}",  
-            "sectors": [  
-                {  
-                    "description": "{{Sector Description}}",  
-                    "code": {{Industry Code grouped in this Sector}}
-                },  
-            ...
-                {  
-                    "description": "{{Sector Description}}",  
-                    "code": {{Industry Code grouped in this Sector}}
-                }
-            ]  
-        }  
-    ]  
+{
+    "description": "{{Custom Aggregation Scheme Name}}",
+    "industrysetid": {{IndustrySetId}},
+    "groups": [
+        {
+            "description": "{{Group Description}}",
+            "sectors": [
+                {
+                    "description": "{{Sector Description}}",
+                    "code": {{Industry Code grouped in this Sector}}
+                },
+                ...
+                {
+                    "description": "{{Sector Description}}",
+                    "code": {{Industry Code grouped in this Sector}}
+                }
+            ]
+        },
+        ...
+        {
+            "description": "{{Group Description}}",
+            "sectors": [
+                {
+                    "description": "{{Sector Description}}",
+                    "code": {{Industry Code grouped in this Sector}}
+                },
+                ...
+                {
+                    "description": "{{Sector Description}}",
+                    "code": {{Industry Code grouped in this Sector}}
+                }
+            ]
+        }
+    ]
 }
 ```
 
@@ -532,7 +525,7 @@ This endpoint will return commodity margins data in CSV format.
 - Other endpoints, such as `Aggregation Scheme Details`, can be used to determine when the Custom Aggregation Scheme finishes building
 
 ### Endpoint
-- `GET {{api_domain}}api/v1/aggregationSchemes/create-custom-industry-aggregation-scheme`
+- `POST {{api_domain}}api/v1/aggregationSchemes/create-custom-industry-aggregation-scheme`
 
 
 
@@ -675,7 +668,7 @@ This endpoint will return all combined and custom regions that a user created by
 #### Endpoint
 **GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/user**
 
-**Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
+**Note:** do not assume an Aggregation Scheme ID. The current default is the `defaultAggregationSchemeId` of the Industry Set flagged `isDefault` in `GET {{api_domain}}api/v1/industry-sets`
 
 
 ### User Custom and Combined Regions (Get)
@@ -688,7 +681,7 @@ This endpoint will return all combined and custom regions that a user created. P
 **GET {{api_domain}}api/v1/region/user**\
 **GET {{api_domain}}api/v1/region/user?aggregationSchemeId={{aggregationSchemeId}}**\
 **GET {{api_domain}}api/v1/region/user?datasetId={{datasetId}}**\
-**GET {{api_domain}}api/v1/region/user?aggregationSchemeId={{aggregationSchemeId}}&datsetId={{datasetId}}**
+**GET {{api_domain}}api/v1/region/user?aggregationSchemeId={{aggregationSchemeId}}&datasetId={{datasetId}}**
 
 
 #### Get User Custom and/or Combined Region (Get)
@@ -710,11 +703,11 @@ This endpoint allows a user to pull high level region information by a specific 
 #### Endpoint
 **GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/{{urid}}**
 
-**Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
+**Note:** do not assume an Aggregation Scheme ID. The current default is the `defaultAggregationSchemeId` of the Industry Set flagged `isDefault` in `GET {{api_domain}}api/v1/industry-sets`
 
 
 ### Get Regions Children by Urid (Get)
-This endpoint allows a user to pull high level region information for all children regions directly under a specific urid, within an aggregation scheme and data set.  It will only pull direct children descendants, so if a country urid is provided, this will return states. If a state is provided, it will return Counties, MSA’s, and Congressional Districts.
+This endpoint allows a user to pull high level region information for all children regions directly under a specific urid, within an aggregation scheme and data set.  It will only pull direct children descendants, so if a country urid is provided, this will return states. If a state is provided, it will return Counties, MSA’s, and Congressional Districts. To get a state's ZIP codes, add `regionTypeFilter=Zipcode`.
 #### Parameters
 * Bearer Token
 * Aggregation Scheme ID (in URL)
@@ -724,7 +717,7 @@ This endpoint allows a user to pull high level region information for all childr
 #### Endpoint
 **GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/{{urid}}/children?regionTypeFilter={{regionType}}**
 
-**Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
+**Note:** do not assume an Aggregation Scheme ID. The current default is the `defaultAggregationSchemeId` of the Industry Set flagged `isDefault` in `GET {{api_domain}}api/v1/industry-sets`
 
 
 ### Regional Data Response
@@ -755,37 +748,9 @@ The preceding Region endpoints all have the same response.
 ## Building Regions
 Not all economic models are built for regions by default, or sometimes you may want to combine regions.  Combining regions is used to create a custom group of counties, ZIP codes, MSAs, and/or states and treat them as one economic region that can be studied. The endpoints defined in this section may be used to build single or combined regions.  
 
-We have endpoints that will start the economic model build process right away, but if you need to build more than 5 regions at a time, we recommend you leverage our batch region endpoints.
+We have endpoints that will start the economic model build process right away, but if you need to build more than 5 regions at a time, use the batch region endpoints: one batch request counts as one build against the limit of 5 model builds a minute.
 
-### Built Models (GET)
-This endpoint returns a list of currently built IMPLAN models accessible to the user. (note: this does not include Custom nor Combined Regions)
-
-#### Parameters
-* Aggregation Scheme Id (In URL)
-* Dataset Id (InURL)
-#### Response (list)
-* HashId
-* Urid
-* UserModelId
-* Description
-* ModelId
-* ModelBuildStatus
-* Employment
-* Output
-* ValueAdded
-* AggregationSchemeId
-* DatasetId
-* DatasetDescription
-* FipsCode
-* ProvinceCode
-* M49Code
-* RegionType
-* HasAccessibleChildren
-* GeoId
-* IsMrioAllowed
-#### Endpoint
-**GET {{api_domain}}api/v1/region/{{aggregationSchemeId}}/{{dataSetId}}/built**
-
+To find which Regions are already built, read `modelBuildStatus` on each Region that the Regions and children endpoints above return.
 
 ### Build Region - Batch (POST)
 This endpoint will allow a user to batch build single regions by urid and aggregation scheme.  Specify the aggregation scheme id in the url, and the urid or list of urids separated by a comma in the body.
@@ -816,7 +781,7 @@ This endpoint will allow a user to batch build single regions by urid and aggreg
 #### Endpoint
 **POST {{api_domain}}api/v1/region/build/batch/{{aggregationSchemeId}}**
 
-**Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
+**Note:** do not assume an Aggregation Scheme ID. The current default is the `defaultAggregationSchemeId` of the Industry Set flagged `isDefault` in `GET {{api_domain}}api/v1/industry-sets`
 
 
 ### Build Combined Region - Batch (POST)
@@ -851,7 +816,7 @@ This endpoint will allow a user to build multiple combined regions  by providing
 #### Endpoint
 **POST {{api_domain}}api/v1/region/build/batch/combined/{{aggregationSchemeId}}/{{type}}**
 
-**Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
+**Note:** do not assume an Aggregation Scheme ID. The current default is the `defaultAggregationSchemeId` of the Industry Set flagged `isDefault` in `GET {{api_domain}}api/v1/industry-sets`
 
 
 ### Build Combined Region (POST)
@@ -884,7 +849,7 @@ This endpoint will allow a user to build a single combined region by providing t
 #### Endpoint
 **POST {{api_domain}}api/v1/region/build/combined/{{aggregationSchemeId}}**
 
-**Note:** the default Aggregation Scheme ID is 8 for Unaggregated 546 Industries
+**Note:** do not assume an Aggregation Scheme ID. The current default is the `defaultAggregationSchemeId` of the Industry Set flagged `isDefault` in `GET {{api_domain}}api/v1/industry-sets`
 
 ---
 
@@ -987,7 +952,7 @@ This endpoint returns region specific industry data to use as a starting place f
   * Other Property Type Income
   * Tax on Production and Imports
 #### Endpoint
-**POST {{api_domain}}api/v1/region/EconomicIndustryData/{{aggregationSchemeId}}?hashId={{hashId}}**
+**GET {{api_domain}}api/v1/region/EconomicIndustryData/{{aggregationSchemeId}}?hashId={{hashId}}**
 
 
 ### Customize Industry (POST)
@@ -1049,7 +1014,7 @@ This endpoint returns region specific average commodity RPC data to use as a sta
   * Foreign Import
   * Is Modifiable
 #### Endpoint
-**POST {{api_domain}}api/v1/region/EconomicCommodityRPCData/{{aggregationSchemeId}}?hashId={{hashId}}**
+**GET {{api_domain}}api/v1/region/EconomicCommodityRPCData/{{aggregationSchemeId}}?hashId={{hashId}}**
 
 
 ### Customize Average Commodity RPC (POST)
@@ -1146,7 +1111,7 @@ The API response will provide a CSV response with following fields:
 ---
 ## Study Area - Industry Detail
 - This endpoint provides regional industry detail data equivalent to the Region Industries Detail table found in `Regions > Study Area Data > Industry Detail` in the IMPLAN application.
-- This endpoint is used for US and Canadian regions _only_
+- This endpoint is for US regions. It also answers for a Canadian or International region, but with the US columns; use the `can/` and `intl/` routes, which return each geography's own columns
 - Please use an alternate endpoint for International regions by including `intl` in the path between `export` and the `{aggregationSchemeId}:
     - `{{api_domain}}api/v1/regions/export/intl/{{AggregationSchemeId}}/StudyAreaDataIndustryDetail`
 
@@ -1611,7 +1576,7 @@ The API response will provide a CSV response with following fields:
 ---
 ## Region Institution Industry Demand
 - This endpoint provides institution industry demand data as found in the `Regions > Industry Accounts > Reports > Institution Industry Demand` table in the IMPLAN application
-- This endpoint works for United States, Canadian, and International Industry Sets so long as an appropriate Aggregation Scheme is used alongside the region's HashId
+- This endpoint is for US regions, and refuses a Canadian or International Aggregation Scheme with `422 Unprocessable Content`. Use `regions/export/can/{{aggregationSchemeId}}/region-institution-industry-demand` or `regions/export/intl/{{aggregationSchemeId}}/region-institution-industry-demand` for those
 
 #### Request
 `GET {{api_domain}}api/v1/regions/export/{{AggregationSchemeId}}/region-institution-industry-demand?hashId={{hashId}}`
@@ -1815,9 +1780,9 @@ The API response will provide a CSV response with the following fields (per envi
 - This endpoint works for United States, Canadian, and International Industry Sets so long as an appropriate Aggregation Scheme is used alongside the region's HashId
 
 #### Request
-`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam??hashId={{hashId}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam?hashId={{hashId}}`
 `GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam?urid={{urid}}`
-`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam??userModelId={{userModelId}}`
+`GET {{api_domain}}api/v1/regions/export/{{aggregationSchemeId}}/StudyAreaDataDetailIxISam?userModelId={{userModelId}}`
 - `aggregationSchemeId` - The Aggregation Scheme for the Region
 - One of `hashId`, `urid`, or `userModelId` _must_ be specified alongside this request
     - This is the ID for the Region
@@ -1883,8 +1848,8 @@ Inside the project, you will define the Events, which are the changes to an econ
 ### Create Project (Post)
 #### Parameters
 * Title
-* AggregationSchemeId - Default to 8
-* HouseholdSetId - Default to 1
+* AggregationSchemeId - Required. There is no default; read the current one from the Industry Set flagged `isDefault`
+* HouseholdSetId - Required. Use one of the chosen Aggregation Scheme's `householdSetIds`
 * IsMrio (Optional)
 * folderId (Optional)
 #### Response
@@ -1945,7 +1910,7 @@ Array of the following:
 * folderId
 * LastImpactRunId
 #### Endpoint
-**GET {{api_domain}}api/v1/impact/project/Shared**
+**GET {{api_domain}}api/v1/impact/project/shared**
 
 
 ### Share Project with Users (Put)
@@ -2007,13 +1972,13 @@ If you wish to edit the values of an existing project, you may do so with this e
 **PUT {{api_domain}}api/v1/impact/project/{{project id}}**
 
 
-### Duplicate Project (Put)
+### Duplicate Project (Post)
 You can duplicate a project using this endpoint.
 #### Parameters
 * Project Id (In URL)
 #### Response
-* Project Id
-* Title
+* `guid` - the new Project's id
+* `projectName` - the new Project's title
 #### Endpoint
 **POST {{api_domain}}api/v1/impact/project/{{project id}}/duplicate**
 
@@ -2049,7 +2014,7 @@ An array of event types (string) to use with Get Project Specification and Creat
 * InternationalIndustryImpactAnalysis
 * CustomInternationalIndustryImpactAnalysis
 #### Endpoint
-**POST {{api_domain}}api/v1/impact/project/{{projectGUID}}/eventtype**
+**GET {{api_domain}}api/v1/impact/project/{{projectGUID}}/eventtype**
 
 
 ### Get Project Specification (Get)
@@ -2227,7 +2192,7 @@ A list of specifications data containing the following fields:
     "IsSam": false,
     "SpendingPatternValueType": "IntermediateExpenditure",
     "SpendingPatternCommodities": null,
-    "Tags": ["Testing"]
+    "Tags": ["Testing"],
     "isLocalEmployeeCompensation": false
 }
 ```
@@ -2318,7 +2283,8 @@ A list of specifications data containing the following fields:
 ### Create Event - Requests w/Commodities
 - In order to specify your own commodity information, simply add an additional property to any of the above Spending Pattern Events in order to modify the commodities used for the Event
 ```json
-"SpendingPatternCommodities": [
+{
+    "SpendingPatternCommodities": [
         {
             "coefficient": 0.0006157221001664674,
             "commodityCode": 3001,
@@ -2346,6 +2312,7 @@ A list of specifications data containing the following fields:
             "commodityDescription": "US Postal delivery services"
         }
     ]
+}
 ```
 
 
@@ -2444,6 +2411,13 @@ Status Code 200 if event successfully deleted.
 
 ### Import Events (POST)
 Use this endpoint along with the [Event Template](https://support.implan.com/hc/en-us/articles/360040713754-Using-the-Event-Template) to import events created in an excel file.
+#### Blank Templates
+Fill the blank template for the Project's Industry Set; a template for a different set is rejected.
+- [US 528](https://support.implan.com/hc/article_attachments/31846310653723)
+- [US 546](https://support.implan.com/hc/article_attachments/28726382924059)
+- [Canada 235](https://support.implan.com/hc/article_attachments/34805745157147)
+- [Canada 236](https://support.implan.com/hc/article_attachments/49510601287323)
+- [International](https://support.implan.com/hc/article_attachments/28726664391451)
 #### Parameters
 Project Id (In URL)
 #### Response
@@ -2561,7 +2535,7 @@ To provide an asynchronous environment, IMPLAN has developed an endpoint that yo
 * Status code
 #### Endpoint
 **GET {{api_domain}}api/v1/impact/status/{{runId}}**
-* Will return “Unknown”,  “New”,  “InProgress”,  “ReadyForWarehouse” , “Complete”, “Error”
+* Will return “Unknown”,  “New”,  “InProgress”,  “ReadyForWarehouse” , “Complete”, “Error”, “UserCancelled”
 
 
 # Results
@@ -2575,7 +2549,7 @@ This endpoint provides a list of possible dollar year deflators that can be appl
 #### Response
 * Array of valid dollar years for the given aggregation scheme and dataset combo
 #### Endpoint
-**GET {{api_domain}}api/v1/dollar-years/{{aggregationSchemeId}}/{{datasetId}}**
+**GET {{api_domain}}api/v1/dollarYears/{{aggregationSchemeId}}/{{datasetId}}**
 
 # Deflators
 ## Get Deflators
@@ -2621,7 +2595,6 @@ This endpoint provides a list of possible dollar year deflators that can be appl
 - To provide an asynchronous environment, IMPLAN has developed an endpoint that you can call to return the final results when the analysis run has been completed.
 #### Parameters
 * Bearer Token
-* User Email Address
 * Analysis Run Id (Obtained from Impact Analysis Endpoint)
 * Dollar Year (Optional) - Overrides the Dollar Year only for Results
 #### Response

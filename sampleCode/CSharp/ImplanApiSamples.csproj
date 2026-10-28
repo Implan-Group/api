@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <!-- .NET 10 is the current release. Verified with SDK 10.0.402, 2026-10-16. -->
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>Implan.ApiSamples</RootNamespace>
+        <AssemblyName>ImplanApiSamples</AssemblyName>
+        <!-- These are teaching samples, so a warning is worth fixing rather than
+             living with. -->
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <InvariantGlobalization>true</InvariantGlobalization>
+        <!-- The test project lives in Tests/, inside this folder, so keep its
+             sources and build output out of this project. -->
+        <DefaultItemExcludes>$(DefaultItemExcludes);Tests/**</DefaultItemExcludes>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- The tests reach a few internal members: the command-line parser, the
+             token clean-up, and the log-file override. -->
+        <InternalsVisibleTo Include="ImplanApiSamples.Tests"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="System.Text.Json"/>
+        <Using Include="System.Text.Json.Serialization"/>
+        <Using Include="RestSharp"/>
+        <Using Include="Implan.ApiSamples.Models"/>
+        <Using Include="Implan.ApiSamples.Services"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- The only third-party dependency. Everything else, including reading the
+             .env file, comes from the base class library. -->
+        <PackageReference Include="RestSharp" Version="114.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Input files for the BulkFromCsv workflow, copied next to the built
+             executable so the sample finds them however it is started. -->
+        <None Update="data\*.csv" CopyToOutputDirectory="PreserveNewest"/>
+        <None Update=".env" CopyToOutputDirectory="PreserveNewest" Condition="Exists('.env')"/>
+    </ItemGroup>
+
+</Project>
