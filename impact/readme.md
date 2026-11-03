@@ -137,13 +137,13 @@ Will Return datasets
 ```json
 [   
 	{
-        "id": 59,
-        "description": "2018",
+        "id": 98,
+        "description": "2023",
         "isDefault": false
     },
     {
-        "id": 77,
-        "description": "2019",
+        "id": 124,
+        "description": "2024",
         "isDefault": true
     }
 ]
@@ -182,10 +182,10 @@ Will return Models
         {
 
 
-            "id": 8367,
+            "id": 309852,
 
 
-            "description": "Mecklenburg County, North Carolina",
+            "description": "Mecklenburg County, NC",
 
 
             "regionType": "County"
@@ -197,7 +197,7 @@ Will return Models
         {
 
 
-            "id": 8368,
+            "id": 306906,
 
 
             "description": "South Carolina",
@@ -212,7 +212,7 @@ Will return Models
         {
 
 
-            "id": 8467,
+            "id": 306939,
 
 
             "description": "Wyoming",
@@ -227,7 +227,7 @@ Will return Models
     ]
 ```
 #### Endpoint
-**GET {{api_domain}}api/v1/models?datasetId=77**
+**GET {{api_domain}}api/v1/models?datasetId=124**
 
 
 ## Industry Codes Endpoint (Get)
@@ -277,7 +277,7 @@ Will return Models
     ...
     {
         "id": 11,
-        "description": "46 Industries (2018 International)",
+        "description": "46 Industries (International)",
         "defaultAggregationSchemeId": 13,
         "activeStatus": true,
         "isDefault": null,
@@ -560,19 +560,19 @@ This endpoint returns region types that can be used for region type filtering in
 - Example:
 ```json
 {
-    "hashId": "BEbD05WXb2",
-    "urid": 1775072,
+    "hashId": "ANb3mLyAxe",
+    "urid": 1861921,
     "userModelId": null,
     "description": "United States (US Totals)",
-    "modelId": 13188,
+    "modelId": 306791,
     "modelBuildStatus": "Complete",
-    "employment": 207667600.00000018,
-    "output": 45886905211009.836,
-    "valueAdded": 25744109000000.02,
-    "aggregationSchemeId": 8,
-    "datasetId": 92,
-    "datasetDescription": "2022 Archive",
-    "fipsCode": "00000",
+    "employment": 218818956.72,
+    "output": 50474268245671.195,
+    "valueAdded": 29298013999999.99,
+    "aggregationSchemeId": 14,
+    "datasetId": 124,
+    "datasetDescription": "2024",
+    "fipsCode": null,
     "provinceCode": null,
     "m49Code": "840",
     "regionType": "Country",
@@ -611,18 +611,18 @@ This endpoint returns region types that can be used for region type filtering in
 ```json
 [
     {
-        "hashId": "LAVBMvDNb1",
-        "urid": 1819295,
+        "hashId": "8qaGz08YxX",
+        "urid": 1859376,
         "userModelId": null,
         "description": "Kentucky",
-        "modelId": 15059,
+        "modelId": 306840,
         "modelBuildStatus": "Complete",
-        "employment": 2608978.2972790226,
-        "output": 561195509364.5885,
-        "valueAdded": 264866590387.3677,
-        "aggregationSchemeId": 8,
-        "datasetId": 96,
-        "datasetDescription": "2022",
+        "employment": 2713303.21,
+        "output": 624861017044.466,
+        "valueAdded": 301606256521.279,
+        "aggregationSchemeId": 14,
+        "datasetId": 124,
+        "datasetDescription": "2024",
         "fipsCode": "21",
         "provinceCode": null,
         "m49Code": null,
@@ -634,18 +634,18 @@ This endpoint returns region types that can be used for region type filtering in
     },
     ...
     {
-        "hashId": "W9b1AO5Nb5",
-        "urid": 1819287,
+        "hashId": "pZxNl0kobn",
+        "urid": 1858092,
         "userModelId": null,
         "description": "Delaware",
-        "modelId": 15051,
+        "modelId": 306817,
         "modelBuildStatus": "Complete",
-        "employment": 625328.0472749957,
-        "output": 148446407436.51935,
-        "valueAdded": 90372082246.67789,
-        "aggregationSchemeId": 8,
-        "datasetId": 96,
-        "datasetDescription": "2022",
+        "employment": 675429.202,
+        "output": 173704059587.94,
+        "valueAdded": 109136237019.246,
+        "aggregationSchemeId": 14,
+        "datasetId": 124,
+        "datasetDescription": "2024",
         "fipsCode": "10",
         "provinceCode": null,
         "m49Code": null,
@@ -871,8 +871,7 @@ Instead of using this endpoint, it is possible to pull down a full list of Regio
 - Must include a list of the Regional Identifiers ([[HashIds|HashIds]] or [[Urids|Urids]]) for the Regions that need to be built and returned. 
 ```json
 [
-    "p0aRdZl0VJ",
-    1905981
+    "8qaGd873bX"
 ]
 ```
 
@@ -884,30 +883,30 @@ Instead of using this endpoint, it is possible to pull down a full list of Regio
 ```json
 [
   {
-    "hashId": "wlx6e9WwVk",
-    "urid": 1905008,
+    "hashId": "8qaGd873bX",
+    "urid": 1910232,
     "userModelId": null,
-    "modelId": 17026,
+    "modelId": 309774,
     "description": "Marion County, OR",
     "modelBuildStatus": "Complete",
-    "employment": 0.0,
-    "output": 0.0,
-    "valueAdded": 0.0,
+    "employment": 222849.049,
+    "output": 41583785154.987,
+    "valueAdded": 24739800675.774,
     "isCustomized": false,
     "isCombined": false,
     "regionType": "County",
-    "datasetId": 98,
-    "datasetDescription": "2023",
+    "datasetId": 124,
+    "datasetDescription": "2024",
     "parentRegionIds": [
       {
         "regionType": "Msa",
-        "hashId": "W1aQlLzoxj",
-        "urid": 1862706
+        "hashId": "EgxYRY43av",
+        "urid": 1862993
       },
       {
         "regionType": "State",
-        "hashId": "9pbP1nM0VN",
-        "urid": 1863644
+        "hashId": "Rgxp47ZPxK",
+        "urid": 1860086
       }
     ],
     "isMrioAllowed": true,

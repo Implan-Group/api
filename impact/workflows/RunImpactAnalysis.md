@@ -28,7 +28,7 @@
 {
     "id": "deadbeef-2600-1337-cafe-123456789abc",
     "title": "Project Title",
-    "aggregationSchemeId": 8,
+    "aggregationSchemeId": 14,
     "householdSetId": 1,
     "isMrio": false,
     "folderId": null,

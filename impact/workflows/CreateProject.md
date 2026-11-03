@@ -72,7 +72,7 @@
 ```json
 {
     "title": "Project Title",
-    "aggregationSchemeId": 8,
+    "aggregationSchemeId": 14,
     "householdSetId": 1,
     "isMrio": false,
     "folderId": null
@@ -195,7 +195,7 @@
   "industryCode": 1,
   "marginType": null,
   "percentage": null,
-  "datasetId": 96
+  "datasetId": 124
 }
 ```
   - `output` (number, optional): Total output value of this Industry Output Event
@@ -269,14 +269,14 @@
 {
   "id": "deadbeef-edbb-4fca-8f8b-1c9779cd1588",
   "projectId": "deadbeef-92d9-45e0-a8b8-e29d83d2a64e",
-  "hashId": "Rgxp4eA3xK",
-  "urid": 1819520,
+  "hashId": "Rgxp47ZPxK",
+  "urid": 1860086,
   "userModelId": null,
-  "modelId": 14998,
+  "modelId": 306900,
   "title": "Sample Group 1",
   "dollarYear": 2024,
   "scalingFactor": 1.0,
-  "datasetId": 96,
+  "datasetId": 124,
   "groupEvents": [
     {
       "eventId": "deadbeef-7eec-4241-bc82-d58f65fac4f0",

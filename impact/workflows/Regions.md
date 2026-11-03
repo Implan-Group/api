@@ -78,14 +78,14 @@
 ```json
 [
 	{
-		"id": 60,
+		"id": 101,
         "description": "2001",
         "isDefault": false
     },
     ...
     {
-	    "id": 96,
-        "description": "2022",
+	    "id": 124,
+        "description": "2024",
         "isDefault": true
     }
 ]
@@ -114,9 +114,9 @@
     "employment": 264756.6275649546,
     "output": 48940767302.00896,
     "valueAdded": 26236124822.124428,
-    "aggregationSchemeId": 8,
-    "datasetId": 96,
-    "datasetDescription": "2022",
+    "aggregationSchemeId": 14,
+    "datasetId": 124,
+    "datasetDescription": "2024",
     "fipsCode": null,
     "provinceCode": null,
     "m49Code": null,

@@ -78,6 +78,11 @@ Use the desired Aggregation Scheme Id with this endpoint to pull a list of avail
 	{
 		"id": 93,
 		"description": "2020",
+		"isDefault": false
+	},
+	{
+		"id": 100,
+		"description": "2021",
 		"isDefault": true
 	}
 ]
@@ -94,18 +99,18 @@ This endpoint will return a list of models available for Batch Impact analysis. 
 ```
 [
     {
-        "hashId": "EgxYRX6Xav",
-        "urid": 1815849,
+        "hashId": "YpxA5NYyxk",
+        "urid": 1781601,
         "userModelId": null,
         "description": "Nunavut",
-        "modelId": 13922,
+        "modelId": 244132,
         "modelBuildStatus": "Complete",
-        "employment": 20457.515130996704,
-        "output": 7718418875.19136,
-        "valueAdded": 4065133039.2314124,
+        "employment": 23542.896,
+        "output": 8398326000.002,
+        "valueAdded": 4418451000,
         "aggregationSchemeId": 12,
-        "datasetId": 93,
-        "datasetDescription": "2020",
+        "datasetId": 100,
+        "datasetDescription": "2021",
         "fipsCode": "14",
         "provinceCode": "62",
         "m49Code": null,
@@ -116,18 +121,18 @@ This endpoint will return a list of models available for Batch Impact analysis. 
         "isMrioAllowed": true
     },
     {
-        "hashId": "k4bKl80LVO",
-        "urid": 1815833,
+        "hashId": "yDxX05A1xJ",
+        "urid": 1785602,
         "userModelId": null,
         "description": "Newfoundland",
-        "modelId": 13928,
+        "modelId": 244244,
         "modelBuildStatus": "Complete",
-        "employment": 200865.97679519653,
-        "output": 52765471380.91922,
-        "valueAdded": 32176045083.19381,
+        "employment": 216549.529,
+        "output": 59393817999.969,
+        "valueAdded": 38678173000,
         "aggregationSchemeId": 12,
-        "datasetId": 93,
-        "datasetDescription": "2020",
+        "datasetId": 100,
+        "datasetDescription": "2021",
         "fipsCode": "05",
         "provinceCode": "10",
         "m49Code": null,
@@ -138,18 +143,18 @@ This endpoint will return a list of models available for Batch Impact analysis. 
         "isMrioAllowed": true
     },
     {
-        "hashId": "4Ba4N4AeVp",
-        "urid": 1818171,
+        "hashId": "pGVrGwkMxe",
+        "urid": 1779415,
         "userModelId": null,
         "description": "British Columbia",
-        "modelId": 14042,
+        "modelId": 244135,
         "modelBuildStatus": "Complete",
-        "employment": 2450467.4931640625,
-        "output": 533364910349.4883,
-        "valueAdded": 307411073455.7796,
+        "employment": 2698541.545,
+        "output": 614543193000.046,
+        "valueAdded": 357002314000,
         "aggregationSchemeId": 12,
-        "datasetId": 93,
-        "datasetDescription": "2020",
+        "datasetId": 100,
+        "datasetDescription": "2021",
         "fipsCode": "02",
         "provinceCode": "59",
         "m49Code": null,
@@ -259,8 +264,8 @@ This endpoint generates an impact analysis for a collection of Canadian region a
 #### Body Request Sample
 ```
 [
-    {"modelId":"14332", "industrycode" : 1, "eventvalue" : 10002.90},
-    {"modelId":"14332", "industrycode" : 2, "eventvalue" : 30002.90}
+    {"modelId":"244135", "industrycode" : 1, "eventvalue" : 10002.90},
+    {"modelId":"244135", "industrycode" : 2, "eventvalue" : 30002.90}
 ]
 ```
 #### Response - The API response when the impact analysis is complete will provide Direct, Indirect, Induced, and Total estimates for the following outputs:
