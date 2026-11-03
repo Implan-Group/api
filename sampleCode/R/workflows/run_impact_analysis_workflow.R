@@ -87,12 +87,7 @@ run_impact_analysis_workflow <- function(project_id = NULL) {
   filters <- result_filters(year = current_dollar_year())
   log_info("  dollar year %d", filters$year)
 
-  # Summary Taxes is read after the others, because its route depends on the
-  # Project's country.
   for (report in STANDARD_REPORTS) {
-    if (identical(report$label, "Summary Taxes")) {
-      next
-    }
     # GET /api/v1/impact/results/...  (wiki: Impact Results)
     csv_text <- report$fetch(client, run_id, filters)
     save_csv(csv_text, file.path(destination, paste0(report$label, ".csv")))

@@ -332,11 +332,12 @@ run_workflow <- function(name, ...) {
 # CI job can tell what went wrong, and in particular can tell a failure worth
 # retrying later (5) from one that needs a person (2, 3, 4).
 main <- function(arguments = commandArgs(trailingOnly = TRUE)) {
-  # A value the command line cannot use is a problem in the input.
+  # A value the command line cannot use is a problem in the input. Like any
+  # command-line tool's usage error, it goes to standard error.
   options <- tryCatch(
     parse_arguments(arguments),
     error = function(condition) {
-      cat(conditionMessage(condition), "\n", sep = "")
+      message(conditionMessage(condition))
       NULL
     }
   )

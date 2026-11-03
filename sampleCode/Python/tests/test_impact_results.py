@@ -23,6 +23,10 @@ class EffectTotalsTests(unittest.TestCase):
             EffectTotals(direct_output=1000, indirect_and_induced_output=500, employment=12),
         )
 
+    def test_a_report_without_an_impact_column_says_so(self) -> None:
+        with self.assertRaisesRegex(ValueError, "Impact"):
+            impact_results.effect_totals("GroupName,Output,Employment\r\nOregon (2024),1000,10\r\n")
+
 
 if __name__ == "__main__":
     unittest.main()

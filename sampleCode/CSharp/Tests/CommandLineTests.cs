@@ -42,6 +42,7 @@ public sealed class CommandLineTests
     [InlineData("regional-exports", "--limit", "-1")]
     [InlineData("create-project", "--map-code", "XX")]
     [InlineData("create-project", "--map-code", "1")]
+    [InlineData("create-project", "--map-code", "CAN,INTL")]
     public void Parse_BadValue_Throws(string workflow, string option, string value)
     {
         Assert.Throws<ArgumentException>(() => CommandLineOptions.Parse([workflow, option, value]));

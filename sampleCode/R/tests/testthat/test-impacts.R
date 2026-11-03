@@ -56,3 +56,10 @@ test_that("effect totals split direct from the rest and skip the Totals row", {
     list(direct_output = 1000, indirect_and_induced_output = 500, employment = 12)
   )
 })
+
+test_that("a report without an Impact column says so", {
+  expect_error(
+    effect_totals("GroupName,Output,Employment\r\nOregon (2024),1000,10\r\n"),
+    "no Impact column"
+  )
+})

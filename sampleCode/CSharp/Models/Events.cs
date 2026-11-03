@@ -217,8 +217,8 @@ public sealed class IndustryImpactAnalysisEvent : ImpactEvent
     public int? SpendingPatternDatasetId { get; set; }
 
     /// <summary>
-    /// Which Region's spending pattern. Required before a Canadian or international
-    /// project will run; leave it unset in a United States project.
+    /// Which Region's spending pattern. Required before a Canadian project will run;
+    /// leave it unset in a United States project.
     /// </summary>
     public long? SpendingPatternRegionUrid { get; set; }
 

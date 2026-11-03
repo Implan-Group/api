@@ -136,7 +136,7 @@ implan_transport_error <- function(base_url, condition) {
 # `stop()` otherwise, but raised as an `implan_lookup_error`, so a caller can treat
 # "not available" as a normal answer without also swallowing an API, network, or
 # sign-in failure.
-lookup_failed <- function(..., call. = FALSE) {
+lookup_failed <- function(...) {
   stop(errorCondition(paste0(...), class = "implan_lookup_error"))
 }
 

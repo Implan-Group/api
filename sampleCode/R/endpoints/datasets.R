@@ -44,7 +44,6 @@ default_dataset <- function(datasets) {
 
   lookup_failed(
     "No Dataset in this Aggregation Scheme is flagged as the default. ",
-    "Choose one explicitly by description.",
-    call. = FALSE
+    "Choose one explicitly by description."
   )
 }

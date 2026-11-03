@@ -106,16 +106,16 @@ get_estimated_growth_percentage <- function(client, run_id, request_body) {
 }
 
 
-# The four reports that share the query-string filters, and the label each is
-# saved under. Two workflows download exactly this set, so it lives here rather
-# than in one of them.
+# The three reports that share the query-string filters and one route for every
+# country, and the label each is saved under. Two workflows download this set, so
+# it lives here rather than in one of them.
 #
-# Estimated Growth Percentage is deliberately absent: its filters go in a body
-# rather than on the query string, so it does not share this shape.
+# Summary Taxes also takes the query-string filters, but its route depends on the
+# Project's map code, so each workflow reads it on its own with get_summary_taxes().
+# Estimated Growth Percentage is absent because its filters go in a body.
 STANDARD_REPORTS <- list(
   list(label = "Summary Economic Indicators", fetch = get_summary_economic_indicators),
   list(label = "Detailed Economic Indicators", fetch = get_detailed_economic_indicators),
-  list(label = "Summary Taxes", fetch = get_summary_taxes),
   list(label = "Detailed Taxes", fetch = get_detailed_taxes)
 )
 
@@ -159,6 +159,16 @@ effect_totals <- function(csv_text) {
     text = csv_text, check.names = FALSE, strip.white = TRUE, stringsAsFactors = FALSE
   )
   names(rows) <- trimws(names(rows))
+  missing <- setdiff(c("GroupName", "Impact", "Output", "Employment"), names(rows))
+  if (length(missing) > 0L) {
+    stop(
+      sprintf(
+        "The report has no %s column, so it is not a Summary Economic Indicators report.",
+        paste(missing, collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
   rows <- rows[rows$GroupName != "Totals" & nzchar(rows$Impact), , drop = FALSE]
   direct <- startsWith(rows$Impact, "1")
   list(

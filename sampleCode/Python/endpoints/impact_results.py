@@ -137,7 +137,14 @@ def effect_totals(csv_text: str) -> EffectTotals:
     is skipped so nothing is counted twice.
     """
     direct = indirect_and_induced = employment = 0.0
-    for row in csv.DictReader(io.StringIO(csv_text), skipinitialspace=True):
+    reader = csv.DictReader(io.StringIO(csv_text), skipinitialspace=True)
+    missing = [c for c in ("GroupName", "Impact", "Output", "Employment") if c not in (reader.fieldnames or [])]
+    if missing:
+        raise ValueError(
+            f"The report has no {', '.join(missing)} column, so it is not a Summary "
+            f"Economic Indicators report."
+        )
+    for row in reader:
         if row.get("GroupName") == "Totals" or not row.get("Impact"):
             continue
         output = float(row["Output"])

@@ -28,8 +28,7 @@ default_us_industry_set <- function(sets) {
 
   lookup_failed(
     "No Industry Set is flagged as the default. Pick one by description from ",
-    "GET /api/v1/industry-sets.",
-    call. = FALSE
+    "GET /api/v1/industry-sets."
   )
 }
 
@@ -49,8 +48,7 @@ latest_set_for_map_code <- function(client, sets, map_code) {
 
   if (length(schemes) == 0L) {
     lookup_failed(
-      sprintf("No Unaggregated Aggregation Scheme for map code %s.", map_code),
-      call. = FALSE
+      sprintf("No Unaggregated Aggregation Scheme for map code %s.", map_code)
     )
   }
 
@@ -71,8 +69,7 @@ latest_set_for_map_code <- function(client, sets, map_code) {
         "Industry Set list."
       ),
       newest$id, newest$industry_set_id
-    ),
-    call. = FALSE
+    )
   )
 }
 
@@ -108,8 +105,7 @@ resolve_identifiers <- function(client, map_code = MAP_CODES[["US"]]) {
       sprintf(
         "Industry Set %s has no Aggregation Schemes available to this account.",
         industry_set$id
-      ),
-      call. = FALSE
+      )
     )
   }
 
@@ -141,8 +137,7 @@ resolve_identifiers <- function(client, map_code = MAP_CODES[["US"]]) {
       sprintf(
         "Aggregation Scheme %s lists no Household Sets, so a Project cannot be created against it.",
         scheme$id
-      ),
-      call. = FALSE
+      )
     )
   }
 
@@ -174,8 +169,7 @@ resolve_identifiers_for_project <- function(client, project) {
       sprintf(
         "Aggregation Scheme %s refers to Industry Set %s, which is not in the Industry Set list.",
         scheme$id, scheme$industry_set_id
-      ),
-      call. = FALSE
+      )
     )
   }
 

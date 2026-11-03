@@ -231,8 +231,8 @@ industry_impact_analysis_event <- function(title,
     # Which data year's spending pattern to spend the intermediate inputs
     # through.
     spending_pattern_dataset_id = spending_pattern_dataset_id,
-    # Which Region's spending pattern. Required before a Canadian or international
-    # project will run; leave it unset in a United States project.
+    # Which Region's spending pattern. Required before a Canadian project will run;
+    # leave it unset in a United States project.
     spending_pattern_region_urid = spending_pattern_region_urid,
     spending_pattern_value_type = spending_pattern_value_type,
     spending_pattern_commodities = spending_pattern_commodities

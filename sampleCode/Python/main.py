@@ -59,14 +59,17 @@ class _ArgumentParser(argparse.ArgumentParser):
 
 
 def _project_id(value: str) -> str:
-    """A project id is a GUID, so anything else is a typo, caught before the API."""
+    """A project id is a GUID, so anything else is a typo, caught before the API.
+
+    Returned in the hyphenated form the API uses, since `uuid` also accepts braces,
+    a `urn:uuid:` prefix, and no hyphens, none of which belong in a URL path.
+    """
     try:
-        uuid.UUID(value)
+        return str(uuid.UUID(value))
     except ValueError:
         raise argparse.ArgumentTypeError(
             f"needs a project id, such as the one CreateProject prints, not {value!r}"
         ) from None
-    return value
 
 
 def _limit(value: str) -> int:

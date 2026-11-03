@@ -39,6 +39,15 @@ public sealed class EndpointTests
     }
 
     [Fact]
+    public void SumEffects_ReportWithoutAnImpactColumn_SaysSo()
+    {
+        var error = Assert.Throws<InvalidDataException>(
+            () => ImpactResults.SumEffects("GroupName,Output,Employment\r\nOregon (2024),1000,10\r\n"));
+
+        Assert.Contains("Impact", error.Message);
+    }
+
+    [Fact]
     public void RunImpact_ReadsABareRunId()
     {
         var (client, _) = Scripted.Client(Scripted.Answer(HttpStatusCode.OK, "30542"));

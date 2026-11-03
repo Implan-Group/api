@@ -41,7 +41,7 @@ test_that("bad input on the command line is refused", {
 })
 
 test_that("bad input on the command line exits 4", {
-  utils::capture.output(result <- main(c("regional-exports", "--limit", "ten")))
+  utils::capture.output(result <- main(c("regional-exports", "--limit", "ten")), type = "message")
   expect_identical(result, 4L)
 })
 

@@ -240,7 +240,7 @@
 ```
   - `intermediateInputs` (number): What the industry spends on goods and services, excluding labor. This is the value that flows through the spending pattern
   - `localPurchasePercentage` (number): The share of intermediate inputs bought inside the region, from 0 to 1. Leave it at `1.0` when everything is local, or set `isSam` to have IMPLAN substitute the region's own trade data instead
-  - `spendingPatternRegionUrid` (number, optional): The URID of the Region whose spending pattern to use. Leave it out in a United States project. A Canadian or international project refuses to run until every Industry Impact Analysis event carries one
+  - `spendingPatternRegionUrid` (number, optional): The URID of the Region whose spending pattern to use. Leave it out in a United States project. A Canadian project refuses to run until every Industry Impact Analysis event carries one
   - `spendingPatternCommodities` (array, optional): Leave it out to use IMPLAN's default pattern for the industry. To adjust the pattern, read the default first, change the coefficients you want, and set `isUserCoefficient` to `true` on each one you changed so IMPLAN knows the number is yours
 
 ---

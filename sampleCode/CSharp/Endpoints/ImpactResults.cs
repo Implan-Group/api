@@ -117,13 +117,6 @@ public static class ImpactResults
     }
 
     /// <summary>
-    /// Writes a CSV report to disk, creating the folder if it is not there.
-    /// </summary>
-    /// <remarks>
-    /// Written as UTF-8 without a byte-order mark, so the line endings the API sent
-    /// survive intact rather than being rewritten.
-    /// </remarks>
-    /// <summary>
     /// A Summary Economic Indicators report summed by effect. Direct is the activity
     /// itself; Indirect and Induced are the supply chain and the household spending it
     /// sets off.
@@ -143,16 +136,16 @@ public static class ImpactResults
             return new EffectTotals(0, 0, 0);
 
         var header = Csv.SplitLine(lines[0]);
-        var groupColumn = header.IndexOf("GroupName");
-        var impactColumn = header.IndexOf("Impact");
-        var outputColumn = header.IndexOf("Output");
-        var employmentColumn = header.IndexOf("Employment");
+        var groupColumn = ColumnIndex(header, "GroupName");
+        var impactColumn = ColumnIndex(header, "Impact");
+        var outputColumn = ColumnIndex(header, "Output");
+        var employmentColumn = ColumnIndex(header, "Employment");
 
         double direct = 0, indirectAndInduced = 0, employment = 0;
         foreach (var line in lines.Skip(1))
         {
             var row = Csv.SplitLine(line);
-            if (row.Count <= Math.Max(outputColumn, employmentColumn) || row[groupColumn] == "Totals" || row[impactColumn].Length == 0)
+            if (row.Count < header.Count || row[groupColumn] == "Totals" || row[impactColumn].Length == 0)
                 continue;
 
             var output = double.Parse(row[outputColumn], System.Globalization.CultureInfo.InvariantCulture);
@@ -166,6 +159,26 @@ public static class ImpactResults
         return new EffectTotals(direct, indirectAndInduced, employment);
     }
 
+    /// <summary>Where a column sits in a report's header, or why the report cannot be summed.</summary>
+    private static int ColumnIndex(List<string> header, string column)
+    {
+        var index = header.IndexOf(column);
+        if (index < 0)
+        {
+            throw new InvalidDataException(
+                $"The report has no {column} column, so it is not a Summary Economic Indicators report.");
+        }
+
+        return index;
+    }
+
+    /// <summary>
+    /// Writes a CSV report to disk, creating the folder if it is not there.
+    /// </summary>
+    /// <remarks>
+    /// Written as UTF-8 without a byte-order mark, so the line endings the API sent
+    /// survive intact rather than being rewritten.
+    /// </remarks>
     public static string SaveCsv(string csvText, string destination)
     {
         var folder = Path.GetDirectoryName(destination);

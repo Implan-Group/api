@@ -67,8 +67,9 @@ public static class Program
         }
         catch (ArgumentException error)
         {
-            // A value the command line cannot use is a problem in the input.
-            ConsoleLog.Info(error.Message);
+            // A value the command line cannot use is a problem in the input. Like any
+            // command-line tool's usage error, it goes to standard error.
+            Console.Error.WriteLine(error.Message);
             return 4;
         }
 
@@ -283,7 +284,10 @@ internal sealed class CommandLineOptions
                 case "--project-id":
                     var projectId = NextValue(args, ref index, argument);
                     if (!Guid.TryParse(projectId, out var parsedProjectId))
-                        throw new ArgumentException($"--project-id needs a project id, such as the one CreateProject prints, not '{projectId}'.");
+                    {
+                        throw new ArgumentException(
+                            $"--project-id needs a project id, such as the one CreateProject prints, not '{projectId}'.");
+                    }
 
                     options.ProjectId = parsedProjectId;
                     break;
@@ -304,7 +308,10 @@ internal sealed class CommandLineOptions
                     // 0 means no cap, which is how the Python and R samples spell it too.
                     var limitText = NextValue(args, ref index, argument);
                     if (!int.TryParse(limitText, out var limit) || limit < 0)
-                        throw new ArgumentException($"--limit needs a whole number of regions, or 0 for all, not '{limitText}'.");
+                    {
+                        throw new ArgumentException(
+                            $"--limit needs a whole number of regions, or 0 for all, not '{limitText}'.");
+                    }
 
                     options.Limit = limit > 0 ? limit : null;
                     break;
@@ -327,12 +334,17 @@ internal sealed class CommandLineOptions
 
     /// <summary>
     /// Reads an option's value as one of an enum's names, ignoring case. A number is
-    /// refused even when it matches an enum value, so a typo cannot select one.
+    /// refused even when it matches an enum value, and so is a comma-separated list,
+    /// which Enum.TryParse would otherwise combine into a value no name has.
     /// </summary>
     private static T ParseName<T>(string value, string option) where T : struct, Enum
     {
-        if (!int.TryParse(value, out _) && Enum.TryParse<T>(value, ignoreCase: true, out var parsed))
+        if (!int.TryParse(value, out _)
+            && Enum.TryParse<T>(value, ignoreCase: true, out var parsed)
+            && Enum.IsDefined(parsed))
+        {
             return parsed;
+        }
 
         throw new ArgumentException($"{option} needs one of {string.Join(", ", Enum.GetNames<T>())}, not '{value}'.");
     }

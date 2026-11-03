@@ -489,6 +489,9 @@ run_and_download <- function(client, project, label) {
     csv_text <- report$fetch(client, run_id, filters)
     save_csv(csv_text, file.path(destination, paste0(report$label, ".csv")))
   }
+  # Every Region in this workflow is a US state or county, so the US route.
+  taxes_csv <- get_summary_taxes(client, run_id, filters, MAP_CODES[["US"]])
+  save_csv(taxes_csv, file.path(destination, "Summary Taxes.csv"))
 
   run_id
 }

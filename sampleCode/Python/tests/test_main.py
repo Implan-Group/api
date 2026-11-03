@@ -56,6 +56,13 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(args.project_id, project_id)
         self.assertEqual(args.map_code, "US")
 
+    def test_a_project_id_is_sent_in_its_hyphenated_form(self) -> None:
+        project_id = "ade07676-0198-4d2f-a2be-def09281ffde"
+        for typed in ("{" + project_id + "}", project_id.replace("-", ""), project_id.upper()):
+            with self.subTest(typed=typed):
+                args = self.parser.parse_args(["run-impact-analysis", "--project-id", typed])
+                self.assertEqual(args.project_id, project_id)
+
     def test_bad_input_on_the_command_line_exits_4(self) -> None:
         cases = {
             "a project id that is not a GUID": ["run-impact-analysis", "--project-id", "abc-123"],
