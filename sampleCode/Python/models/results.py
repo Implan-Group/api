@@ -53,6 +53,19 @@ class ImpactType(str, enum.Enum):
     INDUCED = "Induced"
 
 
+@dataclasses.dataclass(frozen=True)
+class EffectTotals:
+    """A Summary Economic Indicators report summed by effect.
+
+    Direct is the activity itself; Indirect and Induced are the supply chain and the
+    household spending it sets off.
+    """
+
+    direct_output: float
+    indirect_and_induced_output: float
+    employment: float
+
+
 @dataclasses.dataclass(kw_only=True)
 class ImpactResultsExportRequest(ApiModel):
     """Filters for the Estimated Growth Percentage report.

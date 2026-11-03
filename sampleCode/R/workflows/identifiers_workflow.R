@@ -141,7 +141,7 @@ identifiers_workflow <- function() {
         resolve_identifiers(client, map_code)
         log_info("")
       },
-      error = function(condition) {
+      implan_lookup_error = function(condition) {
         # An account whose subscription does not include Canadian or
         # international data is a normal situation, not a failure.
         log_info(

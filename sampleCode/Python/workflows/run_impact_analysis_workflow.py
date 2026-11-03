@@ -22,15 +22,16 @@ Wiki: Impact Results - https://github.com/Implan-Group/api/wiki/Impact-Results
 
 import re
 
-from endpoints import impact_results, impacts, projects
+from endpoints import aggregation_schemes, impact_results, impacts, projects
+from models.reference import MapCode
 from models.results import ImpactResultsExportRequest, ImpactType, ResultFilters
 from utilities import auth, config, logging_setup
 
-# The five standard reports, and the file each is saved as.
+# The query-filtered reports, and the file each is saved as. Summary Taxes is read
+# separately, because its route depends on the Project's country.
 REPORTS = [
     ("Summary Economic Indicators", impact_results.get_summary_economic_indicators),
     ("Detailed Economic Indicators", impact_results.get_detailed_economic_indicators),
-    ("Summary Taxes", impact_results.get_summary_taxes),
     ("Detailed Taxes", impact_results.get_detailed_taxes),
 ]
 
@@ -44,34 +45,37 @@ def _safe_folder_name(text: str) -> str:
 def run(project_id: str | None = None) -> int:
     """Run a project, wait for it, download the reports, and return the run id."""
     logger = logging_setup.get_logger()
+
+    # The project to run is always named. The API documents no order for the list
+    # of your projects, so "the most recent one" cannot be picked from it safely.
+    if not project_id:
+        raise ValueError(
+            "Name the project to run with --project-id. The CreateProject and "
+            "ImportEvents workflows print the id of the project they create."
+        )
+
     client = auth.create_client()
 
-    # Step 1. Find the project. Passing an id is the normal path; without one, the
-    # most recently created project is used, which makes this easy to chain after
-    # CreateProject.
+    # Step 1. Find the project, and the country its Aggregation Scheme covers, which
+    # decides the Summary Taxes route in Step 4.
     logging_setup.heading("Step 1: find the Project")
-    if project_id is None:
-        # GET /api/v1/impact/project  (wiki: Get Projects)
-        mine = projects.get_projects(client)
-        if not mine:
-            raise LookupError(
-                "You have no projects. Run the CreateProject workflow first, or "
-                "pass --project-id."
-            )
-        # The API returns projects oldest first, so the newest is last.
-        project = mine[-1]
-        logger.info("  no --project-id given, so using your most recent project")
-    else:
-        # GET /api/v1/impact/project/{projectId}  (wiki: Get Project)
-        project = projects.get_project(client, project_id)
 
+    # GET /api/v1/impact/project/{projectId}  (wiki: Get Project)
+    project = projects.get_project(client, project_id)
     logger.info("  %s", project.describe())
 
-    # Projects other people have shared with you can be run too; this is how you
-    # find them.
+    # GET /api/v1/aggregationSchemes/{aggregationSchemeId}  (wiki: Aggregation Scheme by Id)
+    scheme = aggregation_schemes.get_aggregation_scheme(client, project.aggregation_scheme_id)
+    map_code = MapCode(scheme.map_code)
+    logger.info("  Aggregation Scheme %d covers %s data", scheme.id, map_code.value)
+
+    # Your own projects, and the ones other people have shared with you, can all be
+    # run; these two lists are where to find the id to pass.
+    # GET /api/v1/impact/project  (wiki: Get Projects)
+    mine = projects.get_projects(client)
     # GET /api/v1/impact/project/shared  (wiki: Get Shared Projects)
     shared = projects.get_shared_projects(client)
-    logger.info("  (%d projects have also been shared with you)", len(shared))
+    logger.info("  (you have %d projects of your own, and %d shared with you)", len(mine), len(shared))
 
     # Step 2. Start the run.
     logging_setup.heading("Step 2: start the impact")
@@ -108,6 +112,11 @@ def run(project_id: str | None = None) -> int:
         # GET /api/v1/impact/results/...  (wiki: Impact Results)
         csv_text = fetch(client, run_id, filters)
         impact_results.save_csv(csv_text, destination / f"{label}.csv")
+
+    # GET /api/v1/impact/results/SummaryTaxes/{runId}, or its can/ or intl/ route
+    # (wiki: Results - Summary Taxes)
+    taxes_csv = impact_results.get_summary_taxes(client, run_id, filters, map_code)
+    impact_results.save_csv(taxes_csv, destination / "Summary Taxes.csv")
 
     # Estimated Growth Percentage is the odd one out: its filters go in a JSON body
     # on a GET, and all five lists have to be present even when empty.

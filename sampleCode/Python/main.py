@@ -18,6 +18,8 @@ and password in it. See README.md.
 
 import argparse
 import sys
+import uuid
+from typing import NoReturn
 
 from models.reference import MapCode
 from models.region import RegionType
@@ -43,8 +45,41 @@ WORKFLOWS: dict[str, str] = {
 }
 
 
+class _ArgumentParser(argparse.ArgumentParser):
+    """An argparse parser whose input errors exit 4, the samples' code for bad input.
+
+    argparse exits 2 by default, which these samples use for an authentication
+    failure, so a typo on the command line would read as a credentials problem.
+    """
+
+    def error(self, message: str) -> NoReturn:
+        self.print_usage(sys.stderr)
+        print(f"{self.prog}: {message}", file=sys.stderr)
+        sys.exit(4)
+
+
+def _project_id(value: str) -> str:
+    """A project id is a GUID, so anything else is a typo, caught before the API."""
+    try:
+        uuid.UUID(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError(
+            f"needs a project id, such as the one CreateProject prints, not {value!r}"
+        ) from None
+    return value
+
+
+def _limit(value: str) -> int:
+    """A whole number of regions, or 0 for all."""
+    if not value.isdigit():
+        raise argparse.ArgumentTypeError(
+            f"needs a whole number of regions, or 0 for all, not {value!r}"
+        )
+    return int(value)
+
+
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
+    parser = _ArgumentParser(
         prog="python main.py",
         description="IMPLAN Impact API workflow samples.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -63,6 +98,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--project-id",
+        type=_project_id,
         help="an existing project, for the workflows that can use one",
     )
     parser.add_argument(
@@ -84,7 +120,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--limit",
-        type=int,
+        type=_limit,
         default=10,
         help="how many regions to process, or 0 for all (regional-exports)",
     )

@@ -23,5 +23,19 @@ class ImpactStatusTests(unittest.TestCase):
         self.assertEqual(impacts.run_impact(client, "project"), 30542)
 
 
+class WaitTests(unittest.TestCase):
+    def test_a_run_that_ends_in_error_raises_an_impact_run_error(self) -> None:
+        client, _ = client_answering(reply(200, "Error", "text/plain"))
+
+        with self.assertLogs("implan"), self.assertRaises(impacts.ImpactRunError):
+            impacts.wait_for_impact(client, 1, poll_seconds=0)
+
+    def test_a_run_that_outlasts_the_timeout_raises_a_timeout_error(self) -> None:
+        client, _ = client_answering(reply(200, "InProgress", "text/plain"))
+
+        with self.assertLogs("implan"), self.assertRaises(TimeoutError):
+            impacts.wait_for_impact(client, 1, timeout_seconds=0, poll_seconds=0)
+
+
 if __name__ == "__main__":
     unittest.main()

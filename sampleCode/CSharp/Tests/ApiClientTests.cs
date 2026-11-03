@@ -159,6 +159,45 @@ public sealed class ApiClientTests
     }
 
     [Fact]
+    public void GatewayTimeout_OnAGet_IsRetried()
+    {
+        var (client, handler) = Scripted.Client(
+            Scripted.Answer(HttpStatusCode.GatewayTimeout, retryAfter: "0"),
+            Scripted.Answer(HttpStatusCode.OK, "[]"));
+
+        Assert.Equal("[]", client.GetText("/x"));
+        Assert.Equal(2, handler.Sent.Count);
+    }
+
+    /// <remarks>
+    /// The API behind the gateway may already have acted, so a second POST could
+    /// start a second run.
+    /// </remarks>
+    [Fact]
+    public void GatewayTimeout_OnAPost_IsNotRetried()
+    {
+        var (client, handler) = Scripted.Client(
+            Scripted.Answer(HttpStatusCode.GatewayTimeout, retryAfter: "0"),
+            Scripted.Answer(HttpStatusCode.OK, "1"));
+
+        var error = Assert.Throws<ImplanApiException>(() => client.PostText("/x", new { }));
+
+        Assert.Equal(504, error.StatusCode);
+        Assert.Single(handler.Sent);
+    }
+
+    [Fact]
+    public void ServiceUnavailable_OnAPost_IsRetried()
+    {
+        var (client, handler) = Scripted.Client(
+            Scripted.Answer(HttpStatusCode.ServiceUnavailable, retryAfter: "0"),
+            Scripted.Answer(HttpStatusCode.OK, "1"));
+
+        Assert.Equal("1", client.PostText("/x", new { }));
+        Assert.Equal(2, handler.Sent.Count);
+    }
+
+    [Fact]
     public void UnreachableHost_ThrowsTransportException()
     {
         var (client, _) = Scripted.Client(Scripted.Unreachable());

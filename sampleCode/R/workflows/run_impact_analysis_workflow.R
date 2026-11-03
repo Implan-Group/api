@@ -22,36 +22,40 @@
 
 
 run_impact_analysis_workflow <- function(project_id = NULL) {
-  client <- create_client()
-
-  # Step 1. Find the project. Passing an id is the normal path; without one, the
-  # most recently created project is used, which makes this easy to chain after
-  # CreateProject.
-  log_heading("Step 1: find the Project")
-  if (is.null(project_id)) {
-    # GET /api/v1/impact/project  (wiki: Get Projects)
-    mine <- get_projects(client)
-    if (length(mine) == 0L) {
-      stop(
-        "You have no projects. Run the CreateProject workflow first, or pass --project-id.",
-        call. = FALSE
-      )
-    }
-    # The API returns projects oldest first, so the newest is last.
-    project <- mine[[length(mine)]]
-    log_info("  no --project-id given, so using your most recent project")
-  } else {
-    # GET /api/v1/impact/project/{projectId}  (wiki: Get Project)
-    project <- get_project(client, project_id)
+  # The project to run is always named. The API documents no order for the list
+  # of your projects, so "the most recent one" cannot be picked from it safely.
+  if (is.null(project_id) || !nzchar(project_id)) {
+    stop(
+      paste(
+        "Name the project to run with --project-id. The CreateProject and",
+        "ImportEvents workflows print the id of the project they create."
+      ),
+      call. = FALSE
+    )
   }
 
+  client <- create_client()
+
+  # Step 1. Find the project, and the country its Aggregation Scheme covers,
+  # which decides the Summary Taxes route in Step 4.
+  log_heading("Step 1: find the Project")
+
+  # GET /api/v1/impact/project/{projectId}  (wiki: Get Project)
+  project <- get_project(client, project_id)
   log_info("  %s", describe(project))
 
-  # Projects other people have shared with you can be run too; this is how you
-  # find them.
+  # GET /api/v1/aggregationSchemes/{aggregationSchemeId}  (wiki: Aggregation Scheme by Id)
+  scheme <- get_aggregation_scheme(client, project$aggregation_scheme_id)
+  map_code <- toupper(scheme$map_code)
+  log_info("  Aggregation Scheme %d covers %s data", scheme$id, map_code)
+
+  # Your own projects, and the ones other people have shared with you, can all be
+  # run; these two lists are where to find the id to pass.
+  # GET /api/v1/impact/project  (wiki: Get Projects)
+  mine <- get_projects(client)
   # GET /api/v1/impact/project/shared  (wiki: Get Shared Projects)
   shared <- get_shared_projects(client)
-  log_info("  (%d projects have also been shared with you)", length(shared))
+  log_info("  (you have %d projects of your own, and %d shared with you)", length(mine), length(shared))
 
   # Step 2. Start the run.
   log_heading("Step 2: start the impact")
@@ -83,11 +87,21 @@ run_impact_analysis_workflow <- function(project_id = NULL) {
   filters <- result_filters(year = current_dollar_year())
   log_info("  dollar year %d", filters$year)
 
+  # Summary Taxes is read after the others, because its route depends on the
+  # Project's country.
   for (report in STANDARD_REPORTS) {
+    if (identical(report$label, "Summary Taxes")) {
+      next
+    }
     # GET /api/v1/impact/results/...  (wiki: Impact Results)
     csv_text <- report$fetch(client, run_id, filters)
     save_csv(csv_text, file.path(destination, paste0(report$label, ".csv")))
   }
+
+  # GET /api/v1/impact/results/SummaryTaxes/{runId}, or its can/ or intl/ route
+  # (wiki: Results - Summary Taxes)
+  taxes_csv <- get_summary_taxes(client, run_id, filters, map_code)
+  save_csv(taxes_csv, file.path(destination, "Summary Taxes.csv"))
 
   # Estimated Growth Percentage is the odd one out: its filters go in a JSON body
   # on a GET, and all five lists have to be present even when empty.

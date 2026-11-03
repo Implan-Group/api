@@ -159,6 +159,7 @@ public static class MrioProjectWorkflow
         // two, and comparing them is the point of the workflow.
         ConsoleLog.Heading("Step 7: read the results region by region");
         var destination = Path.Combine(Config.ReportsDirectory, $"MRIO-{runId}");
+        var totals = new Dictionary<string, ImpactResults.EffectTotals>();
 
         foreach (var region in new[] { source, linked })
         {
@@ -176,11 +177,21 @@ public static class MrioProjectWorkflow
             var path = ImpactResults.SaveCsv(csv,
                 Path.Combine(destination, $"Summary Economic Indicators - {region.Description}.csv"));
 
-            // Count the data rows so the console says something useful without
-            // trying to parse a report whose columns vary by account.
-            var rows = csv.Split('\n').Count(line => line.Trim().Length > 0);
-            ConsoleLog.Info("  {0}: {1} rows in {2}",
-                region.Description, Math.Max(rows - 1, 0), Path.GetFileName(path));
+            ConsoleLog.Info("  {0}: {1}", region.Description, Path.GetFileName(path));
+            totals[region.Description] = ImpactResults.SumEffects(csv);
+        }
+
+        // Side by side. The linked region's direct output is only its own event
+        // scaled to 0.01; the indirect and induced output beyond that is the spillover.
+        ConsoleLog.Info();
+        ConsoleLog.Info("  {0,-12} {1,16} {2,26} {3,12}", "Region", "Direct output", "Indirect + induced output", "Employment");
+        foreach (var (name, effect) in totals)
+        {
+            ConsoleLog.Info("  {0,-12} {1,16} {2,26} {3,12}",
+                name,
+                effect.DirectOutput.ToString("$#,##0", System.Globalization.CultureInfo.InvariantCulture),
+                effect.IndirectAndInducedOutput.ToString("$#,##0", System.Globalization.CultureInfo.InvariantCulture),
+                effect.Employment.ToString("#,##0.0", System.Globalization.CultureInfo.InvariantCulture));
         }
 
         ConsoleLog.Heading("Done");
@@ -188,8 +199,8 @@ public static class MrioProjectWorkflow
         ConsoleLog.Info("Run id:     {0}", runId);
         ConsoleLog.Info("Reports:    {0}", destination);
         ConsoleLog.Info();
-        ConsoleLog.Info("Compare the two files. {0} carries indirect and induced", LinkedRegion);
-        ConsoleLog.Info("effects from activity that only happened in {0}. In a project", SourceRegion);
+        ConsoleLog.Info("{0}'s direct output is only its own event, scaled to 0.01. Its", LinkedRegion);
+        ConsoleLog.Info("indirect and induced output is spillover from {0}. In a project", SourceRegion);
         ConsoleLog.Info("without MRIO those effects leak out of the model and are lost.");
         return runId;
     }

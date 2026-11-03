@@ -50,3 +50,10 @@ test_that("the map code comes from the scheme", {
 
   expect_equal(ids$map_code, MAP_CODES[["CANADA"]])
 })
+
+test_that("a failed lookup is an implan_lookup_error", {
+  expect_error(
+    default_us_industry_set(list(list(id = 8L, is_default = FALSE))),
+    class = "implan_lookup_error"
+  )
+})

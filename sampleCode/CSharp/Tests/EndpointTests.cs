@@ -24,6 +24,21 @@ public sealed class EndpointTests
     }
 
     [Fact]
+    public void SumEffects_SplitsDirectFromTheRestAndSkipsTheTotalsRow()
+    {
+        const string Report =
+            "GroupName, EventName, ModelName, Impact, Employment, LaborIncome, ValueAdded, Output, TagName\r\n" +
+            "\"Smith, Inc (2024)\",Restaurants,Oregon (2024),1 - Direct,10.5,100,200,1000,\r\n" +
+            "\"Smith, Inc (2024)\",Restaurants,Oregon (2024),2 - Indirect,1.25,10,20,300,\r\n" +
+            "\"Smith, Inc (2024)\",Restaurants,Oregon (2024),3 - Induced,0.25,5,10,200,\r\n" +
+            "Totals,,,,12,115,230,1500,\r\n";
+
+        var totals = ImpactResults.SumEffects(Report);
+
+        Assert.Equal(new ImpactResults.EffectTotals(1000, 500, 12), totals);
+    }
+
+    [Fact]
     public void RunImpact_ReadsABareRunId()
     {
         var (client, _) = Scripted.Client(Scripted.Answer(HttpStatusCode.OK, "30542"));

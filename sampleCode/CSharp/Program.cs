@@ -60,7 +60,17 @@ public static class Program
     /// </remarks>
     public static int Main(string[] args)
     {
-        var options = CommandLineOptions.Parse(args);
+        CommandLineOptions options;
+        try
+        {
+            options = CommandLineOptions.Parse(args);
+        }
+        catch (ArgumentException error)
+        {
+            // A value the command line cannot use is a problem in the input.
+            ConsoleLog.Info(error.Message);
+            return 4;
+        }
 
         if (options.ShowList || options.Workflow is null)
         {
@@ -271,15 +281,19 @@ internal sealed class CommandLineOptions
                     break;
 
                 case "--project-id":
-                    options.ProjectId = Guid.Parse(NextValue(args, ref index, argument));
+                    var projectId = NextValue(args, ref index, argument);
+                    if (!Guid.TryParse(projectId, out var parsedProjectId))
+                        throw new ArgumentException($"--project-id needs a project id, such as the one CreateProject prints, not '{projectId}'.");
+
+                    options.ProjectId = parsedProjectId;
                     break;
 
                 case "--map-code":
-                    options.MapCode = Enum.Parse<MapCode>(NextValue(args, ref index, argument), ignoreCase: true);
+                    options.MapCode = ParseName<MapCode>(NextValue(args, ref index, argument), argument);
                     break;
 
                 case "--region-type":
-                    options.RegionType = Enum.Parse<RegionType>(NextValue(args, ref index, argument), ignoreCase: true);
+                    options.RegionType = ParseName<RegionType>(NextValue(args, ref index, argument), argument);
                     break;
 
                 case "--export-name":
@@ -287,8 +301,11 @@ internal sealed class CommandLineOptions
                     break;
 
                 case "--limit":
-                    // 0 means no cap, which is how the Python sample spells it too.
-                    var limit = int.Parse(NextValue(args, ref index, argument));
+                    // 0 means no cap, which is how the Python and R samples spell it too.
+                    var limitText = NextValue(args, ref index, argument);
+                    if (!int.TryParse(limitText, out var limit) || limit < 0)
+                        throw new ArgumentException($"--limit needs a whole number of regions, or 0 for all, not '{limitText}'.");
+
                     options.Limit = limit > 0 ? limit : null;
                     break;
 
@@ -306,6 +323,18 @@ internal sealed class CommandLineOptions
         }
 
         return options;
+    }
+
+    /// <summary>
+    /// Reads an option's value as one of an enum's names, ignoring case. A number is
+    /// refused even when it matches an enum value, so a typo cannot select one.
+    /// </summary>
+    private static T ParseName<T>(string value, string option) where T : struct, Enum
+    {
+        if (!int.TryParse(value, out _) && Enum.TryParse<T>(value, ignoreCase: true, out var parsed))
+            return parsed;
+
+        throw new ArgumentException($"{option} needs one of {string.Join(", ", Enum.GetNames<T>())}, not '{value}'.");
     }
 
     /// <summary>Reads the value that follows an option, and advances past it.</summary>

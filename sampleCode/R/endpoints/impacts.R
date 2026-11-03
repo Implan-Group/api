@@ -83,7 +83,7 @@ wait_for_impact <- function(client,
           return(NA_character_)
         }
 
-        stop(
+        stop(errorCondition(
           sprintf(
             paste0(
               "Impact run %s still has no analyses after %d seconds, which means it ",
@@ -93,8 +93,8 @@ wait_for_impact <- function(client,
             ),
             run_id, IMPACT_START_GRACE_SECONDS, describe(condition$problem)
           ),
-          call. = FALSE
-        )
+          class = "implan_run_error"
+        ))
       }
     )
 
@@ -117,7 +117,7 @@ wait_for_impact <- function(client,
     }
 
     if (is_terminal_failure(status)) {
-      stop(
+      stop(errorCondition(
         sprintf(
           paste0(
             "Impact run %s ended with status '%s'. Check the Project's Events and ",
@@ -125,12 +125,12 @@ wait_for_impact <- function(client,
           ),
           run_id, status
         ),
-        call. = FALSE
-      )
+        class = "implan_run_error"
+      ))
     }
 
     if (Sys.time() >= deadline) {
-      stop(
+      stop(errorCondition(
         sprintf(
           paste0(
             "Impact run %s was still '%s' after %d seconds. It may still finish; check ",
@@ -138,8 +138,8 @@ wait_for_impact <- function(client,
           ),
           run_id, status, timeout_seconds
         ),
-        call. = FALSE
-      )
+        class = c("implan_run_timeout", "implan_run_error")
+      ))
     }
 
     Sys.sleep(poll_seconds)

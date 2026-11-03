@@ -219,6 +219,9 @@ class IndustryImpactAnalysisEvent(Event):
 
     # Which data year's spending pattern to spend the intermediate inputs through.
     spending_pattern_dataset_id: int | None = None
+    # Which Region's spending pattern. Required before a Canadian or international
+    # project will run; leave it unset in a United States project.
+    spending_pattern_region_urid: int | None = None
     spending_pattern_value_type: str = SpendingPatternValueType.INTERMEDIATE_EXPENDITURE.value
     spending_pattern_commodities: list[SpendingPatternCommodity] = dataclasses.field(
         default_factory=list

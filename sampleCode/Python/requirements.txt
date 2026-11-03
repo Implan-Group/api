@@ -4,7 +4,7 @@
 #
 # Deliberately short. Everything else these samples need is in the standard
 # library, including the camelCase-to-snake_case conversion and the filename
-# sanitizing that earlier versions pulled packages in for.
+# sanitizing.
 
 # The floors are the current releases, the versions the samples were verified on.
 # The tests need nothing more: they use the standard library's unittest.

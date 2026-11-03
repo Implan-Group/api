@@ -216,6 +216,12 @@ public sealed class IndustryImpactAnalysisEvent : ImpactEvent
     /// <summary>Which data year's spending pattern the intermediate inputs flow through.</summary>
     public int? SpendingPatternDatasetId { get; set; }
 
+    /// <summary>
+    /// Which Region's spending pattern. Required before a Canadian or international
+    /// project will run; leave it unset in a United States project.
+    /// </summary>
+    public long? SpendingPatternRegionUrid { get; set; }
+
     public SpendingPatternValueType SpendingPatternValueType { get; set; }
         = SpendingPatternValueType.IntermediateExpenditure;
 

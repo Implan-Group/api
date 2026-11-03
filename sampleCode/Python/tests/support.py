@@ -48,7 +48,9 @@ class ScriptedAdapter(BaseAdapter):
         response.reason = HTTPStatus(status).phrase
         response.headers.update(headers)
         response.raw = io.BytesIO(body.encode("utf-8"))
-        response.encoding = "utf-8"
+        # The encoding a real adapter would pick from the headers: ISO-8859-1 for a
+        # text/* type that names no charset, UTF-8 for JSON.
+        response.encoding = requests.utils.get_encoding_from_headers(response.headers)
         response.url = request.url
         response.request = request
         return response

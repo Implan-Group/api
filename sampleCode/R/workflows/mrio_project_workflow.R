@@ -151,6 +151,7 @@ mrio_project_workflow <- function() {
   # two, and comparing them is the point of the workflow.
   log_heading("Step 7: read the results region by region")
   destination <- file.path(reports_directory(), sprintf("MRIO-%d", run_id))
+  totals <- list()
 
   for (region in list(source_region, linked_region)) {
     # The filter matches the report's ModelName column, which carries the data
@@ -171,9 +172,22 @@ mrio_project_workflow <- function() {
       )
     )
 
+    log_info("  %s: %s", region$description, basename(path))
+    totals[[region$description]] <- effect_totals(csv_text)
+  }
+
+  # Side by side. The linked region's direct output is only its own event scaled
+  # to 0.01; the indirect and induced output beyond that is the spillover.
+  log_info("")
+  log_info("  %-12s %16s %26s %12s", "Region", "Direct output", "Indirect + induced output", "Employment")
+  for (name in names(totals)) {
+    effect <- totals[[name]]
     log_info(
-      "  %s: %d rows in %s",
-      region$description, csv_data_row_count(csv_text), basename(path)
+      "  %-12s %16s %26s %12s",
+      name,
+      paste0("$", format(round(effect$direct_output), big.mark = ",", scientific = FALSE)),
+      paste0("$", format(round(effect$indirect_and_induced_output), big.mark = ",", scientific = FALSE)),
+      format(round(effect$employment, 1), big.mark = ",", nsmall = 1, scientific = FALSE)
     )
   }
 
@@ -182,8 +196,8 @@ mrio_project_workflow <- function() {
   log_info("Run id:     %d", run_id)
   log_info("Reports:    %s", destination)
   log_info("")
-  log_info("Compare the two files. %s carries indirect and induced", MRIO_LINKED_REGION)
-  log_info("effects from activity that only happened in %s. In a project", MRIO_SOURCE_REGION)
+  log_info("%s's direct output is only its own event, scaled to 0.01. Its", MRIO_LINKED_REGION)
+  log_info("indirect and induced output is spillover from %s. In a project", MRIO_SOURCE_REGION)
   log_info("without MRIO those effects leak out of the model and are lost.")
 
   invisible(run_id)

@@ -113,6 +113,55 @@ class RetryTests(unittest.TestCase):
         self.assertEqual(client.get_json("/x"), [])
         self.assertEqual(len(adapter.sent), 2)
 
+    def test_a_get_is_retried_after_a_gateway_timeout(self) -> None:
+        client, adapter = client_answering(
+            reply(504, headers={"Retry-After": "0"}),
+            reply(200, "[]"),
+        )
+
+        self.assertEqual(client.get_json("/x"), [])
+        self.assertEqual(len(adapter.sent), 2)
+
+    def test_a_post_is_not_retried_after_a_gateway_timeout(self) -> None:
+        # The API behind the gateway may already have acted, so a second POST could
+        # start a second run.
+        client, adapter = client_answering(
+            reply(504, headers={"Retry-After": "0"}),
+            reply(200, "1"),
+        )
+
+        with self.assertRaises(ImplanApiError) as caught:
+            client.post_json("/x", json_body={})
+
+        self.assertEqual(caught.exception.status_code, 504)
+        self.assertEqual(len(adapter.sent), 1)
+
+    def test_a_post_is_retried_after_a_503(self) -> None:
+        client, adapter = client_answering(
+            reply(503, headers={"Retry-After": "0"}),
+            reply(200, "1"),
+        )
+
+        self.assertEqual(client.post_json("/x", json_body={}), 1)
+        self.assertEqual(len(adapter.sent), 2)
+
+
+class BodyTests(unittest.TestCase):
+    def test_an_empty_json_body_reads_as_none(self) -> None:
+        client, _ = client_answering(reply(200, ""))
+
+        self.assertIsNone(client.get_json("/x"))
+
+    def test_csv_with_no_charset_is_read_as_utf8(self) -> None:
+        client, _ = client_answering(reply(200, "Region\r\nQuébec", "text/csv"))
+
+        self.assertEqual(client.get_text("/x"), "Region\r\nQuébec")
+
+    def test_a_charset_the_api_names_is_honored(self) -> None:
+        client, _ = client_answering(reply(200, "Region\r\nQuébec", "text/csv; charset=utf-8"))
+
+        self.assertEqual(client.get_text("/x"), "Region\r\nQuébec")
+
 
 if __name__ == "__main__":
     unittest.main()

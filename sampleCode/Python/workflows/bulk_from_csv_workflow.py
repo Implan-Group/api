@@ -399,8 +399,10 @@ def _run_and_download(
     try:
         # GET /api/v1/impact/status/{runId}, polled  (wiki: Get Impact Status)
         impacts.wait_for_impact(client, run_id)
-    except (RuntimeError, TimeoutError) as error:
+    except (impacts.ImpactRunError, TimeoutError) as error:
         # One failed run should not stop a batch of fifty. Report it and carry on.
+        # Only a run that failed or timed out: an API, network, or sign-in failure
+        # still stops the batch, because the next run would fail the same way.
         logger.info("    run %d did not complete: %s", run_id, error)
         return None
 

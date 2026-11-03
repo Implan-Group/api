@@ -135,7 +135,8 @@
 - [Impact Readme](https://github.com/Implan-Group/api/blob/main/impact/readme.md#summary-taxes-export)
 
 ##### Request
-- `GET {{api_domain}}api/v1/impact/results/SummaryTaxes/{{impactRunId}}`
+- `GET {{api_domain}}api/v1/impact/results/SummaryTaxes/{{impactRunId}}` for a United States project
+- `GET {{api_domain}}api/v1/impact/results/SummaryTaxes/can/{{impactRunId}}` for a Canadian one, and `.../SummaryTaxes/intl/{{impactRunId}}` for an international one. The United States route refuses the others with a `422`
 
 ##### Response
  - Will return the CSV report as text

@@ -9,9 +9,12 @@ Only read these once the run reports `Complete`.
 Wiki: Impact Results - https://github.com/Implan-Group/api/wiki/Impact-Results
 """
 
+import csv
+import io
 from pathlib import Path
 
-from models.results import ImpactResultsExportRequest, ResultFilters
+from models.reference import MapCode
+from models.results import EffectTotals, ImpactResultsExportRequest, ResultFilters
 from utilities import logging_setup
 from utilities.rest import ApiClient
 
@@ -53,15 +56,23 @@ def get_detailed_economic_indicators(
 
 
 def get_summary_taxes(
-    client: ApiClient, run_id: int, filters: ResultFilters | None = None
+    client: ApiClient,
+    run_id: int,
+    filters: ResultFilters | None = None,
+    map_code: MapCode = MapCode.US,
 ) -> str:
     """Tax revenue by level of government.
 
-    GET /api/v1/impact/results/SummaryTaxes/{runId}
+    GET /api/v1/impact/results/SummaryTaxes/{runId}, or its `can/` or `intl/` route
     (wiki: Results - Summary Taxes)
+
+    Each country taxes at different levels of government, so each has its own
+    route, chosen here from the Project's map code. The United States route refuses
+    a Canadian or international run with a 422.
     """
     params = (filters or ResultFilters()).to_query()
-    return client.get_text(f"{_RESULTS}/SummaryTaxes/{run_id}", params=params)
+    route = {MapCode.US: "", MapCode.CANADA: "can/", MapCode.INTERNATIONAL: "intl/"}[map_code]
+    return client.get_text(f"{_RESULTS}/SummaryTaxes/{route}{run_id}", params=params)
 
 
 def get_detailed_taxes(
@@ -116,3 +127,23 @@ def save_csv(csv_text: str, destination: Path) -> Path:
         handle.write(csv_text)
     logging_setup.get_logger().info("  saved %s", destination)
     return destination
+
+
+def effect_totals(csv_text: str) -> EffectTotals:
+    """Sum a Summary Economic Indicators report by effect.
+
+    Each row is one Group, Event, and effect, whose Impact column reads
+    "1 - Direct", "2 - Indirect", or "3 - Induced". The report's last row, "Totals",
+    is skipped so nothing is counted twice.
+    """
+    direct = indirect_and_induced = employment = 0.0
+    for row in csv.DictReader(io.StringIO(csv_text), skipinitialspace=True):
+        if row.get("GroupName") == "Totals" or not row.get("Impact"):
+            continue
+        output = float(row["Output"])
+        if row["Impact"].startswith("1"):
+            direct += output
+        else:
+            indirect_and_induced += output
+        employment += float(row["Employment"])
+    return EffectTotals(direct, indirect_and_induced, employment)

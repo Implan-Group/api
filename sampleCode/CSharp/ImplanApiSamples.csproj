@@ -14,8 +14,11 @@
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <InvariantGlobalization>true</InvariantGlobalization>
         <!-- The test project lives in Tests/, inside this folder, so keep its
-             sources and build output out of this project. -->
-        <DefaultItemExcludes>$(DefaultItemExcludes);Tests/**</DefaultItemExcludes>
+             sources and build output out of this project. ConsoleApp/ is the
+             folder an earlier sample used; a clone that once built it can still
+             hold its generated sources in ConsoleApp/obj, which would not compile
+             here. -->
+        <DefaultItemExcludes>$(DefaultItemExcludes);Tests/**;ConsoleApp/**</DefaultItemExcludes>
     </PropertyGroup>
 
     <ItemGroup>

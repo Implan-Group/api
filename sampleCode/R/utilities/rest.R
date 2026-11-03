@@ -33,6 +33,15 @@ library(jsonlite)
 # wrong.
 RETRY_STATUSES <- c(429L, 502L, 503L, 504L)
 
+# A 502 or 504 comes from the gateway, and does not say whether the API behind it
+# already acted. Sending a POST again could then start a second impact run or
+# create a second copy of a project, so a POST or PATCH is retried only on 429 and
+# 503, which mean it was not processed, and never after a dropped connection. GET,
+# PUT, and DELETE are idempotent (RFC 9110, section 9.2.2), so repeating them is
+# safe.
+NON_IDEMPOTENT_RETRY_STATUSES <- c(429L, 503L)
+IDEMPOTENT_METHODS <- c("GET", "PUT", "DELETE")
+
 MAX_ATTEMPTS <- 4L
 
 # Sent on every request, so IMPLAN can tell sample traffic apart in their logs.
@@ -122,6 +131,16 @@ implan_transport_error <- function(base_url, condition) {
 }
 
 
+# Stops with a lookup failure: something the workflow looked for, such as a default
+# Dataset or a scheme for a map code, is not in what the API returned. The same as
+# `stop()` otherwise, but raised as an `implan_lookup_error`, so a caller can treat
+# "not available" as a normal answer without also swallowing an API, network, or
+# sign-in failure.
+lookup_failed <- function(..., call. = FALSE) {
+  stop(errorCondition(paste0(...), class = "implan_lookup_error"))
+}
+
+
 # Builds the client the workflows pass around.
 #
 # An environment rather than a list, because the token and the rate limit are
@@ -172,8 +191,15 @@ build_request <- function(client, path, method = "GET", query = NULL, body = NUL
     req_auth_bearer_token(bare_token(client$token_provider())) |>
     req_retry(
       max_tries = MAX_ATTEMPTS,
-      retry_on_failure = TRUE,
-      is_transient = function(resp) resp_status(resp) %in% RETRY_STATUSES
+      retry_on_failure = toupper(method) %in% IDEMPOTENT_METHODS,
+      is_transient = function(resp) {
+        retry_statuses <- if (toupper(method) %in% IDEMPOTENT_METHODS) {
+          RETRY_STATUSES
+        } else {
+          NON_IDEMPOTENT_RETRY_STATUSES
+        }
+        resp_status(resp) %in% retry_statuses
+      }
     ) |>
     req_error(body = function(resp) describe(problem_details(resp)))
 

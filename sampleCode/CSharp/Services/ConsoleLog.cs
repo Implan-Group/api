@@ -121,8 +121,12 @@ public static class ConsoleLog
                     break;
 
                 case ParameterType.RequestBody:
+                    // A JSON body holds the model object itself, not its JSON, so it is
+                    // serialized here with the same options the client sends it with.
                     log.AppendLine("  request body:");
-                    log.AppendLine(Prettify(parameter.Value?.ToString()));
+                    log.AppendLine(parameter.Value is string text
+                        ? Prettify(text)
+                        : JsonSerializer.Serialize(parameter.Value, Json.PrettyOptions));
                     break;
             }
         }

@@ -179,6 +179,7 @@ def run() -> int:
     # two, and comparing them is the point of the workflow.
     logging_setup.heading("Step 7: read the results region by region")
     destination = config.REPORTS_DIRECTORY / f"MRIO-{run_id}"
+    totals = {}
 
     for region in (source, linked):
         # The filter matches the report's ModelName column, which carries the data
@@ -197,17 +198,28 @@ def run() -> int:
             csv_text, destination / f"Summary Economic Indicators - {region.description}.csv"
         )
 
-        # Count the data rows so the console says something useful without trying
-        # to parse a report whose columns vary by account.
-        rows = [line for line in csv_text.splitlines() if line.strip()]
-        logger.info("  %s: %d rows in %s", region.description, max(len(rows) - 1, 0), path.name)
+        logger.info("  %s: %s", region.description, path.name)
+        totals[region.description] = impact_results.effect_totals(csv_text)
+
+    # Side by side. The linked region's direct output is only its own event scaled
+    # to 0.01; the indirect and induced output beyond that is the spillover.
+    logger.info("")
+    logger.info("  %-12s %16s %26s %12s", "Region", "Direct output", "Indirect + induced output", "Employment")
+    for name, effect in totals.items():
+        logger.info(
+            "  %-12s %16s %26s %12s",
+            name,
+            f"${effect.direct_output:,.0f}",
+            f"${effect.indirect_and_induced_output:,.0f}",
+            f"{effect.employment:,.1f}",
+        )
 
     logging_setup.heading("Done")
     logger.info("Project id: %s", project.id)
     logger.info("Run id:     %d", run_id)
     logger.info("Reports:    %s", destination)
     logger.info("")
-    logger.info("Compare the two files. %s carries indirect and induced", LINKED_REGION)
-    logger.info("effects from activity that only happened in %s. In a project", SOURCE_REGION)
+    logger.info("%s's direct output is only its own event, scaled to 0.01. Its", LINKED_REGION)
+    logger.info("indirect and induced output is spillover from %s. In a project", SOURCE_REGION)
     logger.info("without MRIO those effects leak out of the model and are lost.")
     return run_id

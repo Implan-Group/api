@@ -32,6 +32,14 @@ from utilities import config, logging_setup
 # wrong. A 503 from the auth endpoint in particular is usually transient.
 _RETRY_STATUSES = frozenset({429, 502, 503, 504})
 
+# A 502 or 504 comes from the gateway, and does not say whether the API behind it
+# already acted. Sending a POST again could then start a second impact run or
+# create a second copy of a project, so a POST or PATCH is retried only on 429 and
+# 503, which mean it was not processed. GET, PUT, and DELETE are idempotent
+# (RFC 9110, section 9.2.2), so repeating them is safe.
+_NON_IDEMPOTENT_RETRY_STATUSES = frozenset({429, 503})
+_IDEMPOTENT_METHODS = frozenset({"GET", "PUT", "DELETE"})
+
 _MAX_ATTEMPTS = 4
 
 
@@ -267,7 +275,12 @@ class ApiClient:
                 self._token_refresher()
                 continue
 
-            if response.status_code in _RETRY_STATUSES and attempt < _MAX_ATTEMPTS:
+            retry_statuses = (
+                _RETRY_STATUSES
+                if method.upper() in _IDEMPOTENT_METHODS
+                else _NON_IDEMPOTENT_RETRY_STATUSES
+            )
+            if response.status_code in retry_statuses and attempt < _MAX_ATTEMPTS:
                 delay = self._retry_delay(response, attempt)
                 self._logger.info(
                     "  %s from the API; waiting %.0fs and trying again (attempt %d of %d)",
@@ -309,8 +322,16 @@ class ApiClient:
         params: Mapping[str, Any] | None = None,
         json_body: Any | None = None,
     ) -> Any:
-        """GET a JSON document."""
-        return self._send("GET", path, params=params, json_body=json_body).json()
+        """GET a JSON document, or None when the API answers with an empty body.
+
+        A few reads answer an unknown id with an empty 200 rather than a 404; Get
+        User Region is one. `.json()` would raise on that before the caller could
+        check for it.
+        """
+        response = self._send("GET", path, params=params, json_body=json_body)
+        if not response.content.strip():
+            return None
+        return response.json()
 
     def get_text(
         self,
@@ -325,9 +346,11 @@ class ApiClient:
         extension and it opens in Excel or Sheets.
         """
         response = self._send("GET", path, params=params, json_body=json_body)
-        # `requests` guesses an encoding from the headers and guesses badly for
-        # `text/csv`; the API sends UTF-8, so say so before reading `.text`.
-        response.encoding = response.encoding or "utf-8"
+        # The API sends UTF-8 and its CSV responses name no charset. For any text/*
+        # type without one, `requests` assumes ISO-8859-1, which turns "Québec" into
+        # "QuÃ©bec", so read it as UTF-8 unless the response says otherwise.
+        if "charset" not in response.headers.get("Content-Type", "").lower():
+            response.encoding = "utf-8"
         return response.text
 
     def post_json(

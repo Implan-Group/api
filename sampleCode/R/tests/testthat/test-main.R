@@ -26,10 +26,23 @@ test_that("an unknown region type is rejected", {
 })
 
 test_that("a project id parses, and the map code defaults to US", {
-  options <- parse_arguments(c("run-impact-analysis", "--project-id", "abc-123"))
+  project_id <- "00000000-0000-0000-0000-000000000000"
+  options <- parse_arguments(c("run-impact-analysis", "--project-id", project_id))
 
-  expect_equal(options$project_id, "abc-123")
+  expect_equal(options$project_id, project_id)
   expect_equal(options$map_code, "US")
+})
+
+test_that("bad input on the command line is refused", {
+  expect_error(parse_arguments(c("run-impact-analysis", "--project-id", "abc-123")), "--project-id")
+  expect_error(parse_arguments(c("regional-exports", "--limit", "ten")), "--limit")
+  expect_error(parse_arguments(c("create-project", "--map-code", "XX")), "--map-code")
+  expect_error(parse_arguments(c("identifiers", "--bogus")), "Unknown option")
+})
+
+test_that("bad input on the command line exits 4", {
+  utils::capture.output(result <- main(c("regional-exports", "--limit", "ten")))
+  expect_identical(result, 4L)
 })
 
 test_that("each kind of failure gets its own exit code", {

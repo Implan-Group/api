@@ -11,8 +11,9 @@ namespace Implan.ApiSamples.Workflows;
 /// Four things have to exist, in this order, and each depends on the one before:
 ///
 ///   1. A Project, which fixes the Aggregation Scheme and Household Set.
-///   2. Events, which say what changed.
-///   3. A Region to apply them to.
+///   2. A Region to apply the events to.
+///   3. Events, which say what changed. Outside the United States, a spending
+///      pattern event names the region whose spending pattern it uses.
 ///   4. A Group, which pairs that region and a dollar year with those events.
 ///
 /// Run the RunImpactAnalysis workflow afterwards to analyze what this creates.
@@ -27,10 +28,18 @@ namespace Implan.ApiSamples.Workflows;
 public static class CreateProjectWorkflow
 {
     /// <summary>
-    /// The industry the events use, by name rather than by code, because the code
-    /// differs between Industry Sets.
+    /// The industry the events use, per map code, by name rather than by code,
+    /// because the code differs between Industry Sets. Each country's Industry Set
+    /// names its industries differently: the Canadian and international sets have no
+    /// "Oilseed farming", so each map code takes the crop-farming industry its own set
+    /// has.
     /// </summary>
-    private const string IndustryName = "Oilseed farming";
+    private static readonly Dictionary<MapCode, string> IndustryName = new()
+    {
+        [MapCode.US] = "Oilseed farming",
+        [MapCode.CAN] = "Crop production (except cannabis, greenhouse, nursery and floriculture production)",
+        [MapCode.INTL] = "Agriculture and hunting",
+    };
 
     /// <summary>
     /// Which region to put the group in, per map code. International schemes have no
@@ -82,11 +91,25 @@ public static class CreateProjectWorkflow
         // GET /api/v1/IndustryCodes/{aggregationSchemeId}
         // (wiki: Industry Codes by Aggregation Scheme)
         var codes = Industries.GetIndustryCodesForScheme(client, ids.AggregationSchemeId);
-        var industry = Industries.FindIndustryByDescription(codes, IndustryName);
+        var industry = Industries.FindIndustryByDescription(codes, IndustryName[mapCode]);
         ConsoleLog.Info("  {0} is code {1} in this Industry Set", industry.Description, industry.Code);
 
-        // Step 5. Add the events.
-        ConsoleLog.Heading("Step 5: add the Events");
+        // Step 5. Find the region the group will use.
+        ConsoleLog.Heading("Step 5: find the Region");
+        var (regionName, regionType) = DefaultRegion[mapCode];
+
+        // GET /api/v1/region/{aggregationSchemeId}/{datasetId}/children?regionTypeFilter=...
+        // (wiki: Regional Children)
+        // Passing no parent means "children of the top-level region". That works for
+        // international schemes too, which have no top-level region of their own:
+        // ask for Country there and the countries come back.
+        var candidates = Regions.GetRegionChildren(
+            client, ids.AggregationSchemeId, ids.DatasetId, regionType: regionType);
+        var region = Regions.FindByDescription(candidates, regionName);
+        ConsoleLog.Info("  {0}", region.Describe());
+
+        // Step 6. Add the events.
+        ConsoleLog.Heading("Step 6: add the Events");
 
         // The simple case: one number and the industry that earned it. IMPLAN
         // estimates employment, compensation, and the rest from regional averages.
@@ -127,6 +150,10 @@ public static class CreateProjectWorkflow
                 // Which data year's spending pattern the intermediate inputs flow
                 // through. The resolved dataset keeps this consistent with the project.
                 SpendingPatternDatasetId = ids.DatasetId,
+                // A Canadian or international project refuses to run until each
+                // spending pattern event names the region whose pattern it uses. A
+                // United States one uses the national pattern, so it stays unset there.
+                SpendingPatternRegionUrid = mapCode == MapCode.US ? null : region.Urid,
                 SpendingPatternValueType = SpendingPatternValueType.IntermediateExpenditure,
             });
             ConsoleLog.Info("  {0}", detailedEvent.Describe());
@@ -135,20 +162,6 @@ public static class CreateProjectWorkflow
         {
             ConsoleLog.Info("  Industry Impact Analysis is not available in a {0} scheme; skipping it", mapCode);
         }
-
-        // Step 6. Find the region the group will use.
-        ConsoleLog.Heading("Step 6: find the Region");
-        var (regionName, regionType) = DefaultRegion[mapCode];
-
-        // GET /api/v1/region/{aggregationSchemeId}/{datasetId}/children?regionTypeFilter=...
-        // (wiki: Regional Children)
-        // Passing no parent means "children of the top-level region". That works for
-        // international schemes too, which have no top-level region of their own:
-        // ask for Country there and the countries come back.
-        var candidates = Regions.GetRegionChildren(
-            client, ids.AggregationSchemeId, ids.DatasetId, regionType: regionType);
-        var region = Regions.FindByDescription(candidates, regionName);
-        ConsoleLog.Info("  {0}", region.Describe());
 
         // Step 7. Create the group. This is where the events, the region, and the
         // dollar year come together.

@@ -246,6 +246,19 @@ public sealed class ApiClient
         HttpStatusCode.GatewayTimeout,
     ];
 
+    /// <summary>
+    /// The statuses a POST or PATCH is retried on. A 502 or 504 comes from the
+    /// gateway and does not say whether the API behind it already acted, so sending
+    /// a POST again could start a second impact run or create a second copy of a
+    /// project. 429 and 503 mean the request was not processed. GET, PUT, and DELETE
+    /// are idempotent (RFC 9110, section 9.2.2), so they keep the full list.
+    /// </summary>
+    private static readonly HashSet<HttpStatusCode> NonIdempotentRetryStatuses =
+    [
+        HttpStatusCode.TooManyRequests,
+        HttpStatusCode.ServiceUnavailable,
+    ];
+
     private const int MaxAttempts = 4;
 
     private readonly RestClient _client;
@@ -398,7 +411,10 @@ public sealed class ApiClient
                 continue;
             }
 
-            if (RetryStatuses.Contains(response.StatusCode) && attempt < MaxAttempts)
+            var retryStatuses = request.Method is Method.Get or Method.Put or Method.Delete
+                ? RetryStatuses
+                : NonIdempotentRetryStatuses;
+            if (retryStatuses.Contains(response.StatusCode) && attempt < MaxAttempts)
             {
                 var delay = RetryDelay(response, attempt);
                 ConsoleLog.Info(

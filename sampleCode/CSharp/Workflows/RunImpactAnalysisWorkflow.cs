@@ -27,51 +27,50 @@ namespace Implan.ApiSamples.Workflows;
 /// </remarks>
 public static class RunImpactAnalysisWorkflow
 {
-    /// <summary>The four query-filtered reports, and the file each is saved as.</summary>
+    /// <summary>
+    /// The query-filtered reports, and the file each is saved as. Summary Taxes is
+    /// read separately, because its route depends on the Project's country.
+    /// </summary>
     private static readonly (string Label, Func<ApiClient, long, ResultFilters?, string> Fetch)[] Reports =
     [
         ("Summary Economic Indicators", ImpactResults.GetSummaryEconomicIndicators),
         ("Detailed Economic Indicators", ImpactResults.GetDetailedEconomicIndicators),
-        ("Summary Taxes", ImpactResults.GetSummaryTaxes),
         ("Detailed Taxes", ImpactResults.GetDetailedTaxes),
     ];
 
     public static long Run(Guid? projectId = null)
     {
-        var client = Auth.CreateClient();
-
-        // Step 1. Find the project. Passing an id is the normal path; without one,
-        // the most recently created project is used, which makes this easy to chain
-        // after CreateProject.
-        ConsoleLog.Heading("Step 1: find the Project");
-        Project project;
+        // The project to run is always named. The API documents no order for the
+        // list of your projects, so "the most recent one" cannot be picked from it
+        // safely.
         if (projectId is null)
         {
-            // GET /api/v1/impact/project  (wiki: Get Projects)
-            var mine = Projects.GetProjects(client);
-            if (mine.Count == 0)
-            {
-                throw new KeyNotFoundException(
-                    "You have no projects. Run the CreateProject workflow first, or pass --project-id.");
-            }
-
-            // The API returns projects oldest first, so the newest is last.
-            project = mine[^1];
-            ConsoleLog.Info("  no --project-id given, so using your most recent project");
-        }
-        else
-        {
-            // GET /api/v1/impact/project/{projectId}  (wiki: Get Project)
-            project = Projects.GetProject(client, projectId.Value);
+            throw new ArgumentException(
+                "Name the project to run with --project-id. The CreateProject and ImportEvents workflows print the id of the project they create.");
         }
 
+        var client = Auth.CreateClient();
+
+        // Step 1. Find the project, and the country its Aggregation Scheme covers,
+        // which decides the Summary Taxes route in Step 4.
+        ConsoleLog.Heading("Step 1: find the Project");
+
+        // GET /api/v1/impact/project/{projectId}  (wiki: Get Project)
+        var project = Projects.GetProject(client, projectId.Value);
         ConsoleLog.Info("  {0}", project.Describe());
 
-        // Projects other people have shared with you can be run too; this is how you
-        // find them.
+        // GET /api/v1/aggregationSchemes/{aggregationSchemeId}  (wiki: Aggregation Scheme by Id)
+        var scheme = AggregationSchemes.GetAggregationScheme(client, project.AggregationSchemeId);
+        var mapCode = Enum.Parse<MapCode>(scheme.MapCode, ignoreCase: true);
+        ConsoleLog.Info("  Aggregation Scheme {0} covers {1} data", scheme.Id, mapCode);
+
+        // Your own projects, and the ones other people have shared with you, can all
+        // be run; these two lists are where to find the id to pass.
+        // GET /api/v1/impact/project  (wiki: Get Projects)
+        var mine = Projects.GetProjects(client);
         // GET /api/v1/impact/project/shared  (wiki: Get Shared Projects)
         var shared = Projects.GetSharedProjects(client);
-        ConsoleLog.Info("  ({0} projects have also been shared with you)", shared.Count);
+        ConsoleLog.Info("  (you have {0} projects of your own, and {1} shared with you)", mine.Count, shared.Count);
 
         // Step 2. Start the run.
         ConsoleLog.Heading("Step 2: start the impact");
@@ -108,6 +107,11 @@ public static class RunImpactAnalysisWorkflow
             var csv = fetch(client, runId, filters);
             ImpactResults.SaveCsv(csv, Path.Combine(destination, $"{label}.csv"));
         }
+
+        // GET /api/v1/impact/results/SummaryTaxes/{runId}, or its can/ or intl/ route
+        // (wiki: Results - Summary Taxes)
+        var taxesCsv = ImpactResults.GetSummaryTaxes(client, runId, filters, mapCode);
+        ImpactResults.SaveCsv(taxesCsv, Path.Combine(destination, "Summary Taxes.csv"));
 
         // Estimated Growth Percentage is the odd one out: its filters go in a JSON
         // body on a GET, and all five lists have to be present even when empty.

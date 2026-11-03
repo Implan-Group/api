@@ -13,6 +13,15 @@ from utilities import config, logging_setup
 from utilities.rest import ApiClient, ImplanApiError
 
 
+class ImpactRunError(RuntimeError):
+    """An impact run that ended without results: a failed status, or one that never
+    attached to its project.
+
+    A type of its own so a caller can carry on past a failed run, as the bulk
+    workflow does, without also swallowing an API, network, or sign-in failure.
+    """
+
+
 def run_impact(client: ApiClient, project_id: str) -> int:
     """Start an impact analysis and return its run id.
 
@@ -92,7 +101,7 @@ def wait_for_impact(
                 time.sleep(poll_seconds)
                 continue
 
-            raise RuntimeError(
+            raise ImpactRunError(
                 f"Impact run {run_id} still has no analyses after "
                 f"{config.IMPACT_START_GRACE_SECONDS} seconds, which means it never "
                 f"attached to the project. A common cause is a Group saved without a "
@@ -108,7 +117,7 @@ def wait_for_impact(
             return status
 
         if status.is_terminal_failure:
-            raise RuntimeError(
+            raise ImpactRunError(
                 f"Impact run {run_id} ended with status '{status.value}'. Check the "
                 f"Project's Events and Groups in IMPLAN Cloud, then run it again."
             )

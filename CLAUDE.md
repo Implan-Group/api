@@ -99,7 +99,7 @@ Same in every language so outputs can be compared side by side.
 | Item | Value | Resolved how |
 | --- | --- | --- |
 | Aggregation Scheme, Dataset, Household Set | default US family | rule in section 1 |
-| Industry for output events | code 1, `Oilseed farming` | code plus description check |
+| Industry for output events | code 1, `Oilseed farming`; Canada and International take their own set's crop-farming industry (`Crop production (except cannabis, greenhouse, nursery and floriculture production)`, `Agriculture and hunting`) | code plus description check |
 | Industry for the restaurant example | `Full-service restaurants` | description lookup, code printed |
 | Household income specifications | `10002` (15-30k) and `10005` (50-70k) | from the specification endpoint, checked by code |
 | Regions for groups | `Oregon`, `Wisconsin`, `North Carolina` | state children of the top-level region, matched by description |
@@ -228,7 +228,7 @@ Needs: token, ids. Produces: a built combined region. Done when: the poll return
 
 Goal: the minimum path from nothing to a runnable project.
 
-Steps: create the project with the resolved scheme and household set; list the event types valid for it; add one Industry Output event (`marginType` `ProducerPrice`, set explicitly) and one Industry Impact Analysis event for Oilseed farming; find Oregon; add one group for Oregon with both events and the current dollar year; read the project, the Industry Output event, and the group back.
+Steps: create the project with the resolved scheme and household set; list the event types valid for it; find Oregon; add one Industry Output event (`marginType` `ProducerPrice`, set explicitly) and one Industry Impact Analysis event for Oilseed farming; add one group for Oregon with both events and the current dollar year; read the project, the Industry Output event, and the group back.
 
 | Endpoint | Wiki page |
 | --- | --- |
@@ -240,7 +240,7 @@ Steps: create the project with the resolved scheme and household set; list the e
 | `GET /api/v1/impact/project/{projectId}/event/{eventId}` | Get Event |
 | `GET /api/v1/impact/project/{projectId}/group/{groupId}` | Get Group |
 
-The workflow takes an optional map code, default `US`. With `CAN` it resolves the Canadian scheme and dataset, uses a Canadian industry and province, and otherwise runs the same steps; with `INTL` it uses the country children endpoint for the region step, because international schemes have no top-level region.
+The workflow takes an optional map code, default `US`. With `CAN` it resolves the Canadian scheme and dataset, uses a Canadian industry and province, sets the province's URID as the Industry Impact Analysis event's `spendingPatternRegionUrid` (a Canadian or international project refuses to run without it; a US one leaves it unset), and otherwise runs the same steps; with `INTL` it uses the country children endpoint for the region step, because international schemes have no top-level region.
 
 Needs: token, ids. Produces: a project id, two event ids, one group id, all printed. Done when: workflow 7 can run the project.
 
@@ -262,7 +262,7 @@ Needs: token, ids, a project id. Produces: three event ids and three group ids. 
 
 Goal: run a project, wait correctly, and download every standard report.
 
-Steps: list the user's projects and shared projects, read the target project; start the run; poll status with the timeout and terminal-state rules; download the five reports to `reports/{project title}/` as `.csv`, passing the current dollar year where the endpoint accepts one; download Summary Economic Indicators once more filtered to the Direct effect (`impacts=Direct`); print the run id and the folder.
+Steps: refuse to run without `--project-id`, because the API documents no order for the project list; read the target project and its Aggregation Scheme, whose map code picks the Summary Taxes route; list the user's own and shared projects and print how many of each; start the run; poll status with the timeout and terminal-state rules; download the five reports to `reports/{project title}/` as `.csv`, passing the current dollar year where the endpoint accepts one; download Summary Economic Indicators once more filtered to the Direct effect (`impacts=Direct`); print the run id and the folder.
 
 | Endpoint | Wiki page |
 | --- | --- |
@@ -271,7 +271,7 @@ Steps: list the user's projects and shared projects, read the target project; st
 | `GET /api/v1/impact/status/{runId}` | Get Impact Status |
 | `GET /api/v1/impact/results/SummaryEconomicIndicators/{runId}` | Results - Summary Economic Indicators |
 | `GET /api/v1/impact/results/ExportDetailEconomicIndicators/{runId}` | Results - Detailed Economic Indicators |
-| `GET /api/v1/impact/results/SummaryTaxes/{runId}` | Results - Summary Taxes |
+| `GET /api/v1/impact/results/SummaryTaxes/{runId}`, or `.../SummaryTaxes/can/{runId}` and `.../SummaryTaxes/intl/{runId}` by the scheme's map code | Results - Summary Taxes |
 | `GET /api/v1/impact/results/DetailedTaxes/{runId}` | Results - Detailed Taxes |
 | `GET /api/v1/impact/results/EstimatedGrowthPercentage/{runId}` with JSON body | Results - Estimated Growth Percentage |
 

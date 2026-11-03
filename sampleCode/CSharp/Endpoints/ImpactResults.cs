@@ -57,12 +57,23 @@ public static class ImpactResults
     /// Tax revenue by level of government.
     /// </summary>
     /// <remarks>
-    /// GET /api/v1/impact/results/SummaryTaxes/{runId}
-    /// (wiki: Results - Summary Taxes)
+    /// GET /api/v1/impact/results/SummaryTaxes/{runId}, or its <c>can/</c> or
+    /// <c>intl/</c> route (wiki: Results - Summary Taxes)
+    ///
+    /// Each country taxes at different levels of government, so each has its own
+    /// route, chosen here from the Project's map code. The United States route
+    /// refuses a Canadian or international run with a 422.
     /// </remarks>
-    public static string GetSummaryTaxes(ApiClient client, long runId, ResultFilters? filters = null)
+    public static string GetSummaryTaxes(
+        ApiClient client, long runId, ResultFilters? filters = null, MapCode mapCode = MapCode.US)
     {
-        return client.GetText($"{Results}/SummaryTaxes/{runId}", filters?.ToQuery());
+        var route = mapCode switch
+        {
+            MapCode.CAN => "can/",
+            MapCode.INTL => "intl/",
+            _ => string.Empty,
+        };
+        return client.GetText($"{Results}/SummaryTaxes/{route}{runId}", filters?.ToQuery());
     }
 
     /// <summary>
@@ -112,6 +123,49 @@ public static class ImpactResults
     /// Written as UTF-8 without a byte-order mark, so the line endings the API sent
     /// survive intact rather than being rewritten.
     /// </remarks>
+    /// <summary>
+    /// A Summary Economic Indicators report summed by effect. Direct is the activity
+    /// itself; Indirect and Induced are the supply chain and the household spending it
+    /// sets off.
+    /// </summary>
+    public sealed record EffectTotals(double DirectOutput, double IndirectAndInducedOutput, double Employment);
+
+    /// <summary>Sums a Summary Economic Indicators report by effect.</summary>
+    /// <remarks>
+    /// Each row is one Group, Event, and effect, whose Impact column reads
+    /// "1 - Direct", "2 - Indirect", or "3 - Induced". The report's last row,
+    /// "Totals", is skipped so nothing is counted twice.
+    /// </remarks>
+    public static EffectTotals SumEffects(string csvText)
+    {
+        var lines = csvText.Split('\n').Select(l => l.TrimEnd('\r')).Where(l => l.Trim().Length > 0).ToList();
+        if (lines.Count == 0)
+            return new EffectTotals(0, 0, 0);
+
+        var header = Csv.SplitLine(lines[0]);
+        var groupColumn = header.IndexOf("GroupName");
+        var impactColumn = header.IndexOf("Impact");
+        var outputColumn = header.IndexOf("Output");
+        var employmentColumn = header.IndexOf("Employment");
+
+        double direct = 0, indirectAndInduced = 0, employment = 0;
+        foreach (var line in lines.Skip(1))
+        {
+            var row = Csv.SplitLine(line);
+            if (row.Count <= Math.Max(outputColumn, employmentColumn) || row[groupColumn] == "Totals" || row[impactColumn].Length == 0)
+                continue;
+
+            var output = double.Parse(row[outputColumn], System.Globalization.CultureInfo.InvariantCulture);
+            if (row[impactColumn].StartsWith('1'))
+                direct += output;
+            else
+                indirectAndInduced += output;
+            employment += double.Parse(row[employmentColumn], System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        return new EffectTotals(direct, indirectAndInduced, employment);
+    }
+
     public static string SaveCsv(string csvText, string destination)
     {
         var folder = Path.GetDirectoryName(destination);

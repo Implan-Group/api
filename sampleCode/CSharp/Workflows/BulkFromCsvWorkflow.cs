@@ -63,7 +63,8 @@ public static class BulkFromCsvWorkflow
     [
         ("Summary Economic Indicators", ImpactResults.GetSummaryEconomicIndicators),
         ("Detailed Economic Indicators", ImpactResults.GetDetailedEconomicIndicators),
-        ("Summary Taxes", ImpactResults.GetSummaryTaxes),
+        // Every region this workflow builds is in the United States, from FIPS codes.
+        ("Summary Taxes", (client, runId, filters) => ImpactResults.GetSummaryTaxes(client, runId, filters, MapCode.US)),
         ("Detailed Taxes", ImpactResults.GetDetailedTaxes),
     ];
 
@@ -199,7 +200,7 @@ public static class BulkFromCsvWorkflow
 
         var lines = File.ReadAllLines(path);
         var name = Path.GetFileName(path);
-        var headers = lines.Length == 0 ? [] : SplitCsvLine(lines[0]);
+        var headers = lines.Length == 0 ? [] : Csv.SplitLine(lines[0]);
 
         var missing = columns.Where(c => !headers.Contains(c, StringComparer.OrdinalIgnoreCase)).ToList();
         if (missing.Count > 0)
@@ -212,7 +213,7 @@ public static class BulkFromCsvWorkflow
         var rows = new List<Dictionary<string, string>>();
         for (var index = 1; index < lines.Length; index++)
         {
-            var values = SplitCsvLine(lines[index]);
+            var values = Csv.SplitLine(lines[index]);
             var lineNumber = index + 1;
 
             // A value holding an unquoted comma splits in two.
@@ -366,34 +367,6 @@ public static class BulkFromCsvWorkflow
             yield return $"{where}: {column} '{name}' contains {string.Join(" ", rejected)}, "
                          + "which IMPLAN does not allow in a title.";
         }
-    }
-
-    /// <summary>Splits one CSV line, honoring double quotes around a field.</summary>
-    private static List<string> SplitCsvLine(string line)
-    {
-        var fields = new List<string>();
-        var current = new System.Text.StringBuilder();
-        var inQuotes = false;
-
-        foreach (var character in line)
-        {
-            switch (character)
-            {
-                case '"':
-                    inQuotes = !inQuotes;
-                    break;
-                case ',' when !inQuotes:
-                    fields.Add(current.ToString().Trim());
-                    current.Clear();
-                    break;
-                default:
-                    current.Append(character);
-                    break;
-            }
-        }
-
-        fields.Add(current.ToString().Trim());
-        return fields;
     }
 
     /// <summary>Looks up every row's region, grouped by model name, in file order.</summary>

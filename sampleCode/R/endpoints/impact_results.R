@@ -49,12 +49,17 @@ get_detailed_economic_indicators <- function(client, run_id, filters = NULL) {
 
 # Tax revenue by level of government.
 #
-# GET /api/v1/impact/results/SummaryTaxes/{runId}
+# GET /api/v1/impact/results/SummaryTaxes/{runId}, or its `can/` or `intl/` route
 # (wiki: Results - Summary Taxes)
-get_summary_taxes <- function(client, run_id, filters = NULL) {
+#
+# Each country taxes at different levels of government, so each has its own
+# route, chosen here from the Project's map code. The United States route refuses
+# a Canadian or international run with a 422.
+get_summary_taxes <- function(client, run_id, filters = NULL, map_code = MAP_CODES[["US"]]) {
+  route <- switch(map_code, CAN = "can/", INTL = "intl/", "")
   get_text(
     client,
-    sprintf("%s/SummaryTaxes/%s", RESULTS_PATH, run_id),
+    sprintf("%s/SummaryTaxes/%s%s", RESULTS_PATH, route, run_id),
     query = filters_to_query(filters)
   )
 }
@@ -141,4 +146,24 @@ save_csv <- function(csv_text, destination) {
 csv_data_row_count <- function(csv_text) {
   lines <- strsplit(csv_text, "\r?\n")[[1]]
   max(sum(nzchar(trimws(lines))) - 1L, 0L)
+}
+
+
+# Sums a Summary Economic Indicators report by effect.
+#
+# Each row is one Group, Event, and effect, whose Impact column reads
+# "1 - Direct", "2 - Indirect", or "3 - Induced". The report's last row, "Totals",
+# is skipped so nothing is counted twice.
+effect_totals <- function(csv_text) {
+  rows <- utils::read.csv(
+    text = csv_text, check.names = FALSE, strip.white = TRUE, stringsAsFactors = FALSE
+  )
+  names(rows) <- trimws(names(rows))
+  rows <- rows[rows$GroupName != "Totals" & nzchar(rows$Impact), , drop = FALSE]
+  direct <- startsWith(rows$Impact, "1")
+  list(
+    direct_output = sum(rows$Output[direct]),
+    indirect_and_induced_output = sum(rows$Output[!direct]),
+    employment = sum(rows$Employment)
+  )
 }

@@ -29,7 +29,7 @@
 ## 🔽 Run it
 - Run the `mrio-project` workflow from the C#, Python, or R folder. Each folder's README gives the exact command
 - It creates one project in your account and runs it. Delete the project in IMPLAN Cloud when you are done
-- The two reports are saved under `reports/MRIO-{runId}/`. Compare them: the Wisconsin report is the effect an ordinary project would have lost
+- The two reports are saved under `reports/MRIO-{runId}/`, and the workflow prints each state's direct output, indirect and induced output, and employment side by side. Wisconsin's indirect and induced output is the effect an ordinary project would have lost
 
 ---
 ## 🔽 What it does

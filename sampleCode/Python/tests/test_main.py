@@ -51,9 +51,23 @@ class CommandLineTests(unittest.TestCase):
             self.parser.parse_args(["regions", "--region-type", "Planet"])
 
     def test_project_id_and_the_default_map_code(self) -> None:
-        args = self.parser.parse_args(["run-impact-analysis", "--project-id", "abc-123"])
-        self.assertEqual(args.project_id, "abc-123")
+        project_id = "00000000-0000-0000-0000-000000000000"
+        args = self.parser.parse_args(["run-impact-analysis", "--project-id", project_id])
+        self.assertEqual(args.project_id, project_id)
         self.assertEqual(args.map_code, "US")
+
+    def test_bad_input_on_the_command_line_exits_4(self) -> None:
+        cases = {
+            "a project id that is not a GUID": ["run-impact-analysis", "--project-id", "abc-123"],
+            "a limit that is not a whole number": ["regional-exports", "--limit", "ten"],
+            "an unknown map code": ["create-project", "--map-code", "XX"],
+            "an unknown option": ["identifiers", "--bogus"],
+        }
+        for case, arguments in cases.items():
+            with self.subTest(case=case):
+                with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as caught:
+                    self.parser.parse_args(arguments)
+                self.assertEqual(caught.exception.code, 4)
 
 
 class TitleTests(unittest.TestCase):

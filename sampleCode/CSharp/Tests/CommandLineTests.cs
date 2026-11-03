@@ -36,6 +36,17 @@ public sealed class CommandLineTests
         Assert.Throws<ArgumentException>(() => CommandLineOptions.Parse(["regions", "--region-type", "Planet"]));
     }
 
+    [Theory]
+    [InlineData("run-impact-analysis", "--project-id", "abc-123")]
+    [InlineData("regional-exports", "--limit", "ten")]
+    [InlineData("regional-exports", "--limit", "-1")]
+    [InlineData("create-project", "--map-code", "XX")]
+    [InlineData("create-project", "--map-code", "1")]
+    public void Parse_BadValue_Throws(string workflow, string option, string value)
+    {
+        Assert.Throws<ArgumentException>(() => CommandLineOptions.Parse([workflow, option, value]));
+    }
+
     [Fact]
     public void SafeFileName_ReplacesCharactersWindowsRejects()
     {

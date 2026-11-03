@@ -205,6 +205,7 @@ industry_impact_analysis_event <- function(title,
                                            local_purchase_percentage = 1.0,
                                            is_sam = FALSE,
                                            spending_pattern_dataset_id = NULL,
+                                           spending_pattern_region_urid = NULL,
                                            spending_pattern_value_type =
                                              SPENDING_PATTERN_VALUE_TYPES[["INTERMEDIATE_EXPENDITURE"]],
                                            spending_pattern_commodities = NULL,
@@ -230,6 +231,9 @@ industry_impact_analysis_event <- function(title,
     # Which data year's spending pattern to spend the intermediate inputs
     # through.
     spending_pattern_dataset_id = spending_pattern_dataset_id,
+    # Which Region's spending pattern. Required before a Canadian or international
+    # project will run; leave it unset in a United States project.
+    spending_pattern_region_urid = spending_pattern_region_urid,
     spending_pattern_value_type = spending_pattern_value_type,
     spending_pattern_commodities = spending_pattern_commodities
   )
@@ -290,9 +294,10 @@ EVENT_FIELDS <- list(
     "proprietor_income", "total_labor_income", "other_property_income",
     "tax_on_production_and_imports", "wage_and_salary_employment",
     "proprietor_employment", "total_employment", "local_purchase_percentage",
-    "is_sam", "spending_pattern_dataset_id", "spending_pattern_value_type",
-    "spending_pattern_commodities", "is_local_employee_compensation",
-    "is_fte_employment", "is_wage_and_salary", "is_contribution_analysis"
+    "is_sam", "spending_pattern_dataset_id", "spending_pattern_region_urid",
+    "spending_pattern_value_type", "spending_pattern_commodities",
+    "is_local_employee_compensation", "is_fte_employment", "is_wage_and_salary",
+    "is_contribution_analysis"
   ),
   IndustrySpendingPattern = c(
     "industry_code", "output", "local_purchase_percentage", "is_sam",
@@ -310,10 +315,10 @@ EVENT_SHARED_FIELDS <- c("impact_event_type", "title", "id", "project_id", "tags
 # GET /api/v1/impact/project/{projectId}/event returns a mixed list, so the type
 # has to be read from each item before the item can be read.
 #
-# This is where the old samples came apart. They declared a fixed set of fields
-# and rejected anything else, so the day IMPLAN added `isContributionAnalysis` to
-# Industry Impact Analysis events, reading one stopped working. Keeping the
-# unknown fields instead means a new field is visible rather than fatal.
+# Fields this sample does not know are kept rather than rejected. IMPLAN adds
+# fields to event types over time, such as `isContributionAnalysis` on Industry
+# Impact Analysis events, and keeping them means a new field is visible rather
+# than fatal.
 event_from_api <- function(payload) {
   event_type <- payload$impactEventType
   if (is.null(event_type)) {

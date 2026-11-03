@@ -224,9 +224,29 @@ parse_arguments <- function(arguments) {
     if (argument %in% c("--list", "-l", "--help", "-h")) {
       options$show_list <- TRUE
     } else if (identical(argument, "--project-id")) {
+      # A project id is a GUID, so anything else is a typo, caught here rather than
+      # coming back from the API as a 404.
+      if (!grepl("^[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$", next_value())) {
+        stop(
+          sprintf(
+            "--project-id needs a project id, such as the one CreateProject prints, not '%s'.",
+            next_value()
+          ),
+          call. = FALSE
+        )
+      }
       options$project_id <- next_value()
       index <- index + 1L
     } else if (identical(argument, "--map-code")) {
+      if (!toupper(next_value()) %in% MAP_CODES) {
+        stop(
+          sprintf(
+            "--map-code needs one of %s, not '%s'.",
+            paste(MAP_CODES, collapse = ", "), next_value()
+          ),
+          call. = FALSE
+        )
+      }
       options$map_code <- toupper(next_value())
       index <- index + 1L
     } else if (identical(argument, "--region-type")) {
@@ -249,8 +269,16 @@ parse_arguments <- function(arguments) {
       index <- index + 1L
     } else if (identical(argument, "--limit")) {
       # 0 means no cap, which is how the C# and Python samples spell it too.
-      parsed <- suppressWarnings(as.integer(next_value()))
-      options$limit <- if (is.na(parsed) || parsed <= 0L) NULL else parsed
+      # Anything that is not a whole number stops here, rather than quietly meaning
+      # "every region".
+      if (!grepl("^[0-9]+$", next_value())) {
+        stop(
+          sprintf("--limit needs a whole number of regions, or 0 for all, not '%s'.", next_value()),
+          call. = FALSE
+        )
+      }
+      parsed <- as.integer(next_value())
+      options$limit <- if (parsed == 0L) NULL else parsed
       index <- index + 1L
     } else if (identical(argument, "--workbook")) {
       options$workbook <- next_value()
@@ -304,7 +332,17 @@ run_workflow <- function(name, ...) {
 # CI job can tell what went wrong, and in particular can tell a failure worth
 # retrying later (5) from one that needs a person (2, 3, 4).
 main <- function(arguments = commandArgs(trailingOnly = TRUE)) {
-  options <- parse_arguments(arguments)
+  # A value the command line cannot use is a problem in the input.
+  options <- tryCatch(
+    parse_arguments(arguments),
+    error = function(condition) {
+      cat(conditionMessage(condition), "\n", sep = "")
+      NULL
+    }
+  )
+  if (is.null(options)) {
+    return(4L)
+  }
 
   if (isTRUE(options$show_list) || is.null(options$workflow)) {
     print_workflows()

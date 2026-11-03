@@ -467,8 +467,10 @@ run_and_download <- function(client, project, label) {
       wait_for_impact(client, run_id)
       TRUE
     },
-    error = function(condition) {
+    implan_run_error = function(condition) {
       # One failed run should not stop a batch of fifty. Report it and carry on.
+      # Only a run that failed or timed out: an API, network, or sign-in failure
+      # still stops the batch, because the next run would fail the same way.
       log_info("    run %d did not complete: %s", run_id, conditionMessage(condition))
       FALSE
     }

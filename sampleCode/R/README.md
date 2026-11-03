@@ -155,10 +155,9 @@ Then `identifiers`, `regions`, `combine-regions`, `create-project`,
 Workflows 1 through 3 only read. Everything from 4 on creates real objects in your
 IMPLAN account, and each prints what it made so you can delete it afterwards.
 
-`run-impact-analysis` uses your most recent project when you do not name one. Run
-straight after `create-project` or `multi-event-to-multi-group`, it runs the project
-that workflow just made. To run a specific project, pass its id, which
-`create-project` prints when it finishes:
+`run-impact-analysis` runs the project you name with `--project-id`.
+`create-project`, `multi-event-to-multi-group`, and `import-events` each print the id
+of the project they make when they finish:
 
 ```bash
 Rscript main.R run-impact-analysis --project-id 00000000-0000-0000-0000-000000000000

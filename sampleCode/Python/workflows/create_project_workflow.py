@@ -5,8 +5,9 @@ Goal: the shortest path from nothing to a project that can be run.
 Four things have to exist, in this order, and each depends on the one before:
 
   1. A Project, which fixes the Aggregation Scheme and Household Set.
-  2. Events, which say what changed.
-  3. A Region to apply them to.
+  2. A Region to apply the events to.
+  3. Events, which say what changed. Outside the United States, a spending
+     pattern event names the region whose spending pattern it uses.
   4. A Group, which pairs that region and a dollar year with those events.
 
 Run the RunImpactAnalysis workflow afterwards to analyze what this creates.
@@ -33,9 +34,15 @@ from models.reference import MapCode
 from models.region import RegionType
 from utilities import auth, config, logging_setup
 
-# The industry the events use, by name rather than by code, because the code
-# differs between Industry Sets.
-INDUSTRY_NAME = "Oilseed farming"
+# The industry the events use, per map code, by name rather than by code, because
+# the code differs between Industry Sets. Each country's Industry Set names its
+# industries differently: the Canadian and international sets have no "Oilseed
+# farming", so each map code takes the crop-farming industry its own set has.
+INDUSTRY_NAME = {
+    MapCode.US: "Oilseed farming",
+    MapCode.CANADA: "Crop production (except cannabis, greenhouse, nursery and floriculture production)",
+    MapCode.INTERNATIONAL: "Agriculture and hunting",
+}
 
 # Which region to put the group in, per map code. International schemes have no
 # state level, so a country is used there.
@@ -84,11 +91,26 @@ def run(map_code: MapCode = MapCode.US) -> Project:
     # GET /api/v1/IndustryCodes/{aggregationSchemeId}
     # (wiki: Industry Codes by Aggregation Scheme)
     codes = industries.get_industry_codes_for_scheme(client, ids.aggregation_scheme_id)
-    industry = industries.find_industry_by_description(codes, INDUSTRY_NAME)
+    industry = industries.find_industry_by_description(codes, INDUSTRY_NAME[map_code])
     logger.info("  %s is code %d in this Industry Set", industry.description, industry.code)
 
-    # Step 5. Add the events.
-    logging_setup.heading("Step 5: add the Events")
+    # Step 5. Find the region the group will use.
+    logging_setup.heading("Step 5: find the Region")
+    region_name, region_type = DEFAULT_REGION[map_code]
+
+    # GET /api/v1/region/{aggregationSchemeId}/{datasetId}/children?regionTypeFilter=...
+    # (wiki: Regional Children)
+    # Passing no parent means "children of the top-level region". That works for
+    # international schemes too, which have no top-level region of their own: ask
+    # for Country there and the countries come back.
+    candidates = regions.get_region_children(
+        client, ids.aggregation_scheme_id, ids.dataset_id, region_type=region_type
+    )
+    region = regions.find_region_by_description(candidates, region_name)
+    logger.info("  %s", region.describe())
+
+    # Step 6. Add the events.
+    logging_setup.heading("Step 6: add the Events")
 
     # The simple case: one number and the industry that earned it. IMPLAN estimates
     # employment, compensation, and the rest from the region's averages.
@@ -128,6 +150,10 @@ def run(map_code: MapCode = MapCode.US) -> Project:
             # Which data year's spending pattern the intermediate inputs flow
             # through. The resolved dataset keeps this consistent with the project.
             spending_pattern_dataset_id=ids.dataset_id,
+            # A Canadian or international project refuses to run until each
+            # spending pattern event names the region whose pattern it uses. A
+            # United States one uses the national pattern, so it stays unset there.
+            spending_pattern_region_urid=None if map_code is MapCode.US else region.urid,
             spending_pattern_value_type=SpendingPatternValueType.INTERMEDIATE_EXPENDITURE.value,
         )
         detailed_event = events.create_event(client, project.id, detailed_event)
@@ -137,21 +163,6 @@ def run(map_code: MapCode = MapCode.US) -> Project:
             "  Industry Impact Analysis is not available in a %s scheme; skipping it",
             map_code.value,
         )
-
-    # Step 6. Find the region the group will use.
-    logging_setup.heading("Step 6: find the Region")
-    region_name, region_type = DEFAULT_REGION[map_code]
-
-    # GET /api/v1/region/{aggregationSchemeId}/{datasetId}/children?regionTypeFilter=...
-    # (wiki: Regional Children)
-    # Passing no parent means "children of the top-level region". That works for
-    # international schemes too, which have no top-level region of their own: ask
-    # for Country there and the countries come back.
-    candidates = regions.get_region_children(
-        client, ids.aggregation_scheme_id, ids.dataset_id, region_type=region_type
-    )
-    region = regions.find_region_by_description(candidates, region_name)
-    logger.info("  %s", region.describe())
 
     # Step 7. Create the group. This is where the events, the region, and the
     # dollar year come together.
