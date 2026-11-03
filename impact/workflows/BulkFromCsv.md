@@ -27,6 +27,7 @@
 	- A `model_name` can be used in one file only. Give the counties a different `model_name` from the states
 	- The region is found by `fips`. `region_description` is a label for you
 	- A FIPS code that has lost its leading zero, as Excel does to Alabama's `01000`, is padded back to `01000`
+	- Two `model_name`s with the same rows are two regions that share one build, and the second is ready at once. The sample's `CountyCombinedModel_2` and `CountyCombinedModel_3` show this: they combine the same three counties
 	- A rerun with the same rows reuses the regions it built before. To change which states or counties a `model_name` covers, give it a new `model_name`: the API refuses a name you already have when its regions differ
 - Events
 	- `Name` becomes the event's title, so each one must be different
