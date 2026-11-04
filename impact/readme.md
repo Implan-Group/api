@@ -10,7 +10,7 @@ To help you get started running economic impact analysis, this section will prov
 In order to run an economic impact analysis, you will first need to identify the [Data Year (Dataset)](#dataset-endpoint-get) on when the impact will take place, the [Industry](#industry-codes-endpoint-get) that will change, and the [Region](#region-model-endpoint-get) where the impact will take place.
 
 ### Create a project, define groups and events
-After determining your Region(s), Datasets, and Industries, you can create a [Project](#create-project-post), add [Events](#create-event-post) to the project, and add [Groups](create-group-post) to the project with associated Events.
+After determining your Region(s), Datasets, and Industries, you can create a [Project](#create-project-post), add [Events](#create-event-post) to the project, and add [Groups](#create-group-post) to the project with associated Events.
 
 ### Run an Impact on your project
 Once your project has been defined, you can [Run an Impact](#run-impact-post) on your project.  Depending on the size of your project based on the number of events and groups, your project may take a few seconds or a few minutes to complete.  While waiting, you can poll for the [status](#run-status-get) of your project’s impact run. We recommend a polling frequency of 30 seconds.
@@ -88,7 +88,7 @@ The IMPLAN API will currently support the following requests per timeframe, to e
 # Authentication
 
 ## Bearer Access Token
-- The ImpactAPI uses a [jwt](jwt.io) to store authentication information about your current user.
+- The ImpactAPI uses a [jwt](https://jwt.io/) to store authentication information about your current user.
 - You are required to send a valid Bearer Token with all Api requests.
 
 ### Retrieving the Token (non-SSO, non-M2M)
@@ -101,7 +101,7 @@ You must include a `json` body that includes your username and password:
     "password": "{ImplanPassword}" 
 }
 ```
-- There are code examples in the [Appendix](#Appendix) for several languages on how to accomplish this.
+- There are code examples in the [Appendix](#appendix) for several languages on how to accomplish this.
 
 ### Single Sign On (SSO) & Machine to Machine (M2M)
 - SSO and M2M customers _must_ use the following endpoint to retrieve their Bearer Token, substituting your `CLIENT_ID` and `CLIENT_SECRET` into the below:
@@ -856,19 +856,19 @@ This endpoint will allow a user to build a single combined region by providing t
 # Regions - Build and Return
 <p>
 This endpoint allows a user to submit a list of Regional Identifiers.
-Any regions in the list that have not yet been built will be, and then the full list of hydrated [[Region Cards|RegionCards]] will be returned.
+Any regions in the list that have not yet been built will be, and then the full list of hydrated [Region Cards](#regional-data-response) will be returned.
 </p>
 <p>
-Instead of using this endpoint, it is possible to pull down a full list of Regions and then submit only the ones that need to be built to the [[Build Regions|BuildRegions]] endpoint.
+Instead of using this endpoint, it is possible to pull down a full list of Regions and then submit only the ones that need to be built to the [Build Region - Batch](#build-region---batch-post) endpoint.
 </p>
 
 
 ## ⬆️ Request(s)
 ### `POST {api_domain}api/v1/region/build-and-return/{AggregationSchemeId}`
-- [[AggregationSchemeId|AggregationSchemes]] - Aggregation Scheme Id
+- [AggregationSchemeId](#aggregationschemeid) - Aggregation Scheme Id
 
 #### Request Body
-- Must include a list of the Regional Identifiers ([[HashIds|HashIds]] or [[Urids|Urids]]) for the Regions that need to be built and returned. 
+- Must include a list of the Regional Identifiers ([HashIds](#hashid) or [Urids](#urid)) for the Regions that need to be built and returned. 
 ```json
 [
     "8qaGd873bX"

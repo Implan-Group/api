@@ -365,3 +365,20 @@ Needs: token, ids. Produces: a completed run and two tag-filtered reports. Done 
 ## 7. Endpoints the samples deliberately do not cover
 
 Update, delete, duplicate, share, and transfer for projects, events, and groups; cancelling an impact run; folder sharing; Institutional, Household, and Custom spending patterns; Industry Impact Analysis (Custom) and the International variants; custom aggregation schemes; the Instant and Batch APIs. They are documented in the wiki. Adding one means adding it to all languages and to section 5.
+
+---
+
+## 8. Markdown
+
+Every `.md` file in this repository is rendered as GitHub Flavored Markdown, which is not the wiki's renderer. The references:
+
+- [GitHub Flavored Markdown Spec](https://github.github.com/gfm/)
+- [Basic writing and formatting syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax), including its "Section links" rules for heading ids
+- [Organizing information with tables](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables)
+
+The rules that broke links here before:
+
+- **No `[[...]]` links.** That syntax works only in the wiki; in a repository file it shows as plain text. Use `[text](target)`.
+- **Section links use the id GitHub generates for the heading:** lowercase, punctuation dropped, each space a hyphen, and `-1`, `-2` appended to repeats. `### Create Group (Post)` is `#create-group-post`, and `# Appendix` is `#appendix`, never `#Appendix`. A same-file section link starts with `#`.
+- **Escape a `|` inside a table cell** as `\|`, or the cell ends there.
+- **Link to the wiki with its full URL,** such as `https://github.com/Implan-Group/api/wiki/Regions#hashid`. Every link outside this repository starts with `https://`; a link without it is read as a file in the repository.
