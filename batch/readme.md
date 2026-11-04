@@ -117,7 +117,7 @@ The “access_token” is good for 24 hours.  It is required that you cache this
 
 ## Examples
 
-Some code examples for obtaining the authentication token are provided in the [Appendix](#Appendix).
+Some code examples for obtaining the authentication token are provided in the [Appendix](#appendix).
 
 
 ## Expected Response
@@ -132,7 +132,7 @@ IMPLAN has provided a [Postman](https://www.postman.com/) collection to help pro
 
 
 
-* IMPLAN [Batch API V1 postman_collection.json](/Implan%20API.postman_collection.json)
+* [IMPLAN-API.postman_collection.json](../IMPLAN-API.postman_collection.json), the Impact API collection. It does not include the Batch API endpoints.
 * [Postman Instructions for Importing a Collection](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman)
 
 Once downloaded, you may enter your application credentials into the “auth” request body to obtain a bearer token.  Copy the results of the “auth” response into the Collection’s Pre-request script:
