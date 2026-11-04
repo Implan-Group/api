@@ -177,13 +177,13 @@ Will Return datasets
 ```json
 [   
 	{
-		"id": 59,
-		"description": "2018",
+		"id": 98,
+		"description": "2023",
 	    "isDefault": false
 	},
 	{
-	    "id": 77,
-	    "description": "2019",
+	    "id": 124,
+	    "description": "2024",
 	    "isDefault": true
 	}
 ]
@@ -238,18 +238,18 @@ This endpoint will return a list of models available for Batch Impact analysis. 
 ```
 [
     {
-        "hashId": "5Oad92M9bZ",
-        "urid": 1646939,
+        "hashId": "ANb3mYjmxe",
+        "urid": 1863465,
         "userModelId": null,
         "description": "Vermont",
-        "modelId": 11597,
+        "modelId": 306921,
         "modelBuildStatus": "Complete",
-        "employment": 410771.60344260157,
-        "output": 71119723120.10498,
-        "valueAdded": 38292831461.82147,
-        "aggregationSchemeId": 8,
-        "datasetId": 87,
-        "datasetDescription": "2021",
+        "employment": 443933.472,
+        "output": 87548788137.353,
+        "valueAdded": 47865433025.807,
+        "aggregationSchemeId": 14,
+        "datasetId": 124,
+        "datasetDescription": "2024",
         "fipsCode": "50",
         "provinceCode": null,
         "m49Code": null,
@@ -261,18 +261,18 @@ This endpoint will return a list of models available for Batch Impact analysis. 
     },
     ...
     {
-        "hashId": "wlx62YXDxk",
-        "urid": 1646952,
+        "hashId": "BEbD8YBlb2",
+        "urid": 1866272,
         "userModelId": null,
         "description": "Arkansas",
-        "modelId": 11623,
+        "modelId": 306801,
         "modelBuildStatus": "Complete",
-        "employment": 1639050.8514250224,
-        "output": 308251018253.70966,
-        "valueAdded": 150461125093.1109,
-        "aggregationSchemeId": 8,
-        "datasetId": 87,
-        "datasetDescription": "2021",
+        "employment": 1787018.092,
+        "output": 383013144673.582,
+        "valueAdded": 189515479006.24,
+        "aggregationSchemeId": 14,
+        "datasetId": 124,
+        "datasetDescription": "2024",
         "fipsCode": "05",
         "provinceCode": null,
         "m49Code": null,
@@ -290,7 +290,7 @@ This endpoint will return a list of models available for Batch Impact analysis. 
 
 ## Industry Codes Endpoint (Get)
 
-The Industries supported by this API will be the current standard IMPLAN 546 Industry scheme. This response may be cached.  A list of those industries can be found here: [https://support.implan.com/hc/en-us/articles/360034896614-546-Industries-Conversions-Bridges-Construction-2018-Data](https://support.implan.com/hc/en-us/articles/360034896614-546-Industries-Conversions-Bridges-Construction-2018-Data)
+Without an Industry Set, this returns the Industries of the current default Industry Set, which is the 528-industry set. This response may be cached.  A list of those industries can be found here: [https://support.implan.com/hc/en-us/articles/360034896614-546-Industries-Conversions-Bridges-Construction-2018-Data](https://support.implan.com/hc/en-us/articles/360034896614-546-Industries-Conversions-Bridges-Construction-2018-Data)
 
 In 2023, the BEA redefined the North American Industry Classifications System (NAICS) codes. 
 This change is reflected in the 2023 IMPLAN Industry Scheme's data.
@@ -310,17 +310,17 @@ Will return Industries
 ```json
 [
     {
-        "id": 4638,
+        "id": 5594,
         "code": 1,
         "description": "Oilseed farming"
     },
     {
-        "id": 4639,
+        "id": 5595,
         "code": 2,
         "description": "Grain farming"
     },
     {
-        "id": 4640,
+        "id": 5596,
         "code": 3,
         "description": "Vegetable and melon farming"
     }
@@ -464,11 +464,11 @@ Also include this in the body of the request:
 
 [
 
-    {"modelId":"26899", "industrycode" : 1, "eventvalue" : 10002.90},
+    {"modelId":"306921", "industrycode" : 1, "eventvalue" : 10002.90},
     
-    {"modelId":"26899", "industrycode" : 2, "eventvalue" : 30002.90},
+    {"modelId":"306921", "industrycode" : 2, "eventvalue" : 30002.90},
     
-    {"modelId":"26899", "industrycode" : 1, "eventvalue" : 10002.90}
+    {"modelId":"306921", "industrycode" : 1, "eventvalue" : 10002.90}
 
 ]
 

@@ -231,26 +231,34 @@ vignettes/*.pdf
 *.knit.md
 # R Environment Variables
 .Renviron
-# pkgdown site
-docs/
+# pkgdown site. Not listed here: nothing in this repository is an R package, and
+# the pattern is unanchored, so it would also hide a docs/ folder of prose.
 # translation temp files
 po/*~
 # RStudio Connect folder
 rsconnect/
 # --------
 # IMPLAN Impact API R sample — secrets & generated artifacts (do NOT commit).
-# NOTE: the sample input CSVs (state_based.csv, county_based.csv, demo_events.csv)
-# are intentionally NOT ignored — they contain only public FIPS/region/demo data.
-# Credentials
-private/            # procedural helper: private/creds.json
+#
+# A `#` only starts a comment at the beginning of a line. Trailing comments are
+# part of the pattern, which silently stops the rule matching anything, so every
+# note here sits on its own line.
+#
+# The sample input CSVs (state_based.csv, county_based.csv, demo_events.csv) are
+# intentionally NOT ignored: they hold only public FIPS, region, and demo data.
+#
+# Credentials. The current sample reads `.env`, which is already ignored in the
+# Python section above. `creds.json` and `private/` are kept for anyone with a
+# leftover file from the older R scripts.
+private/
 creds.json
-.env                # used by the .env credential path
-# Cached JWT auth tokens (unanchored — scripts create cache/ where they run)
+# Cached auth tokens. The current sample writes implan_auth.jwt, caught by *.jwt
+# in the shared section above; the rest are older names.
 cache/
 saved_token.json
 *.jwt
-# Exported results & logs
-results/            # procedural helper: exported result CSVs
+# Exported results and logs. The current sample writes reports/ and logs/, both
+# caught by the shared section above; results/ is the older name.
+results/
 logs/
-Final_Code/Logs/    # object-oriented: auth_env$logDir
 ### END R-Related ###
