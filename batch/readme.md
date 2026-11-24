@@ -135,9 +135,18 @@ IMPLAN has provided a [Postman](https://www.postman.com/) collection to help pro
 * [IMPLAN-API.postman_collection.json](../IMPLAN-API.postman_collection.json), the Impact API collection. It does not include the Batch API endpoints.
 * [Postman Instructions for Importing a Collection](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman)
 
-Once downloaded, you may enter your application credentials into the “auth” request body to obtain a bearer token.  Copy the results of the “auth” response into the Collection’s Pre-request script:
+Authentication is automatic once imported: the collection's Pre-request Script (Collection &gt; Pre-request Script) fetches and caches a bearer token for you, and the collection-level Authorization is set to `Bearer {{bearerToken}}`, which applies to every request. You do not run an "auth" request yourself or paste a token anywhere.
 
-![alt_text](/images/auth_pre_request.png "auth pre request")
+To use it, create a Postman [Environment](https://learning.postman.com/docs/sending-requests/variables/managing-environments/) with these variables, and select it from the environment dropdown before running any request. Variable names are case-sensitive and must match exactly:
+
+| Variable | Value |
+| --- | --- |
+| `tokenUrl` | `https://api.implan.com/api/auth` |
+| `username` | Your IMPLAN API username, lowercase |
+| `password` | Your IMPLAN API password |
+| `bearerToken` | Leave blank; the script fills this in |
+
+On your first request, the script POSTs `username`/`password` to `tokenUrl`, strips the `Bearer ` prefix off the response, and stores the token in `bearerToken`. On later requests it reuses that token until its JWT expiry passes, then refreshes it automatically.
 
 # Throttling Rates
 The IMPLAN API will currently support the following requests per timeframe, to ensure a smooth operation for all customers.  When exceeding these rates, you will receiving a throttling error response.  

@@ -35,6 +35,19 @@ We have created a Postman collection with reference calls per section in this do
 
 [https://github.com/Implan-Group/api/blob/main/IMPLAN-API.postman_collection.json](https://github.com/Implan-Group/api/blob/main/IMPLAN-API.postman_collection.json) 
 
+### Postman Environment Setup
+Authentication is automatic once the collection is imported: its Pre-request Script (Collection &gt; Pre-request Script) fetches and caches a bearer token for you, and the collection-level Authorization is set to `Bearer {{bearerToken}}`, which applies to every request. You do not call `api/auth` yourself or paste a token anywhere.
+
+To use it, create a Postman [Environment](https://learning.postman.com/docs/sending-requests/variables/managing-environments/) with these variables, and select it from the environment dropdown before running any request. These names are specific to the Postman collection's script, are case-sensitive, and must match exactly; they are distinct from the `{{api_domain}}` / `{{email}}` placeholder notation used for illustration elsewhere in this document.
+
+| Variable | Value |
+| --- | --- |
+| `tokenUrl` | `https://api.implan.com/api/auth` |
+| `username` | Your IMPLAN API username, lowercase |
+| `password` | Your IMPLAN API password |
+| `bearerToken` | Leave blank; the script fills this in |
+
+On your first request, the script POSTs `username`/`password` to `tokenUrl`, strips the `Bearer ` prefix off the response, and stores the token in `bearerToken`. On later requests it reuses that token until its JWT expiry passes, then refreshes it automatically.
 
 ## Production Variables
 
@@ -102,6 +115,7 @@ You must include a `json` body that includes your username and password:
 }
 ```
 - There are code examples in the [Appendix](#appendix) for several languages on how to accomplish this.
+- If you are using the [Postman Collection](#postman-collection), you do not need to call this endpoint yourself; see [Postman Environment Setup](#postman-environment-setup).
 
 ### Single Sign On (SSO) & Machine to Machine (M2M)
 - SSO and M2M customers _must_ use the following endpoint to retrieve their Bearer Token, substituting your `CLIENT_ID` and `CLIENT_SECRET` into the below:
