@@ -25,6 +25,10 @@ returns, and it can be imported into Postman, Swagger UI, or a client generator.
 [Postman collection](IMPLAN-API.postman_collection.json) is generated from the same
 source and covers the same endpoints. Both describe what is in production.
 
+The Postman collection authenticates automatically once you set up a Postman
+Environment; see [Postman Environment Setup](impact/readme.md#postman-environment-setup)
+in the endpoint reference for the variables it needs.
+
 ---
 
 ## Sample code
